@@ -1,0 +1,7 @@
+Properties
+bin
+obj
+*.suo
+*.user
+*.sublime*
+node_modules
