@@ -17,6 +17,20 @@ Iridium hopes to solve these issues by providing a bare bones ORM targeted at po
  - **Powerful Models**
    Iridium's models are designed to exist as individual files or modules within your application, this helps simplify management of your models and separates database design code from your application code. In addition to this, Iridium supports virtual properties, extension methods, transforms, client side property renaming and validations in an easy to understand and implement package.
 
+## Installation
+Iridium is available using *npm*, which means you can install it locally using `npm install iridium` or add it to your project's *package.json* file to have it installed automatically whenever you run `npm install`.
+
+We make use of the [Semantic Versioning](http://semver.org/) guidelines for our versioning system, as such we highly recommend you stick to a single major version of Iridium when developing an application. This can easily be handled through your *package.json* file by doing the following.
+
+```js
+{
+	// ...
+	"dependencies": {
+		"iridium": "1.x"
+	}
+}
+```
+
 ## Example
 ```js
 var iridium = require('iridium');
