@@ -7,4 +7,4 @@ node_js:
 services:
  - mongodb
 env:
- - CI_SERVER="TRAVIS"
+ - CI_SERVER=1

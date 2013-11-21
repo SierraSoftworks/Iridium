@@ -31,11 +31,11 @@ var config = null;
 
 module.exports.getConfig = function () {
 	if (module.exports.isCI()) {
-		return config || (config = module.exports.extend(require('../settings'), {
+		return config || {
 			user: "iridium",
 			password: "",
 			database: "iridium"
-		}));
+		};
 	} else {
 		return config || (config = require("./config"));
 	}
