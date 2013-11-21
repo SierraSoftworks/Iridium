@@ -1,4 +1,6 @@
-# Iridium - A bare metal ORM for MongoDB
+# Iridium
+**A bare metal ORM for MongoDB**
+
 Iridium was designed to alleviate many of the issues often present in modern ORMs, especially those designed for NoSQL datastores like MongoDB. Namely, these include a high level of bloat and an excessive amount of documentation - vastly raising the barrier to entry. On the flip side of the coin, they also tend to abstract core database functionality away from the developer to the extent that they end up jumping through unnecessary hoops just to get the results they're looking for.
 
 Iridium hopes to solve these issues by providing a bare bones ORM targeted at power users, and those looking for an exceptionally low overhead. It provides much of the indispensable functionality found in ORMs without the fluff.
