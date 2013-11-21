@@ -10,7 +10,7 @@
 	],
 	"main": "./index",
 	"scripts": {
-		"test": "node test/run"
+		"test": "node tests/run"
 	},
 	"engines": {
 		"node": ">= 0.8"
