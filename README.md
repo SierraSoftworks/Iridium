@@ -99,3 +99,8 @@ TODO
 
 ## Instances
 TODO
+
+## Credits
+Thanks to [Tadahiro Ishisaka](https://github.com/ishisaka) for his brilliant [nodeintellisense](https://github.com/ishisaka/nodeintellisense) library, it has been used as the basis for IntelliSense support within this module.
+
+I'd also like to thank [dresende](https://github.com/dresende) and [dxg](https://github.com/dxg) from the [node-orm2](https://github.com/dresende/node-orm2) project for getting me introduced to Node and giving me many of the ideas for how a good ORM should be structured. If you're looking for an easy to use and more fully featured ORM with support for SQL and NoSQL databases, I'd seriously suggest giving [node-orm2](https://github.com/dresende/node-orm2) a try.

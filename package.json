@@ -8,10 +8,13 @@
 	"contributors": [
 		{ "name": "Benjamin Pannell", "email": "admin@sierrasoftworks.com" }
 	],
+	"licence": "MIT",
+
 	"main": "./index",
 	"scripts": {
 		"test": "node tests/run"
 	},
+	
 	"engines": {
 		"node": ">= 0.8"
 	},
