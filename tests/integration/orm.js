@@ -127,7 +127,8 @@ describe('orm', function () {
 	describe('Model', function () {
 		var db = null;
 		before(function (done) {
-			db = new Database(common.getConfig(), done);
+			db = new Database(common.getConfig());
+			db.connect(done);
 		});
 
 		describe('constructor', function () {
