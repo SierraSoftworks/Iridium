@@ -1,10 +1,10 @@
 ﻿/// <reference path="../nodelib/node.js"/>
 /// <reference path="../nodelib/mocha.js"/>
 /// <reference path="../nodelib/should.js"/>
-/// <reference path="../../index.js"/>
+/// <reference path="../index.js"/>
 
-var common = require('../common');
-var Database = require('../../index');
+var config = require('./config');
+var Database = require('../index');
 var Model = Database.Model;
 var Instance = Database.Instance;
 var should = require('should');
@@ -127,7 +127,7 @@ describe('orm', function () {
 	describe('Model', function () {
 		var db = null;
 		before(function (done) {
-			db = new Database(common.getConfig());
+			db = new Database(config);
 			db.connect(done);
 		});
 

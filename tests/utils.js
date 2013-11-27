@@ -2,8 +2,8 @@
 /// <reference path="../nodelib/lodash.js"/>
 /// <reference path="../nodelib/mocha.js"/>
 /// <reference path="../nodelib/should.js"/>
-/// <reference path="../../lib/utils/validation.js"/>
-/// <reference path="../../lib/utils/transforms.js"/>
+/// <reference path="../lib/utils/validation.js"/>
+/// <reference path="../lib/utils/transforms.js"/>
 
 var _ = require('lodash');
 var should = require('should');
@@ -11,7 +11,7 @@ var should = require('should');
 describe('utils', function () {
 
 	describe('validation', function () {
-		var validation = require('../../lib/utils/validation');
+		var validation = require('../lib/utils/validation');
 		function validate(schema, value, pass, message) {
 			validation(schema, value).should.have.ownProperty('passed', pass, message);
 		}
@@ -84,7 +84,7 @@ describe('utils', function () {
 	});
 
 	describe('transforms', function () {
-		var transform = require('../../lib/utils/transforms');
+		var transform = require('../lib/utils/transforms');
 
 		it('should allow the transformation of an object\'s properties', function () {
 			var original = {
