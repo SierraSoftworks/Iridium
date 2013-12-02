@@ -1,4 +1,4 @@
-﻿/// <reference path="../nodelib/node.js"/>
+/// <reference path="../nodelib/node.js"/>
 /// <reference path="../nodelib/lodash.js"/>
 /// <reference path="../nodelib/mocha.js"/>
 /// <reference path="../nodelib/should.js"/>
@@ -13,7 +13,9 @@ describe('utils', function () {
 	describe('validation', function () {
 		var validation = require('../lib/utils/validation');
 		function validate(schema, value, pass, message) {
-			validation(schema, value).should.have.ownProperty('passed', pass, message);
+			var result = validation(schema, value);
+			result.should.have.ownProperty('passed', pass, message);
+			return result;
 		}
 
 		it('should allow validation of basic types', function () {
@@ -81,50 +83,11 @@ describe('utils', function () {
 				b: 'b'
 			}, false);
 		});
-	});
 
-	describe('transforms', function () {
-		var transform = require('../lib/utils/transforms');
-
-		it('should allow the transformation of an object\'s properties', function () {
-			var original = {
-				a: 'a',
-				b: 1,
-				c: 'c',
-				d: 'd'
-			};
-
-			var expected = {
-				a: 'aa',
-				b: 1,
-				c: 'c',
-				d: 'd'
-			};
-
-			var trans = {
-				a: { $t: function (value) { return value + value; } },
-				b: false,
-				c: { $t: false }
-			};
-
-			transform(trans, '$t', original);
-
-			original.should.eql(expected);
-		});
-
-		it('should remove properties where the transform returns undefined', function () {
-			var original = {
-				a: 1
-			};
-
-			var expected = {
-				b: '1'
-			};
-
-			var trans = {
-				a: { $t: function (value) { return undefined; } },
-				b: { $t: function (value) { return '1'; } }
-			};
+		it('should allow conversion of a failure to an error object', function() {
+			var result = validate({ name: Number }, { name: 'Test' }, false);
+			result.should.have.ownProperty('toError');
+			should(result.toError() instanceof Error);
 		});
 	});
 });
