@@ -100,6 +100,15 @@ TODO
 ## Instances
 TODO
 
+## Preprocessing Framework
+The preprocessing framework allows Iridium to convert values from a form better suited to your database into a form more suitable for your application in an entirely transparent manner. This is acomplished through the use of a number of preprocessors which run in the following order when retrieving an object from the database, their order is reversed when pushing an object to the database.
+
+### Transforms
+The transforms framework provides a low-level means to convert from one value type to another by means of up/down conversion functions. The up functions are used to convert the value before it is sent UPstream to the database, while down functions are used to convert the database value into the DOWNstream value used by your application.
+
+### Renames
+The renames framework allows you to access properties in a manner better suited to your application while keeping the same schema on the database side. This comes in handy when using the *_id* field for fields such as a user's username.
+
 ## Credits
 Thanks to [Tadahiro Ishisaka](https://github.com/ishisaka) for his brilliant [nodeintellisense](https://github.com/ishisaka/nodeintellisense) library, it has been used as the basis for IntelliSense support within this module.
 
