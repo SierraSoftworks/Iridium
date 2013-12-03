@@ -37,12 +37,7 @@ describe('orm', function () {
 				model =  new Model(db, 'model', {
 					name: /.+/
 				}, {
-					rename: {
-						_id: 'name'
-					},
-					transforms: {
-						_id: false
-					}
+					preprocessors: [new Database.Rename({ _id: 'name' })]
 				});
 
 				model.remove(done);
