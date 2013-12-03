@@ -35,7 +35,7 @@ describe('orm', function () {
 
 			before(function(done) {
 				model =  new Model(db, 'model', {
-					name: String
+					name: /.+/
 				}, {
 					renames: {
 						_id: 'name'
