@@ -16,9 +16,6 @@ var Model = Database.Model;
 	var database = db;
 
 	var options = {
-		rename: {
-			'_id': 'username'
-		},
 		virtuals: {
 			API: function () {
 				var $ = this;
@@ -122,9 +119,11 @@ var Model = Database.Model;
 				done();
 			}
 		},
-		transforms: {
-			_id: false
-		},
+		preprocessors: [
+			new Database.Rename({
+				_id: 'username'
+			})
+		],
 		indexes: [
 			[{ email: 1 }, { unique: true, background: true }],
 			[{ type: 1 }, { background: true }],
