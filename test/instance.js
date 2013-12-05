@@ -115,6 +115,32 @@ describe('orm', function () {
 				i.fullname.should.equal('Billy Bob');
 			});
 
+			it('should allow the creation of virtual getter/setters', function() {
+				var model = new Model(null, 'model', {}, {
+					virtuals: {
+						fullname: {
+							get: function () { return this.firstname + ' ' + this.lastname; },
+							set: function(value) {
+								this.firstname = value.split(' ')[0];
+								this.lastname = value.split(' ')[1];
+							}
+						}
+					}
+				});
+
+				var i = new Instance(model, {
+					_id: 'custom_id',
+					firstname: 'Billy',
+					lastname: 'Bob'
+				});
+
+				i.fullname.should.equal('Billy Bob');
+
+				i.fullname = 'Sally Jane';
+				i.firstname.should.equal('Sally');
+				i.lastname.should.equal('Jane');
+			});
+
 			it('should allow a custom schema', function () {
 				var model = new Model(null, 'model', {
 						name: String,
