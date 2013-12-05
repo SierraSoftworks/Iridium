@@ -8,6 +8,7 @@ var Database = require('../index');
 var Model = Database.Model;
 var Instance = Database.Instance;
 var should = require('should');
+var Concoction = require('concoction');
 
 describe('orm', function () {
 	"use strict";
@@ -37,7 +38,7 @@ describe('orm', function () {
 				model =  new Model(db, 'model', {
 					name: /.+/
 				}, {
-					preprocessors: [new Database.Rename({ _id: 'name' })]
+					preprocessors: [new Concoction.Rename({ _id: 'name' })]
 				});
 
 				model.remove(done);

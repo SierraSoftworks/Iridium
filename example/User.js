@@ -6,6 +6,7 @@
 var _ = require('lodash');
 var Database = require('iridium');
 var Model = Database.Model;
+var Concoction = require('concoction');
 
 (require.modules || {}).User = module.exports = function (db) {
 	/// <summary>Configure the User model to use the given database</summary>
@@ -120,7 +121,7 @@ var Model = Database.Model;
 			}
 		},
 		preprocessors: [
-			new Database.Rename({
+			new Concoction.Rename({
 				_id: 'username'
 			})
 		],

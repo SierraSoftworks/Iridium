@@ -2,6 +2,7 @@ var Database = require('../index');
 var Model = Database.Model;
 var Instance = Database.Instance;
 var should = require('should');
+var Concoction = require('concoction');
 
 describe('orm', function () {
 	"use strict";
@@ -52,7 +53,7 @@ describe('orm', function () {
 						pretty: String
 					},{
 						preprocessors: [
-							new Database.Rename({
+							new Concoction.Rename({
 								uglyName: 'pretty'
 							})
 						]

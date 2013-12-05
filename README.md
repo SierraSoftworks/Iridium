@@ -103,15 +103,18 @@ TODO
 ## Preprocessing Framework
 The preprocessing framework allows Iridium to convert values from a form better suited to your database into a form more suitable for your application in an entirely transparent manner. This is acomplished through the use of a number of preprocessors which run when retrieving an object from the database, their order is reversed when pushing an object to the database.
 
+It has been moved into its own module, Concoction, which can be used outside of Iridium - and allows you to easily extend or replace it if you wish. For more information on Concoction, visit its [project page](https://github.com/SierraSoftworks/Concoction).
+
 ### Conversions
 The transforms framework provides a low-level means to convert from one value type to another by means of up/down conversion functions. The up functions are used to convert the value before it is sent UPstream to the database, while down functions are used to convert the database value into the DOWNstream value used by your application.
 
 ```javascript
+var Concoction = require('concoction');
 var model = new Model(db, 'modelName', modelSchema, {
-		preprocessors: [new Database.Convert({
+		preprocessors: [new Concoction.Convert({
 			property: {
-				$up: function(value) { return convertedValueForDatabase; },
-				$down: function(value) { return convertedValueFromDatabase }
+				apply: function(value) { return convertedValueForDatabase; },
+				reverse: function(value) { return convertedValueFromDatabase }
 			}
 		})]
 	});
@@ -121,8 +124,9 @@ var model = new Model(db, 'modelName', modelSchema, {
 The renames framework allows you to access properties in a manner better suited to your application while keeping the same schema on the database side. This comes in handy when using the *_id* field for fields such as a user's username.
 
 ```javascript
+var Concoction = require('concoction');
 var model = new Model(db, 'modelName', modelSchema, {
-		preprocessors: [new Database.Rename({
+		preprocessors: [new Concoction.Rename({
 			_id: 'id'
 		})]
 	});
