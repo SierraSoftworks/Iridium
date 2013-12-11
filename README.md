@@ -94,13 +94,128 @@ When using Iridium, you are required to instantiate a core with a settings objec
 ```
 
 Once you've got a core, you need to connect it to the database. This is done by calling the core's *connect* method and giving it a callback function.
-TODO
+
+
+### Registering Models
+Models can be registered with the Iridium core to provide quick access from anywhere with access to the database instance. It has the added benefit of enabling IntelliSense for these models when accessed from the database object.
+
+You are required to give each model a name by which they may be accessed, convention states that these names should begin with a capital letter to indicate that they are constructors.
+
+```javascript
+db.register('MyModel', require('./models/MyModel.js'));
+
+db.MyModel.get(function(err, instance) {
+
+});
+```
 
 ## Models
-TODO
+Iridium has been designed to make it as easy as possible to create and manage your models. To support this, models are designed to be stored within their own files - separating them from one another and keeping things logical.
+
+Each model file should export a function which accepts a reference to an Iridium Core instance, and returns the result of a model construction call.
+
+```javascript
+var Model = require('iridium').Model;
+module.exports = function(db) {
+	var schema = {
+		name: String,
+		email: /.+@.+\.\w+/
+	};
+
+	var options = {
+		methods: {
+
+		},
+		virtuals: {
+
+		},
+		preprocessors: [],
+		hooks: {
+
+		}
+	};
+
+	return new Model(db, 'collectionName', schema, options);
+};
+```
+
+### Methods
+Methods allow you to provide instance specific functionality in the form of callable methods on a model's instances. These methods have access to the instance, and allow you to call them directly as 1st class members.
+
+```javascript
+var options = {
+	methods: {
+		checkPassword: function(password) {
+			return hash(password) == this.passwordHash;
+		}
+	}
+};
+```
+
+### Virtuals
+Virtuals work similarly to methods, however they represent Getter/Setter properties which also behave as first class members. The idea is that they allow you to access information which can be gathered from an instance but which you do not necessarilly wish to store in the database.
+
+```javascript
+var options = {
+	virtuals: {
+		forAPI: function() {
+			return {
+				id: this.id,
+				name: this.name
+			};
+		},
+		password: {
+			get: function() { return this.passwordHash; },
+			set: function(value) { this.passwordHash = hash(value); }
+		}
+	}
+};
+```
+
+As you can see, virtuals can either be pure getters (in which case they should not make any changes to the instance) or Getter/Setter pairs, allowing instance values to be modified.
+
+If you have no need for accessing the original database value - and it can be converted between forms losslessly, it may be preferable to make use of the preprocessor framework, as it will remove the overhead of calling a conversion function on each property access.
+
+### Hooks
+Hooks allow you to implement custom behaviour on certain events, one of the most common being the creation of a new instance. A good example of their use is the creation of a new user, where you usually receive their requested password directly. By using a hook, you can automatically convert their password into a hashed form upon creation, and save yourself the headache.
+
+```javascript
+var options = {
+	hooks: {
+		beforeCreate: function() {
+			if(this.password) {
+				this.passwordHash = hash(this.password);
+				delete this.password;
+			}
+		}
+	}
+};
+```
+
+Other uses include the creation of default properties on models, using the *beforeCreate* hook to set the defaults if they are not present.
+
+Keep in mind that all hooks support a *done* callback if you wish to perform any kind of asynchronous operation before completing. This allows web requests, file system operations or even other database operations to be performed safely from within the hook.
 
 ## Instances
-TODO
+An instance represents a database object retrieved by Iridium, and will inherit behaviour from the model it was created to represent. In addition to this, an instance has access to a few functions for performing operations which pertain directly to that instance, including the following.
+
+```javascript
+// Saves any changes made to the instance (only affects properties in the schema, or already retrieved from the DB)
+Instance.save();
+Instance.save(function(err, instance));
+
+// Executes the requested MongoDB changes on the current instance ({ $push: { sessions: 'session_key' }} etc.)
+Instance.save(mongoChanges);
+Instance.save(mongoChanges, function(err, instance));
+
+// Updates the instance's data to match the latest available data from the database
+Instance.update();
+Instance.update(function(err, instance));
+
+// Removes the instance from the database
+Instance.remove();
+Instance.remove(function(err));
+```
 
 ## Preprocessing Framework
 The preprocessing framework allows Iridium to convert values from a form better suited to your database into a form more suitable for your application in an entirely transparent manner. This is acomplished through the use of a number of preprocessors which run when retrieving an object from the database, their order is reversed when pushing an object to the database.
@@ -132,6 +247,32 @@ var model = new Model(db, 'modelName', modelSchema, {
 			_id: 'id'
 		})]
 	});
+```
+
+## Plugins
+Iridium allows you to use plugins which extend the functionality provided by a number of Iridium's components. These plugins can add everything from extra validation behaviour to extra functions for models and instances. Plugins are imported using the `db.register(plugin)` method overload (similar to the way models are loaded), and are declared using the following layout.
+
+```javascript
+module.exports = {
+	validate: function(type, value, propertyName) {
+		// this.fail(expected, got)
+		if(type == 'fail') return this.fail('anything', 'something');
+		if(type == 'pass') return this.pass;
+		// this.assert(condition, expected, got)
+		if(type == 'Positive') return this.assert(value >= 0, 'positive number');
+	},
+	newModel: function(db, collection, schema, options) {
+		this.collection = collection.toLowerCase();
+		this.schema._id = String,
+		this.options.preprocessors = [];
+	},
+	newInstance: function(model, document, isNew) {
+		Object.defineProperty(this, 'id', {
+			get: function() { return document._id; },
+			enumerable: false
+		});
+	}
+};
 ```
 
 ## Credits
