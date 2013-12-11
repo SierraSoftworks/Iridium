@@ -20,6 +20,8 @@ Iridium hopes to solve these issues by providing a bare bones ORM targeted at po
    Everyone who has written code using Node.js knows about Express, to help make your life easier we've included support right out of the box for Express.
  - **Powerful Models**
    Iridium's models are designed to exist as individual files or modules within your application, this helps simplify management of your models and separates database design code from your application code. In addition to this, Iridium supports virtual properties, extension methods, transforms, client side property renaming and validations in an easy to understand and implement package.
+ - **Plugin Framework**
+   Iridium allows the creation and use of plugins which can extend models and reduce duplicated code across models for common behavioural use cases. Plugins can provide custom validation, manipulate models at creation time and have the opportunity to extend instances when they are created.
 
 ## Installation
 Iridium is available using *npm*, which means you can install it locally using `npm install iridium` or add it to your project's *package.json* file to have it installed automatically whenever you run `npm install`.
