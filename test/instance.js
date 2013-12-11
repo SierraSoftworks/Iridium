@@ -8,6 +8,10 @@ describe('orm', function () {
 	"use strict";
 
 	describe('Instance', function () {
+		var db = {
+			plugins: []
+		};
+
 		describe('diff', function () {
 			it('should generate $set for basic changes', function () {
 				Instance.diff({ x: 1 }, { x: 2 }).should.eql({ $set: { x: 2 } });
@@ -33,7 +37,7 @@ describe('orm', function () {
 
 		describe('constructor', function () {
 			it('should present all properties of the document', function () {
-				var model = new Model(null, 'model', {
+				var model = new Model(db, 'model', {
 					name: String
 				}, {
 					preprocessors: []
@@ -49,7 +53,7 @@ describe('orm', function () {
 			});
 
 			it('should allow renaming of properties', function () {
-				var model = new Model(null, 'model', {
+				var model = new Model(db, 'model', {
 						pretty: String
 					},{
 						preprocessors: [
@@ -68,7 +72,7 @@ describe('orm', function () {
 			});
 
 			it('should allow the creation of methods', function () {
-				var model = new Model(null, 'model', {}, {
+				var model = new Model(db, 'model', {}, {
 					methods: {
 						test: function() { return true; }
 					}
@@ -82,7 +86,7 @@ describe('orm', function () {
 			});
 
 			it('should correctly pass all arguments to a method', function () {
-				var model = new Model(null, 'model', {}, {
+				var model = new Model(db, 'model', {}, {
 					methods: {
 						test: function (a, b, c) {
 							should.equal(a, 'a');
@@ -100,7 +104,7 @@ describe('orm', function () {
 			});
 
 			it('should allow the creation of virtual properties', function () {
-				var model = new Model(null, 'model', {}, {
+				var model = new Model(db, 'model', {}, {
 					virtuals: {
 						fullname: function () { return this.firstname + ' ' + this.lastname; }
 					}
@@ -116,7 +120,7 @@ describe('orm', function () {
 			});
 
 			it('should allow the creation of virtual getter/setters', function() {
-				var model = new Model(null, 'model', {}, {
+				var model = new Model(db, 'model', {}, {
 					virtuals: {
 						fullname: {
 							get: function () { return this.firstname + ' ' + this.lastname; },
@@ -142,7 +146,7 @@ describe('orm', function () {
 			});
 
 			it('should allow a custom schema', function () {
-				var model = new Model(null, 'model', {
+				var model = new Model(db, 'model', {
 						name: String,
 						age: { type: Number, required: false }
 					}, {

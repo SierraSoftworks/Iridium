@@ -12,8 +12,8 @@ describe('utils', function () {
 
 	describe('validation', function () {
 		var validation = require('../lib/utils/validation');
-		function validate(schema, value, pass, message) {
-			var result = validation(schema, value);
+		function validate(schema, value, pass, message, extra) {
+			var result = validation(schema, value, '', extra);
 			result.should.have.ownProperty('passed', pass, message);
 			return result;
 		}
@@ -88,6 +88,21 @@ describe('utils', function () {
 			var result = validate({ name: Number }, { name: 'Test' }, false);
 			result.should.have.ownProperty('toError');
 			should(result.toError() instanceof Error);
+		});
+
+		it('should allow the use of extra validators', function() {
+			var extra = function(schema, value, propertyName) {
+				if(schema == 'Positive')
+					return this.assert(value >= 0, 'positive real number', value);
+			};
+
+			var result = validation({ positive: 'Positive' }, { positive: 1 }, undefined, [extra]);
+			result.should.have.ownProperty('passed', true);
+
+			validate({ positive: 'Positive', normal: Number }, { positive: 1, normal: -1 }, true, 
+				'Expected a positive integer to pass validation', [extra]);
+			validate({ positive: 'Positive', normal: Number }, { positive: -1, normal: -1 }, false, 
+				'Expected a negative integer to fail validation', [extra]);
 		});
 	});
 });
