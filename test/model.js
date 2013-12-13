@@ -29,83 +29,50 @@ describe('orm', function () {
 
 				});
 			});
-		});
 
-		describe('database', function() {
-			var model = null;
+			it('should return an object with isModel set to true', function() {
+				var model = new Model(db, 'model', {}, {});
+				model.isModel.should.be.true;
+			});
 
-			before(function(done) {
-				model =  new Model(db, 'model', {
-					name: /.+/
+			it('should return a new instance even if called without the new keyword', function() {
+				var $ = {};
+				var model = Model.call($, db, 'model', {}, {});
+				should(model instanceof Model);
+			});
+
+			it('should provide the full model API', function() {
+				var api = [
+					'preprocessors',
+					'options',
+					'schema',
+					'database',
+					'collection',
+					'extraValidators',
+					'wrap',
+					'toSource',
+					'fromSource',
+					'find',
+					'findOne',
+					'get',
+					'insert',
+					'create',
+					'update',
+					'count',
+					'remove',
+					'aggregate',
+					'ensureIndex',
+					'setupIndexes'
+				];
+				
+				var model = new Model(db, 'model', {
+					
 				}, {
-					preprocessors: [new Concoction.Rename({ _id: 'name' })]
+
 				});
 
-				model.remove(done);
-			});
-
-			describe('insertion', function() {
-
-				it('should allow a single object to be inserted', function(done) {
-					model.create({
-						name: 'Demo1'
-					}, function(err, instance) {
-						if(err) return done(err);
-						instance.should.have.ownProperty('name', 'Demo1');
-						return done();
-					});
-				});
-
-				it('should have created the instance in the database', function(done) {
-					model.count({ name: 'Demo1' }, function(err, number) {
-						if(err) return done(err);
-						number.should.eql(1);
-						done();
-					});
-				});
-
-				it('should allow multiple objects to be inserted', function(done) {
-					model.create([{
-						name: 'Demo2'
-					}, {
-						name: 'Demo3'
-					}], function(err, instances) {
-						if(err) return done(err);
-						should(Array.isArray(instances));
-						instances[0].should.have.ownProperty('name', 'Demo2');
-						instances[1].should.have.ownProperty('name', 'Demo3');
-						return done();
-					});
-				});
-
-				it('should pass along DB errors', function(done) {
-					model.create({
-						name: 'Demo1'
-					}, function(err, inserted) {
-						should.exist(err);
-						should.not.exist(inserted);
-						done();
-					});
-				});
-			});
-
-			describe('findOne', function() {
-				it('should be able to locate a single object', function(done) {
-					model.findOne({ name: 'Demo1' }, function(err, obj) {
-						if(err) return done(err);
-						should.exist(obj);
-						obj.should.have.ownProperty('name', 'Demo1');
-						done();
-					})
-				});
-
-				it('should not throw an error if it couldn\'t find an object', function(done) {
-					model.findOne({ name: 'NotFound' }, function(err, obj) {
-						if(err) return done(err);
-						should.not.exist(obj);
-						done();
-					})
-				});
+				for(var i = 0; i < api.length; i++)
+					model.should.have.property(api[i]);
 			});
 		});
 	});
