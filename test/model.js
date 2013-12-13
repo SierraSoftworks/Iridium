@@ -43,7 +43,7 @@ describe('orm', function () {
 
 			it('should provide the full model API', function() {
 				var api = [
-					'preprocessors',
+					'preprocessor',
 					'options',
 					'schema',
 					'database',
