@@ -182,7 +182,7 @@ Hooks allow you to implement custom behaviour on certain events, one of the most
 ```javascript
 var options = {
 	hooks: {
-		beforeCreate: function() {
+		creating: function() {
 			if(this.password) {
 				this.passwordHash = hash(this.password);
 				delete this.password;
@@ -192,9 +192,19 @@ var options = {
 };
 ```
 
-Other uses include the creation of default properties on models, using the *beforeCreate* hook to set the defaults if they are not present.
+Other uses include the creation of default properties on models, using the *creating* hook to set the defaults if they are not present.
 
 Keep in mind that all hooks support a *done* callback if you wish to perform any kind of asynchronous operation before completing. This allows web requests, file system operations or even other database operations to be performed safely from within the hook.
+
+#### Available Hooks
+ - **creating([done])**
+   Called before an object is first stored in the database, `this` is set to the contents of the object being stored - allowing modification of the object prior to its insertion into the database.
+ - **saving(changes[, done])**
+   Called before an exisiting object is updated in the database (not called for `Model.update()`) with `this` set to the instance of the object being updated and the first argument always being the object changeset (MongoDB update syntax), allowing you to perform custom updates each time an object is saved.
+ - **retrieved([done])**
+   Called after an object has been retrieved from the database, but before it is wrapped into an Instance. The hook's `this` is set to the database document received - and will not have undergone any preprocessing yet.
+ - **ready([done])**
+   Called after an object has undergone preprocessing and has been wrapped into an Instance, allowing you to set non-persistent properties on the object (for example, retrieval time for a cache).
 
 ## Instances
 An instance represents a database object retrieved by Iridium, and will inherit behaviour from the model it was created to represent. In addition to this, an instance has access to a few functions for performing operations which pertain directly to that instance, including the following.
