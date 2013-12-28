@@ -81,7 +81,7 @@ var Concoction = require('concoction');
 			}
 		},
 		hooks: {
-			beforeCreate: function (done) {
+			creating: function (done) {
 				var item = this;
 
 				item._id = item.username;
