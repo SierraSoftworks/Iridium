@@ -43,7 +43,7 @@ describe('orm', function () {
 					preprocessors: []
 				})
 
-				var i = new Instance(model, {
+				var i = new model.Instance({
 					id: 'custom_id',
 					name: 'name'
 				});
@@ -63,7 +63,7 @@ describe('orm', function () {
 						]
 					});
 
-				var i = new Instance(model, {
+				var i = new model.Instance({
 					_id: 'custom_id',
 					uglyName: 'value'
 				});
@@ -78,7 +78,7 @@ describe('orm', function () {
 					}
 				});
 
-				var i = new Instance(model, {
+				var i = new model.Instance({
 					_id: 'custom_id'
 				});
 
@@ -96,7 +96,7 @@ describe('orm', function () {
 					}
 				});
 
-				var i = new Instance(model, {
+				var i = new model.Instance({
 					_id: 'custom_id'
 				});
 
@@ -110,7 +110,7 @@ describe('orm', function () {
 					}
 				});
 
-				var i = new Instance(model, {
+				var i = new model.Instance({
 					_id: 'custom_id',
 					firstname: 'Billy',
 					lastname: 'Bob'
@@ -132,7 +132,7 @@ describe('orm', function () {
 					}
 				});
 
-				var i = new Instance(model, {
+				var i = new model.Instance({
 					_id: 'custom_id',
 					firstname: 'Billy',
 					lastname: 'Bob'
@@ -153,7 +153,7 @@ describe('orm', function () {
 						preprocessors: []
 					});
 
-				var i = new Instance(model, {
+				var i = new model.Instance({
 					id: 'custom_id',
 					name: 'name'
 				});
