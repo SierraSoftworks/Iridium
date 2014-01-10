@@ -268,7 +268,9 @@ MemoryCache.prototype.valid = function(conditions) {
 	return conditions && conditions._id;
 };
 
-MemoryCache.prototype.store = function(document, callback) {
+MemoryCache.prototype.store = function(conditions, document, callback) {
+	// Conditions are null when storing on an insert, otherwise they represent the conditions
+	// that resulted in the object being retrieved from the database.
 	var id = JSON.stringify(document._id);
 	this.cache[id] = document;
 	callback();

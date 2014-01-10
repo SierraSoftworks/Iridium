@@ -19,7 +19,7 @@ EventEmitterCache.prototype.__proto__ = EventEmitter.prototype;
 EventEmitterCache.prototype.valid = function(conditions) {
 	return conditions && conditions._id;
 };
-EventEmitterCache.prototype.store = function(document, callback) {
+EventEmitterCache.prototype.store = function(conditions, document, callback) {
 	this.emit('store');
 	var id = JSON.stringify(document._id);
 	this.cache[id] = document;
