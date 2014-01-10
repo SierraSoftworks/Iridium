@@ -20,6 +20,8 @@ Iridium hopes to solve these issues by providing a bare bones ORM targeted at po
    Everyone who has written code using Node.js knows about Express, to help make your life easier we've included support right out of the box for Express.
  - **Powerful Models**
    Iridium's models are designed to exist as individual files or modules within your application, this helps simplify management of your models and separates database design code from your application code. In addition to this, Iridium supports virtual properties, extension methods, transforms, client side property renaming and validations in an easy to understand and implement package.
+ - **Caching Support**
+   High performance web applications depend on accessing your data as quickly as possible, Iridium provides support for automated inline caching through any key-value store, allowing you to ensure that you can build the fastest application possible.
  - **Plugin Framework**
    Iridium allows the creation and use of plugins which can extend models and reduce duplicated code across models for common behavioural use cases. Plugins can provide custom validation, manipulate models at creation time and have the opportunity to extend instances when they are created.
 
@@ -247,6 +249,41 @@ Instance.update(function(err, instance));
 // Removes the instance from the database
 Instance.remove();
 Instance.remove(function(err));
+```
+
+## Caching Framework
+Our caching framework allows basic queries to be served against a high performance cache, offloading requests from your database server and allowing you to more easily develop high performance applications that scale well to user demand. 
+
+Your cache will **only** be tried for `Model.get` and `Model.findOne` requests for which the cache's `valid()` function returns true, allowing you to implement any basic cache structure you wish - including compound caches should you wish.
+
+By default Iridium doesn't cache anything, implementing a no-op cache, but you can easily configure your own caching plugin on a per-model basis by following this example.
+
+```javascript
+function MemoryCache() {
+	this.cache = {};
+}
+
+// Tells Iridium whether it can use the cache for objects that match these conditions
+MemoryCache.prototype.valid = function(conditions) {
+	return conditions && conditions._id;
+};
+
+MemoryCache.prototype.store = function(document, callback) {
+	var id = JSON.stringify(document._id);
+	this.cache[id] = document;
+	callback();
+};
+
+MemoryCache.prototype.fetch = function(id, callback) {
+	var id = JSON.stringify(conditions._id);
+	callback(this.cache[id]);
+};
+
+MemoryCache.prototype.drop = function(conditions, callback) {
+	var id = JSON.stringify(conditions._id);
+	if(this.cache[id]) delete this.cache[id];
+	callback();
+};
 ```
 
 ## Preprocessing Framework

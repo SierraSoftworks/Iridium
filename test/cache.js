@@ -16,19 +16,22 @@ function EventEmitterCache() {
 }
 
 EventEmitterCache.prototype.__proto__ = EventEmitter.prototype;
+EventEmitterCache.prototype.valid = function(conditions) {
+	return conditions && conditions._id;
+};
 EventEmitterCache.prototype.store = function(document, callback) {
 	this.emit('store');
 	var id = JSON.stringify(document._id);
 	this.cache[id] = document;
 	callback();
 };
-EventEmitterCache.prototype.fetch = function(id, callback) {
-	id = JSON.stringify(id);
+EventEmitterCache.prototype.fetch = function(document, callback) {
+	var id = JSON.stringify(document._id);
 	if(this.cache[id]) this.emit('fetched');
 	callback(this.cache[id]);
 };
-EventEmitterCache.prototype.drop = function(id, callback) {
-	id = JSON.stringify(id);
+EventEmitterCache.prototype.drop = function(document, callback) {
+	var id = JSON.stringify(document._id);
 	if(this.cache[id]) {
 		delete this.cache[id];
 		this.emit('dropped');
