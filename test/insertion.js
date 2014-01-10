@@ -41,7 +41,7 @@ describe('orm', function () {
 						name: 'Demo1'
 					}, function(err, instance) {
 						if(err) return done(err);
-						instance.should.have.ownProperty('name', 'Demo1');
+						instance.should.have.property('name', 'Demo1');
 						return done();
 					});
 				});
@@ -62,8 +62,8 @@ describe('orm', function () {
 					}], function(err, instances) {
 						if(err) return done(err);
 						should(Array.isArray(instances));
-						instances[0].should.have.ownProperty('name', 'Demo2');
-						instances[1].should.have.ownProperty('name', 'Demo3');
+						instances[0].should.have.property('name', 'Demo2');
+						instances[1].should.have.property('name', 'Demo3');
 						return done();
 					});
 				});

@@ -48,7 +48,7 @@ describe('orm', function () {
 					model.findOne({ name: 'Demo1' }, function(err, obj) {
 						if(err) return done(err);
 						should.exist(obj);
-						obj.should.have.ownProperty('name', 'Demo1');
+						obj.should.have.property('name', 'Demo1');
 						done();
 					});
 				});
@@ -57,7 +57,7 @@ describe('orm', function () {
 					model.findOne('Demo1', function(err, obj) {
 						if(err) return done(err);
 						should.exist(obj);
-						obj.should.have.ownProperty('name', 'Demo1');
+						obj.should.have.property('name', 'Demo1');
 						done();
 					});
 				});
@@ -96,7 +96,7 @@ describe('orm', function () {
 						model.findOne({ name: 'Demo1' }, function(err, obj) {
 							if(err) return done(err);
 							should.exist(obj);
-							obj.should.have.ownProperty('name', 'Demo1');
+							obj.should.have.property('name', 'Demo1');
 							d1instance = obj;
 							done();
 						});
@@ -106,8 +106,8 @@ describe('orm', function () {
 						model.findOne(d1instance.id, function(err, obj) {
 							if(err) return done(err);
 							should.exist(obj);
-							obj.should.have.ownProperty('id').with.type('string');
-							obj.should.have.ownProperty('name', 'Demo1');
+							obj.should.have.property('id').with.type('string');
+							obj.should.have.property('name', 'Demo1');
 							done();
 						});
 					});

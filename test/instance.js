@@ -162,9 +162,9 @@ describe('orm', function () {
 					i.age = 'hello';
 				}).should.throwError();
 
-				i.should.have.ownProperty('id', 'custom_id');
-				i.should.have.ownProperty('name', 'name');
-				i.should.have.ownProperty('age', null);
+				i.should.have.property('id', 'custom_id');
+				i.should.have.property('name', 'name');
+				i.should.have.property('age').and.eql(null);
 			});
 		});
 	});
