@@ -1,8 +1,6 @@
-# Iridium
+# Iridium [![Build Status](https://travis-ci.org/SierraSoftworks/Iridium.png?branch=master)](https://travis-ci.org/SierraSoftworks/Iridium) [![](https://badge.fury.io/js/iridium.png)](https://npmjs.org/package/iridium)
 **A bare metal ORM for MongoDB**
 
-[![Build Status](https://travis-ci.org/SierraSoftworks/Iridium.png?branch=master)](https://travis-ci.org/SierraSoftworks/Iridium)
-[![](https://badge.fury.io/js/iridium.png)](https://npmjs.org/package/iridium)
 <script id='fb5ea3m'>(function(i){var f,s=document.getElementById(i);f=document.createElement('iframe');f.src='//api.flattr.com/button/view/?uid=SierraSoftworks&button=compact&url='+encodeURIComponent(document.URL);f.title='Flattr';f.height=20;f.width=110;f.style.borderWidth=0;s.parentNode.insertBefore(f,s);})('fb5ea3m');</script>
 
 Iridium was designed to alleviate many of the issues often present in modern ORMs, especially those designed for NoSQL datastores like MongoDB. Namely, these include a high level of bloat and an excessive amount of documentation - vastly raising the barrier to entry. On the flip side of the coin, they also tend to abstract core database functionality away from the developer to the extent that they end up jumping through unnecessary hoops just to get the results they're looking for.
@@ -10,6 +8,8 @@ Iridium was designed to alleviate many of the issues often present in modern ORM
 Iridium hopes to solve these issues by providing a bare bones ORM targeted at power users, and those looking for an exceptionally low overhead. It provides much of the indispensable functionality found in ORMs without the fluff.
 
 ## Features
+ - **Crazy Lightweight**
+   We've build Iridium from the ground up to minimize its memory footprint and performance overhead, we're fairly confident that you'll be hard pressed to find an ORM as fast with the same number of features. Don't believe us? Take a look at the Benchmarks section where we pit it against the *Native MongoDB Driver!*.
  - **Flexible Schema Validation**
    MongoDB's greatest strength is its ability to support dynamic schemas, we think that's a great idea but sometimes it's necessary to be able to validate aspects of your models. That's where Iridium's validation framework comes in - with an intuitive schema design framework with support for optional and dynamic fields, you'll never find yourself stuck again.
  - **Powerful Transforms**
@@ -32,7 +32,7 @@ We make use of the [Semantic Versioning](http://semver.org/) guidelines for our 
 {
 	// ...
 	"dependencies": {
-		"iridium": "1.x"
+		"iridium": "2.x"
 	}
 }
 ```
@@ -75,7 +75,29 @@ database.connect(function(err, db) {
 		console.log(JSON.stringify(user));
 	});
 });
+```
 
+## Benchmarks
+Since Iridium claims to be ultra-lightweight, we thought we'd share some benchmarks with you - keep in mind that in the interest of fairness we are doing our best to compare apples with apples here, so when benchmarking against the MongoDB native driver we are running Iridium queries with `{ wrap: false }`, which disables wrapping of documents in `Instance` objects - though they still pass through the validation and preprocessing frameworks, and trigger hooks.
+
+Keep in mind that benchmarks only tell half of the story, performance will vary depending on how your application is configured, the system you run it on (these benchmarks were conducted on an ANCIENT laptop that was lying around) and a number of other factors.
+
+### Iridium vs. MongoDB Driver
+As you can see, with `wrap: false`, Iridium is within a few milliseconds of the native MongoDB driver in many queries, despite adding an additional layer of security (validation) and ease of use (preprocessing). You can view the source code for this benchmark under *benchmarks/mongodb.js*.
+
+```
+> MongoDB 10000 Inserts { w: 1 }
+>  => 652ms
+> Iridium 10000 Inserts { w: 1, wrap: false }
+>  => 725ms
+> MongoDB find()
+>  => 230ms
+> Iridium find() { wrap: false }
+>  => 311ms
+> MongoDB remove()
+>  => 216ms
+> Iridium remove()
+>  => 213ms
 ```
 
 ## Core
@@ -285,7 +307,7 @@ module.exports = {
 };
 ```
 
-## Credits
+## Thanks To
 Thanks to [Tadahiro Ishisaka](https://github.com/ishisaka) for his brilliant [nodeintellisense](https://github.com/ishisaka/nodeintellisense) library, it has been used as the basis for IntelliSense support within this module.
 
 I'd also like to thank [dresende](https://github.com/dresende) and [dxg](https://github.com/dxg) from the [node-orm2](https://github.com/dresende/node-orm2) project for getting me introduced to Node and giving me many of the ideas for how a good ORM should be structured. If you're looking for an easy to use and more fully featured ORM with support for SQL and NoSQL databases, I'd seriously suggest giving [node-orm2](https://github.com/dresende/node-orm2) a try.
