@@ -61,7 +61,7 @@ MongoClient.connect('mongodb://localhost/iridium_bench', function(err, mDB) {
 			function(done) {
 				console.log('Iridium 10000 Inserts { w: 1, wrap: false }');
 				var start = new Date();
-				model.insert(objects, false, function(err, inserted) {
+				model.insert(objects, { wrap: false }, function(err, inserted) {
 					if(err) return done(err);
 					printTime(' => %s', start);
 					return done();
@@ -79,7 +79,7 @@ MongoClient.connect('mongodb://localhost/iridium_bench', function(err, mDB) {
 			function(done) {
 				console.log('Iridium find() { wrap: false }');
 				var start = new Date();
-				model.find({}, false, function(err, results) {
+				model.find({}, { wrap: false }, function(err, results) {
 					if(err) return done(err);
 					printTime(' => %s', start);
 					return done();

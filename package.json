@@ -25,9 +25,7 @@
 		"concoction": "*"
 	},
 	"devDependencies": {
-		"async": "*",
 		"mocha": "*",
-		"should": "*",
-		"gitlablist-mocha": "*"
+		"should": "*"
 	}
 }
