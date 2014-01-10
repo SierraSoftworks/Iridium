@@ -21,6 +21,7 @@
 	"dependencies": {
 		"mongodb": "*",
 		"lodash": "*",
+		"async": "*",
 		"concoction": "*"
 	},
 	"devDependencies": {
