@@ -230,6 +230,28 @@ Keep in mind that all hooks support a *done* callback if you wish to perform any
  - **ready([done])**
    Called after an object has undergone preprocessing and has been wrapped into an Instance, allowing you to set non-persistent properties on the object (for example, retrieval time for a cache).
 
+### Events
+Are you a fan of using EventEmitters? Are you too cool for school? No worries, we've got you covered. You can consume events on both models and instances using Node.js' standard event consumption functions, they behave much the same as their hook cousins with the exception that there is no way to safely manipulate the object (their call order is non-deterministic).
+
+```javascript
+// Called for all validation, hook and database errors
+model.on('error', function(err) { });
+// Called when an object is being created in the database
+model.on('creating', function(document) { });
+// Called when an object is being saved to the database
+model.on('saving', function(instance, changes) { });
+// Called when an object is retrieved from the database/cache
+model.on('retrieved', function(instance) { });
+// Called when a new instance becomes ready
+model.on('ready', function(instance) { });
+
+instance.on('error', function(err) { });
+instance.on('creating', function(document) { });
+instance.on('saving', function(instance, changes) { });
+instance.on('retrieved', function(instance) { });
+instance.on('ready', function(instance) { });
+```
+
 ## Instances
 An instance represents a database object retrieved by Iridium, and will inherit behaviour from the model it was created to represent. In addition to this, an instance has access to a few functions for performing operations which pertain directly to that instance, including the following.
 

@@ -49,7 +49,7 @@ describe('hooks', function() {
 
 			var model = createModel(function(done) {
 				this.created = new Date();
-				setTimeout(function() { hookCalled = true; done(); }, 250);
+				setTimeout(function() { hookCalled = true; done(); }, 100);
 			});
 
 			model.insert({ data: 'Testing' }, function(err, created) {
@@ -66,7 +66,7 @@ describe('hooks', function() {
 				throw new Error('Should fail');
 			});
 
-			model.insert({ data: 'Testing' },function(err, inserted) {
+			model.insert({ data: 'Testing' }, function(err, inserted) {
 				should.exist(err);
 				err.message.should.eql('Should fail');
 				should.not.exist(inserted);
