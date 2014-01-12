@@ -258,19 +258,24 @@ An instance represents a database object retrieved by Iridium, and will inherit 
 ```javascript
 // Saves any changes made to the instance (only affects properties in the schema, or already retrieved from the DB)
 Instance.save();
-Instance.save(function(err, instance));
+Instance.save(function(err, instance) {});
 
 // Executes the requested MongoDB changes on the current instance ({ $push: { sessions: 'session_key' }} etc.)
 Instance.save(mongoChanges);
-Instance.save(mongoChanges, function(err, instance));
+Instance.save(mongoChanges, function(err, instance) {});
+
+// Used for manipulating specific array elements, you can use extraConditions to select the array element to manipulate
+// For example Instance.save({ array: { $elemMatch: { id: 1 }}}, { $inc: { 'array.$.hits': 1 }});
+Instance.save(extraConditions, mongoChanges);
+Instance.save(extraConditions, mongoChanges, function(err,instance) {})
 
 // Updates the instance's data to match the latest available data from the database
 Instance.update();
-Instance.update(function(err, instance));
+Instance.update(function(err, instance) {});
 
 // Removes the instance from the database
 Instance.remove();
-Instance.remove(function(err));
+Instance.remove(function(err) {});
 ```
 
 ## Caching Framework
