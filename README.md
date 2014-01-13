@@ -47,7 +47,7 @@ var database = new iridium({
 	database: 'demo'
 });
 
-database.register('User', new iridium.Model('user', {
+database.register('User', new iridium.Model(database, 'user', {
 	firstname: String,
 	lastname: String,
 	since: Date,
