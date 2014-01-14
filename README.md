@@ -24,6 +24,8 @@ Iridium hopes to solve these issues by providing a bare bones ORM targeted at po
    High performance web applications depend on accessing your data as quickly as possible, Iridium provides support for automated inline caching through any key-value store, allowing you to ensure that you can build the fastest application possible.
  - **Plugin Framework**
    Iridium allows the creation and use of plugins which can extend models and reduce duplicated code across models for common behavioural use cases. Plugins can provide custom validation, manipulate models at creation time and have the opportunity to extend instances when they are created.
+ - **Automatic Query Generation**
+   We understand that sometimes you don't want to structure your own queries - it's a hassle which you could do without especially when working with arrays. Thankfully, Iridium includes a powerful differential query generator which automatically generates the query necessary to store your changes without you raising a finger.
 
 ## Installation
 Iridium is available using *npm*, which means you can install it locally using `npm install iridium` or add it to your project's *package.json* file to have it installed automatically whenever you run `npm install`.
@@ -277,6 +279,22 @@ Instance.update(function(err, instance) {});
 Instance.remove();
 Instance.remove(function(err) {});
 ```
+
+### Differential Queries
+In **v2.9.4** we added a powerful new differential query generator (codename Omnom) which allows you to easily make changes to your instances in code, and have Iridium handle the task of converting those changes to the most efficient query possible when you want to store those changes in MongoDB.
+
+Omnom allows you to do many things without needing to worry about how they are persisted to the database. These are some of the things that Omnom is well suited to handling.
+
+ - Change properties or their children
+ - Change the value of an array's element or its children
+ - Remove elements from an array
+ - Add elements to the end of an array
+ - Selectively replacing an array's elements
+
+Unfortunately, there are a few limitations imposed by the way MongoDB handles queries - so when working with Iridium and Omnom we recommend you try to avoid doing the following.
+
+ - Removing elements from an array while adding/changing others (will result in the array being replaced)
+ - Inserting elements at the front of an array (consider reversing the array using a Concoction if you want a stack implementation that is fast)
 
 ## Caching Framework
 Our caching framework allows basic queries to be served against a high performance cache, offloading requests from your database server and allowing you to more easily develop high performance applications that scale well to user demand. 
