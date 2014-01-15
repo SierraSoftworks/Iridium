@@ -19,8 +19,7 @@ describe('diff', function() {
 		};
 
 		var expected = {
-			$inc: { a: 2 },
-			$set: { b: 'tested', f: 'new' },
+			$set: { a: 3, b: 'tested', f: 'new' },
 			$unset: { e: 1 }
 		};
 
@@ -45,8 +44,7 @@ describe('diff', function() {
 		};
 
 		var expected = {
-			$inc: { 'a.value': 2, 'b.value2': 1 },
-			$set: { 'b.value1': 'tested', 'e.value2': false },
+			$set: { 'a.value': 3, 'b.value1': 'tested', 'b.value2': 2, 'e.value2': false },
 			$unset: { 'e.value': 1 }
 		};
 
