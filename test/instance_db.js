@@ -134,6 +134,27 @@ describe('orm', function () {
 					})
 				});
 			});
+
+			describe('remove', function() {
+				it('should remove instances from the database', function(done) {
+					model.get('billy', function(err, billy) {
+						if(err) return done(err);
+						should.exist(billy);
+
+						billy.remove(function(err) {
+							if(err) return done(err);
+							billy.__state.isNew.should.be.true;
+
+							model.get('billy', function(err, nothing) {
+								if(err) return done(err);
+								should.not.exist(nothing);
+
+								done();
+							});
+						});
+					});
+				});
+			});
 		});
 	});
 });
