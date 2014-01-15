@@ -109,6 +109,31 @@ describe('orm', function () {
 					});
 				});
 			});
+
+			describe('update', function() {
+				it('should retrieve the latest version of the model from the database', function(done) {
+					model.findOne('billy', function(err, billy1) {
+						if(err) return done(err);
+
+						model.findOne('billy', function(err, billy2) {
+							if(err) return done(err);
+
+							billy1.age++;
+							billy1.save(function(err) {
+								if(err) return done(err);
+								billy2.age.should.eql(billy1.age - 1);
+
+								billy2.update(function(err) {
+									if(err) return done(err);
+
+									billy2.age.should.eql(billy1.age);
+									done();
+								});
+							})
+						});
+					})
+				});
+			});
 		});
 	});
 });
