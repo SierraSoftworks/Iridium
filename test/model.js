@@ -1,5 +1,4 @@
-﻿/// <reference path="../nodelib/node.js"/>
-/// <reference path="../nodelib/mocha.js"/>
+﻿/// <reference path="../nodelib/mocha.js"/>
 /// <reference path="../nodelib/should.js"/>
 /// <reference path="../index.js"/>
 

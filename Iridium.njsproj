@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <SchemaVersion>2.0</SchemaVersion>
+        <ProjectGuid>{a2511e8c-33be-4b8d-8203-70d403aa446a}</ProjectGuid>
+        <ProjectHome />
+        <ProjectView>ShowAllFiles</ProjectView>
+        <StartupFile>index.js</StartupFile>
+        <WorkingDirectory>.</WorkingDirectory>
+        <OutputPath>.</OutputPath>
+        <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
+        <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+        <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+    <ItemGroup>
+        <Content Include="package.json" />
+        <Content Include="README.md" />
+        <Compile Include="index.js" />
+        <Content Include=".git\ms-persist.xml" />
+        <Compile Include="benchmarks\mongodb.js" />
+        <Compile Include="example\LowercaseCollectionsPlugin.js" />
+        <Compile Include="example\StringCaseValidationPlugin.js" />
+        <Compile Include="example\UserModel.js" />
+        <Compile Include="lib\Database.js" />
+        <Compile Include="lib\Instance.js" />
+        <Compile Include="lib\Model.js" />
+        <Compile Include="nodelib\assert.js" />
+        <Compile Include="nodelib\buffer.js" />
+        <Compile Include="nodelib\child_process.js" />
+        <Compile Include="nodelib\cluster.js" />
+        <Compile Include="nodelib\console.js" />
+        <Compile Include="nodelib\core.js" />
+        <Compile Include="nodelib\crypto.js" />
+        <Compile Include="nodelib\dgram.js" />
+        <Compile Include="nodelib\dns.js" />
+        <Compile Include="nodelib\domain.js" />
+        <Compile Include="nodelib\events.js" />
+        <Compile Include="nodelib\fs.js" />
+        <Compile Include="nodelib\http.js" />
+        <Compile Include="nodelib\https.js" />
+        <Compile Include="nodelib\lodash.js" />
+        <Compile Include="nodelib\mocha.js" />
+        <Compile Include="nodelib\module.js" />
+        <Compile Include="nodelib\net.js" />
+        <Compile Include="nodelib\node.js" />
+        <Compile Include="nodelib\os.js" />
+        <Compile Include="nodelib\path.js" />
+        <Compile Include="nodelib\process.js" />
+        <Compile Include="nodelib\punycode.js" />
+        <Compile Include="nodelib\querystring.js" />
+        <Compile Include="nodelib\readline.js" />
+        <Compile Include="nodelib\repl.js" />
+        <Compile Include="nodelib\should.js" />
+        <Compile Include="nodelib\stream.js" />
+        <Compile Include="nodelib\stringdecoder.js" />
+        <Compile Include="nodelib\superagent.js" />
+        <Compile Include="nodelib\supertest.js" />
+        <Compile Include="nodelib\tls.js" />
+        <Compile Include="nodelib\tty.js" />
+        <Compile Include="nodelib\url.js" />
+        <Compile Include="nodelib\util.js" />
+        <Compile Include="nodelib\vm.js" />
+        <Compile Include="nodelib\zlib.js" />
+        <Compile Include="test\cache.js" />
+        <Compile Include="test\config.js" />
+        <Compile Include="test\diff.js" />
+        <Compile Include="test\findOne.js" />
+        <Compile Include="test\hooks.js" />
+        <Compile Include="test\insertion.js" />
+        <Compile Include="test\instance_db.js" />
+        <Compile Include="test\instance_helpers.js" />
+        <Compile Include="test\instance_setup.js" />
+        <Compile Include="test\model.js" />
+        <Compile Include="test\plugins.js" />
+        <Compile Include="test\validation.js" />
+        <Compile Include="lib\caches\NoOpCache.js" />
+        <Compile Include="lib\utils\diff.js" />
+        <Compile Include="lib\utils\String.js" />
+        <Compile Include="lib\utils\validation.js" />
+    </ItemGroup>
+    <ItemGroup>
+        <Folder Include=".git" />
+        <Folder Include="benchmarks" />
+        <Folder Include="example" />
+        <Folder Include="lib" />
+        <Folder Include="lib\caches" />
+        <Folder Include="lib\utils" />
+        <Folder Include="nodelib" />
+        <Folder Include="test" />
+    </ItemGroup>
+    <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+    <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />
+    <ProjectExtensions>
+        <VisualStudio>
+          <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+            <WebProjectProperties>
+              <UseIIS>False</UseIIS>
+              <AutoAssignPort>True</AutoAssignPort>
+              <DevelopmentServerPort>0</DevelopmentServerPort>
+              <DevelopmentServerVPath>/</DevelopmentServerVPath>
+              <IISUrl>http://localhost:48022/</IISUrl>
+              <NTLMAuthentication>False</NTLMAuthentication>
+              <UseCustomServer>True</UseCustomServer>
+              <CustomServerUrl>http://localhost:1337</CustomServerUrl>
+              <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+            </WebProjectProperties>
+          </FlavorProperties>
+          <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+            <WebProjectProperties>
+              <StartPageUrl>
+              </StartPageUrl>
+              <StartAction>CurrentPage</StartAction>
+              <AspNetDebugging>True</AspNetDebugging>
+              <SilverlightDebugging>False</SilverlightDebugging>
+              <NativeDebugging>False</NativeDebugging>
+              <SQLDebugging>False</SQLDebugging>
+              <ExternalProgram>
+              </ExternalProgram>
+              <StartExternalURL>
+              </StartExternalURL>
+              <StartCmdLineArguments>
+              </StartCmdLineArguments>
+              <StartWorkingDirectory>
+              </StartWorkingDirectory>
+              <EnableENC>False</EnableENC>
+              <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+            </WebProjectProperties>
+          </FlavorProperties>
+        </VisualStudio>
+    </ProjectExtensions>
+</Project>

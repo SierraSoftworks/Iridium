@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Iridium", "Iridium.csproj", "{A937B8F5-CB90-46AD-AB3C-1EBD8E827378}"
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Iridium", "Iridium.njsproj", "{A2511E8C-33BE-4B8D-8203-70D403AA446A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A937B8F5-CB90-46AD-AB3C-1EBD8E827378}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A937B8F5-CB90-46AD-AB3C-1EBD8E827378}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A937B8F5-CB90-46AD-AB3C-1EBD8E827378}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A937B8F5-CB90-46AD-AB3C-1EBD8E827378}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2511E8C-33BE-4B8D-8203-70D403AA446A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2511E8C-33BE-4B8D-8203-70D403AA446A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2511E8C-33BE-4B8D-8203-70D403AA446A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2511E8C-33BE-4B8D-8203-70D403AA446A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
