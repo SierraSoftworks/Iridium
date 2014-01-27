@@ -1,21 +1,18 @@
-/// <reference path="../nodelib/node.js"/>
-/// <reference path="../lib/Instance.js"/>
-/// <reference path="../lib/Model.js"/>
-/// <reference path="../lib/Database.js"/>
+/// <reference path="../index.js"/>
 
 var _ = require('lodash');
-var Database = require('iridium');
+var Database = require('../index.js');
 var Model = Database.Model;
 var Concoction = require('concoction');
 
-(require.modules || {}).User = module.exports = function (db) {
+module.exports = function (db) {
 	/// <summary>Configure the User model to use the given database</summary>
 	/// <param name="db" type="Database">The database connection to use</param>
 	/// <returns type="Model"/>
 
 	"use strict";
 	var database = db;
-
+	
 	var options = {
 		virtuals: {
 			API: function () {
