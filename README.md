@@ -32,7 +32,7 @@ Iridium is available using *npm*, which means you can install it locally using `
 
 We make use of the [Semantic Versioning](http://semver.org/) guidelines for our versioning system, as such we highly recommend you stick to a single major version of Iridium when developing an application. This can easily be handled through your *package.json* file by doing the following.
 
-```js
+```javascript
 {
 	// ...
 	"dependencies": {
@@ -42,7 +42,7 @@ We make use of the [Semantic Versioning](http://semver.org/) guidelines for our 
 ```
 
 ## Example
-```js
+```javascript
 var iridium = require('iridium');
 
 var database = new iridium({
@@ -109,7 +109,7 @@ The Iridium core (that sounds WAY cooler than I intended when I came up with the
 
 When using Iridium, you are required to instantiate a core with a settings object which describes the database server you want to connect to. This is done by calling the core's constructor and passing an object similar to the following.
 
-```js
+```javascript
 {
 	host: 'localhost', // Optional
 	port: 27018, // Optional
