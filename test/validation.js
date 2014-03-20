@@ -1,10 +1,3 @@
-/// <reference path="../nodelib/node.js"/>
-/// <reference path="../nodelib/lodash.js"/>
-/// <reference path="../nodelib/mocha.js"/>
-/// <reference path="../nodelib/should.js"/>
-/// <reference path="../lib/utils/validation.js"/>
-/// <reference path="../lib/utils/transforms.js"/>
-
 var _ = require('lodash');
 var should = require('should');
 

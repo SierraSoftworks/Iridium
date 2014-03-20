@@ -16,6 +16,7 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
+    <Content Include="chutzpah.json" />
     <Content Include="package.json" />
     <Content Include="README.md" />
     <Compile Include="index.js" />
@@ -74,7 +75,7 @@
     <Compile Include="test\instance_db.js" />
     <Compile Include="test\instance_helpers.js" />
     <Compile Include="test\instance_setup.js" />
-    <Compile Include="test\IntelliSense.js" />
+    <Compile Include="example\IntelliSense.js" />
     <Compile Include="test\model.js" />
     <Compile Include="test\plugins.js" />
     <Compile Include="test\validation.js" />

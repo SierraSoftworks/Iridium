@@ -1,4 +1,4 @@
-var Database = require('../index.js');
+var Database = require('../');
 var Model = Database.Model;
 var Instance = Database.Instance;
 var should = require('should');

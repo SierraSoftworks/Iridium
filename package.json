@@ -23,8 +23,8 @@
     "mongodb": "*",
     "lodash": "*",
     "async": "*",
-    "concoction": "~1.0.0",
-    "debug": "~0.7.4"
+    "concoction": "*",
+    "debug": "*"
   },
   "devDependencies": {
     "mocha": "*",

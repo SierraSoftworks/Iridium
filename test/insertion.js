@@ -1,10 +1,5 @@
-/// <reference path="../nodelib/node.js"/>
-/// <reference path="../nodelib/mocha.js"/>
-/// <reference path="../nodelib/should.js"/>
-/// <reference path="../index.js"/>
-
 var config = require('./config');
-var Database = require('../index');
+var Database = require('../');
 var Model = Database.Model;
 var Instance = Database.Instance;
 var should = require('should');
@@ -41,7 +36,7 @@ describe('orm', function () {
 						name: 'Demo1'
 					}, function(err, instance) {
 						if(err) return done(err);
-						instance.should.have.property('name', 'Demo1');
+						instance.should.have.property('name', 'Demo1');                        
 						return done();
 					});
 				});

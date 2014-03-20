@@ -1,10 +1,7 @@
-/// <reference path="../nodelib/node.js"/>
-/// <reference path="../nodelib/mocha.js"/>
-/// <reference path="../nodelib/should.js"/>
-/// <reference path="../index.js"/>
+/// <reference path="mocha.js"/>
 
 var config = require('./config');
-var Database = require('../index');
+var Database = require('../');
 var Model = Database.Model;
 var Instance = Database.Instance;
 var should = require('should');
