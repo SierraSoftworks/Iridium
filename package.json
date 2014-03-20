@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "mongodb": "*",
+	"skmatc": "*",
     "lodash": "*",
     "async": "*",
     "concoction": "*",

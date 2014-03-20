@@ -1,12 +1,18 @@
-var Database = require('iridium');
+var Database = require('iridium'),
+    skmatc = require('skmatc');
 
 var Plugin = {
-	validate: function(schema, value, propertyName) {
-		if(schema == 'Uppercase')
-			return this.assert(value.toUpperCase() == value, 'uppercase string', value);
-		if(schema == 'Lowercase')
-			return this.assert(value.toLowerCase() == value, 'lowercase string', value);
-	}
+	validate: [
+        skmatc.Validator.module(function(schema) {
+            return schema == "Uppercase";
+        }, function(schema, data, path) {
+            return this.assert(value.toUpperCase() == value);
+        }),
+        skmatc.Validator.module(function(schema) {
+            return schema == "Lowercase";
+        }, function(schema, data, path) {
+            return this.assert(value.toLowerCase() == value);
+        })]
 };
 
 module.exports = Plugin;

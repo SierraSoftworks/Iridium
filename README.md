@@ -165,6 +165,23 @@ module.exports = function(db) {
 };
 ```
 
+### Validation
+Iridium now (as of **v2.11.0**) uses [skmatc](https://sierrasoftworks.com/skmatc)(pronounced schematic) for schema validation, it allows you to quickly and easily write complex schemas in a readable manner and provides a powerful extensibility framework which you can use if you require more complex validation logic.
+
+```javascript
+var schema = {
+    username: /\w[\w\d_]{7,}/,
+    email: String,
+    dateOfBirth: Date,
+
+    sessions: [{
+        id: String,
+        started: Date,
+        valid: Boolean
+    }]
+};
+```
+
 ### Methods
 Methods allow you to provide instance specific functionality in the form of callable methods on a model's instances. These methods have access to the instance, and allow you to call them directly as 1st class members.
 
@@ -366,17 +383,10 @@ var model = new Model(db, 'modelName', modelSchema, {
 ```
 
 ## Plugins
-Iridium allows you to use plugins which extend the functionality provided by a number of Iridium's components. These plugins can add everything from extra validation behaviour to extra functions for models and instances. Plugins are imported using the `db.register(plugin)` method overload (similar to the way models are loaded), and are declared using the following layout.
+Iridium allows you to use plugins which extend the functionality provided by a number of Iridium's components. These plugins can add extra functions for models and instances as well has allowing hooks to be added automatically. Plugins are imported using the `db.register(plugin)` method overload (similar to the way models are loaded), and are declared using the following layout.
 
 ```javascript
 module.exports = {
-	validate: function(type, value, propertyName) {
-		// this.fail(expected, got)
-		if(type == 'fail') return this.fail('anything', 'something');
-		if(type == 'pass') return this.pass;
-		// this.assert(condition, expected, got)
-		if(type == 'Positive') return this.assert(value >= 0, 'positive number');
-	},
 	newModel: function(db, collection, schema, options) {
 		this.collection = collection.toLowerCase();
 		this.schema._id = String,

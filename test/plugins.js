@@ -2,14 +2,13 @@ var Database = require('../index.js');
 var Model = Database.Model;
 var Instance = Database.Instance;
 var should = require('should');
+var skmatc = require('skmatc');
 
 describe('plugins', function() {
     describe('custom validation', function() {
         var plugin = {
-            validate: function(schema, value) {
-                if(schema == 'Positive')
-                    return this.assert(value >= 0, 'positive number');
-            }
+            validate: skmatc.Validator.module(function(schema) { return schema == 'Positive'; },
+                function(schema, data, path) { return this.assert(data >= 0); })         
         };
 
         it('should correctly validate models upon creation', function(done) {

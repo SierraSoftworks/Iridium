@@ -16,7 +16,10 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
-    <Content Include="chutzpah.json" />
+    <Content Include=".gitattributes" />
+    <Content Include=".gitignore" />
+    <Content Include=".travis.yml" />
+    <Content Include="LICENCE" />
     <Content Include="package.json" />
     <Content Include="README.md" />
     <Compile Include="index.js" />
@@ -29,43 +32,6 @@
     <Compile Include="lib\Instance.js" />
     <Compile Include="lib\Model.js" />
     <Compile Include="lib\utils\Inherit.js" />
-    <Compile Include="nodelib\assert.js" />
-    <Compile Include="nodelib\buffer.js" />
-    <Compile Include="nodelib\child_process.js" />
-    <Compile Include="nodelib\cluster.js" />
-    <Compile Include="nodelib\console.js" />
-    <Compile Include="nodelib\core.js" />
-    <Compile Include="nodelib\crypto.js" />
-    <Compile Include="nodelib\dgram.js" />
-    <Compile Include="nodelib\dns.js" />
-    <Compile Include="nodelib\domain.js" />
-    <Compile Include="nodelib\events.js" />
-    <Compile Include="nodelib\fs.js" />
-    <Compile Include="nodelib\http.js" />
-    <Compile Include="nodelib\https.js" />
-    <Compile Include="nodelib\lodash.js" />
-    <Compile Include="nodelib\mocha.js" />
-    <Compile Include="nodelib\module.js" />
-    <Compile Include="nodelib\net.js" />
-    <Compile Include="nodelib\node.js" />
-    <Compile Include="nodelib\os.js" />
-    <Compile Include="nodelib\path.js" />
-    <Compile Include="nodelib\process.js" />
-    <Compile Include="nodelib\punycode.js" />
-    <Compile Include="nodelib\querystring.js" />
-    <Compile Include="nodelib\readline.js" />
-    <Compile Include="nodelib\repl.js" />
-    <Compile Include="nodelib\should.js" />
-    <Compile Include="nodelib\stream.js" />
-    <Compile Include="nodelib\stringdecoder.js" />
-    <Compile Include="nodelib\superagent.js" />
-    <Compile Include="nodelib\supertest.js" />
-    <Compile Include="nodelib\tls.js" />
-    <Compile Include="nodelib\tty.js" />
-    <Compile Include="nodelib\url.js" />
-    <Compile Include="nodelib\util.js" />
-    <Compile Include="nodelib\vm.js" />
-    <Compile Include="nodelib\zlib.js" />
     <Compile Include="test\cache.js" />
     <Compile Include="test\config.js" />
     <Compile Include="test\diff.js" />
@@ -91,7 +57,6 @@
     <Folder Include="lib" />
     <Folder Include="lib\caches" />
     <Folder Include="lib\utils" />
-    <Folder Include="nodelib" />
     <Folder Include="test" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
