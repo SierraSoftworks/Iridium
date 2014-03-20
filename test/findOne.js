@@ -1,5 +1,5 @@
-var config = require('./config');
-var Database = require('../index');
+var config = require('./config.js');
+var Database = require('../index.js');
 var Model = Database.Model;
 var Instance = Database.Instance;
 var should = require('should');

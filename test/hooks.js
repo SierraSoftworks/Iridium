@@ -1,10 +1,10 @@
 var should = require('should'),
-	Database = require('../'),
+	Database = require('../index.js'),
 	Model = Database.Model,
 	Instance = Database.Instance;
 
 describe('hooks', function() {
-	var db = new Database(require('./config'));
+	var db = new Database(require('./config.js'));
 
 	before(function(done) {
 		db.connect(done);

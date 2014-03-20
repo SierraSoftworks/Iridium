@@ -1,4 +1,4 @@
-var Database = require('./lib/Database');
+var Database = require('./lib/Database.js');
 var Concoction = require('concoction');
 
 Database.Concoction = Concoction;

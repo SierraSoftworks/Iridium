@@ -4,7 +4,7 @@ var should = require('should');
 describe('utils', function () {
 
 	describe('validation', function () {
-		var validation = require('../lib/utils/validation');
+		var validation = require('../lib/utils/validation.js');
 		function validate(schema, value, pass, message, extra) {
 			var result = validation(schema, value, '', extra);
 			result.should.have.ownProperty('passed', pass, message);
