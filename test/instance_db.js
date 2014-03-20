@@ -129,7 +129,7 @@ describe('orm', function () {
                                     billy2.age.should.eql(billy1.age);
                                     done();
                                 });
-                            })
+                            });
                         });
                     })
                 });
@@ -140,7 +140,7 @@ describe('orm', function () {
                     model.get('billy', function(err, billy) {
                         if(err) return done(err);
                         should.exist(billy);
-
+                        
                         billy.remove(function(err) {
                             if(err) return done(err);
                             billy.__state.isNew.should.be.true;
@@ -151,6 +151,30 @@ describe('orm', function () {
 
                                 done();
                             });
+                        });
+                    });
+                });
+
+                it('should set instance isNew to true after removal', function(done) {
+                    model.create({
+                        username: 'billy',
+                        age: 10,
+                        sessions: [{
+                            id: 'aaaa',
+                            expires: new Date()
+                        }]
+                    }, function(err, original) {
+                        /// <param name="original" value="new model.Instance({})"/>
+                        if(err) return done(err);
+
+                        should.exist(original);
+                        original.__state.isNew.should.be.false;
+
+                        original.remove(function(err) {
+                            should.not.exist(err);
+                            original.__state.isNew.should.be.true;
+
+                            done();
                         });
                     });
                 });
