@@ -44,11 +44,9 @@
     <Compile Include="example\IntelliSense.js" />
     <Compile Include="test\model.js" />
     <Compile Include="test\plugins.js" />
-    <Compile Include="test\validation.js" />
     <Compile Include="lib\caches\NoOpCache.js" />
     <Compile Include="lib\utils\diff.js" />
     <Compile Include="lib\utils\String.js" />
-    <Compile Include="lib\utils\validation.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include=".git" />
