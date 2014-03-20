@@ -7,98 +7,98 @@ var Concoction = require('concoction');
 var EventEmitter = require('events').EventEmitter;
 
 function EventEmitterCache() {
-	this.cache = {};
+    this.cache = {};
 }
 
 EventEmitterCache.prototype.__proto__ = EventEmitter.prototype;
 EventEmitterCache.prototype.valid = function(conditions) {
-	return conditions && conditions._id;
+    return conditions && conditions._id;
 };
 EventEmitterCache.prototype.store = function(conditions, document, callback) {
-	this.emit('store');
-	var id = JSON.stringify(document._id);
-	this.cache[id] = document;
-	callback();
+    this.emit('store');
+    var id = JSON.stringify(document._id);
+    this.cache[id] = document;
+    callback();
 };
 EventEmitterCache.prototype.fetch = function(document, callback) {
-	var id = JSON.stringify(document._id);
-	if(this.cache[id]) this.emit('fetched');
-	callback(this.cache[id]);
+    var id = JSON.stringify(document._id);
+    if(this.cache[id]) this.emit('fetched');
+    callback(this.cache[id]);
 };
 EventEmitterCache.prototype.drop = function(document, callback) {
-	var id = JSON.stringify(document._id);
-	if(this.cache[id]) {
-		delete this.cache[id];
-		this.emit('dropped');
-	}
-	callback();
+    var id = JSON.stringify(document._id);
+    if(this.cache[id]) {
+        delete this.cache[id];
+        this.emit('dropped');
+    }
+    callback();
 };
 
 describe('orm', function () {
-	"use strict";
+    "use strict";
 
-	describe('Model', function () {
-		var db = null;
+    describe('Model', function () {
+        var db = null;
 
-		before(function (done) {
-			db = new Database(config);
-			db.connect(done);
-		});
+        before(function (done) {
+            db = new Database(config);
+            db.connect(done);
+        });
 
-		describe('cache', function() {
-			var model = null;
+        describe('cache', function() {
+            var model = null;
 
-			before(function(done) {
-				model =  new Model(db, 'model', {
-					name: /.+/
-				}, {
-					preprocessors: [new Concoction.Rename({ _id: 'name' })],
-					cache: new EventEmitterCache()
-				});
+            before(function(done) {
+                model =  new Model(db, 'model', {
+                    name: /.+/
+                }, {
+                    preprocessors: [new Concoction.Rename({ _id: 'name' })],
+                    cache: new EventEmitterCache()
+                });
 
-				model.remove(function(err) {
-					if(err) return done(err);
+                model.remove(function(err) {
+                    if(err) return done(err);
 
-					model.create({
-						name: 'Demo1'
-					}, function(err, instance) {
-						if(err) return done(err);
-						return done();
-					});
-				});
-			});
+                    model.create({
+                        name: 'Demo1'
+                    }, function(err, instance) {
+                        if(err) return done(err);
+                        return done();
+                    });
+                });
+            });
 
-			describe('findOne', function() {
-				it('should store newly retrieved documents in the cache', function(done) {
-					var pending = 2;
-					function almostDone() {
-						if(!(--pending)) return done();
-					}
+            describe('findOne', function() {
+                it('should store newly retrieved documents in the cache', function(done) {
+                    var pending = 2;
+                    function almostDone() {
+                        if(!(--pending)) return done();
+                    }
 
-					model.cache.once('store', almostDone);
+                    model.cache.once('store', almostDone);
 
-					model.findOne('Demo1', function(err, instance) {
-						should.not.exist(err);
-						should.exist(instance);
-						almostDone();
-					});
-				});
+                    model.findOne('Demo1', function(err, instance) {
+                        should.not.exist(err);
+                        should.exist(instance);
+                        almostDone();
+                    });
+                });
 
-				it('should fetch retrieved documents from the cache', function(done) {
-					var pending = 2;
-					function almostDone() {
-						if(!(--pending)) return done();
-					}
+                it('should fetch retrieved documents from the cache', function(done) {
+                    var pending = 2;
+                    function almostDone() {
+                        if(!(--pending)) return done();
+                    }
 
-					model.cache.once('fetched', almostDone);
+                    model.cache.once('fetched', almostDone);
 
-					model.findOne('Demo1', function(err, instance) {
-						should.not.exist(err);
-						should.exist(instance);
-						almostDone();
-					});
-				});
-			});
-		});
-	});
+                    model.findOne('Demo1', function(err, instance) {
+                        should.not.exist(err);
+                        should.exist(instance);
+                        almostDone();
+                    });
+                });
+            });
+        });
+    });
 });
