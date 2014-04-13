@@ -107,6 +107,48 @@ describe('orm', function () {
                         });
                     });
                 });
+
+                describe('with partial results', function() {
+                    before(function(done) {
+                        model =  new Model(db, 'model', {
+                            name: /.+/,
+                            description: String
+                        }, {
+
+                        });
+
+                        model.remove(function(err) {
+                            if(err) return done(err);
+
+                            model.create({
+                                name: 'Demo1',
+                                description: 'Demonstration 1'
+                            }, function(err, instance) {
+                                if(err) return done(err);
+                                return done();
+                            });
+                        });
+                    });
+
+                    it('should return just the selected fields', function(done) {
+                        model.findOne({ name: 'Demo1' }, { fields: { id: 1, name: 1 }}, function(err, doc) {
+                            if(err) return done(err);
+                            should.exist(doc);
+                            doc.document.should.have.ownProperty('name').and.eql('Demo1');
+                            doc.document.should.not.have.ownProperty('description');
+                            done();
+                        });
+                    });
+
+                    it('should set the isPartial flag on its instances', function(done) {
+                        model.findOne({ name: 'Demo1' }, { fields: { id: 1, name: 1 }}, function(err, doc) {
+                            if(err) return done(err);
+                            should.exist(doc);
+                            doc.__state.isPartial.should.be.true;
+                            done();
+                        });
+                    });
+                });
             });
         });
     });
