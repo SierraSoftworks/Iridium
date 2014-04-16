@@ -108,6 +108,37 @@ describe('orm', function () {
                     });
                 });
 
+                describe('with wrap:false', function() {
+                    before(function(done) {
+                        model =  new Model(db, 'model', {
+                            name: /.+/
+                        }, {
+
+                        });
+
+                        model.remove(function(err) {
+                            if(err) return done(err);
+
+                            model.create({
+                                name: 'Demo1'
+                            }, function(err, instance) {
+                                if(err) return done(err);
+                                return done();
+                            });
+                        });
+                    });
+
+                    it('should return the raw document', function(done) {
+                        model.findOne({ name: 'Demo1' }, { wrap: false }, function(err, doc) {
+                            should.not.exist(err);
+                            should.exist(doc);
+                            doc.should.have.ownProperty('id');
+                            doc.should.have.ownProperty('name').and.eql('Demo1');
+                            done();
+                        });
+                    });
+                });
+
                 describe('with partial results', function() {
                     before(function(done) {
                         model =  new Model(db, 'model', {
@@ -145,6 +176,16 @@ describe('orm', function () {
                             if(err) return done(err);
                             should.exist(doc);
                             doc.__state.isPartial.should.be.true;
+                            done();
+                        });
+                    });
+
+                    it('should work with wrap: false', function(done) {
+                        model.findOne({ name: 'Demo1' }, { wrap: false, fields: { id: 1, name: 1 }}, function(err, doc) {
+                            if(err) return done(err);
+                            should.exist(doc);
+                            doc.should.have.ownProperty('name').and.eql('Demo1');
+                            doc.should.not.have.ownProperty('description');
                             done();
                         });
                     });
