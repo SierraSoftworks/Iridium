@@ -297,6 +297,23 @@ Instance.remove();
 Instance.remove(function(err) {});
 ```
 
+### Helpers
+The Instance object has a number of helper properties and functions available which prove useful in common use cases. These include the `document` virtual property which returns the underlying document which the Instance represents - allowing you to easily perform JSON serialization. Keep in mind that this document will have passed through the preprocessing framework. This property will be transparently overridden by Instances who's schema defines a `document` property.
+
+You will also find the `select` and `first` methods which can be used to filter an array or map for items which match certain criteria. They are based on [lodash](http://lodash.org)'s _.filter and _.first methods and by default will bind `this` to the Instance on which they are called.
+
+```javascript
+console.log(JSON.stringify(Instance.document));
+
+var session = Instance.first(Instance.sessions, function(session) {
+	return session.id == 'abcdef...';
+});
+
+var comments = Instance.select(Instance.comments, function(comment) {
+	return comment.by = 'username';
+});
+```
+
 ### Differential Queries
 In **v2.9.4** we added a powerful new differential query generator (codename Omnom) which allows you to easily make changes to your instances in code, and have Iridium handle the task of converting those changes to the most efficient query possible when you want to store those changes in MongoDB.
 
