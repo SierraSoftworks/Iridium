@@ -1,6 +1,6 @@
 var settings = {
     host: "localhost",
-    user: "iridium",
+    username: "iridium",
     password: "",
     database: "iridium"
 };
