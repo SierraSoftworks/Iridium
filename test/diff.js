@@ -1,4 +1,5 @@
-var diff = require('../lib/utils/diff');
+var diff = require('../lib/utils/diff'),
+    ObjectID = require('mongodb').ObjectID;
 
 describe('diff', function() {
     it('should correctly diff basic objects', function() {
@@ -49,6 +50,29 @@ describe('diff', function() {
         };
 
         diff(o1, o2).should.eql(expected);
+    });
+
+    it('should correctly diff ObjectIDs', function() {
+        var o1 = new ObjectID();
+        var o2 = ObjectID.createFromHexString(o1.toHexString());
+
+        var a1 = { _id: o1 };
+        var a2 = { _id: o2 };
+        var expected = {
+            
+        };
+
+        diff(a1, a2).should.eql(expected);
+
+        o2 = new ObjectID();
+
+        var a1 = { _id: o1 };
+        var a2 = { _id: o2 };
+        var expected = {
+            $set: { _id: o2 }
+        };
+
+        diff(a1, a2).should.eql(expected);
     });
 
     describe('arrays', function() {
