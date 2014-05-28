@@ -96,6 +96,21 @@ describe('orm', function () {
                         done();
                     });
                 });
+
+                it('should support upsert operations with multiple documents', function(done) {
+                    model.create([{
+                        name: 'Demo1',
+                        upserted: true
+                    },{
+                        name: 'Demo5',
+                        upserted: true
+                    }], { upsert: true }, function(err, updated) {
+                        should.not.exist(err);
+                        should.exist(updated);
+                        updated.length.should.equal(2);
+                        done();
+                    });
+                });
             });
         });
     });
