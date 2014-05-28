@@ -72,6 +72,30 @@ describe('orm', function () {
                         done();
                     });
                 });
+
+                it('should support upsert operations on new documents', function(done) {
+                    model.create({
+                        name: 'Demo4',
+                        upserted: true
+                    }, { upsert: true }, function(err, updated) {
+                        should.not.exist(err);
+                        should.exist(updated);
+                        updated.should.have.property('upserted').and.equal(true);
+                        done();
+                    });
+                });
+
+                it('should support upsert operations on existing documents', function(done) {
+                    model.create({
+                        name: 'Demo1',
+                        upserted: true
+                    }, { upsert: true }, function(err, updated) {
+                        should.not.exist(err);
+                        should.exist(updated);
+                        updated.should.have.property('upserted').and.equal(true);
+                        done();
+                    });
+                });
             });
         });
     });
