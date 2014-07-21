@@ -119,6 +119,8 @@ When using Iridium, you are required to instantiate a core with a settings objec
 }
 ```
 
+Alternatively, you can pass in a standard MongoDB URI like `mongodb://username:password@localhost:27018/iridium` in place of the configuration object, allowing Iridium to easily be used with MongoS.
+
 Once you've got a core, you need to connect it to the database. This is done by calling the core's *connect* method and giving it a callback function.
 
 
