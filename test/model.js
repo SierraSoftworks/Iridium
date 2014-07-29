@@ -19,7 +19,7 @@ describe('orm', function () {
 		describe('constructor', function () {
 			it('should allow a new model to be created', function () {
 				var model = new Model(db, 'model', {
-					
+
 				}, {
 
 				});
@@ -59,9 +59,9 @@ describe('orm', function () {
 					'ensureIndex',
 					'setupIndexes'
 				];
-				
+
 				var model = new Model(db, 'model', {
-					
+
 				}, {
 
 				});
