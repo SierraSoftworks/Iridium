@@ -32,9 +32,11 @@
     <Compile Include="lib\Instance.js" />
     <Compile Include="lib\Model.js" />
     <Compile Include="lib\utils\Inherit.js" />
+    <Compile Include="test\bugs.js" />
     <Compile Include="test\cache.js" />
     <Compile Include="test\config.js" />
     <Compile Include="test\diff.js" />
+    <Compile Include="test\find.js" />
     <Compile Include="test\findOne.js" />
     <Compile Include="test\hooks.js" />
     <Compile Include="test\insertion.js" />
@@ -51,6 +53,7 @@
   <ItemGroup>
     <Folder Include=".git" />
     <Folder Include="benchmarks" />
+    <Folder Include="doc\" />
     <Folder Include="example" />
     <Folder Include="lib" />
     <Folder Include="lib\caches" />
