@@ -20,12 +20,12 @@
     "node": ">= 0.8"
   },
   "dependencies": {
-    "mongodb": "*",
-    "skmatc": "*",
+    "mongodb": "~1.4",
+    "skmatc": "1.x",
     "lodash": "*",
-    "async": "*",
-    "concoction": "*",
-    "debug": "*"
+    "async": "~0.9",
+    "concoction": "~1.0",
+    "debug": "1.x"
   },
   "devDependencies": {
     "mocha": "*",
