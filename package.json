@@ -25,7 +25,9 @@
     "lodash": "*",
     "async": "~0.9",
     "concoction": "~1.0",
-    "debug": "1.x"
+    "debug": "1.x",
+    "q": "1.x",
+    "functionality": "1.x"
   },
   "devDependencies": {
     "mocha": "*",
