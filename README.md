@@ -24,6 +24,8 @@ Iridium hopes to solve these issues by providing a bare bones ORM targeted at po
    Iridium allows the creation and use of plugins which can extend models and reduce duplicated code across models for common behavioural use cases. Plugins can provide custom validation, manipulate models at creation time and have the opportunity to extend instances when they are created.
  - **Automatic Query Generation**
    We understand that sometimes you don't want to structure your own queries - it's a hassle which you could do without especially when working with arrays. Thankfully, Iridium includes a powerful differential query generator which automatically generates the query necessary to store your changes without you raising a finger.
+ - **[Q Promises](https://github.com/kriskowal/q) Built In**
+   We know how horrible it is having to manually wrap your favourite libraries before you can use them with promises, so we've decided to include support for the incredibly popular Q promises library out of the box! (Iridium actually uses it internally as the primary handler, delegating back to callbacks for compatibility, don't tell anybody.)
 
 ## Installation
 Iridium is available using *npm*, which means you can install it locally using `npm install iridium` or add it to your project's *package.json* file to have it installed automatically whenever you run `npm install`.
@@ -141,6 +143,63 @@ You can also chain `register` calls to quickly load all your different models us
 db.register('Model1', require('./models/Model1.js')).register('Model2', require('./models/Model2.js')).connect(function(err, db) {
 	if(err) throw err;
 });
+```
+
+## Database API
+We've tried to keep the Iridium API as similar to the original MongoDB Native Driver's API as possible, while still keeping it extremely easy to use. The following are a bunch of TypeScript definitions showing the different overloads available to you for Iridium's methods.
+If you don't understand TypeScript then it's easiest to think of it this way. You can use any method available from the MongoDB Native Driver using (usually) the same arguments, except the callbacks are entirely optional and a promise is always returned. On methods which select items, you can simply provide the `_id` field's value to have it automatically converted and wrapped, so doing something like `users.find('spartan563')` is entirely fine.
+
+```typescript
+interface FindFunction {
+	(): promise;
+	(callback: function): promise;
+	(identifier: any): promise;
+	(identifier: any, callback: function): promise;
+	(identifier: any, options: object, callback: function): promise;
+	(conditions: object): promise;
+	(conditions: object, callback: function): promise;
+	(conditions: object, options: object, callback: function): promise;
+}
+
+interface InsertFunction {
+	(document: object): promise;
+	(document: object, callback: function): promise;
+	(document: object, options: object): promise;
+	(document: object, options: object, callback: function): promise;
+	(documents: [object]): promise;
+	(documents: [object], callback: function): promise;
+	(documents: [object], options: object): promise;
+	(documents: [object], options: object, callback: function): promise;
+}
+
+interface UpdateFunction {
+	(conditions: object, changes: object): promise;
+	(conditions: object, changes: object, callback: function): promise;
+	(conditions: object, changes: object, options: object): promise;
+	(conditions: object, changes: object, options: object, callback: function): promise;
+}
+
+interface EnsureIndexFunction {
+	(index: object): promise;
+	(index: object, options: object): promise;
+	(index: object, callback: function): promise;
+	(index: object, options: object, callback: function): promise;
+}
+
+var find: FindFunction;
+var findOne: FindFunction;
+var get: FindFunction = findOne;
+
+var insert: InsertFunction;
+var create: InsertFunction = insert;
+var update: UpdateFunction;
+
+var count: FindFunction;
+var remove: FindFunction;
+
+var aggregate: function;
+
+var ensureIndex: EnsureIndexFunction;
 ```
 
 ## Models
@@ -262,21 +321,21 @@ Are you a fan of using EventEmitters? Are you too cool for school? No worries, w
 
 ```javascript
 // Called for all validation, hook and database errors
-model.on('error', function(err) { });
+model.on('error', function error(err) { });
 // Called when an object is being created in the database
-model.on('creating', function(document) { });
+model.on('creating', function creating(document) { });
 // Called when an object is being saved to the database
-model.on('saving', function(instance, changes) { });
+model.on('saving', function saving(instance, changes) { });
 // Called when an object is retrieved from the database/cache
-model.on('retrieved', function(instance) { });
+model.on('retrieved', function retrieved(instance) { });
 // Called when a new instance becomes ready
-model.on('ready', function(instance) { });
+model.on('ready', function ready(instance) { });
 
-instance.on('error', function(err) { });
-instance.on('creating', function(document) { });
-instance.on('saving', function(instance, changes) { });
-instance.on('retrieved', function(instance) { });
-instance.on('ready', function(instance) { });
+instance.on('error', function error(err) { });
+instance.on('creating', function creating(document) { });
+instance.on('saving', function saving(instance, changes) { });
+instance.on('retrieved', function retrieved(instance) { });
+instance.on('ready', function ready(instance) { });
 ```
 
 ## Instances
@@ -284,25 +343,25 @@ An instance represents a database object retrieved by Iridium, and will inherit 
 
 ```javascript
 // Saves any changes made to the instance (only affects properties in the schema, or already retrieved from the DB)
-Instance.save();
-Instance.save(function(err, instance) {});
+Instance.save().then(function complete(instance) { }, function error(err) { });
+Instance.save(function callback(err, instance) {});
 
 // Executes the requested MongoDB changes on the current instance ({ $push: { sessions: 'session_key' }} etc.)
-Instance.save(mongoChanges);
-Instance.save(mongoChanges, function(err, instance) {});
+Instance.save(mongoChanges).then(function complete(instance) { }, function error(err) { });
+Instance.save(mongoChanges, function callback(err, instance) {});
 
 // Used for manipulating specific array elements, you can use extraConditions to select the array element to manipulate
 // For example Instance.save({ array: { $elemMatch: { id: 1 }}}, { $inc: { 'array.$.hits': 1 }});
-Instance.save(extraConditions, mongoChanges);
-Instance.save(extraConditions, mongoChanges, function(err,instance) {})
+Instance.save(extraConditions, mongoChanges).then(function complete(instance) { }, function error(err) { });
+Instance.save(extraConditions, mongoChanges, function callback(err,instance) {})
 
 // Updates the instance's data to match the latest available data from the database
-Instance.update();
-Instance.update(function(err, instance) {});
+Instance.update().then(function complete(instance) { }, function error(err) { });
+Instance.update(function callback(err, instance) {});
 
 // Removes the instance from the database
-Instance.remove();
-Instance.remove(function(err) {});
+Instance.remove().then(function complete() { }, function error(err) { });
+Instance.remove(function callback(err) {});
 ```
 
 ### Helpers
@@ -313,11 +372,11 @@ You will also find the `select` and `first` methods which can be used to filter 
 ```javascript
 console.log(JSON.stringify(Instance.document));
 
-var session = Instance.first(Instance.sessions, function(session) {
+var session = Instance.first(Instance.sessions, function test(session) {
 	return session.id == 'abcdef...';
 });
 
-var comments = Instance.select(Instance.comments, function(comment) {
+var comments = Instance.select(Instance.comments, function test(comment) {
 	return comment.by = 'username';
 });
 ```
@@ -351,11 +410,11 @@ function MemoryCache() {
 }
 
 // Tells Iridium whether it can use the cache for objects that match these conditions
-MemoryCache.prototype.valid = function(conditions) {
+MemoryCache.prototype.valid = function valid(conditions) {
 	return conditions && conditions._id;
 };
 
-MemoryCache.prototype.store = function(conditions, document, callback) {
+MemoryCache.prototype.store = function store(conditions, document, callback) {
 	// Conditions are null when storing on an insert, otherwise they represent the conditions
 	// that resulted in the object being retrieved from the database.
 	var id = JSON.stringify(document._id);
@@ -363,12 +422,12 @@ MemoryCache.prototype.store = function(conditions, document, callback) {
 	callback();
 };
 
-MemoryCache.prototype.fetch = function(id, callback) {
+MemoryCache.prototype.fetch = function fetch(id, callback) {
 	var id = JSON.stringify(conditions._id);
 	callback(this.cache[id]);
 };
 
-MemoryCache.prototype.drop = function(conditions, callback) {
+MemoryCache.prototype.drop = function drop(conditions, callback) {
 	var id = JSON.stringify(conditions._id);
 	if(this.cache[id]) delete this.cache[id];
 	callback();
@@ -388,8 +447,8 @@ var Concoction = require('concoction');
 var model = new Model(db, 'modelName', modelSchema, {
 		preprocessors: [new Concoction.Convert({
 			property: {
-				apply: function(value) { return convertedValueForDatabase; },
-				reverse: function(value) { return convertedValueFromDatabase }
+				apply: function apply(value) { return convertedValueForDatabase; },
+				reverse: function reverse(value) { return convertedValueFromDatabase }
 			}
 		})]
 	});
@@ -412,12 +471,12 @@ Iridium allows you to use plugins which extend the functionality provided by a n
 
 ```javascript
 module.exports = {
-	newModel: function(db, collection, schema, options) {
+	newModel: function newModel(db, collection, schema, options) {
 		this.collection = collection.toLowerCase();
 		this.schema._id = String,
 		this.options.preprocessors = [];
 	},
-	newInstance: function(model, document, isNew) {
+	newInstance: function newInstance(model, document, isNew) {
 		Object.defineProperty(this, 'id', {
 			get: function() { return document._id; },
 			enumerable: false
@@ -427,6 +486,4 @@ module.exports = {
 ```
 
 ## Thanks To
-Thanks to [Tadahiro Ishisaka](https://github.com/ishisaka) for his brilliant [nodeintellisense](https://github.com/ishisaka/nodeintellisense) library, it has been used as the basis for IntelliSense support within this module.
-
 I'd also like to thank [dresende](https://github.com/dresende) and [dxg](https://github.com/dxg) from the [node-orm2](https://github.com/dresende/node-orm2) project for getting me introduced to Node and giving me many of the ideas for how a good ORM should be structured. If you're looking for an easy to use and more fully featured ORM with support for SQL and NoSQL databases, I'd seriously suggest giving [node-orm2](https://github.com/dresende/node-orm2) a try.
