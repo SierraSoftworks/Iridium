@@ -14,8 +14,6 @@ Iridium hopes to solve these issues by providing a bare bones ORM targeted at po
    MongoDB's greatest strength is its ability to support dynamic schemas, we think that's a great idea but sometimes it's necessary to be able to validate aspects of your models. That's where Iridium's validation framework comes in - with an intuitive schema design framework with support for optional and dynamic fields, you'll never find yourself stuck again.
  - **Powerful Transforms**
    Anyone familiar with MongoDB knows the headaches that ObjectID causes due to its custom datatype. We also know that sometimes custom datatypes are unavoidable, or preferable for storage - though not necessarily ideal for processing. Iridium allows you to define a set of up-down transforms which are applied to parts of your model so that your code doesn't need to worry about these inconsistencies, and you can get down to writing the code you want to.
- - **IntelliSense Support**
-   We understand the value of an easy to use library, and having to go *documentation diving* every time you want to find out how to use a function is a pain we're all to familiar with. Iridium was designed from the ground up to include support for Visual Studio's IntelliSense engine - reducing the number of round trips between documentation and your code.
  - **Express Support**
    Everyone who has written code using Node.js knows about Express, to help make your life easier we've included support right out of the box for Express.
  - **Powerful Models**
