@@ -65,6 +65,22 @@ describe('orm', function () {
                     });
                 });
 
+                describe('promises', function() {
+                    it('should work if a value is found', function(done) {
+                        model.findOne('Demo1').then(function(result) {
+                            should.exist(result);
+                            done();
+                        }, done);
+                    });
+
+                    it('should work if a value is not found', function(done) {
+                        model.findOne('NotFound').then(function(result) {
+                            should.not.exist(result);
+                            done();
+                        }, done);
+                    });
+                });
+
                 describe('with default model', function() {                 
                     before(function(done) {
                         model =  new Model(db, 'model', {

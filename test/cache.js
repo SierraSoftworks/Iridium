@@ -98,6 +98,36 @@ describe('orm', function () {
                         almostDone();
                     });
                 });
+
+                describe('promises', function() {
+                    it('should store newly retrieved documents in the cache', function(done) {
+                        var pending = 2;
+                        function almostDone() {
+                            if(!(--pending)) return done();
+                        }
+
+                        model.cache.once('store', almostDone);
+
+                        model.findOne('Demo1').then(function(instance) {
+                            should.exist(instance);
+                            almostDone();
+                        }, done);
+                    });
+
+                    it('should fetch retrieved documents from the cache', function(done) {
+                        var pending = 2;
+                        function almostDone() {
+                            if(!(--pending)) return done();
+                        }
+
+                        model.cache.once('fetched', almostDone);
+
+                        model.findOne('Demo1').then(function(instance) {
+                            should.exist(instance);
+                            almostDone();
+                        }, done);
+                    });
+                });
             });
         });
     });

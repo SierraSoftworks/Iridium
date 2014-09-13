@@ -27,6 +27,7 @@
     "concoction": "~1.0",
     "debug": "1.x",
     "q": "1.x",
+    "async-q": "~0.2",
     "functionality": "1.x"
   },
   "devDependencies": {
