@@ -137,6 +137,14 @@ db.MyModel.get(function(err, instance) {
 });
 ```
 
+You can also chain `register` calls to quickly load all your different models using a single line of code.
+
+```javascript
+db.register('Model1', require('./models/Model1.js')).register('Model2', require('./models/Model2.js')).connect(function(err, db) {
+	if(err) throw err;
+});
+```
+
 ## Models
 Iridium has been designed to make it as easy as possible to create and manage your models. To support this, models are designed to be stored within their own files - separating them from one another and keeping things logical.
 
