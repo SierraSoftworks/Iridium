@@ -49,7 +49,7 @@ describe('hooks', function() {
 
             var model = createModel(function(done) {
                 this.created = new Date();
-                setTimeout(function() { hookCalled = true; done(); }, 100);
+                setTimeout(function() { hookCalled = true; done(); }, 1);
             });
 
             model.insert({ data: 'Testing' }, function(err, created) {
