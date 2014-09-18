@@ -1,13 +1,12 @@
-var should = require('should'),
-    Database = require('../index.js'),
-    Model = Database.Model,
-    Instance = Database.Instance;
-
 describe('hooks', function() {
-    var db = new Database(require('./config.js'));
+    var db = new Database(config);
 
-    before(function(done) {
-        db.connect(done);
+    before(function() {
+        return db.connect();
+    });
+
+    after(function() {
+        db.disconnect();
     });
 
     describe('creating', function() {
@@ -22,7 +21,7 @@ describe('hooks', function() {
             });
         }
         
-        it('should correctly call the synchronous overload', function(done) {
+        it('should correctly call the synchronous overload', function() {
             var hookCalled = false;
             var hookTarget = null;
 
@@ -36,15 +35,13 @@ describe('hooks', function() {
                 data: 'Testing'
             };
 
-            model.create(hookTarget, function(err, created) {
-                if(err) return done(err);
+            return model.create(hookTarget).then(function(created) {
                 should.exist(created.created);
                 hookCalled.should.be.true;
-                return done();
             });
         });
 
-        it('should correctly call the asynchronous overload', function(done) {
+        it('should correctly call the asynchronous overload', function() {
             var hookCalled = false;
 
             var model = createModel(function(done) {
@@ -52,38 +49,36 @@ describe('hooks', function() {
                 setTimeout(function() { hookCalled = true; done(); }, 1);
             });
 
-            model.insert({ data: 'Testing' }, function(err, created) {
-                if(err) return done(err);
+            return model.insert({ data: 'Testing' }).then(function(created) {
                 should.exist(created);
                 should.exist(created.created);
                 hookCalled.should.be.true;
-                done();
             });
         });
 
-        it('should convey errors in the synchronous overload', function(done) {
+        it('should convey errors in the synchronous overload', function() {
             var model = createModel(function() {
                 throw new Error('Should fail');
             });
 
-            model.insert({ data: 'Testing' }, function(err, inserted) {
-                should.exist(err);
+            return model.insert({ data: 'Testing' }).then(function(inserted) {
+                should.fail();
+            }, function(err) {
                 err.message.should.eql('Should fail');
-                should.not.exist(inserted);
-                done();
+                return Q();
             });
         });
 
-        it('should convey errors in the asynchronous overload', function(done) {
+        it('should convey errors in the asynchronous overload', function() {
             var model = createModel(function(done) {
                 done(Error('Should fail'));
             });
 
-            model.insert({ data: 'Testing' },function(err, inserted) {
-                should.exist(err);
+            return model.insert({ data: 'Testing' }).then(function(inserted) {
+                should.fail();
+            }, function(err) {
                 err.message.should.eql('Should fail');
-                should.not.exist(inserted);
-                done();
+                return Q();
             });
         });
     });
@@ -99,7 +94,7 @@ describe('hooks', function() {
             });
         }
 
-        it('should correctly call before wrapping', function(done) {
+        it('should correctly call before wrapping', function() {
             var expected = { data: 'Demo' };
             var hookCalled = false;
             var model = createModel(function() {
@@ -107,16 +102,13 @@ describe('hooks', function() {
                 hookCalled = true;
             });
 
-            model.create(expected, function(err, inserted) {
-                if(err) return done(err);
-
+            return model.create(expected).then(function(inserted) {
                 should.exist(inserted);
                 hookCalled.should.be.true;
-                done();
             });
         });
 
-        it('should allow preprocessing of properties', function(done) {
+        it('should allow preprocessing of properties', function() {
             var expected = { data: 'Demo' };
             var hookCalled = false;
             var model = createModel(function() {
@@ -125,13 +117,10 @@ describe('hooks', function() {
                 hookCalled = true;
             });
 
-            model.create(expected, function(err, inserted) {
-                if(err) return done(err);
-
+            return model.create(expected).then(function(inserted) {
                 should.exist(inserted);
                 hookCalled.should.be.true;
                 should.exist(inserted.lastAccess);
-                done();
             });
         });
     });
