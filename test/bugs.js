@@ -1,20 +1,16 @@
-var config = require('./config.js');
-var Database = require('../index.js');
-var Model = Database.Model;
-var Instance = Database.Instance;
-var should = require('should');
-var Concoction = require('concoction');
-
 describe('bugs', function () {
     "use strict";
-    var db = null;
+    var db = new Database(config);
 
-    before(function (done) {
-        db = new Database(config);
-        db.connect(done);
+    before(function () {
+        return db.connect();
     });
 
-    it("shouldn't attempt to change an ObjectID when saving an instance", function(done) {
+    after(function() {
+        db.disconnect();
+    });
+
+    it("shouldn't attempt to change an ObjectID when saving an instance", function() {
         var model = new Model(db, 'model', {
             id: false,
             data: [String]
@@ -22,20 +18,13 @@ describe('bugs', function () {
 
         });
 
-        model.remove(function(err) {
-            if(err) return done(err);
-
-            model.create({ data: ['testing'] }, function(err, instance) {
-                if(err) return done(err);
-                should.exist(instance);
-
-                instance.data.push('tested');
-                instance.save(function(err) {
-                    should.not.exist(err);
-                    instance.data.should.eql(['testing', 'tested']);
-                    done();
-                });
-            });
+        model.remove().then(function() {
+            return model.create({ data: ['testing'] });
+        }).then(function(instance) {
+            instance.data.push('tested');
+            return instance.save();
+        }).then(function(instance) {
+            instance.data.should.be.like(['testing', 'tested']);
         });
     });
 });
