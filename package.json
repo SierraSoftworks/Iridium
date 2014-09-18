@@ -32,7 +32,9 @@
   },
   "devDependencies": {
     "mocha": "*",
-    "should": "*"
+    "chai": "*",
+    "chai-as-promised": "*",
+    "chai-fuzzy": "*"
   },
   "keywords": [
     "mongodb",
