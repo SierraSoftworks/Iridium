@@ -1,21 +1,16 @@
-﻿var config = require('./config.js');
-var Database = require('../index.js');
-var Model = Database.Model;
-var Instance = Database.Instance;
-var should = require('should');
-var Concoction = require('concoction');
-
-describe('orm', function () {
+﻿describe('orm', function () {
 	"use strict";
 
 	describe('Model', function () {
-		var db = null;
+		var db = new Database(config);
 
-		before(function (done) {
-			db = new Database(config);
-			db.connect(done);
+		before(function () {
+			return db.connect();
 		});
 
+	    after(function() {
+	        db.disconnect();
+	    });
 		describe('constructor', function () {
 			it('should allow a new model to be created', function () {
 				var model = new Model(db, 'model', {
@@ -33,17 +28,11 @@ describe('orm', function () {
 			it('should return a new instance even if called without the new keyword', function() {
 				var $ = {};
 				var model = Model.call($, db, 'model', {}, {});
-				should(model instanceof Model);
+				(model instanceof Model).should.be.true;
 			});
 
 			it('should provide the full model API', function() {
-				var api = [
-					'preprocessor',
-					'options',
-					'schema',
-                    'schemaValidator',
-					'database',
-					'collection',
+				var functions = [
 					'wrap',
 					'toSource',
 					'fromSource',
@@ -60,14 +49,26 @@ describe('orm', function () {
 					'setupIndexes'
 				];
 
+				var properties = [
+					'preprocessor',
+					'options',
+					'schema',
+                    'schemaValidator',
+					'database',
+					'collection'
+				];
+
 				var model = new Model(db, 'model', {
 
 				}, {
 
 				});
 
-				for(var i = 0; i < api.length; i++)
-					model.should.have.property(api[i]);
+				for(var i = 0; i < functions.length; i++)
+					model.should.respondTo(functions[i]);
+
+				for(var i = 0; i < properties.length; i++)
+					model.should.have.property(properties[i]);
 			});
 		});
 	});
