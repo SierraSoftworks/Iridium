@@ -1,9 +1,3 @@
-var Database = require('../index.js');
-var Model = Database.Model;
-var Instance = Database.Instance;
-var should = require('should');
-var Concoction = require('concoction');
-
 describe('orm', function () {
 	"use strict";
 
@@ -87,7 +81,7 @@ describe('orm', function () {
 						}
 					});
 
-					model.Instance.prototype.should.have.ownProperty('testMethod').and.be.type('function');
+					model.Instance.prototype.should.respondTo('testMethod');
 				});
 
 				it('should receive all passed arguments', function() {
