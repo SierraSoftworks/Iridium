@@ -1,7 +1,3 @@
-var Database = require('../index.js');
-var Model = Database.Model;
-var Instance = Database.Instance;
-var should = require('should');
 var skmatc = require('skmatc');
 
 describe('plugins', function() {
@@ -11,7 +7,7 @@ describe('plugins', function() {
                 function(schema, data, path) { return this.assert(data >= 0); })         
         };
 
-        it('should correctly validate models upon creation', function(done) {
+        it('should correctly validate models upon creation', function() {
             var model = new Model({
                 plugins: [plugin],
                 db: {
@@ -21,12 +17,14 @@ describe('plugins', function() {
             { name: String, age: 'Positive' },
             {});
 
-            model.insert({
+            return model.insert({
                 name: 'test', age: -1
-            }, function(err, instance) {
+            }).then(function(instance) {
+                should.fail();
+            }, function(err) {
                 should.exist(err);
-                should.not.exist(instance);
-                done();
+                err.isValidationError.should.be.true;
+                return Q();
             });
         });
     });
