@@ -1,9 +1,3 @@
-var config = require('./config.js');
-var Database = require('../index.js');
-var Model = Database.Model;
-var Instance = Database.Instance;
-var should = require('should');
-var Concoction = require('concoction');
 var EventEmitter = require('events').EventEmitter;
 
 function EventEmitterCache() {
@@ -38,17 +32,16 @@ describe('orm', function () {
     "use strict";
 
     describe('Model', function () {
-        var db = null;
+        var db = new Database(config);
 
-        before(function (done) {
-            db = new Database(config);
-            db.connect(done);
+        before(function () {
+            return db.connect();
         });
 
         describe('cache', function() {
             var model = null;
 
-            before(function(done) {
+            before(function() {
                 model =  new Model(db, 'model', {
                     name: /.+/
                 }, {
@@ -56,76 +49,31 @@ describe('orm', function () {
                     cache: new EventEmitterCache()
                 });
 
-                model.remove(function(err) {
-                    if(err) return done(err);
-
-                    model.create({
-                        name: 'Demo1'
-                    }, function(err, instance) {
-                        if(err) return done(err);
-                        return done();
-                    });
+                return model.remove().then(function() {
+                    return model.create({ name: 'Demo1' });
                 });
             });
 
             describe('findOne', function() {
-                it('should store newly retrieved documents in the cache', function(done) {
-                    var pending = 2;
-                    function almostDone() {
-                        if(!(--pending)) return done();
-                    }
+                it('should store newly retrieved documents in the cache', function() {
+                    var stored = false;
 
-                    model.cache.once('store', almostDone);
+                    model.cache.once('store', function() { stored = true; });
 
-                    model.findOne('Demo1', function(err, instance) {
-                        should.not.exist(err);
+                    return model.findOne('Demo1').then(function(instance) {
                         should.exist(instance);
-                        almostDone();
+                        stored.should.be.true;
                     });
                 });
 
-                it('should fetch retrieved documents from the cache', function(done) {
-                    var pending = 2;
-                    function almostDone() {
-                        if(!(--pending)) return done();
-                    }
+                it('should fetch retrieved documents from the cache', function() {
+                    var fetched = false;
 
-                    model.cache.once('fetched', almostDone);
+                    model.cache.once('fetched', function() { fetched = true; });
 
-                    model.findOne('Demo1', function(err, instance) {
-                        should.not.exist(err);
+                    return model.findOne('Demo1').then(function(instance) {
                         should.exist(instance);
-                        almostDone();
-                    });
-                });
-
-                describe('promises', function() {
-                    it('should store newly retrieved documents in the cache', function(done) {
-                        var pending = 2;
-                        function almostDone() {
-                            if(!(--pending)) return done();
-                        }
-
-                        model.cache.once('store', almostDone);
-
-                        model.findOne('Demo1').then(function(instance) {
-                            should.exist(instance);
-                            almostDone();
-                        }, done);
-                    });
-
-                    it('should fetch retrieved documents from the cache', function(done) {
-                        var pending = 2;
-                        function almostDone() {
-                            if(!(--pending)) return done();
-                        }
-
-                        model.cache.once('fetched', almostDone);
-
-                        model.findOne('Demo1').then(function(instance) {
-                            should.exist(instance);
-                            almostDone();
-                        }, done);
+                        fetched.should.be.true;
                     });
                 });
             });
