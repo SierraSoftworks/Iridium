@@ -1,114 +1,98 @@
-var config = require('./config.js');
-var Database = require('../index.js');
-var Model = Database.Model;
-var Instance = Database.Instance;
-var should = require('should');
-var Concoction = require('concoction');
-
 describe('orm', function () {
     "use strict";
 
     describe('Model', function () {
-        var db = null;
+        var db = new Database(config);
 
-        before(function (done) {
-            db = new Database(config);
-            db.connect(done);
+        before(function () {
+            return db.connect();
+        });
+
+        after(function() {
+            db.disconnect();
         });
 
         describe('database', function() {
             var model = null;
 
-            before(function(done) {
+            before(function() {
                 model =  new Model(db, 'model', {
                     name: /.+/
                 }, {
                     preprocessors: [new Concoction.Rename({ _id: 'name' })]
                 });
 
-                model.remove(done);
+                return model.remove();
             });
 
             describe('insertion', function() {
 
-                it('should allow a single object to be inserted', function(done) {
-                    model.create({
+                it('should allow a single object to be inserted', function() {
+                    return model.create({
                         name: 'Demo1'
-                    }, function(err, instance) {
-                        if(err) return done(err);
-                        instance.should.have.property('name', 'Demo1');                        
-                        return done();
+                    }).then(function(instance) {
+                        instance.should.have.property('name', 'Demo1');
                     });
                 });
 
-                it('should have created the instance in the database', function(done) {
-                    model.count({ name: 'Demo1' }, function(err, number) {
-                        if(err) return done(err);
+                it('should have created the instance in the database', function() {
+                    return model.count({ name: 'Demo1' }).then(function(number) {
                         number.should.eql(1);
-                        done();
                     });
                 });
 
-                it('should allow multiple objects to be inserted', function(done) {
-                    model.create([{
+                it('should allow multiple objects to be inserted', function() {
+                    return model.create([{
                         name: 'Demo2'
                     }, {
                         name: 'Demo3'
-                    }], function(err, instances) {
-                        if(err) return done(err);
-                        should(Array.isArray(instances));
+                    }]).then(function(instances) {
+                        Array.isArray(instances).should.be.true;
                         instances[0].should.have.property('name', 'Demo2');
                         instances[1].should.have.property('name', 'Demo3');
-                        return done();
                     });
                 });
 
-                it('should pass along DB errors', function(done) {
-                    model.create({
+                it('should pass along DB errors', function() {
+                    return model.create({
                         name: 'Demo1'
-                    }, function(err, inserted) {
-                        should.exist(err);
+                    }).then(function(inserted) {
                         should.not.exist(inserted);
-                        done();
+                    }, function(err) {
+                        return Q();
                     });
                 });
 
-                it('should support upsert operations on new documents', function(done) {
-                    model.create({
+                it('should support upsert operations on new documents', function() {
+                    return model.create({
                         name: 'Demo4',
                         upserted: true
-                    }, { upsert: true }, function(err, updated) {
-                        should.not.exist(err);
+                    }, { upsert: true }).then(function(updated) {
                         should.exist(updated);
                         updated.should.have.property('upserted').and.equal(true);
-                        done();
                     });
                 });
 
-                it('should support upsert operations on existing documents', function(done) {
-                    model.create({
+                it('should support upsert operations on existing documents', function() {
+                    return model.create({
                         name: 'Demo1',
                         upserted: true
-                    }, { upsert: true }, function(err, updated) {
-                        should.not.exist(err);
+                    }, { upsert: true }).then(function(updated) {
                         should.exist(updated);
                         updated.should.have.property('upserted').and.equal(true);
-                        done();
                     });
                 });
 
-                it('should support upsert operations with multiple documents', function(done) {
-                    model.create([{
+                it('should support upsert operations with multiple documents', function() {
+                    return model.create([{
                         name: 'Demo1',
                         upserted: true
                     },{
                         name: 'Demo5',
                         upserted: true
-                    }], { upsert: true }, function(err, updated) {
-                        should.not.exist(err);
+                    }], { upsert: true }).then(function(updated) {
                         should.exist(updated);
                         updated.length.should.equal(2);
-                        done();
                     });
                 });
             });
