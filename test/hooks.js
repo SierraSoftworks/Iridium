@@ -124,4 +124,49 @@ describe('hooks', function() {
             });
         });
     });
+    
+    describe('ready', function() {
+        function createModel(hook) {
+            return new Model(db, 'hooks', {
+                data: String
+            }, {
+                hooks: {
+                    ready: hook
+                }
+            });
+        }
+
+        it('should correctly call after wrapping', function() {
+            var expected = { data: 'Demo' };
+            var hookCalled = false;
+            var model = createModel(function() {
+                should.exist(this.document);
+                this.document.should.eql(expected);
+                hookCalled = true;
+            });
+
+            return model.create(expected).then(function(inserted) {
+                should.exist(inserted);
+                hookCalled.should.be.true;
+            });
+        });
+
+        it('should allow postprocessing of Instance', function() {
+            var expected = { data: 'Demo' };
+            var hookCalled = false;
+            var model = createModel(function() {
+                should.exist(this.document);
+                this.document.should.eql(expected);
+                this.lastAccess = new Date();
+                hookCalled = true;
+            });
+
+            return model.create(expected).then(function(inserted) {
+                should.exist(inserted);
+                inserted.document.should.eql(expected);
+                hookCalled.should.be.true;
+                should.exist(inserted.lastAccess);
+            });
+        });
+    });
 });
