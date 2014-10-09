@@ -41,37 +41,23 @@ describe('hooks', function() {
             });
         });
 
-        it('should correctly call the asynchronous overload', function() {
+        it('should not support an asynchronous overload', function() {
             var hookCalled = false;
 
             var model = createModel(function(done) {
-                this.created = new Date();
-                setTimeout(function() { hookCalled = true; done(); }, 1);
+                should.fail('asynchronous overload should not be supported');
             });
 
             return model.insert({ data: 'Testing' }).then(function(created) {
-                should.exist(created);
-                should.exist(created.created);
-                hookCalled.should.be.true;
+                should.fail('asynchronous overload should not be supported');
+            }, function(err) {
+                return Q();
             });
         });
 
         it('should convey errors in the synchronous overload', function() {
             var model = createModel(function() {
                 throw new Error('Should fail');
-            });
-
-            return model.insert({ data: 'Testing' }).then(function(inserted) {
-                should.fail();
-            }, function(err) {
-                err.message.should.eql('Should fail');
-                return Q();
-            });
-        });
-
-        it('should convey errors in the asynchronous overload', function() {
-            var model = createModel(function(done) {
-                done(Error('Should fail'));
             });
 
             return model.insert({ data: 'Testing' }).then(function(inserted) {

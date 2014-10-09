@@ -23,12 +23,11 @@
     "mongodb": "~1.4",
     "skmatc": "1.x",
     "lodash": "*",
-    "async": "~0.9",
     "concoction": "~1.0",
     "debug": "1.x",
     "q": "1.x",
-    "async-q": "~0.2",
-    "functionality": "1.x"
+    "async": "~0.9",
+    "functionality": "2.x"
   },
   "devDependencies": {
     "mocha": "*",
