@@ -1,6 +1,6 @@
 var async = require('async'),
 	MongoClient = require('mongodb').MongoClient,
-	Iridium = require('./');
+	Iridium = require('../');
 
 var objects = [];
 for(var i = 0; i < 10000; i++)
@@ -61,7 +61,7 @@ MongoClient.connect('mongodb://localhost/iridium_bench', function(err, mDB) {
 			function(done) {
 				console.log('Iridium 10000 Inserts { w: 1, wrap: false }');
 				var start = new Date();
-				model.insert(objects, { wrap: false }, function(err, inserted) {
+				model.insert(objects, { w: 1, wrap: false }, function(err, inserted) {
 					if(err) return done(err);
 					printTime(' => %s', start);
 					return done();
