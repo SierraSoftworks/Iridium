@@ -36,7 +36,7 @@ We make use of the [Semantic Versioning](http://semver.org/) guidelines for our 
 {
 	// ...
 	"dependencies": {
-		"iridium": "2.x"
+		"iridium": "3.x"
 	}
 }
 ```
