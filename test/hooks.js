@@ -51,7 +51,7 @@ describe('hooks', function() {
             return model.insert({ data: 'Testing' }).then(function(created) {
                 should.fail('asynchronous overload should not be supported');
             }, function(err) {
-                return Q();
+                return Promise.resolve();
             });
         });
 
@@ -64,7 +64,7 @@ describe('hooks', function() {
                 should.fail();
             }, function(err) {
                 err.message.should.eql('Should fail');
-                return Q();
+                return Promise.resolve();
             });
         });
     });

@@ -24,7 +24,7 @@ describe('plugins', function() {
             }, function(err) {
                 should.exist(err);
                 err.isValidationError.should.be.true;
-                return Q();
+                return Promise.resolve();
             });
         });
     });

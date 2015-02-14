@@ -59,7 +59,7 @@ describe('orm', function () {
                     }).then(function(inserted) {
                         should.not.exist(inserted);
                     }, function(err) {
-                        return Q();
+                        return Promise.resolve();
                     });
                 });
 

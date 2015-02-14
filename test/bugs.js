@@ -7,7 +7,7 @@ describe('bugs', function () {
     });
 
     after(function() {
-        db.disconnect();
+        return db.disconnect();
     });
 
     it("shouldn't attempt to change an ObjectID when saving an instance", function() {
@@ -18,7 +18,7 @@ describe('bugs', function () {
 
         });
 
-        model.remove().then(function() {
+        return model.remove().then(function() {
             return model.create({ data: ['testing'] });
         }).then(function(instance) {
             instance.data.push('tested');

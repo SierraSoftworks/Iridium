@@ -25,7 +25,7 @@
     "lodash": "*",
     "concoction": "~1.0",
     "debug": "1.x",
-    "q": "1.x",
+    "bluebird": "2.x",
     "async": "~0.9",
     "functionality": "2.x"
   },
