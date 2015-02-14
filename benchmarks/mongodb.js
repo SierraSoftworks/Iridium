@@ -20,6 +20,12 @@ var model = new Iridium.Model(iDB, 'iridium', {
 	birthday: Date
 });
 
+var modelWrap = new Iridium.Model(iDB, 'iridiumWrap', {
+	name: String,
+	surname: String,
+	birthday: Date
+});
+
 iDB.register('model', model);
 
 function printTime(format, start) {
@@ -68,6 +74,15 @@ MongoClient.connect('mongodb://localhost/iridium_bench', function(err, mDB) {
 				});
 			},
 			function(done) {
+				console.log('Iridium 10000 Inserts { w: 1, wrap: true }');
+				var start = new Date();
+				modelWrap.insert(objects, { w: 1, wrap: true }, function(err, inserted) {
+					if(err) return done(err);
+					printTime(' => %s', start);
+					return done();
+				});
+			},
+			function(done) {
 				console.log('MongoDB find()');
 				var start = new Date();
 				mDBcol.find({}).toArray(function(err, results) {
@@ -80,6 +95,15 @@ MongoClient.connect('mongodb://localhost/iridium_bench', function(err, mDB) {
 				console.log('Iridium find() { wrap: false }');
 				var start = new Date();
 				model.find({}, { wrap: false }, function(err, results) {
+					if(err) return done(err);
+					printTime(' => %s', start);
+					return done();
+				});				
+			},
+			function(done) {
+				console.log('Iridium find() { wrap: true }');
+				var start = new Date();
+				modelWrap.find({}, { wrap: true }, function(err, results) {
 					if(err) return done(err);
 					printTime(' => %s', start);
 					return done();
@@ -100,6 +124,12 @@ MongoClient.connect('mongodb://localhost/iridium_bench', function(err, mDB) {
 				model.remove(function(err, results) {
 					if(err) return done(err);
 					printTime(' => %s', start);
+					return done();
+				});				
+			},
+			function(done) {
+				modelWrap.remove(function(err, results) {
+					if(err) return done(err);
 					return done();
 				});				
 			}
