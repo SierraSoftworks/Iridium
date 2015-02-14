@@ -24,8 +24,8 @@ Iridium hopes to solve these issues by providing a bare bones ORM targeted at po
    Iridium allows the creation and use of plugins which can extend models and reduce duplicated code across models for common behavioural use cases. Plugins can provide custom validation, manipulate models at creation time and have the opportunity to extend instances when they are created.
  - **Automatic Query Generation**
    We understand that sometimes you don't want to structure your own queries - it's a hassle which you could do without especially when working with arrays. Thankfully, Iridium includes a powerful differential query generator which automatically generates the query necessary to store your changes without you raising a finger.
- - **[Q Promises](https://github.com/kriskowal/q) Built In**
-   We know how horrible it is having to manually wrap your favourite libraries before you can use them with promises, so we've decided to include support for the incredibly popular Q promises library out of the box! (Iridium actually uses it internally as the primary handler, delegating back to callbacks for compatibility, don't tell anybody.)
+ - **[A+ Promises](https://github.com/petkaantonov/bluebird) Built In**
+   We know how horrible it is having to manually wrap your favourite libraries before you can use them with promises, so we've decided to include support for the incredibly fast [Bluebird](https://github.com/petkaantonov/bluebird) promises library out of the box! (Iridium actually uses it internally as the primary handler, delegating back to callbacks for compatibility, don't tell anybody.)
 
 ## Installation
 Iridium is available using *npm*, which means you can install it locally using `npm install iridium` or add it to your project's *package.json* file to have it installed automatically whenever you run `npm install`.
@@ -36,7 +36,7 @@ We make use of the [Semantic Versioning](http://semver.org/) guidelines for our 
 {
 	// ...
 	"dependencies": {
-		"iridium": "3.x"
+		"iridium": "4.x"
 	}
 }
 ```
