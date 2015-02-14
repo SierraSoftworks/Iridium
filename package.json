@@ -1,6 +1,6 @@
 {
   "name": "iridium",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "author": "Benjamin Pannell <admin@sierrasoftworks.com>",
   "description": "A custom lightweight ORM for MongoDB designed for power-users",
   "homepage": "https://sierrasoftworks.com/iridium",
@@ -30,10 +30,10 @@
     "functionality": "2.x"
   },
   "devDependencies": {
-    "mocha": "*",
-    "chai": "*",
-    "chai-as-promised": "*",
-    "chai-fuzzy": "*"
+    "mocha": "2.x",
+    "chai": "1.x",
+    "chai-as-promised": "4.x",
+    "chai-fuzzy": "1.x"
   },
   "keywords": [
     "mongodb",
