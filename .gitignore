@@ -5,3 +5,6 @@ obj
 *.user
 *.sublime*
 node_modules
+.vs
+*.dat
+.idea
