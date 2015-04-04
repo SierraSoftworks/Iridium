@@ -9,5 +9,5 @@ export = IPlugin;
 interface IPlugin {
     newModel?(model: model.IModel<any, any>);
     newInstance? (instance: any, model: model.IModelBase);
-    validate? : SkmatcCore.IValidationHandler | [SkmatcCore.IValidationHandler];
+    validate? : SkmatcCore.IValidationHandler | SkmatcCore.IValidationHandler[];
 }
