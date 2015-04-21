@@ -5,6 +5,8 @@ import Iridium = require('../index');
 import Concoction = require('concoction');
 import Promise = require('bluebird');
 
+var settings: any = {};
+
 export interface UserDocument {
     username: string;
     fullname: string;
@@ -101,7 +103,7 @@ export class User extends Iridium.Instance<UserDocument, User> implements UserDo
         var passwordTest = /(?=^.{8,}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*/;
         if (!passwordTest.test(newPassword || '')) return callback(new Error('Password didn\'t meet the minimum safe password requirements. Passwords should be at least 8 characters long, and contain at least 3 of the following categories: lowercase letters, uppercase letters, numbers, characters'));
 
-        var hashed = require('crypto').createHash('sha512').update(core.settings.security.salt).update(newPassword).digest('hex');
+        var hashed = require('crypto').createHash('sha512').update(settings.security.salt).update(newPassword).digest('hex');
         this.password = hashed;
         this.save(callback);
     }
@@ -110,7 +112,7 @@ export class User extends Iridium.Instance<UserDocument, User> implements UserDo
         /// <param name="password" type="String">The password to validate against the user's password hash.</param>
         /// <returns type="Boolean"/>
 
-        var hashed = require('crypto').createHash('sha512').update(core.settings.security.salt).update(password).digest('hex');
+        var hashed = require('crypto').createHash('sha512').update(settings.security.salt).update(password).digest('hex');
         return hashed == this.password;
     }
     addFriend(friend: string, callback: (err?: Error, user?: User) => void) {
@@ -181,7 +183,7 @@ export function Users(core: Iridium.Core): Iridium.Model<UserDocument, User> {
 
                 if (!passwordTest.test(item.password || '')) return Promise.reject(new Error('Password didn\'t meet the minimum safe password requirements. Passwords should be at least 8 characters long, and contain at least 3 of the following categories: lowercase letters, uppercase letters, numbers, characters'));
 
-                item.password = require('crypto').createHash('sha512').update(core.settings.security.salt).update(item.password).digest('hex');
+                item.password = require('crypto').createHash('sha512').update(settings.security.salt).update(item.password).digest('hex');
 
                 _.defaults(item, {
                     type: "Player",
