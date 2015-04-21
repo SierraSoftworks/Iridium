@@ -1,4 +1,6 @@
-export interface Configuration {
+export = Configuration;
+
+interface Configuration {
     host?: string;
     port?: number;
     database?: string;

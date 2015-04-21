@@ -28,26 +28,17 @@ var MongoConnectAsyc = Promise.promisify(MongoDB.MongoClient.connect);
 export = Core;
 
 class Core {
-    private _models: { [key:string]:model.IModel<any, any>};
-    private _plugins: [IPlugin];
+    private _plugins: IPlugin[] = [];
     private _url: string;
-    private _config: config.Configuration;
+    private _config: config;
     private _connection: MongoDB.Db;
     private _cache: cache = new noOpCache();
-
-    /**
-     * Gets the models registered with this Iridium Core
-     * @returns {{}}
-     */
-    get models(): { [key:string]:model.IModel<any, any> } {
-        return this._models;
-    }
-
+    
     /**
      * Gets the plugins registered with this Iridium Core
      * @returns {[Iridium.Plugin]}
      */
-    get plugins(): [IPlugin] {
+    get plugins(): IPlugin[] {
         return this._plugins;
     }
 
@@ -56,7 +47,7 @@ class Core {
      * Iridium Core.
      * @returns {Iridium.Configuration}
      */
-    get settings(): config.Configuration {
+    get settings(): config {
         return this._config;
     }
 
@@ -76,9 +67,19 @@ class Core {
     get url(): string {
         if (this._url) return this._url;
         var url: string = 'mongodb://';
+
+        if (this._config.username) {
+            url += this._config.username;
+            if (this._config.password)
+                url += ':' + this._config.password;
+            url += '@';
+        }
+
         url += (this._config.host || 'localhost');
         if (this._config.port)
             url += ':' + this._config.port;
+
+        url += '/' + this._config.database;
 
         return url;
     }
@@ -94,27 +95,34 @@ class Core {
     set cache(value: cache) {
         this._cache = value;
     }
-    
+
+    /**
+     * Creates a new Iridium Core instance connected to the specified MongoDB instance
+     * @param {Iridium.IridiumConfiguration} config The config object defining the database to connect to
+     * @constructs Core
+     */
+    constructor(config: config);
     /**
      * Creates a new Iridium Core instance connected to the specified MongoDB instance
      * @param {String} url The URL of the MongoDB instance to connect to
      * @param {Iridium.IridiumConfiguration} config The config object made available as settings
      * @constructs Core
      */
-    constructor(url?: string, config?: config.Configuration) {
+    constructor(uri: string, config?: config);
+    constructor(uri: string | config, config?: config) {
 
         var args = Array.prototype.slice.call(arguments, 0);
-        url = config = null;
+        uri = config = null;
         for(var i = 0; i < args.length; i++) {
             if(typeof args[i] == 'string')
-                url = args[i];
+                uri = args[i];
             else if(typeof args[i] == 'object')
                 config = args[i];
         }
 
-        if(!url && !config) throw new Error("Expected either a URI or config object to be supplied when initializing Iridium");
+        if(!uri && !config) throw new Error("Expected either a URI or config object to be supplied when initializing Iridium");
 
-        this._url = url;
+        this._url = <string>uri;
         this._config = config;
     }
 
@@ -123,38 +131,8 @@ class Core {
      * @param {Iridium.Plugin} plugin The plugin to register with this Iridium Core
      * @returns {Iridium.Core}
      */
-    register(plugin: IPlugin): Core;
-
-    /**
-     * Registers a new model with this Iridium Core
-     * @param {String} name The name which this model will be registered with
-     * @param {Iridium.Model} model The instantiated model to register on this Iridium Core
-     * @returns {Iridium.Core}
-     */
-    register<TSchema, TInstance extends instance.IInstance<any, any>>(name: string, model: model.IModel<TSchema, TInstance>): Core;
-
-    /**
-     * Registers a new model with this Iridium Core
-     * @param {String} name The name which this model will be registered with
-     * @param {Iridium.ModelFactory} modelFactory The factory responsible for creating the model to register on this Iridium Core
-     * @returns {Iridium.Core}
-     */
-    register<TSchema, TInstance extends instance.IInstance<any, any>>(name: string, modelFactory: model.IModelFactory<TSchema, TInstance>): Core;
-
-    register(arg0: any, arg1?: any): Core {
-        if (typeof arg0 == 'object') {
-            this.plugins.push(arg0);
-            return this;
-        }
-
-        if (arg1.isModel) this.models[arg0] = arg1;
-        else this.models[arg0] = arg1(this);
-        Object.defineProperty(this, arg0, {
-            get: function () {
-                return this.models[arg0];
-            },
-            enumerable: false
-        });
+    register(plugin: IPlugin): Core {
+        this.plugins.push(plugin);
         return this;
     }
 

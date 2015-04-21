@@ -2,9 +2,9 @@
 
 import instance = require('./Instance');
 
-export interface IHooks<TSchema> {
-    creating?(document: any);
-    retrieved?(document: any);
-    ready?(instance: instance.IInstance<any, any> | any);
-    beforeSave?(instance: instance.IInstance<any, any>);
+export interface IHooks<TDocument, TInstance> {
+    creating? (document: TDocument);
+    retrieved? (document: TDocument);
+    ready? (instance: TInstance);
+    beforeSave? (instance: TInstance);
 }

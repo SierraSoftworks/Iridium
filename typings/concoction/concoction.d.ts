@@ -7,7 +7,7 @@ declare class concoction {
      * Creates a new recipe with the given ingredients
      * @param {Concoction.Ingredient} ingredients The ingredients which compose the recipe
      */
-    constructor(ingredients: [Concoction.Ingredient]);
+    constructor(ingredients: Concoction.Ingredient[]);
 
     static Ingredient: Concoction.IngredientStatic;
 
@@ -18,7 +18,7 @@ declare class concoction {
      * The ingredients which make up the recipe
      * @property {Array<Concoction.Ingredient>} ingredients The ingredients which make up the recipe
      */
-    ingredients: [Concoction.Ingredient];
+    ingredients: Concoction.Ingredient[];
 
     /**
      * Applies the recipie to the given object

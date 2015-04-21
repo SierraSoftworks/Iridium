@@ -13,34 +13,8 @@ import Promise = require('bluebird');
 
 import general = require('./General');
 
-export interface IInstanceFactory<TSchema, TInstance extends IInstance<any, any>> {
-    (document: any, isNew?: boolean, isPartial?: boolean): TInstance;
-}
-
-export interface IInstance<TSchema, TInstance extends IInstance<any, any>> {
-    save(callback?: general.Callback<TInstance>): Promise<TInstance>;
-    save(changes: Object, callback?: general.Callback<TInstance>): Promise<TInstance>;
-    save(conditions: Object, changes: Object, callback?: general.Callback<TInstance>): Promise<TInstance>;
-
-    update(callback?: general.Callback<TInstance>): Promise<TInstance>;
-    refresh(callback?: general.Callback<TInstance>): Promise<TInstance>;
-
-    delete(callback?: general.Callback<TInstance>): Promise<TInstance>;
-    remove(callback?: general.Callback<TInstance>): Promise<TInstance>;
-
-    document?: TSchema;
-
-    first<T>(collection: T[], predicate: general.Predicate<T>): T;
-    first<T>(collection: { [key: string]: T }, predicate: general.Predicate<T>): T;
-
-    select<T>(collection: T[], predicate: general.Predicate<T>): T[];
-    select<T>(collection: { [key: string]: T }, predicate: general.Predicate<T>): { [key: string]: T };
-}
-
-
-
-export class Instance<TSchema, TInstance extends IInstance<any, any>> implements IInstance<TSchema, TInstance> {
-    constructor(model: model.Model<TSchema, TInstance>, document: TSchema, isNew: boolean = false, isPartial: boolean = false) {
+class Instance<TDocument, TInstance> {
+    constructor(model: model.Model<TDocument, TInstance>, document: TDocument, isNew: boolean = false, isPartial: boolean = false) {
             this._model = model;
 
             this._isNew = !!isNew;
@@ -55,22 +29,21 @@ export class Instance<TSchema, TInstance extends IInstance<any, any>> implements
 
         private _isNew: boolean;
         private _isPartial: boolean;
-        private _model: model.Model<TSchema, TInstance>;
-        private _original: TSchema;
-        private _modified: TSchema;
+        private _model: model.Model<TDocument, TInstance>;
+        private _original: TDocument;
+        private _modified: TDocument;
 
-        get document(): TSchema {
+        get document(): TDocument {
             return this._modified;
         }
 
         [name: string]: any;
 
-
         save(callback?: general.Callback<TInstance>): Promise<TInstance>;
         save(changes: Object, callback?: general.Callback<TInstance>): Promise<TInstance>;
         save(conditions: Object, changes: Object, callback?: general.Callback<TInstance>): Promise<TInstance>;
         save(...args: any[]): Promise<TInstance> {
-            var callback: general.Callback<TSchema> = null;
+            var callback: general.Callback<any> = null;
             var changes: any = null;
             var conditions: any = {};
 
@@ -116,7 +89,7 @@ export class Instance<TSchema, TInstance extends IInstance<any, any>> implements
                     });
                 });
             }).then(function(latest) {
-                return this._model.handlers.documentsReceived(conditions, [latest], function(value: TSchema) {
+                return this._model.handlers.documentsReceived(conditions, [latest], function(value) {
                     this._model.helpers.transform.apply(value);
                     this._isPartial = false;
                     this._isNew = false;
@@ -214,3 +187,5 @@ export class Instance<TSchema, TInstance extends IInstance<any, any>> implements
             return results;
         }
     }
+
+export = Instance;

@@ -48,19 +48,17 @@
     <TypeScriptCompile Include="lib\Plugins.ts" />
     <TypeScriptCompile Include="lib\Schema.ts" />
     <Content Include="test\mocha.opts" />
-    <Compile Include="test\bugs.js" />
-    <Compile Include="test\cache.js" />
-    <Compile Include="test\callbacks.js" />
-    <Compile Include="test\diff.js" />
-    <Compile Include="test\find.js" />
-    <Compile Include="test\findOne.js" />
-    <Compile Include="test\hooks.js" />
-    <Compile Include="test\insertion.js" />
-    <Compile Include="test\instance_db.js" />
-    <Compile Include="test\instance_helpers.js" />
-    <Compile Include="test\instance_setup.js" />
-    <Compile Include="test\model.js" />
-    <Compile Include="test\plugins.js" />
+    <TypeScriptCompile Include="test\Core.ts">
+      <SubType>Code</SubType>
+      <TestFramework>Mocha</TestFramework>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="test\Iridium.ts" />
+    <TypeScriptCompile Include="test\support\chai.ts" />
+    <TypeScriptCompile Include="_references.d.ts" />
+    <TypeScriptCompile Include="typings\chai-as-promised\chai-as-promised.d.ts" />
+    <TypeScriptCompile Include="typings\chai-fuzzy\chai-fuzzy.d.ts" />
+    <TypeScriptCompile Include="typings\chai\chai.d.ts" />
+    <TypeScriptCompile Include="typings\mocha\mocha.d.ts" />
     <TypeScriptCompile Include="typings\tsd.d.ts" />
     <TypeScriptCompile Include="lib\cacheControllers\IDDirector.ts" />
     <TypeScriptCompile Include="lib\caches\MemoryCache.ts" />
@@ -68,8 +66,7 @@
     <TypeScriptCompile Include="lib\middleware\Express.ts" />
     <TypeScriptCompile Include="lib\utils\Omnom.ts" />
     <Content Include="test\support\config.json" />
-    <Compile Include="test\support\chai.js" />
-    <Compile Include="test\support\config.js" />
+    <Compile Include="test\support\config.ts" />
     <TypeScriptCompile Include="typings\bluebird\bluebird.d.ts" />
     <TypeScriptCompile Include="typings\concoction\concoction.d.ts" />
     <TypeScriptCompile Include="typings\lodash\lodash.d.ts" />
@@ -79,7 +76,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="benchmarks" />
-    <Folder Include="dist\js\" />
     <Folder Include="doc" />
     <Folder Include="example" />
     <Folder Include="lib" />
@@ -87,13 +83,16 @@
     <Folder Include="lib\caches" />
     <Folder Include="lib\middleware" />
     <Folder Include="lib\utils" />
-    <Folder Include="dist\" />
     <Folder Include="test" />
     <Folder Include="test\support" />
     <Folder Include="typings" />
     <Folder Include="typings\bluebird" />
+    <Folder Include="typings\chai-as-promised\" />
+    <Folder Include="typings\chai-fuzzy\" />
+    <Folder Include="typings\chai\" />
     <Folder Include="typings\concoction" />
     <Folder Include="typings\lodash" />
+    <Folder Include="typings\mocha\" />
     <Folder Include="typings\mongodb" />
     <Folder Include="typings\node" />
     <Folder Include="typings\skmatc" />
@@ -101,8 +100,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <!--Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them.-->
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
-    <TypeScriptOutDir>dist/js</TypeScriptOutDir>
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />

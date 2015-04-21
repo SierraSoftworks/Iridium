@@ -1,9 +1,7 @@
 ﻿
 import Iridium = require('../index');
-import Instance = require('../lib/Instance');
 
-
-interface IUser {
+interface UserDoc {
     username: string;
     fullname: string;
     email: string;
@@ -11,19 +9,41 @@ interface IUser {
     passwordHash: string;
 }
 
-interface IUserInstance extends IUser, Instance.IInstance<IUser, IUserInstance> {}
+class User extends Iridium.Instance<UserDoc, User> implements UserDoc {
+    username: string;
+    fullname: string;
+    email: string;
+    dateOfBirth: Date;
+    passwordHash: string;
 
-class MyDB extends Iridium {
-    Users = new Iridium.Model<IUser, IUserInstance>(this, "users", {
+    changePassword(newPassword: string) {
+        this.passwordHash = newPassword.toLowerCase();
+    }
+}
+
+class MyDB extends Iridium.Core {
+    Users = new Iridium.Model<UserDoc, User>(this, User, "users", {
         username: /^[a-z][a-z0-9_]{7,}$/,
         fullname: String,
         email: String,
         dateOfBirth: Date,
         passwordHash: String
     }, {
-            indexes: [
-                { email: 1 }
-            ]
+        indexes: [
+            { email: 1 }
+        ]
+    });
+
+    PlainUsers = new Iridium.Model<UserDoc, UserDoc>(this,(doc) => doc, "users", {
+        username: /^[a-z][a-z0-9_]{7,}$/,
+        fullname: String,
+        email: String,
+        dateOfBirth: Date,
+        passwordHash: String
+    }, {
+        indexes: [
+            { email: 1 }
+        ]
     });
 }
 
@@ -39,7 +59,7 @@ db.connect().then(function () {
         users[0].fullname;
     });
     
-    db.Users.findOne().then(function (instance: IUserInstance) {
+    db.Users.findOne().then(function (instance) {
         instance.save().then(function (i) {
             i.remove().then(function (i) {
                 i.username = 'test';
@@ -50,5 +70,9 @@ db.connect().then(function () {
     
     db.Users.count().then(function (count) {
         count.toPrecision(2);
+    });
+
+    db.PlainUsers.get().then(function (plainUser) {
+        plainUser.username;
     });
 });
