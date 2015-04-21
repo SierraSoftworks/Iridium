@@ -1,4 +1,4 @@
-﻿// Type definitions for chai-as-promised
+// Type definitions for chai-as-promised
 // Project: https://github.com/domenic/chai-as-promised/
 // Definitions by: jt000 <https://github.com/jt000>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
