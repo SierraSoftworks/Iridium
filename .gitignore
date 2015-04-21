@@ -9,6 +9,4 @@ node_modules/
 *.dat
 .idea
 dist/
-*.js
-*.map
 *.tmp
