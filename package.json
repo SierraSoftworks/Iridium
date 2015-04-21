@@ -17,7 +17,8 @@
   "licence": "MIT",
   "main": "./index",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "test:watch": "mocha -w"
   },
   "engines": {
     "node": ">= 0.8"

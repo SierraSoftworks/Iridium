@@ -60,7 +60,7 @@ declare module Concoction {
          * Creates an ingredient which renames an object's properties
          * @param {Object} mapping A map from the original object names to the names you wish to use
          */
-        (mapping: { [key: string]: string }) : Ingredient;
+        new(mapping: { [key: string]: string }) : Ingredient;
     }
 
     export interface ConvertStatic {
@@ -68,6 +68,6 @@ declare module Concoction {
          * Creates an ingredient which converts an object's properties from one form to another
          * @param {Object} mapping A map of object properties to their conversion functions
          */
-        (mapping: { [key: string]: Ingredient }): Ingredient;
+        new(mapping: { [key: string]: Ingredient }): Ingredient;
     }
 }
