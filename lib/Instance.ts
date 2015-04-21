@@ -34,7 +34,7 @@ class Instance<TDocument, TInstance> {
         this._original = document;
         this._modified = _.cloneDeep(document);
 
-        _.each(model.core.plugins, function (plugin: IPlugin) {
+        _.each(model.core.plugins,(plugin: IPlugin) => {
             if (plugin.newInstance) plugin.newInstance(this, model);
         });
     }
@@ -80,7 +80,7 @@ class Instance<TDocument, TInstance> {
         var changes: any = null;
         var conditions: any = {};
 
-        Array.prototype.slice.call(args, 0).reverse().forEach(function (arg) {
+        Array.prototype.slice.call(args, 0).reverse().forEach((arg) => {
             if (typeof arg == 'function') callback = arg;
             else if (typeof arg == 'object') {
                 if (!changes) changes = arg;
@@ -88,7 +88,7 @@ class Instance<TDocument, TInstance> {
             }
         });
 
-        return Promise.resolve().then(function () {
+        return Promise.resolve().then(() => {
             _.merge(conditions, this._model.helpers.selectOneDownstream(this._modified));
 
             this._model.helpers.transform.reverse(conditions);
@@ -102,26 +102,26 @@ class Instance<TDocument, TInstance> {
 
                 changes = this._model.helpers.diff(original, modified);
             }
-        }).then(function () {
-            return this._model.handlers.savingDocument(this, changes);
-        }).then(function () {
+        }).then(() => {
+            return this._model.handlers.savingDocument(<any>this, changes);
+        }).then(() => {
             return new Promise<boolean>(function (resolve: (changed: boolean) => void, reject) {
                 this._model.collection.update(conditions, changes, { w: 1 }, function (err: Error, changed: boolean) {
                     if (err) return reject(err);
                     return resolve(changed);
                 });
             });
-        }).then(function (changed: boolean) {
-            conditions = this._model.helpers.selectOne(this.modified);
+        }).then((changed: boolean) => {
+            conditions = this._model.helpers.selectOne(this._modified);
             if (!changed) return this._modified;
 
-            return new Promise<any>(function (resolve, reject) {
+            return new Promise<TDocument>((resolve, reject) => {
                 this._model.collection.findOne(conditions, function (err: Error, latest) {
                     if (err) return reject(err);
                     return resolve(latest);
                 });
             });
-        }).then(function (latest) {
+        }).then((latest: TDocument) => {
             return this._model.handlers.documentsReceived(conditions, [latest], function (value) {
                 this._model.helpers.transform.apply(value);
                 this._isPartial = false;
@@ -130,6 +130,8 @@ class Instance<TDocument, TInstance> {
                 this._modified = _.clone(value);
                 return this;
             });
+        }).then((instances) => {
+            return instances[0];
         }).nodeify(callback);
     }
 
@@ -150,14 +152,14 @@ class Instance<TDocument, TInstance> {
     refresh(callback?: general.Callback<TInstance>): Promise<TInstance> {
         var conditions = this._model.helpers.selectOne(this._original);
 
-        return Promise.resolve().then(function () {
-            return new Promise<any>(function (resolve, reject) {
+        return Promise.resolve().then(() => {
+            return new Promise<TDocument>((resolve, reject) => {
                 this._model.collection.findOne(conditions, function (err: Error, doc: any) {
                     if (err) return reject(err);
                     return resolve(doc);
                 });
             });
-        }).then(function (doc) {
+        }).then((doc) => {
             if (!doc) {
                 this._isPartial = true;
                 this._isNew = true;
@@ -165,18 +167,17 @@ class Instance<TDocument, TInstance> {
                 return this;
             }
 
-            return this._model.handle.documentsReceived(conditions, [doc], this._model.helpers.transform.apply, { wrap: false }).then(function (doc: any) {
-                this._model.helpers.transformFromSource(doc);
+            return this._model.handlers.documentsReceived(conditions, [doc], this._model.helpers.transform.apply, { wrap: false }).then((doc: any) => {
+                this._model.helpers.transform.apply(doc);
                 this._isNew = false;
                 this._isPartial = false;
                 this._original = doc;
                 this._modified = _.cloneDeep(doc);
 
-                this._model._helpers.transformDown(doc);
-
                 return this;
             });
-        }).nodeify(callback);
+        }).then((instances) => instances[0])
+            .nodeify(callback);
     }
 
     /**
@@ -196,16 +197,19 @@ class Instance<TDocument, TInstance> {
     remove(callback?: general.Callback<TInstance>): Promise<TInstance> {
         var conditions = this._model.helpers.selectOne(this._original);
 
-        return Promise.resolve().then(function () {
+        return Promise.resolve().then(() => {
             if (this._isNew) return 0;
-            return new Promise<number>(function (resolve: (value: number) => void, reject) {
-                this._model.collection.remove(conditions, function (err: Error, removed?: number) {
+            return new Promise<number>((resolve, reject) => {
+                this._model.collection.remove(conditions, (err: Error, removed?: any) => {
                     if (err) return reject(err);
                     return resolve(removed);
                 });
             });
-        }).then(function (removed) {
-            if (removed) return this._model.cache.remove(conditions);
+        }).then((removed) => {
+            if (removed) return this._model.cache.clear(conditions);
+            return false;
+        }).then((removed) => {
+            return <any>this;
         }).nodeify(callback);
     }
 
@@ -226,12 +230,12 @@ class Instance<TDocument, TInstance> {
     first<T>(collection: T[]| { [key: string]: T }, predicate: general.Predicate<T>): T {
         var result = null;
 
-        _.each(collection, function (value: T, key) {
+        _.each(collection, (value: T, key) => {
             if (predicate.call(this, value, key)) {
                 result = value;
                 return false;
             }
-        }, this);
+        });
 
         return result;
     }
@@ -254,12 +258,12 @@ class Instance<TDocument, TInstance> {
         var isArray = Array.isArray(collection);
         var results: any = isArray ? [] : {};
 
-        _.each(collection, function (value: T, key) {
+        _.each(collection, (value: T, key) => {
             if (predicate.call(this, value, key)) {
                 if (isArray) results.push(value);
                 else results[key] = value;
             }
-        }, this);
+        });
 
         return results;
     }

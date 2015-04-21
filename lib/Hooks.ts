@@ -7,4 +7,5 @@ export interface IHooks<TDocument, TInstance> {
     retrieved? (document: TDocument);
     ready? (instance: TInstance);
     beforeSave? (instance: TInstance);
+    saving? (instance: TInstance, changes: any);
 }
