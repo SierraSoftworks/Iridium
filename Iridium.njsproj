@@ -31,7 +31,6 @@
     <Content Include="README.md" />
     <Compile Include="index.ts" />
     <Compile Include="benchmarks\mongodb.js" />
-    <Compile Include="example\IntelliSense.js" />
     <Compile Include="example\LowercaseCollectionsPlugin.js" />
     <Compile Include="example\StringCaseValidationPlugin.js" />
     <Compile Include="example\UserModel.js" />
