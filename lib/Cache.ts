@@ -1,4 +1,4 @@
-/// <reference path='../typings/bluebird/bluebird.d.ts' />
+/// <reference path="../_references.d.ts" />
 import Promise = require('bluebird');
 
 export = ICache;

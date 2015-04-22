@@ -1,3 +1,4 @@
+/// <reference path="../_references.d.ts" />
 export = Configuration;
 
 interface Configuration {

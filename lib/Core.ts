@@ -1,10 +1,4 @@
-/// <reference path='../typings/node/node.d.ts' />
-/// <reference path='../typings/mongodb/mongodb.d.ts' />
-/// <reference path='../typings/lodash/lodash.d.ts' />
-/// <reference path='../typings/bluebird/bluebird.d.ts' />
-/// <reference path='./Model' />
-/// <reference path='./Instance' />
-
+/// <reference path="../_references.d.ts" />
 import Promise = require('bluebird');
 import MongoDB = require('mongodb');
 import _ = require('lodash');

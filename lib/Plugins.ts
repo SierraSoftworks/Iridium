@@ -1,5 +1,4 @@
-/// <reference path='../typings/skmatc/skmatc.d.ts' />
-
+/// <reference path="../_references.d.ts" />
 import core = require('./Core');
 import model = require('./Model');
 import instance = require('./Instance');

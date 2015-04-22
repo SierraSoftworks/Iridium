@@ -1,5 +1,4 @@
-/// <reference path='../typings/bluebird/bluebird.d.ts' />
-
+/// <reference path="../_references.d.ts" />
 import instance = require('./Instance');
 
 export interface IHooks<TDocument, TInstance> {

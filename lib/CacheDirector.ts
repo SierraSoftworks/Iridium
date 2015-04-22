@@ -1,3 +1,4 @@
+/// <reference path="../_references.d.ts" />
 export = ICacheDirector;
 
 interface ICacheDirector {

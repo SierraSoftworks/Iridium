@@ -1,7 +1,4 @@
-/// <reference path='../../typings/node/node.d.ts' />
-/// <reference path='../../typings/mongodb/mongodb.d.ts' />
-/// <reference path='../../typings/lodash/lodash.d.ts' />
-
+/// <reference path="../../_references.d.ts" />
 import _ = require('lodash');
 import MongoDB = require('mongodb');
 

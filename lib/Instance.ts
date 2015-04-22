@@ -1,10 +1,4 @@
-﻿/// <reference path='../typings/node/node.d.ts' />
-/// <reference path='../typings/mongodb/mongodb.d.ts' />
-/// <reference path='../typings/lodash/lodash.d.ts' />
-/// <reference path='../typings/bluebird/bluebird.d.ts' />
-/// <reference path="Core.ts" />
-/// <reference path="Model.ts" />
-
+﻿/// <reference path="../_references.d.ts" />
 import iridium = require('./Core');
 import model = require('./Model');
 import IPlugin = require('./Plugins');
