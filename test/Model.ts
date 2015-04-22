@@ -317,17 +317,72 @@ describe("Model",() => {
     });
 
     describe("ensureIndexes",() => {
-        it("should exist");
+        var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { id: false, answer: Number });
+
+        before(() => {
+            return core.connect().then(() => model.remove()).then(() => model.insert([
+                { answer: 10 },
+                { answer: 11 },
+                { answer: 12 },
+                { answer: 13 },
+                { answer: 14 }
+            ]));
+        });
+
+        after(() => {
+            return model.remove().then(() => model.dropIndexes()).then(() => core.close());
+        });
+
+        it("should exist",() => {
+            chai.expect(model.ensureIndices).to.exist.and.be.a('function');
+        });
+
         it("should configure all indexes defined in the model's options");
     });
 
     describe("dropIndex",() => {
-        it("should exist");
+        var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { id: false, answer: Number });
+
+        before(() => {
+            return core.connect().then(() => model.remove()).then(() => model.insert([
+                { answer: 10 },
+                { answer: 11 },
+                { answer: 12 },
+                { answer: 13 },
+                { answer: 14 }
+            ])).then(() => model.ensureIndex({ answer: 1 }));
+        });
+
+        after(() => {
+            return model.remove().then(() => model.dropIndexes()).then(() => core.close());
+        });
+
+        it("should exist",() => {
+            chai.expect(model.dropIndex).to.exist.and.be.a('function');
+        });
         it("should remove the specified index");
     });
 
     describe("dropIndexes",() => {
-        it("should exist");
+        var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { id: false, answer: Number });
+
+        before(() => {
+            return core.connect().then(() => model.remove()).then(() => model.insert([
+                { answer: 10 },
+                { answer: 11 },
+                { answer: 12 },
+                { answer: 13 },
+                { answer: 14 }
+            ])).then(() => model.ensureIndex({ answer: 1 }));
+        });
+
+        after(() => {
+            return model.remove().then(() => model.dropIndexes()).then(() => core.close());
+        });
+
+        it("should exist",() => {
+            chai.expect(model.dropIndexes).to.exist.and.be.a('function');
+        });
         it("should remove all non-_id indexes on the collection");
     });
 });

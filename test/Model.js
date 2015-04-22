@@ -274,15 +274,60 @@ describe("Model", function () {
         });
     });
     describe("ensureIndexes", function () {
-        it("should exist");
+        var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
+        before(function () {
+            return core.connect().then(function () { return model.remove(); }).then(function () { return model.insert([
+                { answer: 10 },
+                { answer: 11 },
+                { answer: 12 },
+                { answer: 13 },
+                { answer: 14 }
+            ]); });
+        });
+        after(function () {
+            return model.remove().then(function () { return model.dropIndexes(); }).then(function () { return core.close(); });
+        });
+        it("should exist", function () {
+            chai.expect(model.ensureIndices).to.exist.and.be.a('function');
+        });
         it("should configure all indexes defined in the model's options");
     });
     describe("dropIndex", function () {
-        it("should exist");
+        var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
+        before(function () {
+            return core.connect().then(function () { return model.remove(); }).then(function () { return model.insert([
+                { answer: 10 },
+                { answer: 11 },
+                { answer: 12 },
+                { answer: 13 },
+                { answer: 14 }
+            ]); }).then(function () { return model.ensureIndex({ answer: 1 }); });
+        });
+        after(function () {
+            return model.remove().then(function () { return model.dropIndexes(); }).then(function () { return core.close(); });
+        });
+        it("should exist", function () {
+            chai.expect(model.dropIndex).to.exist.and.be.a('function');
+        });
         it("should remove the specified index");
     });
     describe("dropIndexes", function () {
-        it("should exist");
+        var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
+        before(function () {
+            return core.connect().then(function () { return model.remove(); }).then(function () { return model.insert([
+                { answer: 10 },
+                { answer: 11 },
+                { answer: 12 },
+                { answer: 13 },
+                { answer: 14 }
+            ]); }).then(function () { return model.ensureIndex({ answer: 1 }); });
+        });
+        after(function () {
+            return model.remove().then(function () { return model.dropIndexes(); }).then(function () { return core.close(); });
+        });
+        it("should exist", function () {
+            chai.expect(model.dropIndexes).to.exist.and.be.a('function');
+        });
         it("should remove all non-_id indexes on the collection");
     });
 });
