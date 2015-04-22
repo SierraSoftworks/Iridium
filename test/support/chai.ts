@@ -1,4 +1,4 @@
-/// <references path="../../_references.d.ts" />
+/// <reference path="../../_references.d.ts" />
 import chai = require('chai');
 import chaiAsPromised = require('chai-as-promised');
 import Promise = require('bluebird');

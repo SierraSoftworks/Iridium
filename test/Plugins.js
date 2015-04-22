@@ -4,12 +4,35 @@ describe("Plugins", function () {
     it("should be registered with an Iridium Core", function () {
         core.register({
             newModel: function (model) {
-            }
+            },
+            newInstance: function (instance, model) {
+            },
+            validate: []
         });
     });
     describe("newModel", function () {
-        it("should allow a plugin not to define a handler");
-        it("should be called when a new model is created");
+        it("should allow a plugin to define a handler", function () {
+            core.register({
+                newModel: function (model) {
+                    model.collectionName = 'changed';
+                },
+                newInstance: function (instance, model) {
+                },
+                validate: []
+            });
+        });
+        it("should allow a plugin not to define a handler", function () {
+            core.register({
+                newInstance: function (instance, model) {
+                },
+                validate: []
+            });
+        });
+        it("should be called when a new model is created", function () {
+            var model = new Iridium.Model(core, function () {
+            }, 'test', {});
+            chai.expect(model.collectionName).to.exist.and.equal('changed');
+        });
     });
     describe("newInstance", function () {
         it("should allow a plugin not to define a handler");
