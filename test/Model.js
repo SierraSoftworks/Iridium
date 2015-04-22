@@ -232,5 +232,23 @@ describe("Model", function () {
             });
         });
     });
+    describe("ensureIndex", function () {
+        var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
+        before(function () {
+            return core.connect().then(function () { return model.remove(); }).then(function () { return model.insert([
+                { answer: 10 },
+                { answer: 11 },
+                { answer: 12 },
+                { answer: 13 },
+                { answer: 14 }
+            ]); });
+        });
+        after(function () {
+            return model.remove().then(function () { return core.close(); });
+        });
+        it("should allow the creation of indexes", function () {
+            return chai.expect(model.ensureIndex({ answer: 1 }, { unique: true })).to.eventually.exist;
+        });
+    });
 });
 //# sourceMappingURL=Model.js.map

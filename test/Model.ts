@@ -263,4 +263,26 @@ describe("Model",() => {
             });
         });
     });
+
+    describe("ensureIndex",() => {
+        var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { id: false, answer: Number });
+
+        before(() => {
+            return core.connect().then(() => model.remove()).then(() => model.insert([
+                { answer: 10 },
+                { answer: 11 },
+                { answer: 12 },
+                { answer: 13 },
+                { answer: 14 }
+            ]));
+        });
+
+        after(() => {
+            return model.remove().then(() => core.close());
+        });
+
+        it("should allow the creation of indexes",() => {
+            return chai.expect(model.ensureIndex({ answer: 1 }, { unique: true })).to.eventually.exist;
+        });
+    });
 });
