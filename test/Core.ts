@@ -89,7 +89,7 @@ describe("Core",() => {
 
     describe("connect",() => {
         var core: Iridium.Core;
-        if (!process.env.CI)
+        if (!process.env.CI_SERVER)
             it("should return a rejection if the connection fails",() => {
                 core = new Iridium.Core("mongodb://0.0.0.0/test");
                 return chai.expect(core.connect()).to.be.rejected;
