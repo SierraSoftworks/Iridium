@@ -72,8 +72,15 @@ describe("Model", function () {
         after(function () {
             return model.remove().then(function () { return core.close(); });
         });
+        it("should exist", function () {
+            chai.expect(model.create).to.exist.and.be.a('function');
+            chai.expect(model.insert).to.exist.and.be.a('function');
+        });
         it("should allow the insertion of a single document", function () {
-            return chai.expect(model.create({ answer: 10 })).to.eventually.exist.and.have.property('answer', 10);
+            return chai.expect(model.create({ answer: 10 })).to.eventually.be.ok;
+        });
+        it("should return a document if a single document is inserted", function () {
+            return chai.expect(model.create({ answer: 10 })).to.eventually.have.property('answer', 10);
         });
         it("should allow the insertion of multiple documents", function () {
             return chai.expect(model.create([
@@ -110,6 +117,9 @@ describe("Model", function () {
         after(function () {
             return model.remove().then(function () { return core.close(); });
         });
+        it("should exist", function () {
+            chai.expect(model.remove).to.exist.and.be.a('function');
+        });
         it("should allow the removal of documents matching a query", function () {
             return chai.expect(model.remove({ answer: 10 })).to.eventually.equal(1);
         });
@@ -138,6 +148,10 @@ describe("Model", function () {
         });
         after(function () {
             return model.remove().then(function () { return core.close(); });
+        });
+        it("should exist", function () {
+            chai.expect(model.findOne).to.exist.and.be.a('function');
+            chai.expect(model.get).to.exist.and.be.a('function');
         });
         it("should support retrieving an random document", function () {
             return chai.expect(model.findOne()).to.eventually.exist.and.have.property('answer').is.a('number');
@@ -183,6 +197,9 @@ describe("Model", function () {
         after(function () {
             return model.remove().then(function () { return core.close(); });
         });
+        it("should exist", function () {
+            chai.expect(model.find).to.exist.and.be.a('function');
+        });
         it("should select all documents by default", function () {
             return chai.expect(model.find()).to.eventually.exist.and.have.length(5);
         });
@@ -217,6 +234,9 @@ describe("Model", function () {
         after(function () {
             return model.remove().then(function () { return core.close(); });
         });
+        it("should exist", function () {
+            chai.expect(model.count).to.exist.and.be.a('function');
+        });
         it("should select all documents by default", function () {
             return chai.expect(model.count()).to.eventually.exist.and.equal(5);
         });
@@ -244,11 +264,26 @@ describe("Model", function () {
             ]); });
         });
         after(function () {
-            return model.remove().then(function () { return core.close(); });
+            return model.remove().then(function () { return model.dropIndexes(); }).then(function () { return core.close(); });
+        });
+        it("should exist", function () {
+            chai.expect(model.ensureIndex).to.exist.and.be.a('function');
         });
         it("should allow the creation of indexes", function () {
             return chai.expect(model.ensureIndex({ answer: 1 }, { unique: true })).to.eventually.exist;
         });
+    });
+    describe("ensureIndexes", function () {
+        it("should exist");
+        it("should configure all indexes defined in the model's options");
+    });
+    describe("dropIndex", function () {
+        it("should exist");
+        it("should remove the specified index");
+    });
+    describe("dropIndexes", function () {
+        it("should exist");
+        it("should remove all non-_id indexes on the collection");
     });
 });
 //# sourceMappingURL=Model.js.map
