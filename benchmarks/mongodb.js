@@ -1,143 +1,98 @@
-var async = require('async'),
-	MongoClient = require('mongodb').MongoClient,
-	Iridium = require('../');
-
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+/// <reference path="../_references.d.ts" />
+var Iridium = require('../index');
+var Promise = require('bluebird');
 var objects = [];
-for(var i = 0; i < 10000; i++)
-	objects.push({
-		name: 'John',
-		surname: 'Doe',
-		birthday: new Date()
-	});
-
-var iDB = new Iridium({
-	database: 'iridium_bench'
-});
-
-var model = new Iridium.Model(iDB, 'iridium', {
-	name: String,
-	surname: String,
-	birthday: Date
-});
-
-var modelWrap = new Iridium.Model(iDB, 'iridiumWrap', {
-	name: String,
-	surname: String,
-	birthday: Date
-});
-
-iDB.register('model', model);
-
-function printTime(format, start) {
-	var ms = (new Date()).getTime() - start.getTime();
-	console.log(format, ms.toString() + 'ms');
+for (var i = 0; i < 10000; i++)
+    objects.push({ name: 'John', surname: 'Doe', birthday: new Date() });
+var User = (function () {
+    function User() {
+    }
+    return User;
+})();
+var WrappedUser = (function (_super) {
+    __extends(WrappedUser, _super);
+    function WrappedUser() {
+        _super.apply(this, arguments);
+    }
+    return WrappedUser;
+})(Iridium.Instance);
+var IridiumDB = (function (_super) {
+    __extends(IridiumDB, _super);
+    function IridiumDB() {
+        _super.call(this, { database: 'test' });
+        this.User = new Iridium.Model(this, User, 'iridium', {
+            name: String,
+            surname: String,
+            birthday: Date
+        });
+        this.UserWrapped = new Iridium.Model(this, WrappedUser, 'iridiumWrapped', {
+            name: String,
+            surname: String,
+            birthday: Date
+        });
+    }
+    return IridiumDB;
+})(Iridium.Core);
+var baseline = null;
+function benchmark(format, action, compareTo) {
+    var start = new Date();
+    return action().then(function (result) {
+        var ms = (new Date()).getTime() - start.getTime();
+        if (compareTo) {
+            var speedUp = '';
+            if ((Math.abs(ms - compareTo) / compareTo) < 0.2)
+                speedUp = '(about the same)';
+            else if (ms > compareTo)
+                speedUp = '(' + (ms / compareTo).toPrecision(2) + 'x slower)';
+            else
+                speedUp = '(' + (compareTo / ms).toPrecision(2) + 'x faster)';
+            console.log(format, ms.toString() + 'ms ' + speedUp);
+        }
+        else {
+            console.log(format, ms.toString() + 'ms');
+            baseline = ms;
+        }
+        return ms;
+    });
 }
-
-MongoClient.connect('mongodb://localhost/iridium_bench', function(err, mDB) {
-	if(err) throw err;
-
-	iDB.connect(function(err) {
-		if(err) throw err;
-
-		// Both databases are ready, let's start testing...
-
-		var mDBcol = mDB.collection('mongo');
-		async.series([
-			function(done) {
-				mDBcol.remove({}, { w: 1 }, function(err, removed) {
-					if(err) return done(err);
-					return done();
-				});
-			},
-			function(done) {
-				model.remove({}, function(err, removed) {
-					if(err) return done(err);
-					return done();
-				});
-			},
-			function(done) {
-				console.log('MongoDB 10000 Inserts { w: 1 }');
-				var start = new Date();
-				mDBcol.insert(objects, { w: 1 }, function(err, inserted) {
-					if(err) return done(err);
-					printTime(' => %s', start);
-					return done();
-				});
-			},
-			function(done) {
-				console.log('Iridium 10000 Inserts { w: 1, wrap: false }');
-				var start = new Date();
-				model.insert(objects, { w: 1, wrap: false }, function(err, inserted) {
-					if(err) return done(err);
-					printTime(' => %s', start);
-					return done();
-				});
-			},
-			function(done) {
-				console.log('Iridium 10000 Inserts { w: 1, wrap: true }');
-				var start = new Date();
-				modelWrap.insert(objects, { w: 1, wrap: true }, function(err, inserted) {
-					if(err) return done(err);
-					printTime(' => %s', start);
-					return done();
-				});
-			},
-			function(done) {
-				console.log('MongoDB find()');
-				var start = new Date();
-				mDBcol.find({}).toArray(function(err, results) {
-					if(err) return done(err);
-					printTime(' => %s', start);
-					return done();
-				});				
-			},
-			function(done) {
-				console.log('Iridium find() { wrap: false }');
-				var start = new Date();
-				model.find({}, { wrap: false }, function(err, results) {
-					if(err) return done(err);
-					printTime(' => %s', start);
-					return done();
-				});				
-			},
-			function(done) {
-				console.log('Iridium find() { wrap: true }');
-				var start = new Date();
-				modelWrap.find({}, { wrap: true }, function(err, results) {
-					if(err) return done(err);
-					printTime(' => %s', start);
-					return done();
-				});				
-			},
-			function(done) {
-				console.log('MongoDB remove()');
-				var start = new Date();
-				mDBcol.remove({}, function(err, results) {
-					if(err) return done(err);
-					printTime(' => %s', start);
-					return done();
-				});				
-			},
-			function(done) {
-				console.log('Iridium remove()');
-				var start = new Date();
-				model.remove(function(err, results) {
-					if(err) return done(err);
-					printTime(' => %s', start);
-					return done();
-				});				
-			},
-			function(done) {
-				modelWrap.remove(function(err, results) {
-					if(err) return done(err);
-					return done();
-				});				
-			}
-		], function(err) {
-			if(err) throw err;
-
-			mDB.close();
-			iDB.disconnect();
-		});
-	});
-});
+var iDB = new IridiumDB();
+iDB.connect().then(function () { return iDB.User.remove(); }).then(function () { return iDB.UserWrapped.remove(); }).then(function () {
+    return new Promise(function (resolve, reject) {
+        iDB.connection.collection('mongodb').remove(function (err) {
+            if (err)
+                return reject(err);
+            return resolve(null);
+        });
+    });
+}).then(function () { return benchmark("MongoDB inserting 10 000 documents: %s", function () {
+    return new Promise(function (resolve, reject) {
+        iDB.connection.collection('mongodb').insert(objects, function (err, objects) {
+            if (err)
+                return reject(err);
+            return resolve(objects);
+        });
+    });
+}); }).then(function () { return benchmark("Iridium Instances inserting 10 000 documents: %s", function () { return iDB.UserWrapped.insert(objects); }, baseline); }).then(function () { return benchmark("Iridium inserting 10 000 documents: %s", function () { return iDB.User.insert(objects); }, baseline); }).then(function () { return benchmark("MongoDB finding 10 000 documents: %s", function () {
+    return new Promise(function (resolve, reject) {
+        iDB.connection.collection('mongodb').find().toArray(function (err, objects) {
+            if (err)
+                return reject(err);
+            return resolve(objects);
+        });
+    });
+}); }).then(function () { return benchmark("Iridium Instances finding 10 000 documents: %s", function () { return iDB.UserWrapped.find(); }, baseline); }).then(function () { return benchmark("Iridium finding 10 000 documents: %s", function () { return iDB.User.find(); }, baseline); }).then(function () { return benchmark("MongoDB removing 10 000 documents: %s", function () {
+    return new Promise(function (resolve, reject) {
+        iDB.connection.collection('mongodb').remove(function (err, objects) {
+            if (err)
+                return reject(err);
+            return resolve(objects);
+        });
+    });
+}); }).then(function () { return benchmark("Iridium Instances removing 10 000 documents: %s", function () { return iDB.UserWrapped.remove(); }, baseline); }).then(function () { return benchmark("Iridium removing 10 000 documents: %s", function () { return iDB.User.remove(); }, baseline); }).then(function () { return iDB.close(); }).catch(function (err) { return console.error(err); });
+//# sourceMappingURL=mongodb.js.map
