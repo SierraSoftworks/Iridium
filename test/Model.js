@@ -4,6 +4,7 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
+/// <reference path="../_references.d.ts" />
 var Iridium = require('../index');
 var Test = (function (_super) {
     __extends(Test, _super);
@@ -63,10 +64,13 @@ describe("Model", function () {
             }, 'test', { id: String }).schema).to.eql({ id: String });
         });
     });
-    describe("create", function () {
-        var model = new Iridium.Model(core, Test, 'test', { answer: Number });
+    var createTests = function () {
+        var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
         before(function () {
             return core.connect();
+        });
+        after(function () {
+            return model.remove().then(function () { return core.close(); });
         });
         it("should allow the insertion of a single document", function () {
             return chai.expect(model.create({ answer: 10 })).to.eventually.exist.and.have.property('answer', 10);
@@ -80,6 +84,152 @@ describe("Model", function () {
         });
         it("should allow you to provide options to control the creation", function () {
             return chai.expect(model.create({ answer: 14 }, { w: 'majority' })).to.eventually.exist;
+        });
+        it("should support a callback style instead of promises", function (done) {
+            model.insert({ answer: 15 }, function (err, inserted) {
+                if (err)
+                    return done(err);
+                chai.expect(inserted).to.exist.and.have.property('answer', 15);
+                return done();
+            });
+        });
+    };
+    describe("create", createTests);
+    describe("insert", createTests);
+    describe("remove", function () {
+        var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
+        before(function () {
+            return core.connect().then(function () { return model.remove(); }).then(function () { return model.insert([
+                { answer: 10 },
+                { answer: 11 },
+                { answer: 12 },
+                { answer: 13 },
+                { answer: 14 }
+            ]); });
+        });
+        after(function () {
+            return model.remove().then(function () { return core.close(); });
+        });
+        it("should allow the removal of documents matching a query", function () {
+            return chai.expect(model.remove({ answer: 10 })).to.eventually.equal(1);
+        });
+        it("should allow the removal of all documents", function () {
+            return chai.expect(model.remove()).to.eventually.equal(4);
+        });
+        it("should support a callback style instead of promises", function (done) {
+            model.remove(function (err, removed) {
+                if (err)
+                    return done(err);
+                chai.expect(removed).to.exist.and.equal(0);
+                return done();
+            });
+        });
+    });
+    var findOneTests = function () {
+        var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
+        before(function () {
+            return core.connect().then(function () { return model.remove(); }).then(function () { return model.insert([
+                { answer: 10 },
+                { answer: 11 },
+                { answer: 12 },
+                { answer: 13 },
+                { answer: 14 }
+            ]); });
+        });
+        after(function () {
+            return model.remove().then(function () { return core.close(); });
+        });
+        it("should support retrieving an random document", function () {
+            return chai.expect(model.findOne()).to.eventually.exist.and.have.property('answer').is.a('number');
+        });
+        it("should support retrieving a document using its ID", function () {
+            return chai.expect(model.findOne().then(function (doc) { return model.findOne(doc.id); })).to.eventually.exist.and.have.property('answer').is.a('number');
+        });
+        it("should retrieve the correct document by its ID", function () {
+            return model.findOne().then(function (doc) {
+                return chai.expect(model.findOne(doc.id)).to.eventually.exist.and.have.property('id', doc.id);
+            });
+        });
+        it("should support retrieving a document using a selector query", function () {
+            return chai.expect(model.findOne({ answer: 10 })).to.eventually.exist.and.have.property('answer', 10);
+        });
+        it("should support passing options to control the query", function () {
+            return chai.expect(model.findOne({}, {
+                sort: { answer: -1 }
+            })).to.eventually.exist.and.have.property('answer', 14);
+        });
+        it("should support a callback style instead of promises", function (done) {
+            model.findOne(function (err, doc) {
+                if (err)
+                    return done(err);
+                chai.expect(doc).to.exist.and.have.property('answer');
+                return done();
+            });
+        });
+    };
+    describe("findOne", findOneTests);
+    describe("get", findOneTests);
+    describe("find", function () {
+        var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
+        before(function () {
+            return core.connect().then(function () { return model.remove(); }).then(function () { return model.insert([
+                { answer: 10 },
+                { answer: 11 },
+                { answer: 12 },
+                { answer: 13 },
+                { answer: 14 }
+            ]); });
+        });
+        after(function () {
+            return model.remove().then(function () { return core.close(); });
+        });
+        it("should select all documents by default", function () {
+            return chai.expect(model.find()).to.eventually.exist.and.have.length(5);
+        });
+        it("should allow filtering using a selector", function () {
+            return chai.expect(model.find({ answer: 10 })).to.eventually.exist.and.have.length(1);
+        });
+        it("should allow passing of options to control the query", function () {
+            return chai.expect(model.find({}, {
+                limit: 2
+            })).to.eventually.exist.and.have.length(2);
+        });
+        it("should support a callback style instead of promises", function (done) {
+            model.find(function (err, docs) {
+                if (err)
+                    return done(err);
+                chai.expect(docs).to.exist.and.have.length(5);
+                return done();
+            });
+        });
+    });
+    describe("count", function () {
+        var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
+        before(function () {
+            return core.connect().then(function () { return model.remove(); }).then(function () { return model.insert([
+                { answer: 10 },
+                { answer: 11 },
+                { answer: 12 },
+                { answer: 13 },
+                { answer: 14 }
+            ]); });
+        });
+        after(function () {
+            return model.remove().then(function () { return core.close(); });
+        });
+        it("should select all documents by default", function () {
+            return chai.expect(model.count()).to.eventually.exist.and.equal(5);
+        });
+        it("should allow filtering using a selector", function () {
+            return chai.expect(model.count({ answer: 10 })).to.eventually.exist.and.equal(1);
+        });
+        it("should support a callback style instead of promises", function (done) {
+            model.count(function (err, docs) {
+                if (err)
+                    return done(err);
+                chai.expect(docs).to.exist.and.equal(5);
+                return done();
+            });
         });
     });
 });
