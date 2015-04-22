@@ -252,7 +252,7 @@ class Instance<TDocument, TInstance> {
         var isArray = Array.isArray(collection);
         var results: any = isArray ? [] : {};
 
-        _.each(collection, (value: T, key) => {
+        _.each(collection,(value: T, key) => {
             if (predicate.call(this, value, key)) {
                 if (isArray) results.push(value);
                 else results[key] = value;
@@ -260,6 +260,22 @@ class Instance<TDocument, TInstance> {
         });
 
         return results;
+    }
+
+    /**
+     * Gets the JSON representation of this instance
+     * @returns {TDocument}
+     */
+    toJSON(): TDocument {
+        return this.document;
+    }
+
+    /**
+     * Gets a string representation of this instance
+     * @returns {String}
+     */
+    toString(): string {
+        return JSON.stringify(this.document, null, 2);
     }
 }
 
