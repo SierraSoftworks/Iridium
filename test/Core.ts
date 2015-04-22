@@ -1,4 +1,5 @@
-﻿import Iridium = require('../index');
+﻿/// <reference path="../_references.d.ts" />
+import Iridium = require('../index');
 
 class InheritedCore extends Iridium.Core {
     theAnswer = 42;

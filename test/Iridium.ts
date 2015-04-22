@@ -1,4 +1,5 @@
-﻿import Iridium = require('../index');
+﻿/// <reference path="../_references.d.ts" />
+import Iridium = require('../index');
 
 describe("Iridium",() => {
     it("should expose the Core",() => {

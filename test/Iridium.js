@@ -1,3 +1,4 @@
+/// <reference path="../_references.d.ts" />
 var Iridium = require('../index');
 describe("Iridium", function () {
     it("should expose the Core", function () {
