@@ -88,7 +88,7 @@ describe("Model",() => {
         });
 
         it("should allow you to provide options to control the creation",() => {
-            return chai.expect(model.create({ answer: 14 }, { w: 'majority' })).to.eventually.exist;
+            return chai.expect(model.create({ answer: 14 }, { upsert: true })).to.eventually.exist;
         });
 
         it("should support a callback style instead of promises",(done) => {
