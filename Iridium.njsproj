@@ -53,6 +53,7 @@
       <TestFramework>Mocha</TestFramework>
     </TypeScriptCompile>
     <TypeScriptCompile Include="test\Iridium.ts" />
+    <TypeScriptCompile Include="test\Model.ts" />
     <TypeScriptCompile Include="test\support\chai.ts" />
     <TypeScriptCompile Include="_references.d.ts" />
     <TypeScriptCompile Include="typings\chai-as-promised\chai-as-promised.d.ts" />
