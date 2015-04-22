@@ -15,6 +15,7 @@ var Test = (function (_super) {
 })(Iridium.Instance);
 describe("Model", function () {
     var core = new Iridium.Core({ database: 'test' });
+    before(function () { return core.connect(); });
     describe("constructor", function () {
         it("should throw an error if you don't provide a valid core", function () {
             chai.expect(function () {
@@ -64,6 +65,49 @@ describe("Model", function () {
             }, 'test', { id: String }).schema).to.eql({ id: String });
         });
     });
+    describe("methods", function () {
+        var test = new Iridium.Model(core, Test, 'test', {
+            id: String,
+            answer: Number
+        });
+        it("should expose create()", function () { return chai.expect(test.create).to.exist.and.be.a('function'); });
+        it("should expose insert()", function () { return chai.expect(test.insert).to.exist.and.be.a('function'); });
+        it("should expose remove()", function () { return chai.expect(test.remove).to.exist.and.be.a('function'); });
+        it("should expose findOne()", function () { return chai.expect(test.findOne).to.exist.and.be.a('function'); });
+        it("should expose get()", function () { return chai.expect(test.get).to.exist.and.be.a('function'); });
+        it("should expose find()", function () { return chai.expect(test.find).to.exist.and.be.a('function'); });
+        it("should expose count()", function () { return chai.expect(test.count).to.exist.and.be.a('function'); });
+        it("should expose ensureIndex()", function () { return chai.expect(test.ensureIndex).to.exist.and.be.a('function'); });
+        it("should expose ensureIndexes()", function () { return chai.expect(test.ensureIndexes).to.exist.and.be.a('function'); });
+        it("should expose dropIndex()", function () { return chai.expect(test.dropIndex).to.exist.and.be.a('function'); });
+        it("should expose dropIndexes()", function () { return chai.expect(test.dropIndexes).to.exist.and.be.a('function'); });
+    });
+    describe("properties", function () {
+        var test = new Iridium.Model(core, Test, 'test', {
+            id: String,
+            answer: Number
+        });
+        it("should expose core", function () {
+            chai.expect(test).to.have.property('core');
+            chai.expect(test.core).to.equal(core);
+        });
+        it("should expose collection", function () {
+            chai.expect(test).to.have.property('collection');
+        });
+        it("should expose collectionName", function () {
+            chai.expect(test).to.have.property('collectionName');
+            chai.expect(test.collectionName).to.equal('test');
+            test.collectionName = 'changed';
+            chai.expect(test.collectionName).to.equal('changed');
+        });
+        it("should expose options", function () { return chai.expect(test).to.have.property('options'); });
+        it("should expose schema", function () { return chai.expect(test).to.have.property('schema'); });
+        it("should expose helpers", function () { return chai.expect(test).to.have.property('helpers'); });
+        it("should expose handlers", function () { return chai.expect(test).to.have.property('handlers'); });
+        it("should expose cache", function () { return chai.expect(test).to.have.property('cache'); });
+        it("should expose cacheDirector", function () { return chai.expect(test).to.have.property('cacheDirector'); });
+        it("should expose Instance", function () { return chai.expect(test.Instance).to.exist.and.be.a('function'); });
+    });
     var createTests = function () {
         var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
         before(function () {
@@ -101,9 +145,9 @@ describe("Model", function () {
             });
         });
     };
-    describe("create", createTests);
-    describe("insert", createTests);
-    describe("remove", function () {
+    describe("create()", createTests);
+    describe("insert()", createTests);
+    describe("remove()", function () {
         var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
         before(function () {
             return core.connect().then(function () { return model.remove(); }).then(function () { return model.insert([
@@ -181,9 +225,9 @@ describe("Model", function () {
             });
         });
     };
-    describe("findOne", findOneTests);
-    describe("get", findOneTests);
-    describe("find", function () {
+    describe("findOne()", findOneTests);
+    describe("get()", findOneTests);
+    describe("find()", function () {
         var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
         before(function () {
             return core.connect().then(function () { return model.remove(); }).then(function () { return model.insert([
@@ -220,7 +264,7 @@ describe("Model", function () {
             });
         });
     });
-    describe("count", function () {
+    describe("count()", function () {
         var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
         before(function () {
             return core.connect().then(function () { return model.remove(); }).then(function () { return model.insert([
@@ -252,7 +296,7 @@ describe("Model", function () {
             });
         });
     });
-    describe("ensureIndex", function () {
+    describe("ensureIndex()", function () {
         var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
         before(function () {
             return core.connect().then(function () { return model.remove(); }).then(function () { return model.insert([
@@ -273,8 +317,10 @@ describe("Model", function () {
             return chai.expect(model.ensureIndex({ answer: 1 }, { unique: true })).to.eventually.exist;
         });
     });
-    describe("ensureIndexes", function () {
-        var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
+    describe("ensureIndexes()", function () {
+        var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number }, {
+            indexes: [{ answer: 1 }]
+        });
         before(function () {
             return core.connect().then(function () { return model.remove(); }).then(function () { return model.insert([
                 { answer: 10 },
@@ -288,11 +334,13 @@ describe("Model", function () {
             return model.remove().then(function () { return model.dropIndexes(); }).then(function () { return core.close(); });
         });
         it("should exist", function () {
-            chai.expect(model.ensureIndices).to.exist.and.be.a('function');
+            chai.expect(model.ensureIndexes).to.exist.and.be.a('function');
         });
-        it("should configure all indexes defined in the model's options");
+        it("should configure all indexes defined in the model's options", function () {
+            return chai.expect(model.ensureIndexes()).to.eventually.exist.and.have.length(1);
+        });
     });
-    describe("dropIndex", function () {
+    describe("dropIndex()", function () {
         var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
         before(function () {
             return core.connect().then(function () { return model.remove(); }).then(function () { return model.insert([
@@ -309,9 +357,11 @@ describe("Model", function () {
         it("should exist", function () {
             chai.expect(model.dropIndex).to.exist.and.be.a('function');
         });
-        it("should remove the specified index");
+        it("should remove the specified index", function () {
+            return chai.expect(model.dropIndex({ answer: 1 })).to.eventually.be.ok;
+        });
     });
-    describe("dropIndexes", function () {
+    describe("dropIndexes()", function () {
         var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
         before(function () {
             return core.connect().then(function () { return model.remove(); }).then(function () { return model.insert([
@@ -328,7 +378,9 @@ describe("Model", function () {
         it("should exist", function () {
             chai.expect(model.dropIndexes).to.exist.and.be.a('function');
         });
-        it("should remove all non-_id indexes on the collection");
+        it("should remove all non-_id indexes on the collection", function () {
+            return chai.expect(model.dropIndexes()).to.eventually.be.true;
+        });
     });
 });
 //# sourceMappingURL=Model.js.map

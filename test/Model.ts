@@ -14,6 +14,8 @@ class Test extends Iridium.Instance<TestDocument, Test> implements TestDocument 
 describe("Model",() => {
     var core = new Iridium.Core({ database: 'test' });
 
+    before(() => core.connect());
+
     describe("constructor",() => {
         it("should throw an error if you don't provide a valid core",() => {
             chai.expect(() => {
@@ -64,6 +66,53 @@ describe("Model",() => {
         });
     });
 
+    describe("methods",() => {
+        var test = new Iridium.Model(core, Test, 'test', {
+            id: String,
+            answer: Number
+        });
+
+        it("should expose create()",() => chai.expect(test.create).to.exist.and.be.a('function'));
+        it("should expose insert()",() => chai.expect(test.insert).to.exist.and.be.a('function'));
+        it("should expose remove()",() => chai.expect(test.remove).to.exist.and.be.a('function'));
+        it("should expose findOne()",() => chai.expect(test.findOne).to.exist.and.be.a('function'));
+        it("should expose get()",() => chai.expect(test.get).to.exist.and.be.a('function'));
+        it("should expose find()",() => chai.expect(test.find).to.exist.and.be.a('function'));
+        it("should expose count()",() => chai.expect(test.count).to.exist.and.be.a('function'));
+        it("should expose ensureIndex()",() => chai.expect(test.ensureIndex).to.exist.and.be.a('function'));
+        it("should expose ensureIndexes()",() => chai.expect(test.ensureIndexes).to.exist.and.be.a('function'));
+        it("should expose dropIndex()",() => chai.expect(test.dropIndex).to.exist.and.be.a('function'));
+        it("should expose dropIndexes()",() => chai.expect(test.dropIndexes).to.exist.and.be.a('function'));
+    });
+
+    describe("properties",() => {
+        var test = new Iridium.Model(core, Test, 'test', {
+            id: String,
+            answer: Number
+        });
+
+        it("should expose core",() => {
+            chai.expect(test).to.have.property('core');
+            chai.expect(test.core).to.equal(core);
+        });
+        it("should expose collection",() => {
+            chai.expect(test).to.have.property('collection');
+        });
+        it("should expose collectionName",() => {
+            chai.expect(test).to.have.property('collectionName');
+            chai.expect(test.collectionName).to.equal('test');
+            test.collectionName = 'changed';
+            chai.expect(test.collectionName).to.equal('changed');
+        });
+        it("should expose options",() => chai.expect(test).to.have.property('options'));
+        it("should expose schema",() => chai.expect(test).to.have.property('schema'));
+        it("should expose helpers",() => chai.expect(test).to.have.property('helpers'));
+        it("should expose handlers",() => chai.expect(test).to.have.property('handlers'));
+        it("should expose cache",() => chai.expect(test).to.have.property('cache'));
+        it("should expose cacheDirector",() => chai.expect(test).to.have.property('cacheDirector'));
+        it("should expose Instance",() => chai.expect(test.Instance).to.exist.and.be.a('function'));
+    });
+
     var createTests = () => {
         var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { id: false, answer: Number });
 
@@ -109,10 +158,10 @@ describe("Model",() => {
         });
     };
 
-    describe("create", createTests);
-    describe("insert", createTests);
+    describe("create()", createTests);
+    describe("insert()", createTests);
 
-    describe("remove",() => {
+    describe("remove()",() => {
         var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { id: false, answer: Number });
 
         before(() => {
@@ -205,10 +254,10 @@ describe("Model",() => {
         });
     };
 
-    describe("findOne", findOneTests);
-    describe("get", findOneTests);
+    describe("findOne()", findOneTests);
+    describe("get()", findOneTests);
 
-    describe("find",() => {
+    describe("find()",() => {
         var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { id: false, answer: Number });
 
         before(() => {
@@ -252,7 +301,7 @@ describe("Model",() => {
         });
     });
 
-    describe("count",() => {
+    describe("count()",() => {
         var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { id: false, answer: Number });
 
         before(() => {
@@ -290,7 +339,7 @@ describe("Model",() => {
         });
     });
 
-    describe("ensureIndex",() => {
+    describe("ensureIndex()",() => {
         var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { id: false, answer: Number });
 
         before(() => {
@@ -316,8 +365,10 @@ describe("Model",() => {
         });
     });
 
-    describe("ensureIndexes",() => {
-        var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { id: false, answer: Number });
+    describe("ensureIndexes()",() => {
+        var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { id: false, answer: Number }, {
+            indexes: [{ answer: 1 }]
+        });
 
         before(() => {
             return core.connect().then(() => model.remove()).then(() => model.insert([
@@ -334,13 +385,15 @@ describe("Model",() => {
         });
 
         it("should exist",() => {
-            chai.expect(model.ensureIndices).to.exist.and.be.a('function');
+            chai.expect(model.ensureIndexes).to.exist.and.be.a('function');
         });
 
-        it("should configure all indexes defined in the model's options");
+        it("should configure all indexes defined in the model's options",() => {
+            return chai.expect(model.ensureIndexes()).to.eventually.exist.and.have.length(1);
+        });
     });
 
-    describe("dropIndex",() => {
+    describe("dropIndex()",() => {
         var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { id: false, answer: Number });
 
         before(() => {
@@ -360,10 +413,13 @@ describe("Model",() => {
         it("should exist",() => {
             chai.expect(model.dropIndex).to.exist.and.be.a('function');
         });
-        it("should remove the specified index");
+
+        it("should remove the specified index",() => {
+            return chai.expect(model.dropIndex({ answer: 1 })).to.eventually.be.ok;
+        });
     });
 
-    describe("dropIndexes",() => {
+    describe("dropIndexes()",() => {
         var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { id: false, answer: Number });
 
         before(() => {
@@ -383,6 +439,9 @@ describe("Model",() => {
         it("should exist",() => {
             chai.expect(model.dropIndexes).to.exist.and.be.a('function');
         });
-        it("should remove all non-_id indexes on the collection");
+
+        it("should remove all non-_id indexes on the collection",() => {
+            return chai.expect(model.dropIndexes()).to.eventually.be.true;
+        });
     });
 });

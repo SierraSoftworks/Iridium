@@ -38,7 +38,7 @@ declare module Concoction {
         /**
          * Creates a new ingredient which transforms objects as part of a recipe
          */
-        (): Ingredient;
+        new (): Ingredient;
     }
 
     export interface Ingredient {

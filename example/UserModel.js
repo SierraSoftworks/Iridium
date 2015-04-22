@@ -1,145 +1,81 @@
 /// <reference path="../typings/concoction/concoction.d.ts" />
-
-import _ = require('lodash');
-import Iridium = require('../index');
-import Concoction = require('concoction');
-import Promise = require('bluebird');
-
-var settings: any = {};
-
-export interface UserDocument {
-    username: string;
-    fullname: string;
-    email: string;
-    password: string;
-    type: string;
-    banned: boolean;
-    statistics: {
-        won: number;
-        drawn: number;
-        lost: number;
-        incomplete: number;
-    };
-    skill: {
-        matchmaking: number;
-        trend: number;
-        level: number;
-        xp: number;
-        current_level: number;
-        next_level: number;
-    };
-    friends: string[];
-
-    pending_messages: {
-        from: string;
-        time: Date;
-        message: string;
-        group?: string;
-        game?: string;
-    }[];
-    sessions: string[];
-    friend_requests: string[];
-    last_seen: Date;
-}
-
-export class User extends Iridium.Instance<UserDocument, User> implements UserDocument {
-    username: string;
-    fullname: string;
-    email: string;
-    password: string;
-    type: string;
-    banned: boolean;
-    statistics: {
-        won: number;
-        drawn: number;
-        lost: number;
-        incomplete: number;
-    };
-    skill: {
-        matchmaking: number;
-        trend: number;
-        level: number;
-        xp: number;
-        current_level: number;
-        next_level: number;
-    };
-    friends: string[];
-
-    pending_messages: {
-        from: string;
-        time: Date;
-        message: string;
-        group?: string;
-        game?: string;
-    }[];
-    sessions: string[];
-    friend_requests: string[];
-    last_seen: Date;
-
-    get API() {
-        var $ = this;
-
-        return {
-            username: $.username,
-            fullname: $.fullname,
-            email: $.email,
-            banned: $.banned,
-            statistics: $.statistics,
-            skill: {
-                level: $.skill.level,
-                xp: $.skill.xp
-            },
-            friends: $.friends,
-            pending_messages: $.pending_messages,
-            last_seen: $.last_seen
-        };
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var _ = require('lodash');
+var Iridium = require('../index');
+var Concoction = require('concoction');
+var Promise = require('bluebird');
+var settings = {};
+var User = (function (_super) {
+    __extends(User, _super);
+    function User() {
+        _super.apply(this, arguments);
     }
-
-    setPassword(newPassword: string, callback: (err?: Error, user?: User) => void) {
+    Object.defineProperty(User.prototype, "API", {
+        get: function () {
+            var $ = this;
+            return {
+                username: $.username,
+                fullname: $.fullname,
+                email: $.email,
+                banned: $.banned,
+                statistics: $.statistics,
+                skill: {
+                    level: $.skill.level,
+                    xp: $.skill.xp
+                },
+                friends: $.friends,
+                pending_messages: $.pending_messages,
+                last_seen: $.last_seen
+            };
+        },
+        enumerable: true,
+        configurable: true
+    });
+    User.prototype.setPassword = function (newPassword, callback) {
         /// <summary>Updates the user's stored password hash</summary>
         /// <param name="newPassword" type="String">The new password to use for the user</param>
         /// <param name="callback" type="Function">A function to be called once the user's password has been updated</param>
-
         var passwordTest = /(?=^.{8,}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*/;
-        if (!passwordTest.test(newPassword || '')) return callback(new Error('Password didn\'t meet the minimum safe password requirements. Passwords should be at least 8 characters long, and contain at least 3 of the following categories: lowercase letters, uppercase letters, numbers, characters'));
-
+        if (!passwordTest.test(newPassword || ''))
+            return callback(new Error('Password didn\'t meet the minimum safe password requirements. Passwords should be at least 8 characters long, and contain at least 3 of the following categories: lowercase letters, uppercase letters, numbers, characters'));
         var hashed = require('crypto').createHash('sha512').update(settings.security.salt).update(newPassword).digest('hex');
         this.password = hashed;
         this.save(callback);
-    }
-    checkPassword(password: string): boolean {
+    };
+    User.prototype.checkPassword = function (password) {
         /// <summary>Checks whether a given password is correct for a user's account</summary>
         /// <param name="password" type="String">The password to validate against the user's password hash.</param>
         /// <returns type="Boolean"/>
-
         var hashed = require('crypto').createHash('sha512').update(settings.security.salt).update(password).digest('hex');
         return hashed == this.password;
-    }
-    addFriend(friend: string, callback: (err?: Error, user?: User) => void) {
+    };
+    User.prototype.addFriend = function (friend, callback) {
         this.save({ $push: { friends: friend } }, callback);
-    }
-    updateLevel() {
+    };
+    User.prototype.updateLevel = function () {
         /// <summary>Update's the user's current level based on the amount of XP they have. Doesn't save the user instance.</summary>
-				
         // Amount of XP required per level starts at 1200, doubles for each consecutive level
         // tf. XP_n = XP_nm1 + 1200 * 2^n
-
         var remainingXP = this.skill.xp;
-
         var previousLevelXP = 0;
         var levelXP = 1200;
         var level = 0;
-
-        for (; remainingXP >= levelXP; level++ , previousLevelXP = levelXP, remainingXP -= levelXP, levelXP += 1200 * Math.pow(2, level));
-
+        for (; remainingXP >= levelXP; level++, previousLevelXP = levelXP, remainingXP -= levelXP, levelXP += 1200 * Math.pow(2, level))
+            ;
         this.skill.level = level;
         this.skill.current_level = previousLevelXP;
         this.skill.next_level = levelXP;
-    }
-}
-
-export function Users(core: Iridium.Core): Iridium.Model<UserDocument, User> {
-    var schema: Iridium.Schema = {
+    };
+    return User;
+})(Iridium.Instance);
+exports.User = User;
+function Users(core) {
+    var schema = {
         username: /[a-z0-9]+(_[a-z0-9]+)*/,
         fullname: String,
         email: String,
@@ -172,19 +108,16 @@ export function Users(core: Iridium.Core): Iridium.Model<UserDocument, User> {
         friend_requests: [String],
         last_seen: Date
     };
-
     var options = {
         hooks: {
             creating: function (item) {
                 item._id = item.username;
-                if (item.username) delete item.username;
-
+                if (item.username)
+                    delete item.username;
                 var passwordTest = /(?=^.{8,}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*/;
-
-                if (!passwordTest.test(item.password || '')) return Promise.reject(new Error('Password didn\'t meet the minimum safe password requirements. Passwords should be at least 8 characters long, and contain at least 3 of the following categories: lowercase letters, uppercase letters, numbers, characters'));
-
+                if (!passwordTest.test(item.password || ''))
+                    return Promise.reject(new Error('Password didn\'t meet the minimum safe password requirements. Passwords should be at least 8 characters long, and contain at least 3 of the following categories: lowercase letters, uppercase letters, numbers, characters'));
                 item.password = require('crypto').createHash('sha512').update(settings.security.salt).update(item.password).digest('hex');
-
                 _.defaults(item, {
                     type: "Player",
                     banned: false,
@@ -208,8 +141,7 @@ export function Users(core: Iridium.Core): Iridium.Model<UserDocument, User> {
                     sessions: [],
                     last_seen: new Date()
                 });
-
-                return Promise.resolve()
+                return Promise.resolve();
             }
         },
         preprocessors: [
@@ -224,12 +156,13 @@ export function Users(core: Iridium.Core): Iridium.Model<UserDocument, User> {
             [{ 'skill.xp': -1 }, { background: true }]
         ]
     };
-
-    return new Iridium.Model<UserDocument, User>(core, User, "users", schema, options);
+    return new Iridium.Model(core, User, "users", schema, options);
 }
-
+exports.Users = Users;
 var usrModel = Users(null);
 usrModel.findOne().then(function (user) {
-    if (user.checkPassword("test")) return true;
+    if (user.checkPassword("test"))
+        return true;
     return false;
 });
+//# sourceMappingURL=UserModel.js.map

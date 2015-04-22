@@ -34,7 +34,7 @@ class MyDB extends Iridium.Core {
         ]
     });
 
-    PlainUsers = new Iridium.Model<UserDoc, UserDoc>(this,(doc) => doc, "users", {
+    PlainUsers = new Iridium.Model<UserDoc, UserDoc>(this,(model, doc) => doc, "users", {
         username: /^[a-z][a-z0-9_]{7,}$/,
         fullname: String,
         email: String,

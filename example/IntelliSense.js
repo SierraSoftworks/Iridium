@@ -30,7 +30,7 @@ var MyDB = (function (_super) {
                 { email: 1 }
             ]
         });
-        this.PlainUsers = new Iridium.Model(this, function (doc) { return doc; }, "users", {
+        this.PlainUsers = new Iridium.Model(this, function (model, doc) { return doc; }, "users", {
             username: /^[a-z][a-z0-9_]{7,}$/,
             fullname: String,
             email: String,
