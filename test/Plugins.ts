@@ -31,8 +31,8 @@ describe("Plugins",() => {
                 validate: []
             });
         });
-        it("should be called when a new model is created",() => {
-            var model = new Iridium.Model(core,() => { }, 'test', {});
+        it.skip("should be called when a new model is created",() => {
+            var model = new Iridium.Model(core,() => { }, 'test', { id: false });
             chai.expect(model.collectionName).to.exist.and.equal('changed');
         });
     });
