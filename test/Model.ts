@@ -368,26 +368,59 @@ describe("Model",() => {
             chai.expect(model.find).to.exist.and.be.a('function');
         });
 
-        it("should select all documents by default",() => {
-            return chai.expect(model.find()).to.eventually.exist.and.have.length(5);
-        });
+        it("should return a cursor object");
 
-        it("should allow filtering using a selector",() => {
-            return chai.expect(model.find({ answer: 10 })).to.eventually.exist.and.have.length(1);
-        });
+        describe("cursor",() => {
 
-        it("should allow passing of options to control the query",() => {
-            return chai.expect(model.find({}, {
-                limit: 2
-            })).to.eventually.exist.and.have.length(2);
-        });
+            describe("each",() => {
+                it("should call the handler for all documents",() => {
+                    var count = 0;
+                    return chai.expect(model.find().each((instance) => {
+                        chai.expect(instance).to.exist;
+                        count++;
+                    }).then(() => chai.expect(count).to.equal(5))).to.eventually.be.ok;
+                });
 
-        it("should support a callback style instead of promises",(done) => {
-            model.find((err, docs) => {
-                if (err) return done(err);
-                chai.expect(docs).to.exist.and.have.length(5);
-                return done();
             });
+
+            describe("map",() => {
+
+            });
+
+            describe("toArray",() => {
+                it("should return all documents",() => {
+                    return chai.expect(model.find().toArray()).to.eventually.exist.and.have.length(5);
+                });
+
+                it("should allow filtering using a selector",() => {
+                    return chai.expect(model.find({ answer: 10 }).toArray()).to.eventually.exist.and.have.length(1);
+                });
+
+                it("should support a callback style instead of promises",(done) => {
+                    model.find().toArray((err, docs) => {
+                        if (err) return done(err);
+                        chai.expect(docs).to.exist.and.have.length(5);
+                        return done();
+                    });
+                });
+            });
+
+            describe("count",() => {
+
+            });
+
+            describe("limit",() => {
+
+            });
+
+            describe("skip",() => {
+
+            });
+
+            describe("sort",() => {
+
+            });
+
         });
     });
 

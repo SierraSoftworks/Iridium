@@ -14,6 +14,7 @@ import IPlugin = require('./Plugins');
 import cache = require('./Cache');
 import CacheDirector = require('./CacheDirector');
 import general = require('./General');
+import Cursor = require('./Cursor');
 
 import noOpCache = require('./caches/NoOpCache');
 import memoryCache = require('./caches/MemoryCache');
@@ -201,62 +202,35 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
      * @param {function(Error, TInstance[])} callback An optional callback which will be triggered when results are available
      * @returns {Promise<TInstance[]>}
      */
-    find(callback?: general.Callback<TInstance[]>): Promise<TInstance[]>;
+    find(): Cursor<TDocument, TInstance>;
     /**
      * Returns all documents in the collection which match the conditions and wraps them as instances
      * @param {Object} conditions The MongoDB query dictating which documents to return
-     * @param {function(Error, TInstance[])} callback An optional callback which will be triggered when results are available
      * @returns {Promise<TInstance[]>}
      */
-    find(conditions: any, callback?: general.Callback<TInstance[]>): Promise<TInstance[]>;
+    find(conditions: any): Cursor<TDocument, TInstance>;
     /**
      * Returns all documents in the collection which match the conditions
      * @param {Object} conditions The MongoDB query dictating which documents to return
-     * @param {QueryOptions} options The options dictating how this function behaves
-     * @param {function(Error, TInstance[])} callback An optional callback which will be triggered when results are available
+     * @param {Object} fields The fields to include or exclude from the document
      * @returns {Promise<TInstance[]>}
      */
-    find(conditions: any, options: QueryOptions, callback?: general.Callback<TInstance[]>): Promise<TInstance[]>;
-    find(conditions?: any, options?: QueryOptions, callback?: general.Callback<TInstance[]>): Promise<TInstance[]> {
-        if (typeof options == 'function') {
-            callback = <general.Callback<TInstance[]>>options;
-            options = {};
-        }
-
-        if (typeof conditions == 'function') {
-            callback = <general.Callback<TInstance[]>>conditions;
-            conditions = {};
-            options = {};
-        }
-
+    find(conditions: any, fields: { [name: string]: number }): Cursor<TDocument, TInstance>;
+    find(conditions?: any, fields?: any): Cursor<TDocument, TInstance> {
         conditions = conditions || {};
-        options = options || {};
+        fields = fields || {};
 
-        _.defaults(options, <QueryOptions>{
+        if (fields)
+            this.helpers.transform.reverse(fields);
 
+        if (!_.isPlainObject(conditions)) conditions = this.helpers.selectOneDownstream(conditions);
+        this.helpers.transform.reverse(conditions);
+
+        var cursor = this.collection.find(conditions, {
+            fields: fields
         });
 
-        return Promise.resolve().then(() => {
-            if (options.fields)
-                this.helpers.transform.reverse(options.fields);
-
-            if (!_.isPlainObject(conditions)) conditions = this.helpers.selectOneDownstream(conditions);
-            this.helpers.transform.reverse(conditions);
-
-            var cursor = this.collection.find(conditions, {
-                limit: options.limit,
-                sort: options.sort,
-                skip: options.skip,
-                fields: options.fields
-            });
-
-            return Promise.promisify<TDocument[]>((callback) => {
-                cursor.toArray(callback);
-            })();
-        }).then((results: TDocument[]) => {
-            if (!results || !results.length) return Promise.resolve(<TInstance[]>[]);
-            return this.handlers.documentsReceived(conditions, results,(document, isNew?, isPartial?) => this.helpers.wrapDocument(document, isNew, isPartial), options);
-        }).nodeify(callback);
+        return new Cursor<TDocument, TInstance>(this, conditions, cursor);
     }
 
     /**
@@ -379,7 +353,7 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
             });
         }).then((document: TDocument) => {
             if (!document) return null;
-            return this.handlers.documentsReceived(conditions, [document],(document, isNew?, isPartial?) => this.helpers.wrapDocument(document, isNew, isPartial), options).then((documents) => documents[0]);
+            return this.handlers.documentReceived(conditions, document,(document, isNew?, isPartial?) => this.helpers.wrapDocument(document, isNew, isPartial), options);
         }).nodeify(callback);
     }
 
@@ -489,8 +463,8 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
                         });
                     });
                 });
-        }).then((inserted: any[]) => {
-            return this.handlers.documentsReceived(null, inserted,(document, isNew?, isPartial?) => this.helpers.wrapDocument(document, isNew, isPartial), { cache: options.cache });
+        }).map((inserted: any) => {
+            return this.handlers.documentReceived(null, inserted,(document, isNew?, isPartial?) => this.helpers.wrapDocument(document, isNew, isPartial), { cache: options.cache });
         }).then((results: TInstance[]) => {
             if (Array.isArray(objs)) return results;
             return results[0];
@@ -822,16 +796,16 @@ export class ModelHandlers<TDocument, TInstance> {
         return this._model;
     }
 
-    documentsReceived<TResult>(conditions: any,
-        results: TDocument[],
+    documentReceived<TResult>(conditions: any,
+        result: TDocument,
         wrapper: (document: TDocument, isNew?: boolean, isPartial?: boolean) => TResult,
-        options: QueryOptions = {}): Promise<TResult[]> {
+        options: QueryOptions = {}): Promise<TResult> {
         _.defaults(options, {
             cache: true,
             partial: false
         });
 
-        return Promise.resolve(results).map((target: any) => {
+        return Promise.resolve(result).then((target: any) => {
             return <Promise<TResult>>Promise.resolve().then(() => {
                 // Trigger the received hook
                 if (this.model.options.hooks.retrieved) return this.model.options.hooks.retrieved(target);

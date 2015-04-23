@@ -319,23 +319,42 @@ describe("Model", function () {
         it("should exist", function () {
             chai.expect(model.find).to.exist.and.be.a('function');
         });
-        it("should select all documents by default", function () {
-            return chai.expect(model.find()).to.eventually.exist.and.have.length(5);
-        });
-        it("should allow filtering using a selector", function () {
-            return chai.expect(model.find({ answer: 10 })).to.eventually.exist.and.have.length(1);
-        });
-        it("should allow passing of options to control the query", function () {
-            return chai.expect(model.find({}, {
-                limit: 2
-            })).to.eventually.exist.and.have.length(2);
-        });
-        it("should support a callback style instead of promises", function (done) {
-            model.find(function (err, docs) {
-                if (err)
-                    return done(err);
-                chai.expect(docs).to.exist.and.have.length(5);
-                return done();
+        it("should return a cursor object");
+        describe("cursor", function () {
+            describe("each", function () {
+                it("should call the handler for all documents", function () {
+                    var count = 0;
+                    return chai.expect(model.find().each(function (instance) {
+                        chai.expect(instance).to.exist;
+                        count++;
+                    }).then(function () { return chai.expect(count).to.equal(5); })).to.eventually.be.ok;
+                });
+            });
+            describe("map", function () {
+            });
+            describe("toArray", function () {
+                it("should return all documents", function () {
+                    return chai.expect(model.find().toArray()).to.eventually.exist.and.have.length(5);
+                });
+                it("should allow filtering using a selector", function () {
+                    return chai.expect(model.find({ answer: 10 }).toArray()).to.eventually.exist.and.have.length(1);
+                });
+                it("should support a callback style instead of promises", function (done) {
+                    model.find().toArray(function (err, docs) {
+                        if (err)
+                            return done(err);
+                        chai.expect(docs).to.exist.and.have.length(5);
+                        return done();
+                    });
+                });
+            });
+            describe("count", function () {
+            });
+            describe("limit", function () {
+            });
+            describe("skip", function () {
+            });
+            describe("sort", function () {
             });
         });
     });

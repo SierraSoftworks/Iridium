@@ -130,7 +130,7 @@ class Instance<TDocument, TInstance> {
                 });
             });
         }).then((latest: TDocument) => {
-            return this._model.handlers.documentsReceived(conditions, [latest],(value) => {
+            return this._model.handlers.documentReceived(conditions, latest,(value) => {
                 this._model.helpers.transform.apply(value);
                 this._isPartial = false;
                 this._isNew = false;
@@ -138,8 +138,6 @@ class Instance<TDocument, TInstance> {
                 this._modified = _.clone(value);
                 return <TInstance><any>this;
             });
-        }).then((instances) => {
-            return instances[0];
         }).nodeify(callback);
     }
 
@@ -175,10 +173,10 @@ class Instance<TDocument, TInstance> {
                 return <Promise<TInstance>><any>this;
             }
 
-            return this._model.handlers.documentsReceived<TDocument>(conditions, [newDocument],(doc) => {
+            return this._model.handlers.documentReceived<TDocument>(conditions, newDocument,(doc) => {
                 this._model.helpers.transform.apply(doc);
                 return doc;
-            }).then((docs) => docs[0]).then((doc) => {
+            }).then((doc) => {
                 this._isNew = false;
                 this._isPartial = false;
                 this._original = doc;
