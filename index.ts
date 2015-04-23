@@ -1,5 +1,4 @@
-/// <reference path="./lib/Core.ts" />
-/// <reference path="./lib/Model.ts" />
+/// <reference path="./_references.d.ts" />
 
 import _Core = require('./lib/Core');
 import _Model = require('./lib/Model');
