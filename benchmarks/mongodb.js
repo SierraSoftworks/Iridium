@@ -26,7 +26,7 @@ var IridiumDB = (function (_super) {
     __extends(IridiumDB, _super);
     function IridiumDB() {
         _super.call(this, { database: 'test' });
-        this.User = new Iridium.Model(this, User, 'iridium', {
+        this.User = new Iridium.Model(this, function (model, doc) { return doc; }, 'iridium', {
             name: String,
             surname: String,
             birthday: Date
@@ -86,7 +86,7 @@ iDB.connect().then(function () { return iDB.User.remove(); }).then(function () {
             return resolve(objects);
         });
     });
-}); }).then(function () { return benchmark("Iridium Instances finding 10 000 documents: %s", function () { return iDB.UserWrapped.find(); }, baseline); }).then(function () { return benchmark("Iridium finding 10 000 documents: %s", function () { return iDB.User.find(); }, baseline); }).then(function () { return benchmark("MongoDB removing 10 000 documents: %s", function () {
+}); }).then(function () { return benchmark("Iridium Instances finding 10 000 documents (toArray): %s", function () { return iDB.UserWrapped.find().toArray(); }, baseline); }).then(function () { return benchmark("Iridium finding 10 000 documents (toArray): %s", function () { return iDB.User.find().toArray(); }, baseline); }).then(function () { return benchmark("Iridium Instances finding 10 000 documents (map): %s", function () { return iDB.UserWrapped.find().map(function (x) { return x; }); }, baseline); }).then(function () { return benchmark("Iridium finding 10 000 documents (map): %s", function () { return iDB.User.find().map(function (x) { return x; }); }, baseline); }).then(function () { return benchmark("MongoDB removing 10 000 documents: %s", function () {
     return new Promise(function (resolve, reject) {
         iDB.connection.collection('mongodb').remove(function (err, objects) {
             if (err)

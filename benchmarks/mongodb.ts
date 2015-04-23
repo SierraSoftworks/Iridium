@@ -26,7 +26,7 @@ class IridiumDB extends Iridium.Core {
         super({ database: 'test' });
     }
 
-    User = new Iridium.Model<User, User>(this, User, 'iridium', {
+    User = new Iridium.Model<User, User>(this, (model, doc) => doc, 'iridium', {
         name: String,
         surname: String,
         birthday: Date
@@ -90,8 +90,10 @@ iDB.connect()
             });
         });
     }))
-    .then(() => benchmark("Iridium Instances finding 10 000 documents: %s", () => iDB.UserWrapped.find(), baseline))
-    .then(() => benchmark("Iridium finding 10 000 documents: %s", () => iDB.User.find(), baseline))
+    .then(() => benchmark("Iridium Instances finding 10 000 documents (toArray): %s",() => iDB.UserWrapped.find().toArray(), baseline))
+    .then(() => benchmark("Iridium finding 10 000 documents (toArray): %s",() => iDB.User.find().toArray(), baseline))
+    .then(() => benchmark("Iridium Instances finding 10 000 documents (map): %s",() => iDB.UserWrapped.find().map(x => x), baseline))
+    .then(() => benchmark("Iridium finding 10 000 documents (map): %s",() => iDB.User.find().map(x => x), baseline))
 
     .then(() => benchmark("MongoDB removing 10 000 documents: %s", () => {
         return new Promise<any>((resolve, reject) => {
