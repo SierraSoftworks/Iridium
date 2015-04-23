@@ -1,5 +1,10 @@
 # Iridium [![Build Status](https://travis-ci.org/SierraSoftworks/Iridium.png?branch=master)](https://travis-ci.org/SierraSoftworks/Iridium) [![](https://badge.fury.io/js/iridium.png)](https://npmjs.org/package/iridium)
-**A bare metal ORM for MongoDB**
+**A bare metal ODM for MongoDB**
+
+Iridium isn't your traditional JavaScript ORM, it's the ORM I've always wanted and I hope you'll enjoy using it as much
+as I do. With Iridium, your models are simply JavaScript classes (if you're using ES6 or TypeScript) which means that
+you don't need to learn a new DSL just to define your database structure and that your favourite editor will be able
+to understand your code and provide useful suggestions.
 
 ## NOT YET FINISHED
 The TypeScript implementation of Iridium is not yet finished - if you'd like to help out then please get in touch but **DO NOT START BUILDING APPS USING IT YET**. Seriously, it doesn't even have an official version number yet - everything is subject to change.
