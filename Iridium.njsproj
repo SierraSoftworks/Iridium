@@ -31,15 +31,16 @@
     <Content Include="tsd.json" />
     <Content Include="README.md" />
     <Compile Include="index.ts" />
-    <Compile Include="benchmarks\mongodb.js" />
     <Compile Include="example\ModelHookPlugin.ts" />
     <Compile Include="example\ValidationPlugin.ts" />
     <Compile Include="example\UserModel.ts" />
+    <TypeScriptCompile Include="benchmarks\mongodb.ts" />
     <TypeScriptCompile Include="example\IntelliSense.ts" />
     <TypeScriptCompile Include="lib\Cache.ts" />
     <TypeScriptCompile Include="lib\CacheDirector.ts" />
     <TypeScriptCompile Include="lib\Configuration.ts" />
     <TypeScriptCompile Include="lib\Core.ts" />
+    <TypeScriptCompile Include="lib\Cursor.ts" />
     <TypeScriptCompile Include="lib\General.ts" />
     <TypeScriptCompile Include="lib\Hooks.ts" />
     <TypeScriptCompile Include="lib\Instance.ts" />
