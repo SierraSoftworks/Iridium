@@ -35,6 +35,7 @@ describe("Instance", function () {
     var core = new TestDB();
     before(function () { return core.connect(); });
     after(function () { return core.close(); });
+    beforeEach(function () { return core.Test.remove(); });
     it("should expose the latest document values", function () {
         var instance = core.Test.helpers.wrapDocument({
             id: 'aaaaaa',
@@ -87,6 +88,146 @@ describe("Instance", function () {
         });
         chai.expect(instance).to.exist;
         chai.expect(instance.test).to.exist.and.be.a('function');
+    });
+    describe("save()", function () {
+        beforeEach(function () { return core.Test.remove(); });
+        it("should avoid making calls to the database if no changes were made to the instance", function () {
+            var update = core.Test.collection.update;
+            core.Test.collection.update = function () {
+                chai.assert.fail();
+            };
+            return core.Test.insert({
+                answer: 1
+            }).then(function () { return chai.expect(core.Test.get().then(function (instance) {
+                return instance.save().then(function () {
+                    core.Test.collection.update = update;
+                });
+            })); });
+        });
+        it("should insert the instance if it is not present in the database", function () {
+            var instance = new core.Test.Instance({
+                answer: 1
+            });
+            chai.expect(instance._isNew).to.be.true;
+            return chai.expect(instance.save().then(function () { return chai.expect(core.Test.get(instance.id)).to.eventually.have.property('answer', instance.answer); })).to.eventually.be.ok;
+        });
+        it("should automatically generate the update query if one was not provided", function () {
+            return core.Test.insert({
+                answer: 1
+            }).then(function () { return chai.expect(core.Test.get().then(function (instance) {
+                instance.answer = 42;
+                return instance.save().then(function () { return core.Test.get(instance.id); });
+            })).to.eventually.have.property('answer', 42); });
+        });
+        it("should allow you to specify a custom update query", function () {
+            return core.Test.insert({
+                answer: 1
+            }).then(function () { return core.Test.get(); }).then(function (instance) { return chai.expect(instance.save({ $set: { answer: 10 } })).to.eventually.have.property('answer', 10); });
+        });
+        it("should allow you tp specify a custom update query and conditions for the update", function () {
+            return core.Test.insert({
+                answer: 1
+            }).then(function () { return core.Test.get(); }).then(function (instance) { return chai.expect(instance.save({ answer: { $lt: 5 } }, { $set: { answer: 10 } })).to.eventually.have.property('answer', 10); });
+        });
+        it("should return a promise for the instance", function () {
+            return core.Test.insert({
+                answer: 1
+            }).then(function () { return core.Test.get(); }).then(function (instance) { return chai.expect(instance.save()).to.eventually.equal(instance); });
+        });
+        it("should allow the use of a callback instead of promises", function (done) {
+            core.Test.insert({
+                answer: 1
+            }).then(function () { return core.Test.get(); }).then(function (instance) {
+                instance.save(function (err, result) {
+                    if (err)
+                        return done(err);
+                    chai.expect(result).to.equal(instance);
+                    return done();
+                });
+            });
+        });
+    });
+    describe("update()", function () {
+        beforeEach(function () { return core.Test.remove().then(function () { return core.Test.insert({ answer: 1 }); }); });
+        it("should not replace the instance", function () {
+            return core.Test.get().then(function (instance) { return chai.expect(instance.update()).to.eventually.equal(instance); });
+        });
+        it("should update the instance's properties", function () {
+            return core.Test.get().then(function (instance) {
+                core.Test.update({ id: instance.id }, {
+                    $set: { answer: 10 }
+                }).then(function () { return chai.expect(instance.update()).to.eventually.have.property('answer', 10); });
+            });
+        });
+        it("should return a promise for the instance", function () {
+            return core.Test.get().then(function (instance) {
+                core.Test.update({ id: instance.id }, {
+                    $set: { answer: 10 }
+                }).then(function () { return chai.expect(instance.update()).to.eventually.equal(instance); });
+            });
+        });
+        it("should allow the use of a callback instead of promises", function (done) {
+            core.Test.get().then(function (instance) {
+                instance.update(function (err, result) {
+                    if (err)
+                        return done(err);
+                    chai.expect(result).to.equal(instance);
+                    return done();
+                });
+            });
+        });
+    });
+    describe("refresh()", function () {
+        beforeEach(function () { return core.Test.remove().then(function () { return core.Test.insert({ answer: 1 }); }); });
+        it("should not replace the instance", function () {
+            return core.Test.get().then(function (instance) { return chai.expect(instance.update()).to.eventually.equal(instance); });
+        });
+        it("should update the instance's properties", function () {
+            return core.Test.get().then(function (instance) {
+                core.Test.update({ id: instance.id }, {
+                    $set: { answer: 10 }
+                }).then(function () { return chai.expect(instance.refresh()).to.eventually.have.property('answer', 10); });
+            });
+        });
+        it("should return a promise for the instance", function () {
+            return core.Test.get().then(function (instance) {
+                core.Test.update({ id: instance.id }, {
+                    $set: { answer: 10 }
+                }).then(function () { return chai.expect(instance.refresh()).to.eventually.equal(instance); });
+            });
+        });
+        it("should allow the use of a callback instead of promises", function (done) {
+            core.Test.get().then(function (instance) {
+                instance.refresh(function (err, result) {
+                    if (err)
+                        return done(err);
+                    chai.expect(result).to.equal(instance);
+                    return done();
+                });
+            });
+        });
+    });
+    describe("remove()", function () {
+        beforeEach(function () { return core.Test.remove().then(function () { return core.Test.insert({ answer: 1 }); }); });
+        it("should remove the document from the database", function () {
+            return chai.expect(core.Test.get().then(function (instance) { return instance.remove(); }).then(function () { return core.Test.get(); })).to.eventually.be.null;
+        });
+        it("should set the instance's isNew property to true", function () {
+            return chai.expect(core.Test.get().then(function (instance) { return instance.remove(); })).to.eventually.have.property('_isNew', true);
+        });
+        it("should return a promise for the instance", function () {
+            return core.Test.get().then(function (instance) { return chai.expect(instance.remove()).to.eventually.equal(instance); });
+        });
+        it("should allow the use of a callback instead of promises", function (done) {
+            core.Test.get().then(function (instance) {
+                instance.remove(function (err, result) {
+                    if (err)
+                        return done(err);
+                    chai.expect(result).to.equal(instance);
+                    return done();
+                });
+            });
+        });
     });
 });
 //# sourceMappingURL=Instance.js.map

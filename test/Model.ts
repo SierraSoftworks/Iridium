@@ -112,8 +112,8 @@ describe("Model",() => {
         it("should expose cacheDirector",() => chai.expect(test).to.have.property('cacheDirector'));
         it("should expose Instance",() => chai.expect(test.Instance).to.exist.and.be.a('function'));
     });
-
-    var createTests = () => {
+    
+    describe("create()",() => {
         var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { id: false, answer: Number });
 
         before(() => {
@@ -126,7 +126,6 @@ describe("Model",() => {
 
         it("should exist",() => {
             chai.expect(model.create).to.exist.and.be.a('function');
-            chai.expect(model.insert).to.exist.and.be.a('function');
         });
 
         it("should allow the insertion of a single document",() => {
@@ -150,16 +149,57 @@ describe("Model",() => {
         });
 
         it("should support a callback style instead of promises",(done) => {
-            model.insert({ answer: 15 }, (err, inserted) => {
+            model.create({ answer: 15 },(err, inserted) => {
                 if (err) return done(err);
                 chai.expect(inserted).to.exist.and.have.property('answer', 15);
                 return done();
             });
         });
-    };
+    });
 
-    describe("create()", createTests);
-    describe("insert()", createTests);
+    describe("insert()",() => {
+        var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { id: false, answer: Number });
+
+        before(() => {
+            return core.connect()
+        });
+
+        after(() => {
+            return model.remove().then(() => core.close());
+        });
+
+        it("should exist",() => {
+            chai.expect(model.insert).to.exist.and.be.a('function');
+        });
+
+        it("should allow the insertion of a single document",() => {
+            return chai.expect(model.insert({ answer: 10 })).to.eventually.be.ok;
+        });
+
+        it("should return a document if a single document is inserted",() => {
+            return chai.expect(model.insert({ answer: 10 })).to.eventually.have.property('answer', 10);
+        });
+
+        it("should allow the insertion of multiple documents",() => {
+            return chai.expect(model.insert([
+                { answer: 11 },
+                { answer: 12 },
+                { answer: 13 }
+            ])).to.eventually.exist.and.have.lengthOf(3);
+        });
+
+        it("should allow you to provide options to control the creation",() => {
+            return chai.expect(model.insert({ answer: 14 }, { upsert: true })).to.eventually.exist;
+        });
+
+        it("should support a callback style instead of promises",(done) => {
+            model.insert({ answer: 15 },(err, inserted) => {
+                if (err) return done(err);
+                chai.expect(inserted).to.exist.and.have.property('answer', 15);
+                return done();
+            });
+        });
+    });
 
     describe("remove()",() => {
         var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { id: false, answer: Number });
@@ -198,8 +238,8 @@ describe("Model",() => {
             });
         });
     });
-
-    var findOneTests = () => {
+    
+    describe("findOne()",() => {
         var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { id: false, answer: Number });
 
         before(() => {
@@ -218,7 +258,6 @@ describe("Model",() => {
 
         it("should exist",() => {
             chai.expect(model.findOne).to.exist.and.be.a('function');
-            chai.expect(model.get).to.exist.and.be.a('function');
         });
 
         it("should support retrieving an random document",() => {
@@ -252,10 +291,61 @@ describe("Model",() => {
                 return done();
             });
         });
-    };
+    });
 
-    describe("findOne()", findOneTests);
-    describe("get()", findOneTests);
+    describe("get()",() => {
+        var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { id: false, answer: Number });
+
+        before(() => {
+            return core.connect().then(() => model.remove()).then(() => model.insert([
+                { answer: 10 },
+                { answer: 11 },
+                { answer: 12 },
+                { answer: 13 },
+                { answer: 14 }
+            ]));
+        });
+
+        after(() => {
+            return model.remove().then(() => core.close());
+        });
+
+        it("should exist",() => {
+            chai.expect(model.get).to.exist.and.be.a('function');
+        });
+
+        it("should support retrieving an random document",() => {
+            return chai.expect(model.get()).to.eventually.exist.and.have.property('answer').is.a('number');
+        });
+
+        it("should support retrieving a document using its ID",() => {
+            return chai.expect(model.get().then((doc) => model.get(doc.id))).to.eventually.exist.and.have.property('answer').is.a('number');
+        });
+
+        it("should retrieve the correct document by its ID",() => {
+            return model.get().then((doc) => {
+                return chai.expect(model.get(doc.id)).to.eventually.exist.and.have.property('id', doc.id);
+            });
+        });
+
+        it("should support retrieving a document using a selector query",() => {
+            return chai.expect(model.get({ answer: 10 })).to.eventually.exist.and.have.property('answer', 10);
+        });
+
+        it("should support passing options to control the query",() => {
+            return chai.expect(model.get({}, {
+                sort: { answer: -1 }
+            })).to.eventually.exist.and.have.property('answer', 14);
+        });
+
+        it("should support a callback style instead of promises",(done) => {
+            model.get((err, doc) => {
+                if (err) return done(err);
+                chai.expect(doc).to.exist.and.have.property('answer');
+                return done();
+            });
+        });
+    });
 
     describe("find()",() => {
         var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { id: false, answer: Number });
