@@ -20,7 +20,7 @@ class Instance<TDocument, TInstance> {
      * The instance returned by the model, and all of this instance's methods, will be of type
      * TInstance - which should represent the merger of TSchema and IInstance for best results.
      */
-    constructor(model: model.Model<TDocument, TInstance>, document: TDocument, isNew: boolean = false, isPartial: boolean = false) {
+    constructor(model: model.Model<TDocument, TInstance>, document: TDocument, isNew: boolean = true, isPartial: boolean = false) {
         this._model = model;
 
         this._isNew = !!isNew;
@@ -96,11 +96,25 @@ class Instance<TDocument, TInstance> {
 
                 changes = this._model.helpers.diff(original, modified);
             }
-        }).then(() => {
-            return this._model.handlers.savingDocument(<any>this, changes);
-        }).then(() => {
-            return new Promise<boolean>(function (resolve: (changed: boolean) => void, reject) {
-                this._model.collection.update(conditions, changes, { w: 1 }, function (err: Error, changed: boolean) {
+
+            if (!_.keys(changes).length) return null;
+
+            return changes;
+        }).then((changes) => {
+            if (!changes && !this._isNew) return changes;
+            return this._model.handlers.savingDocument(<TInstance><any>this, changes).then(() => changes);
+        }).then((changes) => {
+            if (!changes && !this._isNew) return false;
+
+            if (this._isNew) return new Promise<boolean>((resolve, reject) => {
+                this._model.collection.insert(this._modified,(err, doc) => {
+                    if (err) return reject(err);
+                    return resolve(<any>!!doc);
+                });
+            });
+
+            return new Promise<boolean>((resolve: (changed: boolean) => void, reject) => {
+                this._model.collection.update(conditions, changes, { w: 1 },(err: Error, changed: boolean) => {
                     if (err) return reject(err);
                     return resolve(changed);
                 });
@@ -110,19 +124,19 @@ class Instance<TDocument, TInstance> {
             if (!changed) return this._modified;
 
             return new Promise<TDocument>((resolve, reject) => {
-                this._model.collection.findOne(conditions, function (err: Error, latest) {
+                this._model.collection.findOne(conditions,(err: Error, latest) => {
                     if (err) return reject(err);
                     return resolve(latest);
                 });
             });
         }).then((latest: TDocument) => {
-            return this._model.handlers.documentsReceived(conditions, [latest], function (value) {
+            return this._model.handlers.documentsReceived(conditions, [latest],(value) => {
                 this._model.helpers.transform.apply(value);
                 this._isPartial = false;
                 this._isNew = false;
                 this._original = value;
                 this._modified = _.clone(value);
-                return this;
+                return <TInstance><any>this;
             });
         }).then((instances) => {
             return instances[0];
@@ -148,30 +162,31 @@ class Instance<TDocument, TInstance> {
 
         return Promise.resolve().then(() => {
             return new Promise<TDocument>((resolve, reject) => {
-                this._model.collection.findOne(conditions, function (err: Error, doc: any) {
+                this._model.collection.findOne(conditions,(err: Error, doc: any) => {
                     if (err) return reject(err);
                     return resolve(doc);
                 });
             });
-        }).then((doc) => {
-            if (!doc) {
+        }).then((newDocument) => {
+            if (!newDocument) {
                 this._isPartial = true;
                 this._isNew = true;
                 this._original = _.cloneDeep(this._modified);
-                return this;
+                return <Promise<TInstance>><any>this;
             }
 
-            return this._model.handlers.documentsReceived(conditions, [doc], this._model.helpers.transform.apply, { wrap: false }).then((doc: any) => {
+            return this._model.handlers.documentsReceived<TDocument>(conditions, [newDocument],(doc) => {
                 this._model.helpers.transform.apply(doc);
+                return doc;
+            }).then((docs) => docs[0]).then((doc) => {
                 this._isNew = false;
                 this._isPartial = false;
                 this._original = doc;
                 this._modified = _.cloneDeep(doc);
 
-                return this;
+                return <TInstance><any>this;
             });
-        }).then((instances) => instances[0])
-            .nodeify(callback);
+        }).nodeify(callback);
     }
 
     /**
@@ -194,7 +209,7 @@ class Instance<TDocument, TInstance> {
         return Promise.resolve().then(() => {
             if (this._isNew) return 0;
             return new Promise<number>((resolve, reject) => {
-                this._model.collection.remove(conditions, (err: Error, removed?: any) => {
+                this._model.collection.remove(conditions,(err: Error, removed?: any) => {
                     if (err) return reject(err);
                     return resolve(removed);
                 });
@@ -203,7 +218,8 @@ class Instance<TDocument, TInstance> {
             if (removed) return this._model.cache.clear(conditions);
             return false;
         }).then((removed) => {
-            return <any>this;
+            this._isNew = true;
+            return <TInstance><any>this;
         }).nodeify(callback);
     }
 
@@ -224,7 +240,7 @@ class Instance<TDocument, TInstance> {
     first<T>(collection: T[]| { [key: string]: T }, predicate: general.Predicate<T>): T {
         var result = null;
 
-        _.each(collection, (value: T, key) => {
+        _.each(collection,(value: T, key) => {
             if (predicate.call(this, value, key)) {
                 result = value;
                 return false;
