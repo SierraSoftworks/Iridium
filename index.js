@@ -21,7 +21,6 @@ var Iridium;
         return Core;
     })(_Core);
     Iridium.Core = Core;
-    ;
     var Model = (function (_super) {
         __extends(Model, _super);
         function Model() {
@@ -30,7 +29,6 @@ var Iridium;
         return Model;
     })(_Model);
     Iridium.Model = Model;
-    ;
     var Instance = (function (_super) {
         __extends(Instance, _super);
         function Instance() {
@@ -39,7 +37,6 @@ var Iridium;
         return Instance;
     })(_Instance);
     Iridium.Instance = Instance;
-    ;
     var NoOpCache = (function (_super) {
         __extends(NoOpCache, _super);
         function NoOpCache() {
@@ -48,7 +45,6 @@ var Iridium;
         return NoOpCache;
     })(_NoOpCache);
     Iridium.NoOpCache = NoOpCache;
-    ;
     var MemoryCache = (function (_super) {
         __extends(MemoryCache, _super);
         function MemoryCache() {
@@ -57,7 +53,6 @@ var Iridium;
         return MemoryCache;
     })(_MemoryCache);
     Iridium.MemoryCache = MemoryCache;
-    ;
     var CacheOnID = (function (_super) {
         __extends(CacheOnID, _super);
         function CacheOnID() {
@@ -66,10 +61,6 @@ var Iridium;
         return CacheOnID;
     })(_IDDirector);
     Iridium.CacheOnID = CacheOnID;
-    ;
-    ;
-    ;
-    ;
 })(Iridium || (Iridium = {}));
 ;
 module.exports = Iridium;
