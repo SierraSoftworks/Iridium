@@ -10,3 +10,4 @@ node_modules/
 .idea
 dist/
 *.tmp
+coverage/

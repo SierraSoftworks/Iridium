@@ -4,5 +4,9 @@ node_js:
 
 services:
  - mongodb
+
 env:
  - CI_SERVER=1
+
+after_script:
+ - npm run coverage:travis

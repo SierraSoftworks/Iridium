@@ -17,8 +17,11 @@
   "licence": "MIT",
   "main": "./index",
   "scripts": {
-    "test": "mocha",
-    "test:watch": "mocha -w"
+    "test": "npm run coverage",
+	"test:watch": "mocha -w",
+	"coverage": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec --ui bdd",
+	"coverage:travis:before": "npm run coverage",
+	"coverage:travis": "cat coverage/lcov.info | coveralls"
   },
   "engines": {
     "node": ">= 0.8"
@@ -40,7 +43,8 @@
     "chai-fuzzy": "^1.5.0",
     "underscore": "^1.8.3",
 	"tick": "~0.1.1",
-	"istanbul": "~0.3.13"
+	"istanbul": "~0.3.13",
+	"coveralls": "^2.11.2"
   },
   "keywords": [
     "mongodb",
