@@ -1,4 +1,4 @@
-# Iridium [![Build Status](https://travis-ci.org/SierraSoftworks/Iridium.png?branch=master)](https://travis-ci.org/SierraSoftworks/Iridium) [![](https://badge.fury.io/js/iridium.png)](https://npmjs.org/package/iridium)
+# Iridium [![Build Status](https://travis-ci.org/SierraSoftworks/Iridium.png?branch=master)](https://travis-ci.org/SierraSoftworks/Iridium) [![Coverage Status](https://coveralls.io/repos/SierraSoftworks/Iridium/badge.svg)](https://coveralls.io/r/SierraSoftworks/Iridium) [![](https://badge.fury.io/js/iridium.png)](https://npmjs.org/package/iridium)
 **A bare metal ODM for MongoDB**
 
 Iridium isn't your traditional JavaScript ORM, it's the ORM I've always wanted and I hope you'll enjoy using it as much
