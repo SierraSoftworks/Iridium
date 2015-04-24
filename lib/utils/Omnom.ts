@@ -39,12 +39,22 @@ class Omnom {
         return this;
     }
 
-    static diff(original: number, modified: number);
-    static diff(original: [any], modified: any[]);
-    static diff(original: MongoDB.ObjectID, modified: MongoDB.ObjectID);
-    static diff(original: Object, modified: Object);
-    static diff(original: any, modified: any) {
-        return new Omnom().diff(original, modified).changes;
+    static diff(original: number, modified: number, options?: {
+        atomicNumbers?: boolean;
+    });
+    static diff(original: [any], modified: any[], options?: {
+        atomicNumbers?: boolean;
+    });
+    static diff(original: MongoDB.ObjectID, modified: MongoDB.ObjectID, options?: {
+        atomicNumbers?: boolean;
+    });
+    static diff(original: Object, modified: Object, options?: {
+        atomicNumbers?: boolean;
+    });
+    static diff(original: any, modified: any, options?: {
+        atomicNumbers?: boolean;
+    }) {
+        return new Omnom(options).diff(original, modified).changes;
     }
 
     private onObject(original: number, modified: number, changePath?: string);
@@ -100,7 +110,7 @@ class Omnom {
             if (j === modified.length) {
                 if (pulls.length === 1) return this.pull(changePath, pulls[0]);
                 // We can complete using just pulls
-                return this.pullAll(changePath, pulls);
+                return pulls.forEach((pull) => this.pull(changePath, pull));
             }
 
             // If we have a smaller target array than our source, we will need to re-create it
@@ -191,6 +201,8 @@ class Omnom {
         if (this.changes.$pull[path]) {
             this.pullAll(path, [this.changes.$pull[path], value]);
             delete this.changes.$pull[path];
+            if (_.keys(this.changes.$pull).length === 0)
+                delete this.changes.$pull;
             return;
         }
 

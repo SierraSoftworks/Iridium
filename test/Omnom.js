@@ -23,6 +23,28 @@ describe("Omnom", function () {
         };
         chai.expect(Omnom.diff(oldObject, newObject)).to.exist.and.be.eql(expectedDiff);
     });
+    it("should correctly diff basic objects with atomic number changes", function () {
+        var oldObject = {
+            a: 1,
+            b: 'test',
+            c: 2,
+            d: 'constant',
+            e: 'old'
+        };
+        var newObject = {
+            a: 3,
+            b: 'tested',
+            c: 2,
+            d: 'constant',
+            f: 'new'
+        };
+        var expectedDiff = {
+            $set: { b: 'tested', f: 'new' },
+            $inc: { a: 2 },
+            $unset: { e: 1 }
+        };
+        chai.expect(Omnom.diff(oldObject, newObject, { atomicNumbers: true })).to.exist.and.be.eql(expectedDiff);
+    });
     it('should correctly diff complex objects', function () {
         var oldObject = {
             a: { value: 1 },
@@ -60,20 +82,28 @@ describe("Omnom", function () {
         chai.expect(Omnom.diff(oldObject, newObject)).to.exist.and.be.eql(expectedDiff);
     });
     describe('arrays', function () {
+        it('should correctly handle two pure arrays', function () {
+            var oldObject = [1, 2, 3];
+            var newObject = [4, 5, 6];
+            var expectedDiff = {
+                $set: { undefined: [4, 5, 6] }
+            };
+            chai.expect(Omnom.diff(oldObject, newObject)).to.exist.and.be.eql(expectedDiff);
+        });
         it('should correctly handle arrays which can be pulled', function () {
-            var oldObject = { a: [1, 2, 3, 4], b: [1, 2, 3, 4] };
-            var newObject = { a: [1, 3, 4], b: [1, 3] };
+            var oldObject = { a: [1, 2, 3, 4], b: [1, 2, 3, 4], c: [1, 2, 3, 4, 5] };
+            var newObject = { a: [1, 3, 4], b: [1, 3], c: [1] };
             var expectedDiff = {
                 $pull: { a: 2 },
-                $pullAll: { b: [2, 4] }
+                $pullAll: { b: [2, 4], c: [2, 3, 4, 5] }
             };
             chai.expect(Omnom.diff(oldObject, newObject)).to.exist.and.be.eql(expectedDiff);
         });
         it('should correctly handle arrays which can be pushed', function () {
-            var oldObject = { a: [1, 2, 3, 4], b: [1, 2, 3, 4] };
-            var newObject = { a: [1, 2, 3, 4, 5], b: [1, 2, 3, 4, 5, 6] };
+            var oldObject = { a: [1, 2, 3, 4], b: [1, 2, 3, 4], c: [1] };
+            var newObject = { a: [1, 2, 3, 4, 5], b: [1, 2, 3, 4, 5, 6], c: [1, 2, 3, 4, 5] };
             var expectedDiff = {
-                $push: { a: 5, b: { $each: [5, 6] } }
+                $push: { a: 5, b: { $each: [5, 6] }, c: { $each: [2, 3, 4, 5] } }
             };
             chai.expect(Omnom.diff(oldObject, newObject)).to.exist.and.be.eql(expectedDiff);
         });
@@ -85,6 +115,15 @@ describe("Omnom", function () {
                     a: [5, 4, 3],
                     b: [5, 4, 3, 2]
                 }
+            };
+            chai.expect(Omnom.diff(oldObject, newObject)).to.exist.and.be.eql(expectedDiff);
+        });
+        it("should correctly handle arrays which shrink in size and can't be pulled", function () {
+            var oldObject = { a: [1, 2, 3, 4], b: [1, 2, 3, 4] };
+            var newObject = { a: [1, 3, 5], b: [1, 3] };
+            var expectedDiff = {
+                $set: { a: [1, 3, 5] },
+                $pullAll: { b: [2, 4] }
             };
             chai.expect(Omnom.diff(oldObject, newObject)).to.exist.and.be.eql(expectedDiff);
         });
