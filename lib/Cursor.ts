@@ -2,7 +2,7 @@
 import Model = require('./Model');
 import General = require('./General');
 import MongoDB = require('mongodb');
-import Promise = require('bluebird');
+import Bluebird = require('bluebird');
 import Index = require('./Index');
 
 export = Cursor;
@@ -24,8 +24,8 @@ class Cursor<TDocument, TInstance> {
      * @param {function(Error, Number)} callback A callback which is triggered when the result is available
      * @return {Promise<number>} A promise which will resolve with the number of documents matched by this cursor
      */
-    count(callback?: General.Callback<number>): Promise<number> {
-        return new Promise<number>((resolve, reject) => {
+    count(callback?: General.Callback<number>): Bluebird<number> {
+        return new Bluebird<number>((resolve, reject) => {
             this.cursor.count(true,(err, count) => {
                 if (err) return reject(err);
                 return resolve(<any>count);
@@ -39,8 +39,8 @@ class Cursor<TDocument, TInstance> {
      * @param {function(Error)} callback A callback which is triggered when all operations have been dispatched
      * @return {Promise} A promise which is resolved when all operations have been dispatched
      */
-    each(handler: (instance: TInstance) => void, callback?: General.Callback<void>): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+    each(handler: (instance: TInstance) => void, callback?: General.Callback<void>): Bluebird<void> {
+        return new Bluebird<void>((resolve, reject) => {
             this.cursor.each((err, item: TDocument) => {
                 if (err) return reject(err);
                 if (!item) return resolve(null);
@@ -55,12 +55,12 @@ class Cursor<TDocument, TInstance> {
      * @param {function(Error, TResult[])} callback A callback which is triggered when the transformations are completed
      * @return {Promise<TResult[]>} A promise which is fulfilled with the results of the transformations
      */
-    map<TResult>(transform: (instance: TInstance) => TResult | Promise<TResult>, callback?: General.Callback<TResult[]>): Promise<TResult[]> {
-        return new Promise<TResult[]>((resolve, reject) => {
-            var promises: Promise<TResult>[] = [];
+    map<TResult>(transform: (instance: TInstance) => TResult | Bluebird<TResult>, callback?: General.Callback<TResult[]>): Bluebird<TResult[]> {
+        return new Bluebird<TResult[]>((resolve, reject) => {
+            var promises: Bluebird<TResult>[] = [];
             this.cursor.each((err, item: TDocument) => {
                 if (err) return reject(err);
-                if (!item) return resolve(Promise.all(promises));
+                if (!item) return resolve(Bluebird.all(promises));
                 promises.push(this.model.handlers.documentReceived(this.conditions, item,(document, isNew?, isPartial?) => this.model.helpers.wrapDocument(document, isNew, isPartial))
                     .then(<(instance) => TResult>transform));
             });
@@ -72,8 +72,8 @@ class Cursor<TDocument, TInstance> {
      * @param {function(Error, TInstance[])} callback A callback which is triggered with the resulting instances
      * @return {Promise<TInstance[]>} A promise which resolves with the instances returned by the query
      */
-    toArray(callback?: General.Callback<TInstance[]>): Promise<TInstance[]> {
-        return new Promise<TDocument[]>((resolve, reject) => {
+    toArray(callback?: General.Callback<TInstance[]>): Bluebird<TInstance[]> {
+        return new Bluebird<TDocument[]>((resolve, reject) => {
             this.cursor.toArray((err, results: any[]) => {
                 if (err) return reject(err);
                 return resolve(<any>results);
@@ -88,8 +88,8 @@ class Cursor<TDocument, TInstance> {
      * @param {function(Error, TInstance)} callback A callback which is triggered when the next item becomes available
      * @return {Promise<TInstance>} A promise which is resolved with the next item
      */
-    next(callback?: General.Callback<TInstance>): Promise<TInstance> {
-        return new Promise<TDocument>((resolve, reject) => {
+    next(callback?: General.Callback<TInstance>): Bluebird<TInstance> {
+        return new Bluebird<TDocument>((resolve, reject) => {
             this.cursor.nextObject((err, result: any) => {
                 if (err) return reject(err);
                 return resolve(<any>result);

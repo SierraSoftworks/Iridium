@@ -2,7 +2,7 @@
 import MongoDB = require('mongodb');
 import Skmatc = require('skmatc');
 import Concoction = require('concoction');
-import Promise = require('bluebird');
+import Bluebird = require('bluebird');
 import util = require('util');
 import _ = require('lodash');
 
@@ -241,21 +241,21 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    get(callback?: general.Callback<TInstance>): Promise<TInstance>;
+    get(callback?: general.Callback<TInstance>): Bluebird<TInstance>;
     /**
      * Retrieves a single document from the collection with the given ID and wraps it as an instance
      * @param {any} id The document's unique _id field value in downstream format
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    get(id: any, callback?: general.Callback<TInstance>): Promise<TInstance>;
+    get(id: any, callback?: general.Callback<TInstance>): Bluebird<TInstance>;
     /**
      * Retrieves a single document from the collection which matches the conditions
      * @param {Object} conditions The MongoDB query dictating which document to return
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    get(conditions: { [key: string]: any }, callback?: general.Callback<TInstance>): Promise<TInstance>;
+    get(conditions: { [key: string]: any }, callback?: general.Callback<TInstance>): Bluebird<TInstance>;
     /**
      * Retrieves a single document from the collection with the given ID and wraps it as an instance
      * @param {any} id The document's unique _id field value in downstream format
@@ -263,7 +263,7 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    get(id: any, options: ModelOptions.QueryOptions, callback?: general.Callback<TInstance>): Promise<TInstance>;
+    get(id: any, options: ModelOptions.QueryOptions, callback?: general.Callback<TInstance>): Bluebird<TInstance>;
     /**
      * Retrieves a single document from the collection which matches the conditions
      * @param {Object} conditions The MongoDB query dictating which document to return
@@ -271,8 +271,8 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    get(conditions: { [key: string]: any }, options: ModelOptions.QueryOptions, callback?: general.Callback<TInstance>): Promise<TInstance>;
-    get(...args: any[]): Promise<TInstance> {
+    get(conditions: { [key: string]: any }, options: ModelOptions.QueryOptions, callback?: general.Callback<TInstance>): Bluebird<TInstance>;
+    get(...args: any[]): Bluebird<TInstance> {
         return this.findOne.apply(this, args);
     }
 
@@ -281,21 +281,21 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    findOne(callback?: general.Callback<TInstance>): Promise<TInstance>;
+    findOne(callback?: general.Callback<TInstance>): Bluebird<TInstance>;
     /**
      * Retrieves a single document from the collection with the given ID and wraps it as an instance
      * @param {any} id The document's unique _id field value in downstream format
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    findOne(id: any, callback?: general.Callback<TInstance>): Promise<TInstance>;
+    findOne(id: any, callback?: general.Callback<TInstance>): Bluebird<TInstance>;
     /**
      * Retrieves a single document from the collection which matches the conditions
      * @param {Object} conditions The MongoDB query dictating which document to return
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    findOne(conditions: { [key: string]: any }, callback?: general.Callback<TInstance>): Promise<TInstance>;
+    findOne(conditions: { [key: string]: any }, callback?: general.Callback<TInstance>): Bluebird<TInstance>;
     /**
      * Retrieves a single document from the collection with the given ID and wraps it as an instance
      * @param {any} id The document's unique _id field value in downstream format
@@ -303,7 +303,7 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    findOne(id: any, options: ModelOptions.QueryOptions, callback?: general.Callback<TInstance>): Promise<TInstance>;
+    findOne(id: any, options: ModelOptions.QueryOptions, callback?: general.Callback<TInstance>): Bluebird<TInstance>;
     /**
      * Retrieves a single document from the collection which matches the conditions
      * @param {Object} conditions The MongoDB query dictating which document to return
@@ -311,8 +311,8 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    findOne(conditions: { [key: string]: any }, options: ModelOptions.QueryOptions, callback?: general.Callback<TInstance>): Promise<TInstance>;
-    findOne(...args: any[]): Promise<TInstance> {
+    findOne(conditions: { [key: string]: any }, options: ModelOptions.QueryOptions, callback?: general.Callback<TInstance>): Bluebird<TInstance>;
+    findOne(...args: any[]): Bluebird<TInstance> {
         var conditions: { [key: string]: any } = null;
         var options: ModelOptions.QueryOptions = null;
         var callback: general.Callback<TInstance> = null;
@@ -333,7 +333,7 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
             cache: true
         });
 
-        return Promise.resolve().bind(this).then(() => {
+        return Bluebird.resolve().bind(this).then(() => {
             this._helpers.transform.reverse(conditions);
 
             if (options.fields)
@@ -343,7 +343,7 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
         }).then((cachedDocument: TDocument) => {
 
             if (cachedDocument) return cachedDocument;
-            return new Promise<any>((resolve, reject) => {
+            return new Bluebird<any>((resolve, reject) => {
                 this.collection.findOne(conditions, <MongoDB.CollectionFindOptions>{
                     fields: options.fields,
                     skip: options.skip,
@@ -366,7 +366,7 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
      * @param {function(Error, TInstance)} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    create(objects: TDocument, callback?: general.Callback<TInstance>): Promise<TInstance>;
+    create(objects: TDocument, callback?: general.Callback<TInstance>): Bluebird<TInstance>;
     /**
      * Inserts an object into the collection after validating it against this model's schema
      * @param {Object} object The object to insert into the collection
@@ -374,14 +374,14 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
      * @param {function(Error, TInstance)} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    create(objects: TDocument, options: ModelOptions.CreateOptions, callback?: general.Callback<TInstance>): Promise<TInstance>;
+    create(objects: TDocument, options: ModelOptions.CreateOptions, callback?: general.Callback<TInstance>): Bluebird<TInstance>;
     /**
      * Inserts the objects into the collection after validating them against this model's schema
      * @param {Object[]} objects The objects to insert into the collection
      * @param {function(Error, TInstance)} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    create(objects: TDocument[], callback?: general.Callback<TInstance[]>): Promise<TInstance[]>;
+    create(objects: TDocument[], callback?: general.Callback<TInstance[]>): Bluebird<TInstance[]>;
     /**
      * Inserts the objects into the collection after validating them against this model's schema
      * @param {Object[]} objects The objects to insert into the collection
@@ -389,8 +389,8 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
      * @param {function(Error, TInstance)} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    create(objects: TDocument[], options: ModelOptions.CreateOptions, callback?: general.Callback<TInstance[]>): Promise<TInstance[]>;
-    create(...args: any[]): Promise<any> {
+    create(objects: TDocument[], options: ModelOptions.CreateOptions, callback?: general.Callback<TInstance[]>): Bluebird<TInstance[]>;
+    create(...args: any[]): Bluebird<any> {
         return this.insert.apply(this, args);
     }
 
@@ -400,7 +400,7 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
      * @param {function(Error, TInstance)} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    insert(objects: TDocument, callback?: general.Callback<TInstance>): Promise<TInstance>;
+    insert(objects: TDocument, callback?: general.Callback<TInstance>): Bluebird<TInstance>;
     /**
      * Inserts an object into the collection after validating it against this model's schema
      * @param {Object} object The object to insert into the collection
@@ -408,14 +408,14 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
      * @param {function(Error, TInstance)} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    insert(objects: TDocument, options: ModelOptions.CreateOptions, callback?: general.Callback<TInstance>): Promise<TInstance>;
+    insert(objects: TDocument, options: ModelOptions.CreateOptions, callback?: general.Callback<TInstance>): Bluebird<TInstance>;
     /**
      * Inserts the objects into the collection after validating them against this model's schema
      * @param {Object[]} objects The objects to insert into the collection
      * @param {function(Error, TInstance[])} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    insert(objects: TDocument[], callback?: general.Callback<TInstance[]>): Promise<TInstance[]>;
+    insert(objects: TDocument[], callback?: general.Callback<TInstance[]>): Bluebird<TInstance[]>;
     /**
      * Inserts the objects into the collection after validating them against this model's schema
      * @param {Object[]} objects The objects to insert into the collection
@@ -423,8 +423,8 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
      * @param {function(Error, TInstance[])} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    insert(objects: TDocument[], options: ModelOptions.CreateOptions, callback?: general.Callback<TInstance[]>): Promise<TInstance[]>;
-    insert(objs: TDocument | TDocument[], ...args: any[]): Promise<any> {
+    insert(objects: TDocument[], options: ModelOptions.CreateOptions, callback?: general.Callback<TInstance[]>): Bluebird<TInstance[]>;
+    insert(objs: TDocument | TDocument[], ...args: any[]): Bluebird<any> {
         var objects: TDocument[];
         var options: ModelOptions.CreateOptions = {};
         var callback: general.Callback<any> = null;
@@ -445,13 +445,13 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
             w: 1
         });
 
-        return Promise.resolve().then(() => {
+        return Bluebird.resolve().then(() => {
             var queryOptions = { w: options.w, upsert: options.upsert, new: true };
 
             if (options.upsert) {
                 var docs = this._handlers.creatingDocuments(objects);
                 return docs.map((object:{ _id: any; }) => {
-                    return new Promise<any[]>((resolve, reject) => {
+                    return new Bluebird<any[]>((resolve, reject) => {
                         this.collection.findAndModify({_id: object._id}, ["_id"], object, queryOptions, (err, result) => {
                             if (err) return reject(err);
                             return resolve(result);
@@ -461,7 +461,7 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
             }
             else
                 return this._handlers.creatingDocuments(objects).then((objects) => {
-                    return new Promise<any[]>((resolve, reject) => {
+                    return new Bluebird<any[]>((resolve, reject) => {
                         this.collection.insert(objects, queryOptions,(err, results) => {
                             if (err) return reject(err);
                             return resolve(results);
@@ -482,7 +482,7 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
      * @param {Object} changes The changes to make to the documents
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      */
-    update(conditions: any, changes: any, callback?: general.Callback<number>): Promise<number>;
+    update(conditions: any, changes: any, callback?: general.Callback<number>): Bluebird<number>;
     /**
      * Updates the documents in the backing collection which match the conditions using the given update instructions
      * @param {Object} conditions The conditions which determine which documents will be updated
@@ -490,8 +490,8 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
      * @param {UpdateOptions} options The options which dictate how this function behaves
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      */
-    update(conditions: any, changes: any, options: ModelOptions.UpdateOptions, callback?: general.Callback<number>): Promise<number>;
-    update(conditions: any, changes: any, options?: ModelOptions.UpdateOptions, callback?: general.Callback<number>): Promise<number> {
+    update(conditions: any, changes: any, options: ModelOptions.UpdateOptions, callback?: general.Callback<number>): Bluebird<number>;
+    update(conditions: any, changes: any, options?: ModelOptions.UpdateOptions, callback?: general.Callback<number>): Bluebird<number> {
         if (typeof options == 'function') {
             callback = <general.Callback<number>>options;
             options = {};
@@ -504,7 +504,7 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
 
         this._helpers.transform.reverse(conditions);
 
-        return new Promise<number>((resolve, reject) => {
+        return new Bluebird<number>((resolve, reject) => {
             this.collection.update(conditions, changes, options,(err, changes) => {
                 if (err) return reject(err);
                 return resolve(changes);
@@ -517,21 +517,21 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      * @returns {Promise<number>}
      */
-    count(callback?: general.Callback<number>): Promise<number>;
+    count(callback?: general.Callback<number>): Bluebird<number>;
     /**
      * Counts the number of documents in the collection which match the conditions provided
      * @param {Object} conditions The conditions which determine whether an object is counted or not
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      * @returns {Promise<number>}
      */
-    count(conditions: any, callback?: general.Callback<number>): Promise<number>;
-    count(conditions?: any, callback?: general.Callback<number>): Promise<number> {
+    count(conditions: any, callback?: general.Callback<number>): Bluebird<number>;
+    count(conditions?: any, callback?: general.Callback<number>): Bluebird<number> {
         if (typeof conditions == 'function') {
             callback = <general.Callback<number>>conditions;
             conditions = {};
         }
         
-        return new Promise<number>((resolve, reject) => {
+        return new Bluebird<number>((resolve, reject) => {
             this.collection.count(conditions,(err, results) => {
                 if (err) return reject(err);
                 return resolve(results);
@@ -544,22 +544,22 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      * @returns {Promise<number>}
      */
-    remove(callback?: general.Callback<number>): Promise<number>;
+    remove(callback?: general.Callback<number>): Bluebird<number>;
     /**
      * Removes all documents from the collection which match the conditions
      * @param {Object} conditions The conditions determining whether an object is removed or not
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      * @returns {Promise<number>}
      */
-    remove(conditions: any, callback?: general.Callback<number>): Promise<number>;
-    remove(conditions?: any, callback?: general.Callback<number>): Promise<number> {
+    remove(conditions: any, callback?: general.Callback<number>): Bluebird<number>;
+    remove(conditions?: any, callback?: general.Callback<number>): Bluebird<number> {
         if (typeof conditions == 'function') {
             callback = <general.Callback<number>>conditions;
             conditions = {};
         }
         conditions = conditions || {};
 
-        return new Promise<number>((resolve, reject) => {
+        return new Bluebird<number>((resolve, reject) => {
             this._helpers.transform.reverse(conditions);
             this.collection.remove(conditions,(err, results) => {
                 if (err) return reject(err);
@@ -568,7 +568,7 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
         }).then((count) => {
             if(count === 1)
                 return this._cache.clear(conditions).then(() => count);
-            return Promise.resolve(count);
+            return Bluebird.resolve(count);
         }).nodeify(callback);
     }
 
@@ -578,7 +578,7 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
      * @param {function(Error, String)} callback A callback which is triggered when the operation completes
      * @returns {Promise<String>} The name of the index
      */
-    ensureIndex(specification: Index.IndexSpecification, callback?: general.Callback<string>): Promise<string>;
+    ensureIndex(specification: Index.IndexSpecification, callback?: general.Callback<string>): Bluebird<string>;
     /**
      * Ensures that the given index is created for the collection
      * @param {Object} specification The index specification object used by MongoDB
@@ -586,14 +586,14 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
      * @param {function(Error, String)} callback A callback which is triggered when the operation completes
      * @returns {Promise<String>} The name of the index
      */
-    ensureIndex(specification: Index.IndexSpecification, options: MongoDB.IndexOptions, callback?: general.Callback<string>): Promise<string>;
-    ensureIndex(specification: Index.IndexSpecification, options?: MongoDB.IndexOptions, callback?: general.Callback<string>): Promise<string> {
+    ensureIndex(specification: Index.IndexSpecification, options: MongoDB.IndexOptions, callback?: general.Callback<string>): Bluebird<string>;
+    ensureIndex(specification: Index.IndexSpecification, options?: MongoDB.IndexOptions, callback?: general.Callback<string>): Bluebird<string> {
         if (typeof options == 'function') {
             callback = <general.Callback<any>>options;
             options = {};
         }
 
-        return new Promise<string>((resolve, reject) => {
+        return new Bluebird<string>((resolve, reject) => {
             this.collection.ensureIndex(specification, options,(err, name: any) => {
                 if (err) return reject(err);
                 return resolve(name);
@@ -606,8 +606,8 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
      * @param {function(Error, String[])} callback A callback which is triggered when the operation completes
      * @returns {Promise<String[]>} The names of the indexes
      */
-    ensureIndexes(callback?: general.Callback<string[]>): Promise<string[]> {
-        return Promise.resolve(this.options.indexes).map((index: Index.Index | Index.IndexSpecification) => {
+    ensureIndexes(callback?: general.Callback<string[]>): Bluebird<string[]> {
+        return Bluebird.resolve(this.options.indexes).map((index: Index.Index | Index.IndexSpecification) => {
             return this.ensureIndex((<Index.Index>index).spec || <Index.IndexSpecification>index,(<Index.Index>index).options || {});
         }).nodeify(callback);
     }
@@ -618,15 +618,15 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
      * @param {function(Error, Boolean)} callback A callback which is triggered when the operation completes
      * @returns {Promise<Boolean>} Whether the index was dropped
      */
-    dropIndex(name: string, callback?: general.Callback<boolean>): Promise<boolean>;
+    dropIndex(name: string, callback?: general.Callback<boolean>): Bluebird<boolean>;
     /**
      * Drops the index if it exists in the collection
      * @param {IndexSpecification} index The index to remove
      * @param {function(Error, Boolean)} callback A callback which is triggered when the operation completes
      * @returns {Promise<Boolean>} Whether the index was dropped
      */
-    dropIndex(index: Index.IndexSpecification, callback?: general.Callback<boolean>): Promise<boolean>;
-    dropIndex(specification: string | Index.IndexSpecification, callback?: general.Callback<boolean>): Promise<boolean> {
+    dropIndex(index: Index.IndexSpecification, callback?: general.Callback<boolean>): Bluebird<boolean>;
+    dropIndex(specification: string | Index.IndexSpecification, callback?: general.Callback<boolean>): Bluebird<boolean> {
         var index: string;
 
         if (typeof (specification) === 'string') index = <string>specification;
@@ -634,7 +634,7 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
             index = _(<Index.IndexSpecification>specification).map((direction, key) => key + '_' + direction).reduce<string>((x, y) => x + '_' + y);
         }
 
-        return new Promise<any>((resolve, reject) => {
+        return new Bluebird<any>((resolve, reject) => {
             this.collection.dropIndex(index,(err, count) => {
                 if (err) return reject(err);
                 return resolve(count);
@@ -647,8 +647,8 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
      * @param {function(Error, Boolean)} callback A callback which is triggered when the operation completes
      * @returns {Promise<Boolean>} Whether the indexes were dropped
      */
-    dropIndexes(callback?: general.Callback<boolean>): Promise<boolean> {
-        return new Promise<any>((resolve, reject) => {
+    dropIndexes(callback?: general.Callback<boolean>): Bluebird<boolean> {
+        return new Bluebird<any>((resolve, reject) => {
             this.collection.dropAllIndexes((err, count) => {
                 if (err) return reject(err);
                 return resolve(count);

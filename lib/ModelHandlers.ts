@@ -6,7 +6,7 @@ import Model = require('./Model');
 import ModelCache = require('./ModelCache');
 import ModelOptions = require('./ModelOptions');
 import _ = require('lodash');
-import Promise = require('bluebird');
+import Bluebird = require('bluebird');
 
 export = ModelHandlers;
 
@@ -18,14 +18,14 @@ class ModelHandlers<TDocument, TInstance> {
     documentReceived<TResult>(conditions: any,
         result: TDocument,
         wrapper: (document: TDocument, isNew?: boolean, isPartial?: boolean) => TResult,
-        options: ModelOptions.QueryOptions = {}): Promise<TResult> {
+        options: ModelOptions.QueryOptions = {}): Bluebird<TResult> {
         _.defaults(options, {
             cache: true,
             partial: false
         });
 
-        return Promise.resolve(result).then((target: any) => {
-            return <Promise<TResult>>Promise.resolve().then(() => {
+        return Bluebird.resolve(result).then((target: any) => {
+            return <Bluebird<TResult>>Bluebird.resolve().then(() => {
                 // Trigger the received hook
                 if (this.model.options.hooks.retrieved) return this.model.options.hooks.retrieved(target);
             }).then(() => {
@@ -41,27 +41,27 @@ class ModelHandlers<TDocument, TInstance> {
                 // Wrap the document and trigger the ready hook
                 var wrapped: TResult = wrapper(target, false, !!options.fields);
 
-                if (this.model.options.hooks.ready && wrapped instanceof this.model.Instance) return Promise.resolve(this.model.options.hooks.ready(<TInstance><any>wrapped)).then(() => wrapped);
+                if (this.model.options.hooks.ready && wrapped instanceof this.model.Instance) return Bluebird.resolve(this.model.options.hooks.ready(<TInstance><any>wrapped)).then(() => wrapped);
                 return wrapped;
             });
         });
     }
 
-    creatingDocuments(documents: TDocument[]): Promise<any[]> {
-        return Promise.all(documents.map((document: any) => {
-            return Promise.resolve().then(() => {
+    creatingDocuments(documents: TDocument[]): Bluebird<any[]> {
+        return Bluebird.all(documents.map((document: any) => {
+            return Bluebird.resolve().then(() => {
                 if (this.model.options.hooks.retrieved) return this.model.options.hooks.creating(document);
             }).then(() => {
                 var validation: SkmatcCore.IResult = this.model.helpers.validate(document);
-                if (validation.failed) return Promise.reject(validation.error);
+                if (validation.failed) return Bluebird.reject(validation.error);
                 this.model.helpers.transform.reverse(document);
                 return document;
             });
         }));
     }
 
-    savingDocument(instance: TInstance, changes: any): Promise<TInstance> {
-        return Promise.resolve().then(() => {
+    savingDocument(instance: TInstance, changes: any): Bluebird<TInstance> {
+        return Bluebird.resolve().then(() => {
             if (this.model.options.hooks.saving) return this.model.options.hooks.saving(instance, changes);
         }).then(() => instance);
     }

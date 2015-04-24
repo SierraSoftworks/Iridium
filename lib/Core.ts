@@ -1,5 +1,5 @@
 /// <reference path="../_references.d.ts" />
-import Promise = require('bluebird');
+import Bluebird = require('bluebird');
 import MongoDB = require('mongodb');
 import _ = require('lodash');
 import http = require('http');
@@ -17,7 +17,7 @@ import cache = require('./Cache');
 import noOpCache = require('./caches/NoOpCache');
 import memoryCache = require('./caches/MemoryCache');
 
-var MongoConnectAsyc = Promise.promisify(MongoDB.MongoClient.connect);
+var MongoConnectAsyc = Bluebird.promisify(MongoDB.MongoClient.connect);
 
 export = Core;
 
@@ -135,9 +135,9 @@ class Core {
      * @param {function(Error, Iridium.Core)} [callback] A callback to be triggered once the connection is established.
      * @returns {Promise}
      */
-    connect(callback?: (err: Error, core: Core) => any): Promise<Core> {
+    connect(callback?: (err: Error, core: Core) => any): Bluebird<Core> {
         var self = this;
-        return Promise.bind(this).then(function() {
+        return Bluebird.bind(this).then(function() {
             if (self._connection) return self._connection;
             return MongoConnectAsyc(self.url);
         }).then(function (db: MongoDB.Db) {
@@ -150,9 +150,9 @@ class Core {
      * Closes the active database connection
      * @type {Promise}
      */
-    close(): Promise<Core> {
+    close(): Bluebird<Core> {
         var self = this;
-        return Promise.bind(this).then(function() {
+        return Bluebird.bind(this).then(function() {
             if (!self._connection) return this;
             var conn: MongoDB.Db = self._connection;
             self._connection = null;

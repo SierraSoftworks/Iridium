@@ -1,10 +1,10 @@
 /// <reference path="../_references.d.ts" />
-import Promise = require('bluebird');
+import Bluebird = require('bluebird');
 
 export = ICache;
 
 interface ICache {
-    set<T>(key: string, value: T): Promise<T>;
-    get<T>(key: string): Promise<T>;
-    clear(key: string): Promise<boolean>
+    set<T>(key: string, value: T): Bluebird<T>;
+    get<T>(key: string): Bluebird<T>;
+    clear(key: string): Bluebird<boolean>
 }

@@ -5,7 +5,7 @@ import Concoction = require('concoction');
 import Skmatc = require('skmatc');
 import Omnom = require('./utils/Omnom');
 import _ = require('lodash');
-import Promise = require('bluebird');
+import Bluebird = require('bluebird');
 
 export = ModelHelpers;
 
