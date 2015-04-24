@@ -11,6 +11,10 @@ class Cursor<TDocument, TInstance> {
         
     }
 
+    /**
+     * Counts the number of documents which are matched by this cursor
+     * @param {function(Error, Number)} callback A callback which is triggered when the result is available
+     */
     count(callback?: general.Callback<number>): Promise<number> {
         return new Promise<number>((resolve, reject) => {
             this.cursor.count(true,(err, count) => {
@@ -20,13 +24,17 @@ class Cursor<TDocument, TInstance> {
         }).nodeify(callback);
     }
 
+    /**
+     * Runs the specified handler over each instance in the query results
+     * @param {function(Instance)} handler The handler which is triggered for each element in the query
+     * @param {function(Error)} callback A callback which is triggered when all operations have been dispatched
+     */
     each(handler: (instance: TInstance) => void, callback?: general.Callback<void>): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            var promises = [];
             this.cursor.each((err, item: TDocument) => {
                 if (err) return reject(err);
-                if (!item) return resolve(Promise.all(promises).then(() => null));
-                promises.push(this.model.handlers.documentReceived(this.conditions, item,(document, isNew?, isPartial?) => this.model.helpers.wrapDocument(document, isNew, isPartial)).then(handler));
+                if (!item) return resolve(null);
+                this.model.handlers.documentReceived(this.conditions, item,(document, isNew?, isPartial?) => this.model.helpers.wrapDocument(document, isNew, isPartial)).then(handler);
             });
         }).nodeify(callback);
     }
