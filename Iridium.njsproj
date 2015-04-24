@@ -43,9 +43,16 @@
     <TypeScriptCompile Include="lib\Cursor.ts" />
     <TypeScriptCompile Include="lib\General.ts" />
     <TypeScriptCompile Include="lib\Hooks.ts" />
+    <TypeScriptCompile Include="lib\Index.ts" />
     <TypeScriptCompile Include="lib\Instance.ts" />
     <TypeScriptCompile Include="lib\Middleware.ts" />
     <TypeScriptCompile Include="lib\Model.ts" />
+    <TypeScriptCompile Include="lib\ModelCache.ts" />
+    <TypeScriptCompile Include="lib\ModelHandlers.ts" />
+    <TypeScriptCompile Include="lib\ModelHelpers.ts" />
+    <TypeScriptCompile Include="lib\ModelInterfaces.ts" />
+    <TypeScriptCompile Include="lib\ModelOptions.ts" />
+    <TypeScriptCompile Include="lib\ModelSpecificInstance.ts" />
     <TypeScriptCompile Include="lib\Plugins.ts" />
     <TypeScriptCompile Include="lib\Schema.ts" />
     <Content Include="test\mocha.opts" />

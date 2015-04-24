@@ -1,8 +1,9 @@
 ﻿/// <reference path="../_references.d.ts" />
-import model = require('./Model');
-import general = require('./General');
+import Model = require('./Model');
+import General = require('./General');
 import MongoDB = require('mongodb');
 import Promise = require('bluebird');
+import Index = require('./Index');
 
 export = Cursor;
 
@@ -14,7 +15,7 @@ class Cursor<TDocument, TInstance> {
      * @param {MongoDB.Cursor} cursor The MongoDB native cursor object to be wrapped
      * @constructor
      */
-    constructor(private model: model.Model<TDocument, TInstance>, private conditions: any, public cursor: MongoDB.Cursor) {
+    constructor(private model: Model<TDocument, TInstance>, private conditions: any, public cursor: MongoDB.Cursor) {
         
     }
 
@@ -23,7 +24,7 @@ class Cursor<TDocument, TInstance> {
      * @param {function(Error, Number)} callback A callback which is triggered when the result is available
      * @return {Promise<number>} A promise which will resolve with the number of documents matched by this cursor
      */
-    count(callback?: general.Callback<number>): Promise<number> {
+    count(callback?: General.Callback<number>): Promise<number> {
         return new Promise<number>((resolve, reject) => {
             this.cursor.count(true,(err, count) => {
                 if (err) return reject(err);
@@ -38,7 +39,7 @@ class Cursor<TDocument, TInstance> {
      * @param {function(Error)} callback A callback which is triggered when all operations have been dispatched
      * @return {Promise} A promise which is resolved when all operations have been dispatched
      */
-    each(handler: (instance: TInstance) => void, callback?: general.Callback<void>): Promise<void> {
+    each(handler: (instance: TInstance) => void, callback?: General.Callback<void>): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.cursor.each((err, item: TDocument) => {
                 if (err) return reject(err);
@@ -54,7 +55,7 @@ class Cursor<TDocument, TInstance> {
      * @param {function(Error, TResult[])} callback A callback which is triggered when the transformations are completed
      * @return {Promise<TResult[]>} A promise which is fulfilled with the results of the transformations
      */
-    map<TResult>(transform: (instance: TInstance) => TResult | Promise<TResult>, callback?: general.Callback<TResult[]>): Promise<TResult[]> {
+    map<TResult>(transform: (instance: TInstance) => TResult | Promise<TResult>, callback?: General.Callback<TResult[]>): Promise<TResult[]> {
         return new Promise<TResult[]>((resolve, reject) => {
             var promises: Promise<TResult>[] = [];
             this.cursor.each((err, item: TDocument) => {
@@ -71,7 +72,7 @@ class Cursor<TDocument, TInstance> {
      * @param {function(Error, TInstance[])} callback A callback which is triggered with the resulting instances
      * @return {Promise<TInstance[]>} A promise which resolves with the instances returned by the query
      */
-    toArray(callback?: general.Callback<TInstance[]>): Promise<TInstance[]> {
+    toArray(callback?: General.Callback<TInstance[]>): Promise<TInstance[]> {
         return new Promise<TDocument[]>((resolve, reject) => {
             this.cursor.toArray((err, results: any[]) => {
                 if (err) return reject(err);
@@ -87,7 +88,7 @@ class Cursor<TDocument, TInstance> {
      * @param {function(Error, TInstance)} callback A callback which is triggered when the next item becomes available
      * @return {Promise<TInstance>} A promise which is resolved with the next item
      */
-    next(callback?: general.Callback<TInstance>): Promise<TInstance> {
+    next(callback?: General.Callback<TInstance>): Promise<TInstance> {
         return new Promise<TDocument>((resolve, reject) => {
             this.cursor.nextObject((err, result: any) => {
                 if (err) return reject(err);
@@ -111,7 +112,7 @@ class Cursor<TDocument, TInstance> {
      * @param {model.IndexSpecification} sortExpression The index expression dictating the sort order and direction to use
      * @return {Cursor} The new cursor which sorts its results by the sortExpression
      */
-    sort(sortExpression: model.IndexSpecification): Cursor<TDocument, TInstance> {
+    sort(sortExpression: Index.IndexSpecification): Cursor<TDocument, TInstance> {
         return new Cursor(this.model, this.conditions, this.cursor.sort(sortExpression));
     }
 

@@ -16,7 +16,7 @@ export = Iridium;
 
 module Iridium {
     export class Core extends _Core { };
-    export class Model<TDocument, TInstance> extends _Model.Model<TDocument, TInstance> { };
+    export class Model<TDocument, TInstance> extends _Model<TDocument, TInstance> { };
     export class Instance<TDocument, TInstance> extends _Instance<TDocument, TInstance> { };
 
     export class NoOpCache extends _NoOpCache { };

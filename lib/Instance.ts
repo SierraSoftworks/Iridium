@@ -1,6 +1,6 @@
 ﻿/// <reference path="../_references.d.ts" />
 import iridium = require('./Core');
-import model = require('./Model');
+import Model = require('./Model');
 import IPlugin = require('./Plugins');
 import _ = require('lodash');
 import Promise = require('bluebird');
@@ -20,7 +20,7 @@ class Instance<TDocument, TInstance> {
      * The instance returned by the model, and all of this instance's methods, will be of type
      * TInstance - which should represent the merger of TSchema and IInstance for best results.
      */
-    constructor(model: model.Model<TDocument, TInstance>, document: TDocument, isNew: boolean = true, isPartial: boolean = false) {
+    constructor(model: Model<TDocument, TInstance>, document: TDocument, isNew: boolean = true, isPartial: boolean = false) {
         this._model = model;
 
         this._isNew = !!isNew;
@@ -35,7 +35,7 @@ class Instance<TDocument, TInstance> {
 
     private _isNew: boolean;
     private _isPartial: boolean;
-    private _model: model.Model<TDocument, TInstance>;
+    private _model: Model<TDocument, TInstance>;
     private _original: TDocument;
     private _modified: TDocument;
 

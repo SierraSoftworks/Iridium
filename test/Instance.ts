@@ -195,11 +195,11 @@ describe("Instance",() => {
         });
 
         it("should update the instance's properties",() => {
-            return core.Test.get().then((instance) => {
-                core.Test.update({ id: instance.id }, {
+            return chai.expect(core.Test.get().then((instance) => {
+                return core.Test.update({ id: instance.id }, {
                     $set: { answer: 10 }
-                }).then(() => chai.expect(instance.update()).to.eventually.have.property('answer', 10));
-            });
+                }).then(() => instance.update());
+            })).to.eventually.have.property('answer', 10);
         });
 
         it("should set _isNew to true if the instance was removed from the database",() => {
@@ -235,11 +235,11 @@ describe("Instance",() => {
         });
 
         it("should update the instance's properties",() => {
-            return core.Test.get().then((instance) => {
-                core.Test.update({ id: instance.id }, {
+            return chai.expect(core.Test.get().then((instance) => {
+                return core.Test.update({ id: instance.id }, {
                     $set: { answer: 10 }
-                }).then(() => chai.expect(instance.refresh()).to.eventually.have.property('answer', 10));
-            });
+                }).then(() => instance.refresh());
+            })).to.eventually.have.property('answer', 10);
         });
 
         it("should set _isNew to true if the instance was removed from the database",() => {

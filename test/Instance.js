@@ -158,11 +158,11 @@ describe("Instance", function () {
             return core.Test.get().then(function (instance) { return chai.expect(instance.update()).to.eventually.equal(instance); });
         });
         it("should update the instance's properties", function () {
-            return core.Test.get().then(function (instance) {
-                core.Test.update({ id: instance.id }, {
+            return chai.expect(core.Test.get().then(function (instance) {
+                return core.Test.update({ id: instance.id }, {
                     $set: { answer: 10 }
-                }).then(function () { return chai.expect(instance.update()).to.eventually.have.property('answer', 10); });
-            });
+                }).then(function () { return instance.update(); });
+            })).to.eventually.have.property('answer', 10);
         });
         it("should set _isNew to true if the instance was removed from the database", function () {
             return core.Test.get().then(function (instance) {
@@ -193,11 +193,11 @@ describe("Instance", function () {
             return core.Test.get().then(function (instance) { return chai.expect(instance.update()).to.eventually.equal(instance); });
         });
         it("should update the instance's properties", function () {
-            return core.Test.get().then(function (instance) {
-                core.Test.update({ id: instance.id }, {
+            return chai.expect(core.Test.get().then(function (instance) {
+                return core.Test.update({ id: instance.id }, {
                     $set: { answer: 10 }
-                }).then(function () { return chai.expect(instance.refresh()).to.eventually.have.property('answer', 10); });
-            });
+                }).then(function () { return instance.refresh(); });
+            })).to.eventually.have.property('answer', 10);
         });
         it("should set _isNew to true if the instance was removed from the database", function () {
             return core.Test.get().then(function (instance) {

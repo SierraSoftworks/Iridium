@@ -28,7 +28,7 @@ var Iridium;
             _super.apply(this, arguments);
         }
         return Model;
-    })(_Model.Model);
+    })(_Model);
     Iridium.Model = Model;
     ;
     var Instance = (function (_super) {

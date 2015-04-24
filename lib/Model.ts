@@ -15,18 +15,27 @@ import cache = require('./Cache');
 import CacheDirector = require('./CacheDirector');
 import general = require('./General');
 import Cursor = require('./Cursor');
+import Index = require('./Index');
+import ModelOptions = require('./ModelOptions');
 
 import noOpCache = require('./caches/NoOpCache');
 import memoryCache = require('./caches/MemoryCache');
 import idCacheController = require('./cacheControllers/IDDirector');
 
 import Omnom = require('./utils/Omnom');
+import ModelCache = require('./ModelCache');
+import ModelHelpers = require('./ModelHelpers');
+import ModelHandlers = require('./ModelHandlers');
+import ModelInterfaces = require('./ModelInterfaces');
+import ModelSpecificInstance = require('./ModelSpecificInstance');
+
+export = Model;
 
 /**
  * An Iridium Model which represents a structured MongoDB collection
  * @class
  */
-export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance> {
+class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, TInstance> {
     /**
      * Creates a new Iridium model representing a given ISchema and backed by a collection whose name is specified
      * @param {Iridium} core The Iridium core that this model should use for database access
@@ -36,13 +45,13 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
      * @returns {Model}
      * @constructor
      */
-    constructor(core: Iridium, instanceType: InstanceCreator<TDocument, TInstance> | InstanceConstructor<TDocument, TInstance>, collection: string, schema: ISchema, options: IModelOptions<TDocument, TInstance> = {}) {
+    constructor(core: Iridium, instanceType: ModelInterfaces.InstanceCreator<TDocument, TInstance> | ModelInterfaces.InstanceConstructor<TDocument, TInstance>, collection: string, schema: ISchema, options: ModelOptions.IModelOptions < TDocument, TInstance > = {}) {
         if (!(core instanceof Iridium)) throw new Error("You failed to provide a valid Iridium core for this model");
         if (typeof instanceType != 'function') throw new Error("You failed to provide a valid instance constructor for this model");
         if (typeof collection != 'string' || !collection) throw new Error("You failed to provide a valid collection name for this model");
         if (!_.isPlainObject(schema) || !_.keys(schema).length) throw new Error("You failed to provide a valid schema for this model");
 
-        _.defaults(options, <IModelOptions<TDocument, TInstance>>{
+        _.defaults(options, <ModelOptions.IModelOptions<TDocument, TInstance>>{
             hooks: {},
             transforms: [
                 new Concoction.Rename({ _id: 'id' }),
@@ -74,16 +83,16 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
         this._cacheDirector = options.cache;
         this._cache = new ModelCache(this);
 
-        if (instanceType.prototype instanceof instance)
-            this._Instance = ModelSpecificInstance(this, <InstanceConstructor<TDocument, TInstance>>instanceType);
+        if ((<Function>instanceType).prototype instanceof instance)
+            this._Instance = ModelSpecificInstance(this, <ModelInterfaces.InstanceConstructor<TDocument, TInstance>>instanceType);
         else
-            this._Instance = <ModelSpecificInstanceConstructor<TDocument, TInstance>>(instanceType.bind(undefined, this));
+            this._Instance = <ModelInterfaces.ModelSpecificInstanceConstructor<TDocument, TInstance>>((<Function>instanceType).bind(undefined, this));
 
         this._helpers = new ModelHelpers(this);
         this._handlers = new ModelHandlers(this);
     }
 
-    private _options: IModelOptions<TDocument, TInstance>;
+    private _options: ModelOptions.IModelOptions<TDocument, TInstance>;
     /**
      * Gets the options provided when instantiating this model
      * @public
@@ -93,7 +102,7 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
      * options. Changes made to this object after the {plugin.newModel} hook are
      * called will not have any effect on this model.
      */
-    get options(): IModelOptions<TDocument, TInstance> {
+    get options(): ModelOptions.IModelOptions<TDocument, TInstance> {
         return this._options;
     }
 
@@ -182,12 +191,12 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
         return this._cache;
     }
 
-    private _Instance: ModelSpecificInstanceConstructor<TDocument, TInstance>;
+    private _Instance: ModelInterfaces.ModelSpecificInstanceConstructor<TDocument, TInstance>;
 
     /**
      * Gets the constructor responsible for creating instances for this model
      */
-    get Instance(): ModelSpecificInstanceConstructor<TDocument, TInstance> {
+    get Instance(): ModelInterfaces.ModelSpecificInstanceConstructor<TDocument, TInstance> {
         return this._Instance;
     }
     
@@ -254,7 +263,7 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    get(id: any, options: QueryOptions, callback?: general.Callback<TInstance>): Promise<TInstance>;
+    get(id: any, options: ModelOptions.QueryOptions, callback?: general.Callback<TInstance>): Promise<TInstance>;
     /**
      * Retrieves a single document from the collection which matches the conditions
      * @param {Object} conditions The MongoDB query dictating which document to return
@@ -262,7 +271,7 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    get(conditions: { [key: string]: any }, options: QueryOptions, callback?: general.Callback<TInstance>): Promise<TInstance>;
+    get(conditions: { [key: string]: any }, options: ModelOptions.QueryOptions, callback?: general.Callback<TInstance>): Promise<TInstance>;
     get(...args: any[]): Promise<TInstance> {
         return this.findOne.apply(this, args);
     }
@@ -294,7 +303,7 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    findOne(id: any, options: QueryOptions, callback?: general.Callback<TInstance>): Promise<TInstance>;
+    findOne(id: any, options: ModelOptions.QueryOptions, callback?: general.Callback<TInstance>): Promise<TInstance>;
     /**
      * Retrieves a single document from the collection which matches the conditions
      * @param {Object} conditions The MongoDB query dictating which document to return
@@ -302,10 +311,10 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    findOne(conditions: { [key: string]: any }, options: QueryOptions, callback?: general.Callback<TInstance>): Promise<TInstance>;
+    findOne(conditions: { [key: string]: any }, options: ModelOptions.QueryOptions, callback?: general.Callback<TInstance>): Promise<TInstance>;
     findOne(...args: any[]): Promise<TInstance> {
         var conditions: { [key: string]: any } = null;
-        var options: QueryOptions = null;
+        var options: ModelOptions.QueryOptions = null;
         var callback: general.Callback<TInstance> = null;
 
         for (var argI = 0; argI < args.length; argI++) {
@@ -365,7 +374,7 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
      * @param {function(Error, TInstance)} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    create(objects: TDocument, options: CreateOptions, callback?: general.Callback<TInstance>): Promise<TInstance>;
+    create(objects: TDocument, options: ModelOptions.CreateOptions, callback?: general.Callback<TInstance>): Promise<TInstance>;
     /**
      * Inserts the objects into the collection after validating them against this model's schema
      * @param {Object[]} objects The objects to insert into the collection
@@ -380,7 +389,7 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
      * @param {function(Error, TInstance)} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    create(objects: TDocument[], options: CreateOptions, callback?: general.Callback<TInstance[]>): Promise<TInstance[]>;
+    create(objects: TDocument[], options: ModelOptions.CreateOptions, callback?: general.Callback<TInstance[]>): Promise<TInstance[]>;
     create(...args: any[]): Promise<any> {
         return this.insert.apply(this, args);
     }
@@ -399,7 +408,7 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
      * @param {function(Error, TInstance)} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    insert(objects: TDocument, options: CreateOptions, callback?: general.Callback<TInstance>): Promise<TInstance>;
+    insert(objects: TDocument, options: ModelOptions.CreateOptions, callback?: general.Callback<TInstance>): Promise<TInstance>;
     /**
      * Inserts the objects into the collection after validating them against this model's schema
      * @param {Object[]} objects The objects to insert into the collection
@@ -414,10 +423,10 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
      * @param {function(Error, TInstance[])} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    insert(objects: TDocument[], options: CreateOptions, callback?: general.Callback<TInstance[]>): Promise<TInstance[]>;
+    insert(objects: TDocument[], options: ModelOptions.CreateOptions, callback?: general.Callback<TInstance[]>): Promise<TInstance[]>;
     insert(objs: TDocument | TDocument[], ...args: any[]): Promise<any> {
         var objects: TDocument[];
-        var options: CreateOptions = {};
+        var options: ModelOptions.CreateOptions = {};
         var callback: general.Callback<any> = null;
         if (typeof args[0] == 'function') callback = args[0];
         else {
@@ -439,15 +448,17 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
         return Promise.resolve().then(() => {
             var queryOptions = { w: options.w, upsert: options.upsert, new: true };
 
-            if (options.upsert)
-                return this._handlers.creatingDocuments(objects).map((object: { _id: any; }) => {
+            if (options.upsert) {
+                var docs = this._handlers.creatingDocuments(objects);
+                return docs.map((object:{ _id: any; }) => {
                     return new Promise<any[]>((resolve, reject) => {
-                        this.collection.findAndModify({ _id: object._id }, ["_id"], object, queryOptions,(err, result) => {
+                        this.collection.findAndModify({_id: object._id}, ["_id"], object, queryOptions, (err, result) => {
                             if (err) return reject(err);
                             return resolve(result);
                         });
                     });
                 });
+            }
             else
                 return this._handlers.creatingDocuments(objects).then((objects) => {
                     return new Promise<any[]>((resolve, reject) => {
@@ -479,8 +490,8 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
      * @param {UpdateOptions} options The options which dictate how this function behaves
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      */
-    update(conditions: any, changes: any, options: UpdateOptions, callback?: general.Callback<number>): Promise<number>;
-    update(conditions: any, changes: any, options?: UpdateOptions, callback?: general.Callback<number>): Promise<number> {
+    update(conditions: any, changes: any, options: ModelOptions.UpdateOptions, callback?: general.Callback<number>): Promise<number>;
+    update(conditions: any, changes: any, options?: ModelOptions.UpdateOptions, callback?: general.Callback<number>): Promise<number> {
         if (typeof options == 'function') {
             callback = <general.Callback<number>>options;
             options = {};
@@ -567,7 +578,7 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
      * @param {function(Error, String)} callback A callback which is triggered when the operation completes
      * @returns {Promise<String>} The name of the index
      */
-    ensureIndex(specification: IndexSpecification, callback?: general.Callback<string>): Promise<string>;
+    ensureIndex(specification: Index.IndexSpecification, callback?: general.Callback<string>): Promise<string>;
     /**
      * Ensures that the given index is created for the collection
      * @param {Object} specification The index specification object used by MongoDB
@@ -575,8 +586,8 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
      * @param {function(Error, String)} callback A callback which is triggered when the operation completes
      * @returns {Promise<String>} The name of the index
      */
-    ensureIndex(specification: IndexSpecification, options: MongoDB.IndexOptions, callback?: general.Callback<string>): Promise<string>;
-    ensureIndex(specification: IndexSpecification, options?: MongoDB.IndexOptions, callback?: general.Callback<string>): Promise<string> {
+    ensureIndex(specification: Index.IndexSpecification, options: MongoDB.IndexOptions, callback?: general.Callback<string>): Promise<string>;
+    ensureIndex(specification: Index.IndexSpecification, options?: MongoDB.IndexOptions, callback?: general.Callback<string>): Promise<string> {
         if (typeof options == 'function') {
             callback = <general.Callback<any>>options;
             options = {};
@@ -596,8 +607,8 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
      * @returns {Promise<String[]>} The names of the indexes
      */
     ensureIndexes(callback?: general.Callback<string[]>): Promise<string[]> {
-        return Promise.resolve(this.options.indexes).map((index: Index | IndexSpecification) => {
-            return this.ensureIndex((<Index>index).spec || <IndexSpecification>index,(<Index>index).options || {});
+        return Promise.resolve(this.options.indexes).map((index: Index.Index | Index.IndexSpecification) => {
+            return this.ensureIndex((<Index.Index>index).spec || <Index.IndexSpecification>index,(<Index.Index>index).options || {});
         }).nodeify(callback);
     }
 
@@ -614,13 +625,13 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
      * @param {function(Error, Boolean)} callback A callback which is triggered when the operation completes
      * @returns {Promise<Boolean>} Whether the index was dropped
      */
-    dropIndex(index: IndexSpecification, callback?: general.Callback<boolean>): Promise<boolean>;
-    dropIndex(specification: string | IndexSpecification, callback?: general.Callback<boolean>): Promise<boolean> {
+    dropIndex(index: Index.IndexSpecification, callback?: general.Callback<boolean>): Promise<boolean>;
+    dropIndex(specification: string | Index.IndexSpecification, callback?: general.Callback<boolean>): Promise<boolean> {
         var index: string;
 
         if (typeof (specification) === 'string') index = <string>specification;
         else {
-            index = _(<IndexSpecification>specification).map((direction, key) => key + '_' + direction).reduce<string>((x, y) => x + '_' + y);
+            index = _(<Index.IndexSpecification>specification).map((direction, key) => key + '_' + direction).reduce<string>((x, y) => x + '_' + y);
         }
 
         return new Promise<any>((resolve, reject) => {
@@ -643,266 +654,5 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
                 return resolve(count);
             });
         }).nodeify(callback);
-    }
-}
-
-export interface InstanceConstructor<TDocument, TInstance> {
-    new (model: Model<TDocument, TInstance>, doc: TDocument, isNew?: boolean, isPartial?: boolean): TInstance;
-}
-
-export interface InstanceCreator<TDocument, TInstance> {
-    (model: Model<TDocument, TInstance>, doc: TDocument, isNew?: boolean, isPartial?: boolean): TInstance;
-}
-
-export interface ModelSpecificInstanceConstructor<TDocument, TInstance> {
-    new (doc: TDocument, isNew?: boolean, isPartial?: boolean): TInstance;
-}
-
-export interface IModelBase {
-    collection: MongoDB.Collection;
-    collectionName: string;
-    core: Iridium;
-    schema: ISchema;
-    cache: ModelCache;
-    cacheDirector: CacheDirector;
-}
-
-export interface IModelFactory<TDocument, TInstance> {
-    (core: Iridium): IModel<TDocument, TInstance>;
-}
-
-export interface IModelOptions<TDocument, TInstance> {
-    hooks?: hooks.IHooks<TDocument, TInstance>;
-    validators?: SkmatcCore.IValidator[];
-    transforms?: Concoction.Ingredient[];
-    cache?: CacheDirector;
-    indexes?: (Index | IndexSpecification)[];
-    properties?: { [key: string]: (general.PropertyGetter<any> | general.Property<any>) };
-}
-
-export interface IModel<TDocument, TInstance> extends IModelBase {
-    Instance: new (doc: TDocument, isNew?: boolean, isPartial?: boolean) => TInstance;
-}
-
-export class ModelHelpers<TDocument, TInstance> {
-    constructor(public model: Model<TDocument, TInstance>) {
-        this._validator = new Skmatc(model.schema);
-        this.transform = new Concoction(model.options.transforms);
-    }
-    
-    /**
-     * Gets the Concoction transforms defined for this model
-     * @returns {Concoction}
-     */
-    public transform: concoction;
-    
-    private _validator: Skmatc;
-
-    /**
-     * Validates a document to ensure that it matches the model's ISchema requirements
-     * @param {any} document The document to validate against the ISchema
-     * @returns {SkmatcCore.IResult} The result of the validation
-     */
-    validate(document: TDocument): SkmatcCore.IResult {
-        return this._validator.validate(document);
-    }
-
-    /**
-     * Creates a selector based on the document's unique _id field
-     * @param {object} document The document to render the unique selector for
-     * @returns {{_id: any}} A database selector which can be used to return only this document
-     */
-    selectOne(document: TDocument): { _id: any } {
-        var testDoc: TDocument = _.cloneDeep(document);
-        this.transform.reverse(testDoc);
-        return {
-            _id: (<any>testDoc)._id
-        };
-    }
-
-    /**
-     * Gets the field used in the ISchema to represent the document _id
-     */
-    get identifierField(): string {
-        var id = new String("");
-        var testDoc = {
-            _id: id
-        };
-
-        this.transform.apply(testDoc);
-
-        var idField = null;
-        for (var k in testDoc)
-            if (testDoc[k] === id) {
-                idField = k;
-                break;
-            }
-
-        return idField;
-    }
-
-    /**
-     * Creates a selector based on the document's unique _id field in downstream format
-     * @param {any} id The downstream identifier to use when creating the selector
-     * @returns {object} A database selector which can be used to return only this document in downstream form
-     */
-    selectOneDownstream(id: TDocument): any {
-        if(_.isPlainObject(id))
-            return _.pick(id, this.identifierField);
-        else {
-            var conditions = {};
-            conditions[this.identifierField] = id;
-            return conditions;
-        }
-    }
-
-    /**
-     * Wraps the given document in an instance wrapper for use throughout the application
-     * @param {any} document The document to be wrapped as an instance
-     * @param {Boolean} isNew Whether the instance originated from the database or was created by the application
-     * @param {Boolean} isPartial Whether the document supplied contains all information present in the database
-     * @returns {any} An instance which wraps this document
-     */
-    wrapDocument(document: TDocument, isNew?: boolean, isPartial?: boolean): TInstance {
-        return new this.model.Instance(document, isNew, isPartial);
-    }
-
-    /**
-     * Performs a diff operation between two documents and creates a MongoDB changes object to represent the differences
-     * @param {any} original The original document prior to changes being made
-     * @param {any} modified The document after changes were made
-     */
-    diff(original: TDocument, modified: TDocument): any {
-        var omnom = new Omnom();
-        omnom.diff(original, modified);
-        return omnom.changes;
-    }
-}
-
-export class ModelHandlers<TDocument, TInstance> {
-    constructor(public model: Model<TDocument, TInstance>) {
-
-    }
-
-    documentReceived<TResult>(conditions: any,
-        result: TDocument,
-        wrapper: (document: TDocument, isNew?: boolean, isPartial?: boolean) => TResult,
-        options: QueryOptions = {}): Promise<TResult> {
-        _.defaults(options, {
-            cache: true,
-            partial: false
-        });
-
-        return Promise.resolve(result).then((target: any) => {
-            return <Promise<TResult>>Promise.resolve().then(() => {
-                // Trigger the received hook
-                if (this.model.options.hooks.retrieved) return this.model.options.hooks.retrieved(target);
-            }).then(() => {
-                // Cache the document if caching is enabled
-                if (this.model.core.cache && options.cache && !options.fields) {
-                    var cacheDoc = _.cloneDeep(target);
-                    return this.model.cache.set(cacheDoc);
-                }
-            }).then(() => {
-                // Transform the document
-                this.model.helpers.transform.apply(target);
-
-                // Wrap the document and trigger the ready hook
-                var wrapped: TResult = wrapper(target, false, !!options.fields);
-
-                if (this.model.options.hooks.ready && wrapped instanceof this.model.Instance) return Promise.resolve(this.model.options.hooks.ready(<TInstance><any>wrapped)).then(() => wrapped);
-                return wrapped;
-            });
-        });
-    }
-
-    creatingDocuments(documents: TDocument[]): Promise<any[]> {
-        return Promise.all(documents.map((document: any) => {
-            return Promise.resolve().then(() => {
-                if (this.model.options.hooks.retrieved) return this.model.options.hooks.creating(document);
-            }).then(() => {
-                var validation: SkmatcCore.IResult = this.model.helpers.validate(document);
-                if (validation.failed) return Promise.reject(validation.error);
-                this.model.helpers.transform.reverse(document);
-                return document;
-            });
-        }));
-    }
-
-    savingDocument(instance: TInstance, changes: any): Promise<TInstance> {
-        return Promise.resolve().then(() => {
-            if (this.model.options.hooks.saving) return this.model.options.hooks.saving(instance, changes);
-        }).then(() => instance);
-    }
-}
-
-export function ModelSpecificInstance<TDocument, TInstance>(model: Model<TDocument, TInstance>, instanceType: InstanceConstructor<TDocument, TInstance>): new (doc: TDocument, isNew?: boolean, isPartial?: boolean) => TInstance {
-    var constructor = function (doc: TDocument, isNew?: boolean, isPartial?: boolean) {
-        instanceType.call(this, model, doc, isNew, isPartial);
-    };
-
-    util.inherits(constructor, instanceType);
-
-    _.each(Object.keys(model.schema),(property) => {
-        Object.defineProperty(constructor.prototype, property, {
-            get: function () {
-                return this._modified[property];
-            },
-            set: function (value) {
-                this._modified[property] = value;
-            },
-            enumerable: true
-        });
-    });
-
-    return <any>constructor;
-}
-
-export interface QueryOptions {
-    cache?: boolean;
-    fields?: { [name: string]: number };
-    limit?: number;
-    skip?: number;
-    sort?: IndexSpecification;
-}
-
-export interface CreateOptions {
-    w?: any;
-    upsert?: boolean;
-    cache?: boolean;
-}
-
-export interface UpdateOptions {
-    w?: any;
-    multi?: boolean;
-}
-
-export interface IndexSpecification {
-    [key: string]: number;
-}
-
-export interface Index {
-    spec: IndexSpecification;
-    options?: MongoDB.IndexOptions;
-}
-
-class ModelCache {
-    constructor(public model: IModelBase) {
-
-    }
-
-    set<T>(value: T): Promise<T> {
-        if (!this.model.cacheDirector || !this.model.cacheDirector.valid(value)) return Promise.resolve(value);
-        return this.model.core.cache.set(this.model.cacheDirector.buildKey(value), value);
-    }
-
-    get<T>(conditions: any): Promise<T> {
-        if (!this.model.cacheDirector || !this.model.cacheDirector.validQuery(conditions)) return Promise.resolve(<T>null);
-        return this.model.core.cache.get<T>(this.model.cacheDirector.buildQueryKey(conditions));
-    }
-
-    clear(conditions: any): Promise<boolean> {
-        if (!this.model.cacheDirector || !this.model.cacheDirector.validQuery(conditions)) return Promise.resolve(false);
-        return this.model.core.cache.clear(this.model.cacheDirector.buildQueryKey(conditions));
     }
 }
