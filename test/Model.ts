@@ -450,6 +450,40 @@ describe("Model",() => {
             });
         });
 
+        describe("next()",() => {
+            it("should return a promise",() => {
+                chai.expect(model.find().next()).to.be.an.instanceof(Promise);
+            });
+
+            it("which should resolve to the next instance in the query",() => {
+                return chai.expect(model.find().next()).to.eventually.be.an.instanceof(model.Instance);
+            });
+
+            it("should support using callbacks instead of promises",(done) => {
+                model.find().next((err, instance) => {
+                    if (err) return done(err);
+                    chai.expect(instance).to.be.an.instanceof(model.Instance);
+                    return done();
+                });
+            });
+        });
+
+        describe("rewind()",() => {
+            it("should return a new cursor",() => {
+                chai.expect(model.find().rewind()).to.be.an.instanceof(Cursor);
+            });
+
+            it("which should start returning items from the start of the query",() => {
+                var cursor = model.find();
+                return cursor.next().then(firstItem => cursor.rewind().next().then(rewoundItem => chai.expect(firstItem.document).to.eql(rewoundItem.document)));
+            });
+
+            it("should carry through any other attributes",() => {
+                var cursor = model.find().sort({ answer: -1 }).limit(2);
+                return chai.expect(cursor.toArray().then(() => cursor.rewind().map(i => i.answer))).to.eventually.eql([14, 13]);
+            });
+        });
+
         describe("count()",() => {
             it("should return a promise",() => {
                 chai.expect(model.find().count()).to.be.instanceof(Promise);
