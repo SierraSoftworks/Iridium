@@ -121,7 +121,11 @@ class Instance<TDocument, TInstance> {
             });
         }).then((changed: boolean) => {
             conditions = this._model.helpers.selectOne(this._modified);
-            if (!changed) return this._modified;
+            if (!changed) {
+                var document = _.cloneDeep(this._modified);
+                this._model.helpers.transform.reverse(document);
+                return document;
+            }
 
             return new Promise<TDocument>((resolve, reject) => {
                 this._model.collection.findOne(conditions,(err: Error, latest) => {

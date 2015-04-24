@@ -37,16 +37,10 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
      * @constructor
      */
     constructor(core: Iridium, instanceType: InstanceCreator<TDocument, TInstance> | InstanceConstructor<TDocument, TInstance>, collection: string, schema: ISchema, options: IModelOptions<TDocument, TInstance> = {}) {
-
-        // Allow instantiation doing `require('iridium').Model(db, 'collection', {})`
-        if (!(this instanceof Model)) return new Model<TDocument, TInstance>(core, instanceType, collection, schema, options);
-
         if (!(core instanceof Iridium)) throw new Error("You failed to provide a valid Iridium core for this model");
         if (typeof instanceType != 'function') throw new Error("You failed to provide a valid instance constructor for this model");
         if (typeof collection != 'string' || !collection) throw new Error("You failed to provide a valid collection name for this model");
         if (!_.isPlainObject(schema) || !_.keys(schema).length) throw new Error("You failed to provide a valid schema for this model");
-
-        options = options || {};
 
         _.defaults(options, <IModelOptions<TDocument, TInstance>>{
             hooks: {},
@@ -221,10 +215,10 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
         fields = fields || {};
 
         if (fields)
-            this.helpers.transform.reverse(fields);
+            this._helpers.transform.reverse(fields);
 
-        if (!_.isPlainObject(conditions)) conditions = this.helpers.selectOneDownstream(conditions);
-        this.helpers.transform.reverse(conditions);
+        if (!_.isPlainObject(conditions)) conditions = this._helpers.selectOneDownstream(conditions);
+        this._helpers.transform.reverse(conditions);
 
         var cursor = this.collection.find(conditions, {
             fields: fields
@@ -320,25 +314,25 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
                 if (conditions) options = args[argI];
                 else conditions = args[argI];
             }
-            else conditions = this.helpers.selectOneDownstream(args[argI]);
+            else conditions = this._helpers.selectOneDownstream(args[argI]);
         }
 
         conditions = conditions || {};
         options = options || {};
 
         _.defaults(options, {
-            wrap: true,
             cache: true
         });
 
         return Promise.resolve().bind(this).then(() => {
-            this.helpers.transform.reverse(conditions);
+            this._helpers.transform.reverse(conditions);
 
             if (options.fields)
-                this.helpers.transform.reverse(options.fields);
+                this._helpers.transform.reverse(options.fields);
 
-            return this.cache.get(conditions);
+            return this._cache.get<TDocument>(conditions);
         }).then((cachedDocument: TDocument) => {
+
             if (cachedDocument) return cachedDocument;
             return new Promise<any>((resolve, reject) => {
                 this.collection.findOne(conditions, <MongoDB.CollectionFindOptions>{
@@ -353,7 +347,7 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
             });
         }).then((document: TDocument) => {
             if (!document) return null;
-            return this.handlers.documentReceived(conditions, document,(document, isNew?, isPartial?) => this.helpers.wrapDocument(document, isNew, isPartial), options);
+            return this._handlers.documentReceived(conditions, document,(document, isNew?, isPartial?) => this._helpers.wrapDocument(document, isNew, isPartial), options);
         }).nodeify(callback);
     }
 
@@ -446,7 +440,7 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
             var queryOptions = { w: options.w, upsert: options.upsert, new: true };
 
             if (options.upsert)
-                return this.handlers.creatingDocuments(objects).map((object: { _id: any; }) => {
+                return this._handlers.creatingDocuments(objects).map((object: { _id: any; }) => {
                     return new Promise<any[]>((resolve, reject) => {
                         this.collection.findAndModify({ _id: object._id }, ["_id"], object, queryOptions,(err, result) => {
                             if (err) return reject(err);
@@ -455,7 +449,7 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
                     });
                 });
             else
-                return this.handlers.creatingDocuments(objects).then((objects) => {
+                return this._handlers.creatingDocuments(objects).then((objects) => {
                     return new Promise<any[]>((resolve, reject) => {
                         this.collection.insert(objects, queryOptions,(err, results) => {
                             if (err) return reject(err);
@@ -464,7 +458,7 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
                     });
                 });
         }).map((inserted: any) => {
-            return this.handlers.documentReceived(null, inserted,(document, isNew?, isPartial?) => this.helpers.wrapDocument(document, isNew, isPartial), { cache: options.cache });
+            return this._handlers.documentReceived(null, inserted,(document, isNew?, isPartial?) => this._helpers.wrapDocument(document, isNew, isPartial), { cache: options.cache });
         }).then((results: TInstance[]) => {
             if (Array.isArray(objs)) return results;
             return results[0];
@@ -497,7 +491,7 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
             multi: true
         });
 
-        this.helpers.transform.reverse(conditions);
+        this._helpers.transform.reverse(conditions);
 
         return new Promise<number>((resolve, reject) => {
             this.collection.update(conditions, changes, options,(err, changes) => {
@@ -525,11 +519,9 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
             callback = <general.Callback<number>>conditions;
             conditions = {};
         }
-
-        var $this = this;
-
+        
         return new Promise<number>((resolve, reject) => {
-            $this.collection.count(conditions,(err, results) => {
+            this.collection.count(conditions,(err, results) => {
                 if (err) return reject(err);
                 return resolve(results);
             });
@@ -557,12 +549,15 @@ export class Model<TDocument, TInstance> implements IModel<TDocument, TInstance>
         conditions = conditions || {};
 
         return new Promise<number>((resolve, reject) => {
+            this._helpers.transform.reverse(conditions);
             this.collection.remove(conditions,(err, results) => {
                 if (err) return reject(err);
                 return resolve(results);
             });
         }).then((count) => {
-            return this.cache.clear(conditions).then(() => count);
+            if(count === 1)
+                return this._cache.clear(conditions).then(() => count);
+            return Promise.resolve(count);
         }).nodeify(callback);
     }
 
@@ -690,25 +685,17 @@ export interface IModel<TDocument, TInstance> extends IModelBase {
 }
 
 export class ModelHelpers<TDocument, TInstance> {
-    constructor(model: Model<TDocument, TInstance>) {
-        this._model = model;
-
+    constructor(public model: Model<TDocument, TInstance>) {
         this._validator = new Skmatc(model.schema);
-        this._transform = new Concoction(model.options.transforms);
+        this.transform = new Concoction(model.options.transforms);
     }
-
-    private _model: Model<TDocument, TInstance>;
-
-    private _transform: concoction;
-
+    
     /**
      * Gets the Concoction transforms defined for this model
      * @returns {Concoction}
      */
-    get transform(): Concoction {
-        return this._transform;
-    }
-
+    public transform: concoction;
+    
     private _validator: Skmatc;
 
     /**
@@ -760,7 +747,13 @@ export class ModelHelpers<TDocument, TInstance> {
      * @returns {object} A database selector which can be used to return only this document in downstream form
      */
     selectOneDownstream(id: TDocument): any {
-        return _.pick(id, this.identifierField);
+        if(_.isPlainObject(id))
+            return _.pick(id, this.identifierField);
+        else {
+            var conditions = {};
+            conditions[this.identifierField] = id;
+            return conditions;
+        }
     }
 
     /**
@@ -771,7 +764,7 @@ export class ModelHelpers<TDocument, TInstance> {
      * @returns {any} An instance which wraps this document
      */
     wrapDocument(document: TDocument, isNew?: boolean, isPartial?: boolean): TInstance {
-        return new this._model.Instance(document, isNew, isPartial);
+        return new this.model.Instance(document, isNew, isPartial);
     }
 
     /**
@@ -787,13 +780,8 @@ export class ModelHelpers<TDocument, TInstance> {
 }
 
 export class ModelHandlers<TDocument, TInstance> {
-    constructor(model: Model<TDocument, TInstance>) {
-        this._model = model;
-    }
+    constructor(public model: Model<TDocument, TInstance>) {
 
-    private _model: Model<TDocument, TInstance>;
-    get model(): Model<TDocument, TInstance> {
-        return this._model;
     }
 
     documentReceived<TResult>(conditions: any,
@@ -811,9 +799,9 @@ export class ModelHandlers<TDocument, TInstance> {
                 if (this.model.options.hooks.retrieved) return this.model.options.hooks.retrieved(target);
             }).then(() => {
                 // Cache the document if caching is enabled
-                if (conditions && this.model.core.cache && options.cache && !options.fields) {
+                if (this.model.core.cache && options.cache && !options.fields) {
                     var cacheDoc = _.cloneDeep(target);
-                    return this.model.cache.set(conditions, cacheDoc);
+                    return this.model.cache.set(cacheDoc);
                 }
             }).then(() => {
                 // Transform the document
@@ -822,7 +810,7 @@ export class ModelHandlers<TDocument, TInstance> {
                 // Wrap the document and trigger the ready hook
                 var wrapped: TResult = wrapper(target, false, !!options.fields);
 
-                if (this.model.options.hooks.ready && wrapped instanceof instance) return Promise.resolve(this.model.options.hooks.ready(<TInstance><any>wrapped)).then(() => wrapped);
+                if (this.model.options.hooks.ready && wrapped instanceof this.model.Instance) return Promise.resolve(this.model.options.hooks.ready(<TInstance><any>wrapped)).then(() => wrapped);
                 return wrapped;
             });
         });
@@ -899,27 +887,22 @@ export interface Index {
 }
 
 class ModelCache {
-    constructor(model: IModelBase) {
-        this._model = model;
+    constructor(public model: IModelBase) {
+
     }
 
-    private _model: IModelBase;
-    get model(): IModelBase {
-        return this._model;
-    }
-
-    set<T>(conditions: any, value: T): Promise<T> {
-        if (!this.model.cacheDirector || !this.model.cacheDirector.valid(conditions)) return Promise.resolve(value);
-        return this.model.core.cache.set(this.model.cacheDirector.buildKey(conditions), value);
+    set<T>(value: T): Promise<T> {
+        if (!this.model.cacheDirector || !this.model.cacheDirector.valid(value)) return Promise.resolve(value);
+        return this.model.core.cache.set(this.model.cacheDirector.buildKey(value), value);
     }
 
     get<T>(conditions: any): Promise<T> {
-        if (!this.model.cacheDirector || !this.model.cacheDirector.valid(conditions)) return Promise.resolve(<T>null);
-        return this.model.core.cache.get<T>(this.model.cacheDirector.buildKey(conditions));
+        if (!this.model.cacheDirector || !this.model.cacheDirector.validQuery(conditions)) return Promise.resolve(<T>null);
+        return this.model.core.cache.get<T>(this.model.cacheDirector.buildQueryKey(conditions));
     }
 
     clear(conditions: any): Promise<boolean> {
-        if (!this.model.cacheDirector || !this.model.cacheDirector.valid(conditions)) return Promise.resolve(false);
-        return this.model.core.cache.clear(this.model.cacheDirector.buildKey(conditions));
+        if (!this.model.cacheDirector || !this.model.cacheDirector.validQuery(conditions)) return Promise.resolve(false);
+        return this.model.core.cache.clear(this.model.cacheDirector.buildQueryKey(conditions));
     }
 }
