@@ -49,7 +49,15 @@
     <TypeScriptCompile Include="lib\Plugins.ts" />
     <TypeScriptCompile Include="lib\Schema.ts" />
     <Content Include="test\mocha.opts" />
+    <TypeScriptCompile Include="test\Cache.ts">
+      <SubType>Code</SubType>
+      <TestFramework>Mocha</TestFramework>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="test\Core.ts">
+      <SubType>Code</SubType>
+      <TestFramework>Mocha</TestFramework>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="test\Hooks.ts">
       <SubType>Code</SubType>
       <TestFramework>Mocha</TestFramework>
     </TypeScriptCompile>
