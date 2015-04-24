@@ -19,9 +19,7 @@
   "scripts": {
     "test": "npm run coverage",
 	"test:watch": "mocha -w",
-	"coverage": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec --ui bdd",
-	"coverage:travis:before": "npm run coverage",
-	"coverage:travis": "cat coverage/lcov.info | coveralls"
+	"coverage": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec --ui bdd"
   },
   "engines": {
     "node": ">= 0.8"
@@ -44,7 +42,8 @@
     "underscore": "^1.8.3",
 	"tick": "~0.1.1",
 	"istanbul": "~0.3.13",
-	"coveralls": "^2.11.2"
+	"coveralls": "^2.11.2",
+	"codeclimate-test-reporter": "~0.0.4"
   },
   "keywords": [
     "mongodb",
