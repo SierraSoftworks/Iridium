@@ -49,7 +49,7 @@ class ModelHelpers<TDocument, TInstance> {
      * Gets the field used in the ISchema to represent the document _id
      */
     get identifierField(): string {
-        var id = new String("");
+        var id = {};
         var testDoc = {
             _id: id
         };

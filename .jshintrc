@@ -1,0 +1,25 @@
+{
+  "bitwise": false,
+  "curly": false,
+  "eqeqeq": false,
+  "forin": false,
+  "freeze": true,
+  "immed": false,
+  "newcap": true,
+  "noarg": true,
+  "noempty": true,
+  "nobsp": true,
+  "plusplus": false,
+  "undef": true,
+  "unused": true,
+  "maxcomplexity": 40,
+  "asi": false,
+  "boss": true,
+  "debug": false,
+  "eqnull": false,
+  "es5": true,
+  "es6": false,
+  "evil": false,
+
+  "node": true
+}
