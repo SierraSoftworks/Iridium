@@ -32,6 +32,9 @@ describe("Core", function () {
                 database: 'test'
             });
         });
+        it("should throw an error if no URI or configuration object was provided", function () {
+            chai.expect(function () { return new Iridium.Core(''); }).to.throw("Expected either a URI or config object to be supplied when initializing Iridium");
+        });
         it("should correctly convert the configuration object into a URI string", function () {
             var core = new Iridium.Core({
                 host: 'localhost',
@@ -70,6 +73,7 @@ describe("Core", function () {
         });
         it("should have an Express provider", function () {
             chai.expect(core.express).to.exist.and.be.a('function');
+            chai.expect(core.express()).to.exist.and.be.a('function');
         });
     });
     describe("cache", function () {
