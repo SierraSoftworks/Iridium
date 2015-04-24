@@ -1,5 +1,7 @@
 ﻿/// <reference path="../_references.d.ts" />
 import Iridium = require('../index');
+import Cursor = require('../lib/Cursor');
+import Promise = require('bluebird');
 
 interface TestDocument {
     id?: string;
@@ -368,32 +370,78 @@ describe("Model",() => {
             chai.expect(model.find).to.exist.and.be.a('function');
         });
 
-        it("should return a cursor object");
+        it("should return a cursor object",() => {
+            chai.expect(model.find()).to.be.an.instanceof(Cursor);
+        });
 
         describe("cursor",() => {
 
-            describe("each",() => {
-                it("should call the handler for all documents",() => {
-                    var count = 0;
+            describe("each()",() => {
+                it("should call the handler with each document",() => {
                     return chai.expect(model.find().each((instance) => {
                         chai.expect(instance).to.exist;
-                        count++;
-                    }).then(() => chai.expect(count).to.equal(5))).to.eventually.be.ok;
+                    })).to.eventually.not.be.rejected;
                 });
 
+                it("should return a promise immediately",() => {
+                    chai.expect(model.find().each(i => { })).to.be.instanceof(Promise);
+                });
+
+                it("should resolve the promise after all handlers have been completed",() => {
+                    var count = 0;
+                    return chai.expect(model.find().each((instance) => {
+                        count++;
+                    }).then(() => count)).to.eventually.equal(5);
+                });
+
+                it("should support using callbacks instead of promises",(done) => {
+                    var count = 0;
+                    model.find().each(i => count++,(err) => {
+                        if (err) return done(err);
+                        chai.expect(count).to.eql(5);
+                        return done();
+                    });
+                });
             });
 
-            describe("map",() => {
+            describe("map()",() => {
+                it("should call the handler with documents",() => {
+                    return chai.expect(model.find().map((instance) => {
+                        chai.expect(instance).to.exist;
+                    })).to.eventually.not.be.rejected;
+                });
 
+                it("should return the values from of each iteration",() => {
+                    var count = 0;
+                    return chai.expect(model.find().map((instance) => {
+                        return count++;
+                    })).to.eventually.be.eql([0,1,2,3,4]);
+                });
+
+                it("should return its result promise immediately",() => {
+                    chai.expect(model.find().map(i => i)).to.be.instanceof(Promise);
+                });
+
+                it("should only resolve its result promise after all results have been resolved",() => {
+                    var count = 0;
+                    return chai.expect(model.find().map((instance) => {
+                        return count++;
+                    }).then(() => count)).to.eventually.equal(5);
+                });
+
+                it("should support using callbacks instead of promises",(done) => {
+                    var count = 0;
+                    model.find().map(i => count++,(err, results) => {
+                        if (err) return done(err);
+                        chai.expect(results).to.eql([0, 1, 2, 3, 4]);
+                        return done();
+                    });
+                });
             });
 
-            describe("toArray",() => {
+            describe("toArray()",() => {
                 it("should return all documents",() => {
                     return chai.expect(model.find().toArray()).to.eventually.exist.and.have.length(5);
-                });
-
-                it("should allow filtering using a selector",() => {
-                    return chai.expect(model.find({ answer: 10 }).toArray()).to.eventually.exist.and.have.length(1);
                 });
 
                 it("should support a callback style instead of promises",(done) => {
@@ -405,22 +453,70 @@ describe("Model",() => {
                 });
             });
 
-            describe("count",() => {
+            describe("count()",() => {
+                it("should return a promise",() => {
+                    chai.expect(model.find().count()).to.be.instanceof(Promise);
+                });
 
+                it("should resolve the promise with the number of documents which match the query",() => {
+                    return chai.expect(model.find().count()).to.eventually.be.equal(5);
+                });
+
+                it("should support using callbacks instead of promises",(done) => {
+                    model.find().count((err, count) => {
+                        if (err) return done(err);
+                        chai.expect(count).to.equal(5);
+                        return done();
+                    });
+                });
             });
 
-            describe("limit",() => {
+            describe("limit()",() => {
+                it("should return a new cursor",() => {
+                    chai.expect(model.find().limit(1)).to.be.instanceof(Cursor);
+                });
 
+                it("which should impose the limit",() => {
+                    return chai.expect(model.find().limit(2).toArray()).to.eventually.have.length(2);
+                });
             });
 
-            describe("skip",() => {
+            describe("skip()",() => {
+                it("should return a new cursor",() => {
+                    chai.expect(model.find().skip(1)).to.be.instanceof(Cursor);
+                });
 
+                it("which should impose the limit",() => {
+                    return chai.expect(model.find().skip(2).count()).to.eventually.be.equal(3);
+                });
             });
 
-            describe("sort",() => {
+            describe("sort()",() => {
+                it("should return a new cursor",() => {
+                    chai.expect(model.find().sort({ answer: 1 })).to.be.instanceof(Cursor);
+                });
 
+                it("which should perform the sort",() => {
+                    return chai.expect(model.find().sort({ answer: -1 }).map(i => i.answer)).to.eventually.eql([14, 13, 12, 11, 10]);
+                });
             });
 
+        });
+
+        describe("filtering",() => {
+            it("should allow filtering using a selector",() => {
+                return chai.expect(model.find({ answer: 10 }).toArray()).to.eventually.exist.and.have.length(1);
+            });
+
+            it("should transform the conditions",() => {
+                return model.get().then(instance => chai.expect(model.find({
+                    id: instance.id
+                }).count()).to.eventually.equal(1));
+            });
+
+            it("should allow the returned fields to be restricted",() => {
+                return chai.expect(model.find({}, { answer: 0 }).map(i => i.answer)).to.eventually.eql([undefined, undefined, undefined, undefined, undefined]);
+            });
         });
     });
 
