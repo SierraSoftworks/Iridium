@@ -8,6 +8,9 @@ var __extends = this.__extends || function (d, b) {
 var _Core = require('./lib/Core');
 var _Model = require('./lib/Model');
 var _Instance = require('./lib/Instance');
+var _MemoryCache = require('./lib/caches/MemoryCache');
+var _NoOpCache = require('./lib/caches/NoOpCache');
+var _IDDirector = require('./lib/cacheControllers/IDDirector');
 var Iridium;
 (function (Iridium) {
     var Core = (function (_super) {
@@ -36,6 +39,35 @@ var Iridium;
         return Instance;
     })(_Instance);
     Iridium.Instance = Instance;
+    ;
+    var NoOpCache = (function (_super) {
+        __extends(NoOpCache, _super);
+        function NoOpCache() {
+            _super.apply(this, arguments);
+        }
+        return NoOpCache;
+    })(_NoOpCache);
+    Iridium.NoOpCache = NoOpCache;
+    ;
+    var MemoryCache = (function (_super) {
+        __extends(MemoryCache, _super);
+        function MemoryCache() {
+            _super.apply(this, arguments);
+        }
+        return MemoryCache;
+    })(_MemoryCache);
+    Iridium.MemoryCache = MemoryCache;
+    ;
+    var CacheOnID = (function (_super) {
+        __extends(CacheOnID, _super);
+        function CacheOnID() {
+            _super.apply(this, arguments);
+        }
+        return CacheOnID;
+    })(_IDDirector);
+    Iridium.CacheOnID = CacheOnID;
+    ;
+    ;
     ;
     ;
 })(Iridium || (Iridium = {}));
