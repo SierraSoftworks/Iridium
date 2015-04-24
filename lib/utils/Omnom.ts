@@ -229,7 +229,7 @@ class Omnom {
         if (!_.isPlainObject(o1) || !_.isPlainObject(o2)) return o1 == o2 ? 1 : 0;
 
         var o1i, o1k = Object.keys(o1);
-        var o2i, o2k = Object.keys(o2);
+        var o2k = Object.keys(o2);
 
         var commonKeys = [];
         for (o1i = 0; o1i < o1k.length; o1i++)
