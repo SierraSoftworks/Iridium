@@ -27,7 +27,12 @@ var TestDB = (function (_super) {
     __extends(TestDB, _super);
     function TestDB() {
         _super.call(this, "mongodb://localhost/test");
-        this.Test = new Iridium.Model(this, Test, 'test', { id: false, answer: Number });
+        this.Test = new Iridium.Model(this, Test, 'test', {
+            id: false,
+            answer: Number,
+            lots: { $required: false, $type: [Number] },
+            less: { $required: false, $propertyType: Number }
+        });
     }
     return TestDB;
 })(Iridium.Core);
@@ -159,6 +164,11 @@ describe("Instance", function () {
                 }).then(function () { return chai.expect(instance.update()).to.eventually.have.property('answer', 10); });
             });
         });
+        it("should set _isNew to true if the instance was removed from the database", function () {
+            return core.Test.get().then(function (instance) {
+                core.Test.remove().then(function () { return instance.update(); }).then(function () { return chai.expect(instance._isNew).to.be.true; });
+            });
+        });
         it("should return a promise for the instance", function () {
             return core.Test.get().then(function (instance) {
                 core.Test.update({ id: instance.id }, {
@@ -187,6 +197,11 @@ describe("Instance", function () {
                 core.Test.update({ id: instance.id }, {
                     $set: { answer: 10 }
                 }).then(function () { return chai.expect(instance.refresh()).to.eventually.have.property('answer', 10); });
+            });
+        });
+        it("should set _isNew to true if the instance was removed from the database", function () {
+            return core.Test.get().then(function (instance) {
+                core.Test.remove().then(function () { return instance.refresh(); }).then(function () { return chai.expect(instance._isNew).to.be.true; });
             });
         });
         it("should return a promise for the instance", function () {
@@ -218,6 +233,17 @@ describe("Instance", function () {
         it("should return a promise for the instance", function () {
             return core.Test.get().then(function (instance) { return chai.expect(instance.remove()).to.eventually.equal(instance); });
         });
+        it("shouldn't mind if the object has already been removed", function () {
+            return core.Test.get().then(function (instance) {
+                return chai.expect(core.Test.remove().then(function () { return instance.remove(); })).to.eventually.not.be.rejected;
+            });
+        });
+        it("should be a no-op if the object is marked as _isNew", function () {
+            return core.Test.get().then(function (instance) {
+                var newInstance = new core.Test.Instance(instance.document);
+                return newInstance.remove();
+            }).then(function () { return chai.expect(core.Test.count()).to.eventually.equal(1); });
+        });
         it("should allow the use of a callback instead of promises", function (done) {
             core.Test.get().then(function (instance) {
                 instance.remove(function (err, result) {
@@ -227,6 +253,60 @@ describe("Instance", function () {
                     return done();
                 });
             });
+        });
+    });
+    describe("delete()", function () {
+        beforeEach(function () { return core.Test.remove().then(function () { return core.Test.insert({ answer: 1 }); }); });
+        it("should remove the document from the database", function () {
+            return chai.expect(core.Test.get().then(function (instance) { return instance.delete(); }).then(function () { return core.Test.get(); })).to.eventually.be.null;
+        });
+        it("should set the instance's isNew property to true", function () {
+            return chai.expect(core.Test.get().then(function (instance) { return instance.delete(); })).to.eventually.have.property('_isNew', true);
+        });
+        it("should return a promise for the instance", function () {
+            return core.Test.get().then(function (instance) { return chai.expect(instance.delete()).to.eventually.equal(instance); });
+        });
+        it("shouldn't mind if the object has already been removed", function () {
+            return core.Test.get().then(function (instance) {
+                return chai.expect(core.Test.remove().then(function () { return instance.delete(); })).to.eventually.not.be.rejected;
+            });
+        });
+        it("should allow the use of a callback instead of promises", function (done) {
+            core.Test.get().then(function (instance) {
+                instance.delete(function (err, result) {
+                    if (err)
+                        return done(err);
+                    chai.expect(result).to.equal(instance);
+                    return done();
+                });
+            });
+        });
+    });
+    describe("first()", function () {
+        beforeEach(function () { return core.Test.remove().then(function () { return core.Test.insert({ answer: 1, lots: [1, 2, 3, 4], less: { 'a': 1, 'b': 2 } }); }); });
+        it("should return the first object which matches the predicate over an array", function () {
+            return chai.expect(core.Test.get().then(function (instance) { return instance.first(instance.lots, function (lot) { return lot == 2; }); })).to.eventually.equal(2);
+        });
+        it("should return the first object which matches the predicate over an object", function () {
+            return chai.expect(core.Test.get().then(function (instance) { return instance.first(instance.less, function (value, key) { return key == 'a'; }); })).to.eventually.equal(1);
+        });
+        it("should return null if no item was found", function () {
+            return chai.expect(core.Test.get().then(function (instance) { return instance.first(instance.lots, function (lot) { return lot > 100; }); })).to.eventually.be.null;
+        });
+    });
+    describe("select()", function () {
+        beforeEach(function () { return core.Test.remove().then(function () { return core.Test.insert({ answer: 1, lots: [1, 2, 3, 4], less: { 'a': 1, 'b': 2 } }); }); });
+        it("should return the objects which match the predicate over an array", function () {
+            return chai.expect(core.Test.get().then(function (instance) { return instance.select(instance.lots, function (lot) { return lot > 2; }); })).to.eventually.eql([3, 4]);
+        });
+        it("should return the properties which match the predicate over an object", function () {
+            return chai.expect(core.Test.get().then(function (instance) { return instance.select(instance.less, function (value, key) { return key == 'a'; }); })).to.eventually.eql({ 'a': 1 });
+        });
+        it("should return an empty array if no items matched over an array", function () {
+            return chai.expect(core.Test.get().then(function (instance) { return instance.select(instance.lots, function (lot) { return lot > 100; }); })).to.eventually.be.eql([]);
+        });
+        it("should return an empty object if no items matched over an object", function () {
+            return chai.expect(core.Test.get().then(function (instance) { return instance.select(instance.less, function (lot) { return lot > 100; }); })).to.eventually.be.eql({});
         });
     });
 });

@@ -110,6 +110,13 @@ describe("Model", function () {
         it("should expose cacheDirector", function () { return chai.expect(test).to.have.property('cacheDirector'); });
         it("should expose Instance", function () { return chai.expect(test.Instance).to.exist.and.be.a('function'); });
     });
+    describe("collection", function () {
+        it("should throw an error if you attempt to access it before connecting to the database", function () {
+            var model = new Iridium.Model(new Iridium.Core('mongodb://localhost/test'), function () {
+            }, 'test', { id: false });
+            chai.expect(function () { return model.collection; }).to.throw("Iridium Core not connected to a database.");
+        });
+    });
     describe("create()", function () {
         var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
         before(function () {
@@ -250,6 +257,11 @@ describe("Model", function () {
                 sort: { answer: -1 }
             })).to.eventually.exist.and.have.property('answer', 14);
         });
+        it("should allow you to limit the returned fields", function () {
+            return chai.expect(model.findOne({}, {
+                fields: { answer: 0 }
+            }).then(function (instance) { return instance.answer; })).to.eventually.be.undefined;
+        });
         it("should support a callback style instead of promises", function (done) {
             model.findOne(function (err, doc) {
                 if (err)
@@ -294,6 +306,11 @@ describe("Model", function () {
             return chai.expect(model.get({}, {
                 sort: { answer: -1 }
             })).to.eventually.exist.and.have.property('answer', 14);
+        });
+        it("should allow you to limit the returned fields", function () {
+            return chai.expect(model.get({}, {
+                fields: { answer: 0 }
+            }).then(function (instance) { return instance.answer; })).to.eventually.be.undefined;
         });
         it("should support a callback style instead of promises", function (done) {
             model.get(function (err, doc) {
@@ -466,6 +483,9 @@ describe("Model", function () {
             it("should allow filtering using a selector", function () {
                 return chai.expect(model.find({ answer: 10 }).toArray()).to.eventually.exist.and.have.length(1);
             });
+            it("should allow an ID to be specified directly", function () {
+                return model.find({ answer: 10 }).next().then(function (instance) { return chai.expect(model.find(instance.id).count()).to.eventually.equal(1); });
+            });
             it("should transform the conditions", function () {
                 return model.get().then(function (instance) { return chai.expect(model.find({
                     id: instance.id
@@ -554,7 +574,7 @@ describe("Model", function () {
     });
     describe("dropIndex()", function () {
         var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
-        before(function () {
+        beforeEach(function () {
             return core.connect().then(function () { return model.remove(); }).then(function () { return model.insert([
                 { answer: 10 },
                 { answer: 11 },
@@ -563,14 +583,20 @@ describe("Model", function () {
                 { answer: 14 }
             ]); }).then(function () { return model.ensureIndex({ answer: 1 }); });
         });
-        after(function () {
+        afterEach(function () {
             return model.remove().then(function () { return model.dropIndexes(); }).then(function () { return core.close(); });
         });
         it("should exist", function () {
             chai.expect(model.dropIndex).to.exist.and.be.a('function');
         });
         it("should remove the specified index", function () {
+            return chai.expect(model.dropIndex('answer_1')).to.eventually.be.ok;
+        });
+        it("should remove the specified index using its definition", function () {
             return chai.expect(model.dropIndex({ answer: 1 })).to.eventually.be.ok;
+        });
+        it("should support removing a compound indexe using its definition", function () {
+            return chai.expect(model.ensureIndex({ _id: 1, answer: 1 }).then(function () { return model.dropIndex({ _id: 1, answer: 1 }); })).to.eventually.be.ok;
         });
     });
     describe("dropIndexes()", function () {

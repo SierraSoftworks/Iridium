@@ -115,6 +115,13 @@ describe("Model",() => {
         it("should expose Instance",() => chai.expect(test.Instance).to.exist.and.be.a('function'));
     });
 
+    describe("collection",() => {
+        it("should throw an error if you attempt to access it before connecting to the database",() => {
+            var model = new Iridium.Model(new Iridium.Core('mongodb://localhost/test'),() => { }, 'test', { id: false });
+            chai.expect(() => model.collection).to.throw("Iridium Core not connected to a database.");
+        });
+    });
+
     describe("create()",() => {
         var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { id: false, answer: Number });
 
@@ -285,6 +292,12 @@ describe("Model",() => {
                 sort: { answer: -1 }
             })).to.eventually.exist.and.have.property('answer', 14);
         });
+        
+        it("should allow you to limit the returned fields",() => {
+            return chai.expect(model.findOne({}, {
+                fields: { answer: 0 }
+            }).then((instance) => instance.answer)).to.eventually.be.undefined;
+        });
 
         it("should support a callback style instead of promises",(done) => {
             model.findOne((err, doc) => {
@@ -338,6 +351,12 @@ describe("Model",() => {
             return chai.expect(model.get({}, {
                 sort: { answer: -1 }
             })).to.eventually.exist.and.have.property('answer', 14);
+        });
+
+        it("should allow you to limit the returned fields",() => {
+            return chai.expect(model.get({}, {
+                fields: { answer: 0 }
+            }).then((instance) => instance.answer)).to.eventually.be.undefined;
         });
 
         it("should support a callback style instead of promises",(done) => {
@@ -537,6 +556,10 @@ describe("Model",() => {
                 return chai.expect(model.find({ answer: 10 }).toArray()).to.eventually.exist.and.have.length(1);
             });
 
+            it("should allow an ID to be specified directly",() => {
+                return model.find({ answer: 10 }).next().then((instance) => chai.expect(model.find(instance.id).count()).to.eventually.equal(1));
+            });
+
             it("should transform the conditions",() => {
                 return model.get().then(instance => chai.expect(model.find({
                     id: instance.id
@@ -644,7 +667,7 @@ describe("Model",() => {
     describe("dropIndex()",() => {
         var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { id: false, answer: Number });
 
-        before(() => {
+        beforeEach(() => {
             return core.connect().then(() => model.remove()).then(() => model.insert([
                 { answer: 10 },
                 { answer: 11 },
@@ -654,7 +677,7 @@ describe("Model",() => {
             ])).then(() => model.ensureIndex({ answer: 1 }));
         });
 
-        after(() => {
+        afterEach(() => {
             return model.remove().then(() => model.dropIndexes()).then(() => core.close());
         });
 
@@ -663,7 +686,15 @@ describe("Model",() => {
         });
 
         it("should remove the specified index",() => {
+            return chai.expect(model.dropIndex('answer_1')).to.eventually.be.ok;
+        });
+
+        it("should remove the specified index using its definition",() => {
             return chai.expect(model.dropIndex({ answer: 1 })).to.eventually.be.ok;
+        });
+
+        it("should support removing a compound indexe using its definition",() => {
+            return chai.expect(model.ensureIndex({ _id: 1, answer: 1 }).then(() => model.dropIndex({ _id: 1, answer: 1 }))).to.eventually.be.ok;
         });
     });
 
