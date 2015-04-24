@@ -1,10 +1,17 @@
 language: node_js
 node_js:
- - "0.8"
  - "0.10"
- - "0.11"
 
 services:
  - mongodb
+
 env:
  - CI_SERVER=1
+
+addons:
+ code_climate:
+    repo_token: 9c90177b42d39905ca635b1f6226580dab5799f87f172b66bab4e8df77b67a13
+
+after_script:
+ - coveralls < coverage/lcov.info
+ - codeclimate < coverage/lcov.info

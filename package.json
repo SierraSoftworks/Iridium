@@ -4,7 +4,10 @@
   "author": "Benjamin Pannell <admin@sierrasoftworks.com>",
   "description": "A custom lightweight ORM for MongoDB designed for power-users",
   "homepage": "https://sierrasoftworks.com/iridium",
-  "repository": "https://github.com/sierrasoftworks/iridium",
+  "repository": {
+    "url": "https://github.com/sierrasoftworks/iridium",
+    "type": "git"
+  },
   "contributors": [
     {
       "name": "Benjamin Pannell",
@@ -14,26 +17,35 @@
   "licence": "MIT",
   "main": "./index",
   "scripts": {
-    "test": "mocha"
+    "test": "npm run coverage",
+	"test:watch": "mocha -w",
+    "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec --ui bdd",
+    "lint": "jshint lib/"
   },
   "engines": {
     "node": ">= 0.8"
   },
   "dependencies": {
-    "mongodb": "~1.4",
-    "skmatc": "1.x",
-    "lodash": "*",
-    "concoction": "~1.0",
-    "debug": "1.x",
-    "bluebird": "2.x",
     "async": "~0.9",
-    "functionality": "2.x"
+    "bluebird": "2.x",
+    "concoction": "~1.0",
+    "debug": "^1.0.4",
+    "functionality": "2.x",
+    "lodash": "*",
+    "mongodb": "^1.4.35",
+    "skmatc": "1.x"
   },
   "devDependencies": {
     "mocha": "2.x",
-    "chai": "1.x",
-    "chai-as-promised": "4.x",
-    "chai-fuzzy": "1.x"
+    "chai": "^2.2.0",
+    "chai-as-promised": "^5.0.0",
+    "chai-fuzzy": "^1.5.0",
+    "underscore": "^1.8.3",
+	"tick": "~0.1.1",
+	"istanbul": "~0.3.13",
+	"coveralls": "^2.11.2",
+    "codeclimate-test-reporter": "~0.0.4",
+    "jshint": "^2.7.0"
   },
   "keywords": [
     "mongodb",

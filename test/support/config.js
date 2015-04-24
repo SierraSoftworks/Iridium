@@ -1,9 +1,4 @@
-var Iridium = require('../../index.js'),
-    config = require('./config.json'),
-    Concoction = require('concoction');;
-
-global.Iridium = global.Database = Iridium;
-global.Model = Iridium.Model;
-global.Instance = Iridium.Instance;
-global.Concoction = Concoction;
+/// <reference path="../../_references.d.ts" />
+var config = module.require('./config.json');
 global.config = config;
+//# sourceMappingURL=config.js.map

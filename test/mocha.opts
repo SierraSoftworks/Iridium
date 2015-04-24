@@ -1,2 +1,3 @@
 --require test/support/chai
 --require test/support/config
+--timeout 10s

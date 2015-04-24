@@ -1,7 +1,13 @@
-Properties
-bin
-obj
+Properties/
+bin/
+obj/
 *.suo
 *.user
 *.sublime*
-node_modules
+node_modules/
+.vs
+*.dat
+.idea
+dist/
+*.tmp
+coverage/
