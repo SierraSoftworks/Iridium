@@ -1,5 +1,6 @@
 ﻿/// <reference path="../_references.d.ts" />
 import ModelInterfaces = require('./ModelInterfaces');
+import Promise = require('bluebird');
 
 export = ModelCache;
 
