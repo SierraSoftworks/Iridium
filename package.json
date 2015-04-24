@@ -35,12 +35,12 @@
   },
   "devDependencies": {
     "mocha": "2.x",
-    "chai": "1.x",
-    "chai-as-promised": "4.x",
-    "chai-fuzzy": "1.x",
-    "typescript-require": "^0.2.8",
+    "chai": "^2.2.0",
+    "chai-as-promised": "^5.0.0",
+    "chai-fuzzy": "^1.5.0",
     "underscore": "^1.8.3",
-    "tick": "^0.1.1"
+	"tick": "~0.1.1",
+	"istanbul": "~0.3.13"
   },
   "keywords": [
     "mongodb",
