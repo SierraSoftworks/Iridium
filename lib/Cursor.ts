@@ -7,7 +7,14 @@ import Promise = require('bluebird');
 export = Cursor;
 
 class Cursor<TDocument, TInstance> {
-    constructor(private model: model.Model<TDocument, TInstance>, private conditions: any, private cursor: MongoDB.Cursor) {
+    /**
+     * Creates a new Iridium cursor which wraps a MongoDB cursor object
+     * @param {Model} model The Iridium model that this cursor belongs to
+     * @param {Object} conditions The conditions that resulte in this cursor being created
+     * @param {MongoDB.Cursor} cursor The MongoDB native cursor object to be wrapped
+     * @constructor
+     */
+    constructor(private model: model.Model<TDocument, TInstance>, private conditions: any, public cursor: MongoDB.Cursor) {
         
     }
 
