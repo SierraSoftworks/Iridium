@@ -14,6 +14,7 @@ class Cursor<TDocument, TInstance> {
     /**
      * Counts the number of documents which are matched by this cursor
      * @param {function(Error, Number)} callback A callback which is triggered when the result is available
+     * @return {Promise<number>} A promise which will resolve with the number of documents matched by this cursor
      */
     count(callback?: general.Callback<number>): Promise<number> {
         return new Promise<number>((resolve, reject) => {
@@ -28,6 +29,7 @@ class Cursor<TDocument, TInstance> {
      * Runs the specified handler over each instance in the query results
      * @param {function(Instance)} handler The handler which is triggered for each element in the query
      * @param {function(Error)} callback A callback which is triggered when all operations have been dispatched
+     * @return {Promise} A promise which is resolved when all operations have been dispatched
      */
     each(handler: (instance: TInstance) => void, callback?: general.Callback<void>): Promise<void> {
         return new Promise<void>((resolve, reject) => {
@@ -39,18 +41,29 @@ class Cursor<TDocument, TInstance> {
         }).nodeify(callback);
     }
 
-    map<TResult>(handler: (instance: TInstance) => TResult | Promise<TResult>, callback?: general.Callback<TResult[]>): Promise<TResult[]> {
+    /**
+     * Runs the specified transform over each instance in the query results and returns the resulting transformed objects
+     * @param {function(Instance): TResult} transform A handler which is used to transform the result objects
+     * @param {function(Error, TResult[])} callback A callback which is triggered when the transformations are completed
+     * @return {Promise<TResult[]>} A promise which is fulfilled with the results of the transformations
+     */
+    map<TResult>(transform: (instance: TInstance) => TResult | Promise<TResult>, callback?: general.Callback<TResult[]>): Promise<TResult[]> {
         return new Promise<TResult[]>((resolve, reject) => {
             var promises: Promise<TResult>[] = [];
             this.cursor.each((err, item: TDocument) => {
                 if (err) return reject(err);
                 if (!item) return resolve(Promise.all(promises));
                 promises.push(this.model.handlers.documentReceived(this.conditions, item,(document, isNew?, isPartial?) => this.model.helpers.wrapDocument(document, isNew, isPartial))
-                    .then(<(instance) => TResult>handler));
+                    .then(<(instance) => TResult>transform));
             });
         }).nodeify(callback);
     }
 
+    /**
+     * Retrieves all matching instances and returns them in an array
+     * @param {function(Error, TInstance[])} callback A callback which is triggered with the resulting instances
+     * @return {Promise<TInstance[]>} A promise which resolves with the instances returned by the query
+     */
     toArray(callback?: general.Callback<TInstance[]>): Promise<TInstance[]> {
         return new Promise<TDocument[]>((resolve, reject) => {
             this.cursor.toArray((err, results: any[]) => {
@@ -62,6 +75,11 @@ class Cursor<TDocument, TInstance> {
         }).nodeify(callback);
     }
 
+    /**
+     * Retrieves the next item in the results list
+     * @param {function(Error, TInstance)} callback A callback which is triggered when the next item becomes available
+     * @return {Promise<TInstance>} A promise which is resolved with the next item
+     */
     next(callback?: general.Callback<TInstance>): Promise<TInstance> {
         return new Promise<TDocument>((resolve, reject) => {
             this.cursor.nextObject((err, result: any) => {
@@ -73,19 +91,39 @@ class Cursor<TDocument, TInstance> {
         }).nodeify(callback);
     }
 
+    /**
+     * Returns a new cursor which behaves the same as this one did before any results were retrieved
+     * @return {Cursor} The new cursor which starts at the beginning of the results
+     */
     rewind(): Cursor<TDocument, TInstance> {
         return new Cursor(this.model, this.conditions, this.cursor.rewind());
     }
 
+    /**
+     * Returns a new cursor which sorts its results by the given index expression
+     * @param {model.IndexSpecification} sortExpression The index expression dictating the sort order and direction to use
+     * @return {Cursor} The new cursor which sorts its results by the sortExpression
+     */
     sort(sortExpression: model.IndexSpecification): Cursor<TDocument, TInstance> {
         return new Cursor(this.model, this.conditions, this.cursor.sort(sortExpression));
     }
 
-    limit(number: number): Cursor<TDocument, TInstance> {
-        return new Cursor(this.model, this.conditions, this.cursor.limit(number));
+    /**
+     * Returns a new cursor which limits the number of returned results
+     * @param {Number} limit The maximum number of results to return
+     * @return {Cursor} The new cursor which will return a maximum number of results
+     */
+    limit(limit: number): Cursor<TDocument, TInstance> {
+        return new Cursor(this.model, this.conditions, this.cursor.limit(limit));
     }
 
-    skip(number: number): Cursor<TDocument, TInstance> {
-        return new Cursor(this.model, this.conditions, this.cursor.skip(number));
+    /**
+     * Returns a new cursor which skips a number of results before it begins
+     * returning any.
+     * @param {Number} skip The number of results to skip before the cursor beings returning
+     * @return {Cursor} The new cursor which skips a number of results
+     */
+    skip(skip: number): Cursor<TDocument, TInstance> {
+        return new Cursor(this.model, this.conditions, this.cursor.skip(skip));
     }
 }
