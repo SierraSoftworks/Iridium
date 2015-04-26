@@ -16,6 +16,56 @@ as necessary, however new features will not be backported.
 We recommend that you **do not upgrade existing applications** to the 4.x branch unless you've got a lot of time on your
 hands or are using TypeScript already. If however you are set on doing so, you will need to change the following things.
 
+## The Performance Difference
+With the new architecture it is a lot easier to reason about how V8's compiler will optimize objects, helping to make
+sure that performance is significantly better than Iridium's already high level.
+
+Running the benchmark scripts from v4.x and v5.x, (which run the same combination of 10 000 inserts, finds and removes)
+we saw the following results.
+
+### Iridium 4.x Benchmark
+```
+MongoDB 10000 Inserts { w: 1 }
+    => 412ms
+Iridium 10000 Inserts { w: 1, wrap: false }
+    => 1124ms (2.7x slower)
+Iridium 10000 Inserts { w: 1, wrap: true }
+    => 1700ms (4.2x slower)
+    
+MongoDB find()
+    => 83ms
+Iridium find() { wrap: false }
+    => 216ms (2.6x slower)
+Iridium find() { wrap: true }
+    => 669ms (8.06x slower)
+    
+MongoDB remove()
+    => 151ms
+Iridium remove()
+    => 147ms (about the same)
+```
+
+### Iridium 5.x Benchmark
+```
+Running benchmark with intensity of 10000
+MongoDB inserting: 368ms
+Iridium inserting: 920ms (2.5x slower)
+Iridium Instances inserting: 1151ms (3.1x slower)
+
+MongoDB finding: 87ms
+Iridium finding: 268ms (3.1x slower)
+Iridium Instances finding: 344ms (4.0x slower)
+
+MongoDB removing: 182ms
+Iridium Instances removing: 159ms (about the same)
+Iridium removing: 158ms (about the same)
+```
+
+As you can see, with the exception of the unwrapped find() method, we see an across-the-board improvement in performance
+of up to 100% (most significant when wrapping documents in the new Instance type). We're very happy with these gains, and
+keep in mind that these v5.x benchmarks were run before any optmization work has begun on the 5.x branch - things are
+definitely looking good.
+
 ## Architectural Changes
 The biggest change between v4.x and v5.x is that Iridium is now primarily developed in TypeScript. Yes, you read that
 correctly, [TypeScript](http://www.typescriptlang.org). I'll be perfectly honest with you, it was my intention to do
