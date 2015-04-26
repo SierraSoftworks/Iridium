@@ -20,7 +20,7 @@ describe("Hooks", function () {
     this.timeout(500);
     var core = new Iridium.Core({ database: 'test' });
     var model = new Iridium.Model(core, Test, 'test', {
-        id: false,
+        _id: false,
         answer: Number
     }, {
         hooks: {

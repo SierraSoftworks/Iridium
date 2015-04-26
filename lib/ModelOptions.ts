@@ -27,8 +27,8 @@ export interface UpdateOptions {
 export interface IModelOptions<TDocument, TInstance> {
     hooks?: Hooks<TDocument, TInstance>;
     validators?: SkmatcCore.IValidator[];
-    transforms?: Concoction.Ingredient[];
     cache?: CacheDirector;
     indexes?: (Index.Index | Index.IndexSpecification)[];
     properties?: { [key: string]: (General.PropertyGetter<any> | General.Property<any>) };
+    identifier?: Concoction.Ingredient;
 }

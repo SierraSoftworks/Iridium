@@ -2,11 +2,11 @@
 import Iridium = require('../index');
 
 interface Document {
-    id?: string;
+    _id?: string;
 }
 
 class Instance extends Iridium.Instance<Document, Instance> {
-    id: string;
+    _id: string;
 }
 
 describe("Cache",() => {
@@ -93,7 +93,7 @@ describe("Cache",() => {
             database: 'test'
         });
 
-        var model = new Iridium.Model<Document, Instance>(core, Instance, 'test', { id: false }, {
+        var model = new Iridium.Model<Document, Instance>(core, Instance, 'test', { _id: false }, {
             cache: new Iridium.CacheOnID()
         });
 
@@ -123,14 +123,16 @@ describe("Cache",() => {
             beforeEach(() => core.cache = new Iridium.MemoryCache());
 
             it("when a single document is retrieved",() => {
-                return model.get().then((instance) => chai.expect(core.cache.get(instance.id)).to.eventually.exist);
+                return model.get().then((instance) =>
+                    chai.expect(core.cache.get(instance._id)
+                    ).to.eventually.exist);
             });
 
             it("when an instance is modified",() => {
                 return model.get().then((instance) => {
                     core.cache = new Iridium.MemoryCache();
                     return instance.save();
-                }).then((instance) => chai.expect(core.cache.get(instance.id)).to.eventually.exist);
+                }).then((instance) => chai.expect(core.cache.get(instance._id)).to.eventually.exist);
             });
         });
 
@@ -139,12 +141,10 @@ describe("Cache",() => {
             beforeEach(() => core.connect().then(() => model.remove()).then(() => model.insert({})).then(() => {
                 core.cache = new Iridium.MemoryCache();
             }).then(() => model.get()).then(instance => {
-                instanceID = instance.id;
+                instanceID = instance._id;
                 // Remove the instance from the database and put it back into the cache
                 return instance.remove().then(() => {
-                    var doc = instance.document;
-                    model.helpers.transform.reverse(doc);
-                    return model.cache.set(doc);
+                    return model.cache.set(instance.document);
                 });
             }));
 
@@ -153,7 +153,7 @@ describe("Cache",() => {
             });
 
             it("when a document is requested which matches the conditions",() => {
-                return chai.expect(model.get({ id: instanceID })).to.eventually.exist;
+                return chai.expect(model.get({ _id: instanceID })).to.eventually.exist;
             });
         });
 
@@ -161,13 +161,13 @@ describe("Cache",() => {
             beforeEach(() => model.insert({}).then(() => model.get()));
 
             it("when an instance is removed",() => {
-                return model.get().then(instance => instance.remove()).then(instance => chai.expect(core.cache.get(instance.id)).to.eventually.be.undefined);
+                return model.get().then(instance => instance.remove()).then(instance => chai.expect(core.cache.get(instance._id)).to.eventually.be.undefined);
             });
 
             it("when remove is called with compatible conditions",() => {
                 return model.get().then(instance => {
-                    return model.remove({ id: instance.id }).then(() => instance);
-                }).then(instance => chai.expect(core.cache.get(instance.id)).to.eventually.be.undefined);
+                    return model.remove({ _id: instance._id }).then(() => instance);
+                }).then(instance => chai.expect(core.cache.get(instance._id)).to.eventually.be.undefined);
             });
         });
     });

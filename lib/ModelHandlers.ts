@@ -10,7 +10,7 @@ import Bluebird = require('bluebird');
 
 export = ModelHandlers;
 
-class ModelHandlers<TDocument, TInstance> {
+class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
     constructor(public model: Model<TDocument, TInstance>) {
 
     }
@@ -35,9 +35,6 @@ class ModelHandlers<TDocument, TInstance> {
                     return this.model.cache.set(cacheDoc);
                 }
             }).then(() => {
-                // Transform the document
-                this.model.helpers.transform.apply(target);
-
                 // Wrap the document and trigger the ready hook
                 var wrapped: TResult = wrapper(target, false, !!options.fields);
 
@@ -54,7 +51,6 @@ class ModelHandlers<TDocument, TInstance> {
             }).then(() => {
                 var validation: SkmatcCore.IResult = this.model.helpers.validate(document);
                 if (validation.failed) return Bluebird.reject(validation.error);
-                this.model.helpers.transform.reverse(document);
                 return document;
             });
         }));

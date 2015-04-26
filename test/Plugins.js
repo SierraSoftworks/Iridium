@@ -30,7 +30,7 @@ describe("Plugins", function () {
                     wasCalled = true;
                 }
             });
-            var model = new Iridium.Model(core, function (model, doc) { return doc; }, 'test', { id: false });
+            var model = new Iridium.Model(core, function (model, doc) { return doc; }, 'test', { _id: false });
             chai.expect(wasCalled).to.be.true;
         });
         it("should be able to make modifications to the model", function () {
@@ -39,7 +39,7 @@ describe("Plugins", function () {
                     model.collectionName = 'changed';
                 }
             });
-            var model = new Iridium.Model(core, function (model, doc) { return doc; }, 'test', { id: false });
+            var model = new Iridium.Model(core, function (model, doc) { return doc; }, 'test', { _id: false });
             chai.expect(model.collectionName).to.exist.and.be.equal('changed');
         });
     });
@@ -70,7 +70,7 @@ describe("Plugins", function () {
                 },
                 validate: []
             });
-            var model = new Iridium.Model(core, Iridium.Instance, 'test', { id: false });
+            var model = new Iridium.Model(core, Iridium.Instance, 'test', { _id: false });
             var instance = new model.Instance({});
             chai.expect(wasCalled).to.be.true;
         });
@@ -84,7 +84,7 @@ describe("Plugins", function () {
                 },
                 validate: []
             });
-            var model = new Iridium.Model(core, function (model, doc) { return doc; }, 'test', { id: false });
+            var model = new Iridium.Model(core, function (model, doc) { return doc; }, 'test', { _id: false });
             var instance = new model.Instance({});
             chai.expect(wasCalled).to.be.false;
         });

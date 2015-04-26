@@ -7,7 +7,7 @@ import Index = require('./Index');
 
 export = Cursor;
 
-class Cursor<TDocument, TInstance> {
+class Cursor<TDocument extends { _id?: any }, TInstance> {
     /**
      * Creates a new Iridium cursor which wraps a MongoDB cursor object
      * @param {Model} model The Iridium model that this cursor belongs to

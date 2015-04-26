@@ -2,14 +2,14 @@
 import Iridium = require('../index');
 
 interface TestDocument {
-    id?: string;
+    _id?: string;
     answer: number;
     lots?: number[];
     less?: { [key: string]: number };
 }
 
 class Test extends Iridium.Instance<TestDocument, Test> implements TestDocument {
-    id: string;
+    _id: string;
     answer: number;
     lots: number[];
     less: { [key: string]: number };
@@ -29,7 +29,7 @@ class TestDB extends Iridium.Core {
     }
 
     Test = new Iridium.Model<TestDocument, Test>(this, Test, 'test', {
-        id: false,
+        _id: false,
         answer: Number,
         lots: { $required: false, $type: [Number] },
         less: { $required: false, $propertyType: Number }
@@ -46,13 +46,13 @@ describe("Instance",() => {
 
     it("should expose the latest document values",() => {
         var instance = core.Test.helpers.wrapDocument({
-            id: 'aaaaaa',
+            _id: 'aaaaaa',
             answer: 2
         });
 
         chai.expect(instance).to.exist;
         chai.expect(instance.answer).to.be.equal(2);
-        chai.expect(instance.id).to.be.equal('aaaaaa');
+        chai.expect(instance._id).to.be.equal('aaaaaa');
     });
 
     describe("methods",() => {
@@ -136,7 +136,7 @@ describe("Instance",() => {
             });
 
             chai.expect((<any>instance)._isNew).to.be.true;
-            return chai.expect(instance.save().then(() => chai.expect(core.Test.get(instance.id)).to.eventually.have.property('answer', instance.answer))).to.eventually.be.ok;
+            return chai.expect(instance.save().then(() => chai.expect(core.Test.get(instance._id)).to.eventually.have.property('answer', instance.answer))).to.eventually.be.ok;
         });
 
         it("should automatically generate the update query if one was not provided",() => {
@@ -144,7 +144,7 @@ describe("Instance",() => {
                 answer: 1
             }).then(() => chai.expect(core.Test.get().then((instance) => {
                 instance.answer = 42;
-                return instance.save().then(() => core.Test.get(instance.id));
+                return instance.save().then(() => core.Test.get(instance._id));
             })).to.eventually.have.property('answer', 42));
         });
 
@@ -196,7 +196,7 @@ describe("Instance",() => {
 
         it("should update the instance's properties",() => {
             return chai.expect(core.Test.get().then((instance) => {
-                return core.Test.update({ id: instance.id }, {
+                return core.Test.update({ _id: instance._id }, {
                     $set: { answer: 10 }
                 }).then(() => instance.update());
             })).to.eventually.have.property('answer', 10);
@@ -210,7 +210,7 @@ describe("Instance",() => {
 
         it("should return a promise for the instance",() => {
             return core.Test.get().then((instance) => {
-                core.Test.update({ id: instance.id }, {
+                core.Test.update({ _id: instance._id }, {
                     $set: { answer: 10 }
                 }).then(() => chai.expect(instance.update()).to.eventually.equal(instance));
             });
@@ -236,7 +236,7 @@ describe("Instance",() => {
 
         it("should update the instance's properties",() => {
             return chai.expect(core.Test.get().then((instance) => {
-                return core.Test.update({ id: instance.id }, {
+                return core.Test.update({ _id: instance._id }, {
                     $set: { answer: 10 }
                 }).then(() => instance.refresh());
             })).to.eventually.have.property('answer', 10);
@@ -250,7 +250,7 @@ describe("Instance",() => {
 
         it("should return a promise for the instance",() => {
             return core.Test.get().then((instance) => {
-                core.Test.update({ id: instance.id }, {
+                core.Test.update({ _id: instance._id }, {
                     $set: { answer: 10 }
                 }).then(() => chai.expect(instance.refresh()).to.eventually.equal(instance));
             });
@@ -325,6 +325,13 @@ describe("Instance",() => {
             return core.Test.get().then(instance => {
                 return chai.expect(core.Test.remove().then(() => instance.delete())).to.eventually.not.be.rejected;
             });
+        });
+
+        it("should be a no-op if the object is marked as _isNew",() => {
+            return core.Test.get().then(instance => {
+                var newInstance = new core.Test.Instance(instance.document);
+                return newInstance.delete();
+            }).then(() => chai.expect(core.Test.count()).to.eventually.equal(1));
         });
 
         it("should allow the use of a callback instead of promises",(done) => {

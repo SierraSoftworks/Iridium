@@ -7,7 +7,7 @@ import Bluebird = require('bluebird');
 
 import general = require('./General');
 
-class Instance<TDocument, TInstance> {
+class Instance<TDocument extends { _id?: any }, TInstance> {
     /**
      * Creates a new instance which represents the given document as a type of model
      * @param {model.Model} model The model that the document represents
@@ -83,10 +83,8 @@ class Instance<TDocument, TInstance> {
         });
 
         return Bluebird.resolve().then(() => {
-            _.merge(conditions, this._model.helpers.selectOneDownstream(this._modified));
-
-            this._model.helpers.transform.reverse(conditions);
-
+            _.merge(conditions, { _id: this._modified._id });
+            
             if (!changes) {
                 var validation = this._model.helpers.validate(this._modified);
                 if (validation.failed) return Bluebird.reject(validation.error).bind(this).nodeify(callback);
@@ -119,12 +117,10 @@ class Instance<TDocument, TInstance> {
                     return resolve(changed);
                 });
             });
-        }).then((changed: boolean) => {
-            conditions = this._model.helpers.selectOne(this._modified);
+            }).then((changed: boolean) => {
+            conditions = { _id: this._modified._id };
             if (!changed) {
-                var document = _.cloneDeep(this._modified);
-                this._model.helpers.transform.reverse(document);
-                return document;
+                return _.cloneDeep(this._modified);
             }
 
             return new Bluebird<TDocument>((resolve, reject) => {
@@ -135,7 +131,6 @@ class Instance<TDocument, TInstance> {
             });
         }).then((latest: TDocument) => {
             return this._model.handlers.documentReceived(conditions, latest,(value) => {
-                this._model.helpers.transform.apply(value);
                 this._isPartial = false;
                 this._isNew = false;
                 this._original = value;
@@ -160,7 +155,7 @@ class Instance<TDocument, TInstance> {
      * @returns {Promise<TInstance>}
      */
     refresh(callback?: general.Callback<TInstance>): Bluebird<TInstance> {
-        var conditions = this._model.helpers.selectOne(this._original);
+        var conditions = { _id: this._original._id };
 
         return Bluebird.resolve().then(() => {
             return new Bluebird<TDocument>((resolve, reject) => {
@@ -177,10 +172,7 @@ class Instance<TDocument, TInstance> {
                 return <Bluebird<TInstance>><any>this;
             }
 
-            return this._model.handlers.documentReceived<TDocument>(conditions, newDocument,(doc) => {
-                this._model.helpers.transform.apply(doc);
-                return doc;
-            }).then((doc) => {
+            return this._model.handlers.documentReceived<TDocument>(conditions, newDocument, doc => doc).then((doc) => {
                 this._isNew = false;
                 this._isPartial = false;
                 this._original = doc;
@@ -206,7 +198,7 @@ class Instance<TDocument, TInstance> {
      * @returns {Promise<TInstance>}
      */
     remove(callback?: general.Callback<TInstance>): Bluebird<TInstance> {
-        var conditions = this._model.helpers.selectOne(this._original);
+        var conditions = { _id: this._original._id };
 
         return Bluebird.resolve().then(() => {
             if (this._isNew) return 0;

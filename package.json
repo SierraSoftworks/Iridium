@@ -20,7 +20,8 @@
     "test": "npm run coverage",
 	"test:watch": "mocha -w",
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec --ui bdd",
-    "lint": "jshint lib/"
+    "lint": "jshint lib/",
+    "benchmark": "node ./benchmarks/mongodb.js"
   },
   "engines": {
     "node": ">= 0.8"

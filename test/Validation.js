@@ -16,6 +16,7 @@ var Person = (function (_super) {
 describe("Validation", function () {
     var core = new Iridium.Core({ database: 'test' });
     var model = new Iridium.Model(core, Person, 'test', {
+        _id: false,
         name: String,
         dateOfBirth: Date,
         siblings: [{

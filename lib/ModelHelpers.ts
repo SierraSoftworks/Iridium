@@ -9,17 +9,10 @@ import Bluebird = require('bluebird');
 
 export = ModelHelpers;
 
-class ModelHelpers<TDocument, TInstance> {
+class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
     constructor(public model: Model<TDocument, TInstance>) {
         this._validator = new Skmatc(model.schema);
-        this.transform = new Concoction(model.options.transforms);
     }
-    
-    /**
-     * Gets the Concoction transforms defined for this model
-     * @returns {Concoction}
-     */
-    public transform: concoction;
 
     private _validator: Skmatc;
 
@@ -31,54 +24,16 @@ class ModelHelpers<TDocument, TInstance> {
     validate(document: TDocument): SkmatcCore.IResult {
         return this._validator.validate(document);
     }
-
-    /**
-     * Creates a selector based on the document's unique _id field
-     * @param {object} document The document to render the unique selector for
-     * @returns {{_id: any}} A database selector which can be used to return only this document
-     */
-    selectOne(document: TDocument): { _id: any } {
-        var testDoc: TDocument = _.cloneDeep(document);
-        this.transform.reverse(testDoc);
-        return {
-            _id: (<any>testDoc)._id
-        };
-    }
-
-    /**
-     * Gets the field used in the ISchema to represent the document _id
-     */
-    get identifierField(): string {
-        var id = {};
-        var testDoc = {
-            _id: id
-        };
-
-        this.transform.apply(testDoc);
-
-        var idField = null;
-        for (var k in testDoc)
-            if (testDoc[k] === id) {
-                idField = k;
-                break;
-            }
-
-        return idField;
-    }
-
+    
     /**
      * Creates a selector based on the document's unique _id field in downstream format
      * @param {any} id The downstream identifier to use when creating the selector
      * @returns {object} A database selector which can be used to return only this document in downstream form
      */
-    selectOneDownstream(id: TDocument): any {
-        if (_.isPlainObject(id))
-            return _.pick(id, this.identifierField);
-        else {
-            var conditions = {};
-            conditions[this.identifierField] = id;
-            return conditions;
-        }
+    selectOneDownstream(document: TDocument): any {
+        return _.isPlainObject(document) ? document._id : {
+            _id: document
+        };
     }
 
     /**

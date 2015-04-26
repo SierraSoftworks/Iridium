@@ -2,6 +2,7 @@
 import Iridium = require('../index');
 
 interface UserDoc {
+    _id?: string;
     username: string;
     fullname: string;
     email: string;
@@ -10,6 +11,7 @@ interface UserDoc {
 }
 
 class User extends Iridium.Instance<UserDoc, User> implements UserDoc {
+    _id: string;
     username: string;
     fullname: string;
     email: string;
@@ -23,6 +25,7 @@ class User extends Iridium.Instance<UserDoc, User> implements UserDoc {
 
 class MyDB extends Iridium.Core {
     Users = new Iridium.Model<UserDoc, User>(this, User, "users", {
+        _id: false,
         username: /^[a-z][a-z0-9_]{7,}$/,
         fullname: String,
         email: String,
@@ -35,6 +38,7 @@ class MyDB extends Iridium.Core {
     });
 
     PlainUsers = new Iridium.Model<UserDoc, UserDoc>(this,(model, doc) => doc, "users", {
+        _id: false,
         username: /^[a-z][a-z0-9_]{7,}$/,
         fullname: String,
         email: String,

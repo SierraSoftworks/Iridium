@@ -28,7 +28,7 @@ var TestDB = (function (_super) {
     function TestDB() {
         _super.call(this, "mongodb://localhost/test");
         this.Test = new Iridium.Model(this, Test, 'test', {
-            id: false,
+            _id: false,
             answer: Number,
             lots: { $required: false, $type: [Number] },
             less: { $required: false, $propertyType: Number }
@@ -43,12 +43,12 @@ describe("Instance", function () {
     beforeEach(function () { return core.Test.remove(); });
     it("should expose the latest document values", function () {
         var instance = core.Test.helpers.wrapDocument({
-            id: 'aaaaaa',
+            _id: 'aaaaaa',
             answer: 2
         });
         chai.expect(instance).to.exist;
         chai.expect(instance.answer).to.be.equal(2);
-        chai.expect(instance.id).to.be.equal('aaaaaa');
+        chai.expect(instance._id).to.be.equal('aaaaaa');
     });
     describe("methods", function () {
         it("should expose save()", function () {
@@ -114,14 +114,14 @@ describe("Instance", function () {
                 answer: 1
             });
             chai.expect(instance._isNew).to.be.true;
-            return chai.expect(instance.save().then(function () { return chai.expect(core.Test.get(instance.id)).to.eventually.have.property('answer', instance.answer); })).to.eventually.be.ok;
+            return chai.expect(instance.save().then(function () { return chai.expect(core.Test.get(instance._id)).to.eventually.have.property('answer', instance.answer); })).to.eventually.be.ok;
         });
         it("should automatically generate the update query if one was not provided", function () {
             return core.Test.insert({
                 answer: 1
             }).then(function () { return chai.expect(core.Test.get().then(function (instance) {
                 instance.answer = 42;
-                return instance.save().then(function () { return core.Test.get(instance.id); });
+                return instance.save().then(function () { return core.Test.get(instance._id); });
             })).to.eventually.have.property('answer', 42); });
         });
         it("should allow you to specify a custom update query", function () {
@@ -159,7 +159,7 @@ describe("Instance", function () {
         });
         it("should update the instance's properties", function () {
             return chai.expect(core.Test.get().then(function (instance) {
-                return core.Test.update({ id: instance.id }, {
+                return core.Test.update({ _id: instance._id }, {
                     $set: { answer: 10 }
                 }).then(function () { return instance.update(); });
             })).to.eventually.have.property('answer', 10);
@@ -171,7 +171,7 @@ describe("Instance", function () {
         });
         it("should return a promise for the instance", function () {
             return core.Test.get().then(function (instance) {
-                core.Test.update({ id: instance.id }, {
+                core.Test.update({ _id: instance._id }, {
                     $set: { answer: 10 }
                 }).then(function () { return chai.expect(instance.update()).to.eventually.equal(instance); });
             });
@@ -194,7 +194,7 @@ describe("Instance", function () {
         });
         it("should update the instance's properties", function () {
             return chai.expect(core.Test.get().then(function (instance) {
-                return core.Test.update({ id: instance.id }, {
+                return core.Test.update({ _id: instance._id }, {
                     $set: { answer: 10 }
                 }).then(function () { return instance.refresh(); });
             })).to.eventually.have.property('answer', 10);
@@ -206,7 +206,7 @@ describe("Instance", function () {
         });
         it("should return a promise for the instance", function () {
             return core.Test.get().then(function (instance) {
-                core.Test.update({ id: instance.id }, {
+                core.Test.update({ _id: instance._id }, {
                     $set: { answer: 10 }
                 }).then(function () { return chai.expect(instance.refresh()).to.eventually.equal(instance); });
             });
@@ -270,6 +270,12 @@ describe("Instance", function () {
             return core.Test.get().then(function (instance) {
                 return chai.expect(core.Test.remove().then(function () { return instance.delete(); })).to.eventually.not.be.rejected;
             });
+        });
+        it("should be a no-op if the object is marked as _isNew", function () {
+            return core.Test.get().then(function (instance) {
+                var newInstance = new core.Test.Instance(instance.document);
+                return newInstance.delete();
+            }).then(function () { return chai.expect(core.Test.count()).to.eventually.equal(1); });
         });
         it("should allow the use of a callback instead of promises", function (done) {
             core.Test.get().then(function (instance) {

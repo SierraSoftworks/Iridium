@@ -22,26 +22,26 @@ describe("Model", function () {
         it("should throw an error if you don't provide a valid core", function () {
             chai.expect(function () {
                 new Iridium.Model(null, function () {
-                }, 'test', { id: String });
+                }, 'test', { _id: false });
             }).to.throw("You failed to provide a valid Iridium core for this model");
         });
         it("should throw an error if you don't provide a valid instanceType", function () {
             chai.expect(function () {
-                new Iridium.Model(core, null, 'test', { id: String });
+                new Iridium.Model(core, null, 'test', { _id: false });
             }).to.throw("You failed to provide a valid instance constructor for this model");
         });
         it("should throw an error if you don't provide a collection name", function () {
             chai.expect(function () {
                 new Iridium.Model(core, function () {
-                }, null, { id: String });
+                }, null, { _id: false });
             }).to.throw("You failed to provide a valid collection name for this model");
             chai.expect(function () {
                 new Iridium.Model(core, function () {
-                }, '', { id: String });
+                }, '', { _id: false });
             }).to.throw("You failed to provide a valid collection name for this model");
             chai.expect(function () {
                 new Iridium.Model(core, function () {
-                }, 4, { id: String });
+                }, 4, { _id: false });
             }).to.throw("You failed to provide a valid collection name for this model");
         });
         it("should throw an error if you don't provide a valid schema", function () {
@@ -51,25 +51,25 @@ describe("Model", function () {
             }).to.throw("You failed to provide a valid schema for this model");
             chai.expect(function () {
                 new Iridium.Model(core, function () {
-                }, 'test', {});
+                }, 'test', { id: false });
             }).to.throw("You failed to provide a valid schema for this model");
         });
         it("should correctly set the core", function () {
             chai.expect(new Iridium.Model(core, function () {
-            }, 'test', { id: String }).core).to.equal(core);
+            }, 'test', { _id: false }).core).to.equal(core);
         });
         it("should correctly set the collectionName", function () {
             chai.expect(new Iridium.Model(core, function () {
-            }, 'test', { id: String }).collectionName).to.equal('test');
+            }, 'test', { _id: false }).collectionName).to.equal('test');
         });
         it("should correctly set the schema", function () {
             chai.expect(new Iridium.Model(core, function () {
-            }, 'test', { id: String }).schema).to.eql({ id: String });
+            }, 'test', { _id: false }).schema).to.eql({ _id: false });
         });
     });
     describe("methods", function () {
         var test = new Iridium.Model(core, Test, 'test', {
-            id: String,
+            _id: false,
             answer: Number
         });
         it("should expose create()", function () { return chai.expect(test.create).to.exist.and.be.a('function'); });
@@ -86,7 +86,7 @@ describe("Model", function () {
     });
     describe("properties", function () {
         var test = new Iridium.Model(core, Test, 'test', {
-            id: String,
+            _id: false,
             answer: Number
         });
         it("should expose core", function () {
@@ -113,12 +113,12 @@ describe("Model", function () {
     describe("collection", function () {
         it("should throw an error if you attempt to access it before connecting to the database", function () {
             var model = new Iridium.Model(new Iridium.Core('mongodb://localhost/test'), function () {
-            }, 'test', { id: false });
+            }, 'test', { _id: false });
             chai.expect(function () { return model.collection; }).to.throw("Iridium Core not connected to a database.");
         });
     });
     describe("create()", function () {
-        var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
+        var model = new Iridium.Model(core, Test, 'test', { _id: false, answer: Number });
         before(function () {
             return core.connect();
         });
@@ -154,7 +154,7 @@ describe("Model", function () {
         });
     });
     describe("insert()", function () {
-        var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
+        var model = new Iridium.Model(core, Test, 'test', { _id: false, answer: Number });
         before(function () {
             return core.connect();
         });
@@ -190,7 +190,7 @@ describe("Model", function () {
         });
     });
     describe("remove()", function () {
-        var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
+        var model = new Iridium.Model(core, Test, 'test', { _id: false, answer: Number });
         before(function () {
             return core.connect().then(function () { return model.remove(); }).then(function () { return model.insert([
                 { answer: 10 },
@@ -222,7 +222,7 @@ describe("Model", function () {
         });
     });
     describe("findOne()", function () {
-        var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
+        var model = new Iridium.Model(core, Test, 'test', { _id: false, answer: Number });
         before(function () {
             return core.connect().then(function () { return model.remove(); }).then(function () { return model.insert([
                 { answer: 10 },
@@ -242,11 +242,11 @@ describe("Model", function () {
             return chai.expect(model.findOne()).to.eventually.exist.and.have.property('answer').is.a('number');
         });
         it("should support retrieving a document using its ID", function () {
-            return chai.expect(model.findOne().then(function (doc) { return model.findOne(doc.id); })).to.eventually.exist.and.have.property('answer').is.a('number');
+            return chai.expect(model.findOne().then(function (doc) { return model.findOne(doc._id); })).to.eventually.exist.and.have.property('answer').is.a('number');
         });
         it("should retrieve the correct document by its ID", function () {
             return model.findOne().then(function (doc) {
-                return chai.expect(model.findOne(doc.id)).to.eventually.exist.and.have.property('id', doc.id);
+                return chai.expect(model.findOne(doc._id)).to.eventually.exist.and.have.property('_id', doc._id);
             });
         });
         it("should support retrieving a document using a selector query", function () {
@@ -272,7 +272,7 @@ describe("Model", function () {
         });
     });
     describe("get()", function () {
-        var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
+        var model = new Iridium.Model(core, Test, 'test', { _id: false, answer: Number });
         before(function () {
             return core.connect().then(function () { return model.remove(); }).then(function () { return model.insert([
                 { answer: 10 },
@@ -292,11 +292,11 @@ describe("Model", function () {
             return chai.expect(model.get()).to.eventually.exist.and.have.property('answer').is.a('number');
         });
         it("should support retrieving a document using its ID", function () {
-            return chai.expect(model.get().then(function (doc) { return model.get(doc.id); })).to.eventually.exist.and.have.property('answer').is.a('number');
+            return chai.expect(model.get().then(function (doc) { return model.get(doc._id); })).to.eventually.exist.and.have.property('answer').is.a('number');
         });
         it("should retrieve the correct document by its ID", function () {
             return model.get().then(function (doc) {
-                return chai.expect(model.get(doc.id)).to.eventually.exist.and.have.property('id', doc.id);
+                return chai.expect(model.get(doc._id)).to.eventually.exist.and.have.property('_id', doc._id);
             });
         });
         it("should support retrieving a document using a selector query", function () {
@@ -322,7 +322,7 @@ describe("Model", function () {
         });
     });
     describe("find()", function () {
-        var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
+        var model = new Iridium.Model(core, Test, 'test', { _id: false, answer: Number });
         before(function () {
             return core.connect().then(function () { return model.remove(); }).then(function () { return model.insert([
                 { answer: 10 },
@@ -484,11 +484,11 @@ describe("Model", function () {
                 return chai.expect(model.find({ answer: 10 }).toArray()).to.eventually.exist.and.have.length(1);
             });
             it("should allow an ID to be specified directly", function () {
-                return model.find({ answer: 10 }).next().then(function (instance) { return chai.expect(model.find(instance.id).count()).to.eventually.equal(1); });
+                return model.find({ answer: 10 }).next().then(function (instance) { return chai.expect(model.find(instance._id).count()).to.eventually.equal(1); });
             });
             it("should transform the conditions", function () {
                 return model.get().then(function (instance) { return chai.expect(model.find({
-                    id: instance.id
+                    _id: instance._id
                 }).count()).to.eventually.equal(1); });
             });
             it("should allow the returned fields to be restricted", function () {
@@ -497,7 +497,7 @@ describe("Model", function () {
         });
     });
     describe("count()", function () {
-        var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
+        var model = new Iridium.Model(core, Test, 'test', { _id: false, answer: Number });
         before(function () {
             return core.connect().then(function () { return model.remove(); }).then(function () { return model.insert([
                 { answer: 10 },
@@ -529,7 +529,7 @@ describe("Model", function () {
         });
     });
     describe("ensureIndex()", function () {
-        var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
+        var model = new Iridium.Model(core, Test, 'test', { _id: false, answer: Number });
         before(function () {
             return core.connect().then(function () { return model.remove(); }).then(function () { return model.insert([
                 { answer: 10 },
@@ -550,7 +550,7 @@ describe("Model", function () {
         });
     });
     describe("ensureIndexes()", function () {
-        var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number }, {
+        var model = new Iridium.Model(core, Test, 'test', { _id: false, answer: Number }, {
             indexes: [{ answer: 1 }]
         });
         before(function () {
@@ -573,7 +573,7 @@ describe("Model", function () {
         });
     });
     describe("dropIndex()", function () {
-        var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
+        var model = new Iridium.Model(core, Test, 'test', { _id: false, answer: Number });
         beforeEach(function () {
             return core.connect().then(function () { return model.remove(); }).then(function () { return model.insert([
                 { answer: 10 },
@@ -600,7 +600,7 @@ describe("Model", function () {
         });
     });
     describe("dropIndexes()", function () {
-        var model = new Iridium.Model(core, Test, 'test', { id: false, answer: Number });
+        var model = new Iridium.Model(core, Test, 'test', { _id: false, answer: Number });
         before(function () {
             return core.connect().then(function () { return model.remove(); }).then(function () { return model.insert([
                 { answer: 10 },

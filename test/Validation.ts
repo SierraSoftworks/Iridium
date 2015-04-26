@@ -24,6 +24,7 @@ class Person extends Iridium.Instance<Document, Person> {
 describe("Validation", () => {
     var core = new Iridium.Core({ database: 'test' });
     var model = new Iridium.Model<Document, Person>(core, Person, 'test', {
+        _id: false,
         name: String,
         dateOfBirth: Date,
         siblings: [{

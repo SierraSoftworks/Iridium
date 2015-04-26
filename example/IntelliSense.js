@@ -20,6 +20,7 @@ var MyDB = (function (_super) {
     function MyDB() {
         _super.apply(this, arguments);
         this.Users = new Iridium.Model(this, User, "users", {
+            _id: false,
             username: /^[a-z][a-z0-9_]{7,}$/,
             fullname: String,
             email: String,
@@ -31,6 +32,7 @@ var MyDB = (function (_super) {
             ]
         });
         this.PlainUsers = new Iridium.Model(this, function (model, doc) { return doc; }, "users", {
+            _id: false,
             username: /^[a-z][a-z0-9_]{7,}$/,
             fullname: String,
             email: String,

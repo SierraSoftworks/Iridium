@@ -35,7 +35,7 @@ export = Model;
  * An Iridium Model which represents a structured MongoDB collection
  * @class
  */
-class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, TInstance> {
+class Model<TDocument extends { _id?: any }, TInstance> implements ModelInterfaces.IModel<TDocument, TInstance> {
     /**
      * Creates a new Iridium model representing a given ISchema and backed by a collection whose name is specified
      * @param {Iridium} core The Iridium core that this model should use for database access
@@ -45,29 +45,24 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
      * @returns {Model}
      * @constructor
      */
-    constructor(core: Iridium, instanceType: ModelInterfaces.InstanceCreator<TDocument, TInstance> | ModelInterfaces.InstanceConstructor<TDocument, TInstance>, collection: string, schema: ISchema, options: ModelOptions.IModelOptions < TDocument, TInstance > = {}) {
+    constructor(core: Iridium, instanceType: ModelInterfaces.InstanceCreator<TDocument, TInstance> | ModelInterfaces.InstanceConstructor<TDocument, TInstance>, collection: string, schema: ISchema, options: ModelOptions.IModelOptions<TDocument, TInstance> = {}) {
         if (!(core instanceof Iridium)) throw new Error("You failed to provide a valid Iridium core for this model");
         if (typeof instanceType != 'function') throw new Error("You failed to provide a valid instance constructor for this model");
         if (typeof collection != 'string' || !collection) throw new Error("You failed to provide a valid collection name for this model");
-        if (!_.isPlainObject(schema) || !_.keys(schema).length) throw new Error("You failed to provide a valid schema for this model");
+        if (!_.isPlainObject(schema) || schema._id === undefined) throw new Error("You failed to provide a valid schema for this model");
 
         _.defaults(options, <ModelOptions.IModelOptions<TDocument, TInstance>>{
             hooks: {},
-            transforms: [
-                new Concoction.Rename({ _id: 'id' }),
-                new Concoction.Convert({
-                    id: {
-                        apply: function (value) {
-                            return (value && value.id) ? new MongoDB.ObjectID(value.id).toHexString() : value;
-                        },
-                        reverse: function (value) {
-                            if (value === null || value === undefined) return undefined;
-                            if (value && /^[a-f0-9]{24}$/.test(value)) return MongoDB.ObjectID.createFromHexString(value);
-                            return value;
-                        }
-                    }
-                })
-            ],
+            identifier: {
+                apply: function (value) {
+                    return (value && value._bsontype == 'ObjectID') ? new MongoDB.ObjectID(value.id).toHexString() : value;
+                },
+                reverse: function (value) {
+                    if (value === null || value === undefined) return undefined;
+                    if (value && /^[a-f0-9]{24}$/.test(value)) return MongoDB.ObjectID.createFromHexString(value);
+                    return value;
+                }
+            },
             cache: new idCacheController()
         });
 
@@ -223,12 +218,11 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
         conditions = conditions || {};
         fields = fields || {};
 
-        if (fields)
-            this._helpers.transform.reverse(fields);
+        if (!_.isPlainObject(conditions)) conditions = { _id: conditions };
 
-        if (!_.isPlainObject(conditions)) conditions = this._helpers.selectOneDownstream(conditions);
-        this._helpers.transform.reverse(conditions);
-
+        if (conditions.hasOwnProperty('_id'))
+            conditions['_id'] = this.options.identifier.reverse(conditions['_id']);
+        
         var cursor = this.collection.find(conditions, {
             fields: fields
         });
@@ -323,7 +317,7 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
                 if (conditions) options = args[argI];
                 else conditions = args[argI];
             }
-            else conditions = this._helpers.selectOneDownstream(args[argI]);
+            else conditions = { _id: args[argI] };
         }
 
         conditions = conditions || {};
@@ -334,14 +328,11 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
         });
 
         return Bluebird.resolve().bind(this).then(() => {
-            this._helpers.transform.reverse(conditions);
-
-            if (options.fields)
-                this._helpers.transform.reverse(options.fields);
+            if (conditions.hasOwnProperty('_id'))
+                conditions['_id'] = this.options.identifier.reverse(conditions['_id']);
 
             return this._cache.get<TDocument>(conditions);
         }).then((cachedDocument: TDocument) => {
-
             if (cachedDocument) return cachedDocument;
             return new Bluebird<any>((resolve, reject) => {
                 this.collection.findOne(conditions, <MongoDB.CollectionFindOptions>{
@@ -450,9 +441,9 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
 
             if (options.upsert) {
                 var docs = this._handlers.creatingDocuments(objects);
-                return docs.map((object:{ _id: any; }) => {
+                return docs.map((object: { _id: any; }) => {
                     return new Bluebird<any[]>((resolve, reject) => {
-                        this.collection.findAndModify({_id: object._id}, ["_id"], object, queryOptions, (err, result) => {
+                        this.collection.findAndModify({ _id: object._id }, ["_id"], object, queryOptions,(err, result) => {
                             if (err) return reject(err);
                             return resolve(result);
                         });
@@ -497,18 +488,25 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
             options = {};
         }
 
+        if (!_.isPlainObject(conditions)) conditions = {
+            _id: conditions
+        };
+
         _.defaults(options, {
             w: 1,
             multi: true
         });
 
-        this._helpers.transform.reverse(conditions);
+        return Bluebird.resolve().then(() => {
+            if (conditions.hasOwnProperty('_id'))
+                conditions['_id'] = this.options.identifier.reverse(conditions['_id']);
 
-        return new Bluebird<number>((resolve, reject) => {
-            this.collection.update(conditions, changes, options,(err, changes) => {
-                if (err) return reject(err);
-                return resolve(changes);
-            });
+            return new Bluebird<number>((resolve, reject) => {
+                this.collection.update(conditions, changes, options,(err, changes) => {
+                    if (err) return reject(err);
+                    return resolve(changes);
+                });
+            })
         }).nodeify(callback);
     }
 
@@ -530,11 +528,22 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
             callback = <general.Callback<number>>conditions;
             conditions = {};
         }
-        
-        return new Bluebird<number>((resolve, reject) => {
-            this.collection.count(conditions,(err, results) => {
-                if (err) return reject(err);
-                return resolve(results);
+
+        conditions = conditions || {};
+
+        if (!_.isPlainObject(conditions)) conditions = {
+            _id: conditions
+        };
+
+        return Bluebird.resolve().then(() => {
+            if (conditions.hasOwnProperty('_id'))
+                conditions['_id'] = this.options.identifier.reverse(conditions['_id']);
+
+            return new Bluebird<number>((resolve, reject) => {
+                this.collection.count(conditions,(err, results) => {
+                    if (err) return reject(err);
+                    return resolve(results);
+                });
             });
         }).nodeify(callback);
     }
@@ -557,16 +566,25 @@ class Model<TDocument, TInstance> implements ModelInterfaces.IModel<TDocument, T
             callback = <general.Callback<number>>conditions;
             conditions = {};
         }
+
         conditions = conditions || {};
 
-        return new Bluebird<number>((resolve, reject) => {
-            this._helpers.transform.reverse(conditions);
-            this.collection.remove(conditions,(err, results) => {
-                if (err) return reject(err);
-                return resolve(results);
+        if (!_.isPlainObject(conditions)) conditions = {
+            _id: conditions
+        };
+
+        return Bluebird.resolve().then(() => {
+            if (conditions.hasOwnProperty('_id'))
+                conditions['_id'] = this.options.identifier.reverse(conditions['_id']);
+
+            return new Bluebird<number>((resolve, reject) => {
+                this.collection.remove(conditions,(err, results) => {
+                    if (err) return reject(err);
+                    return resolve(results);
+                });
             });
         }).then((count) => {
-            if(count === 1)
+            if (count === 1)
                 return this._cache.clear(conditions).then(() => count);
             return Bluebird.resolve(count);
         }).nodeify(callback);

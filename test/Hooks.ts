@@ -20,7 +20,7 @@ describe("Hooks", function () {
 
     var core = new Iridium.Core({ database: 'test' });
     var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', {
-        id: false,
+        _id: false,
         answer: Number
     }, {
             hooks: {

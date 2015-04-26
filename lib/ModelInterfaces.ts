@@ -15,18 +15,18 @@ export interface IModelBase {
     cacheDirector: CacheDirector;
 }
 
-export interface IModel<TDocument, TInstance> extends IModelBase {
+export interface IModel<TDocument extends { _id?: any }, TInstance> extends IModelBase {
     Instance: new (doc: TDocument, isNew?: boolean, isPartial?: boolean) => TInstance;
 }
 
-export interface InstanceConstructor<TDocument, TInstance> {
+export interface InstanceConstructor<TDocument extends { _id?: any }, TInstance> {
     new (model: Model<TDocument, TInstance>, doc: TDocument, isNew?: boolean, isPartial?: boolean): TInstance;
 }
 
-export interface InstanceCreator<TDocument, TInstance> {
+export interface InstanceCreator<TDocument extends { _id?: any }, TInstance> {
     (model: Model<TDocument, TInstance>, doc: TDocument, isNew?: boolean, isPartial?: boolean): TInstance;
 }
 
-export interface ModelSpecificInstanceConstructor<TDocument, TInstance> {
+export interface ModelSpecificInstanceConstructor<TDocument extends { _id?: any }, TInstance> {
     new (doc: TDocument, isNew?: boolean, isPartial?: boolean): TInstance;
 }

@@ -6,9 +6,10 @@ var __extends = this.__extends || function (d, b) {
 };
 /// <reference path="../_references.d.ts" />
 var Iridium = require('../index');
-var Promise = require('bluebird');
+var Bluebird = require('bluebird');
+var intensity = 10000;
 var objects = [];
-for (var i = 0; i < 10000; i++)
+for (var i = 0; i < intensity; i++)
     objects.push({ name: 'John', surname: 'Doe', birthday: new Date() });
 var User = (function () {
     function User() {
@@ -27,11 +28,13 @@ var IridiumDB = (function (_super) {
     function IridiumDB() {
         _super.call(this, { database: 'test' });
         this.User = new Iridium.Model(this, function (model, doc) { return doc; }, 'iridium', {
+            _id: false,
             name: String,
             surname: String,
             birthday: Date
         });
         this.UserWrapped = new Iridium.Model(this, WrappedUser, 'iridiumWrapped', {
+            _id: false,
             name: String,
             surname: String,
             birthday: Date
@@ -61,38 +64,39 @@ function benchmark(format, action, compareTo) {
         return ms;
     });
 }
+console.log("Running benchmark with intensity of %d", intensity);
 var iDB = new IridiumDB();
 iDB.connect().then(function () { return iDB.User.remove(); }).then(function () { return iDB.UserWrapped.remove(); }).then(function () {
-    return new Promise(function (resolve, reject) {
+    return new Bluebird(function (resolve, reject) {
         iDB.connection.collection('mongodb').remove(function (err) {
             if (err)
                 return reject(err);
             return resolve(null);
         });
     });
-}).then(function () { return benchmark("MongoDB inserting 10 000 documents: %s", function () {
-    return new Promise(function (resolve, reject) {
+}).then(function () { return benchmark("MongoDB inserting: %s", function () {
+    return new Bluebird(function (resolve, reject) {
         iDB.connection.collection('mongodb').insert(objects, function (err, objects) {
             if (err)
                 return reject(err);
             return resolve(objects);
         });
     });
-}); }).then(function () { return benchmark("Iridium Instances inserting 10 000 documents: %s", function () { return iDB.UserWrapped.insert(objects); }, baseline); }).then(function () { return benchmark("Iridium inserting 10 000 documents: %s", function () { return iDB.User.insert(objects); }, baseline); }).then(function () { return benchmark("MongoDB finding 10 000 documents: %s", function () {
-    return new Promise(function (resolve, reject) {
+}); }).then(function () { return benchmark("Iridium Instances inserting: %s", function () { return iDB.UserWrapped.insert(objects); }, baseline); }).then(function () { return benchmark("Iridium inserting: %s", function () { return iDB.User.insert(objects); }, baseline); }).then(function () { return benchmark("MongoDB finding: %s", function () {
+    return new Bluebird(function (resolve, reject) {
         iDB.connection.collection('mongodb').find().toArray(function (err, objects) {
             if (err)
                 return reject(err);
             return resolve(objects);
         });
     });
-}); }).then(function () { return benchmark("Iridium Instances finding 10 000 documents (toArray): %s", function () { return iDB.UserWrapped.find().toArray(); }, baseline); }).then(function () { return benchmark("Iridium finding 10 000 documents (toArray): %s", function () { return iDB.User.find().toArray(); }, baseline); }).then(function () { return benchmark("Iridium Instances finding 10 000 documents (map): %s", function () { return iDB.UserWrapped.find().map(function (x) { return x; }); }, baseline); }).then(function () { return benchmark("Iridium finding 10 000 documents (map): %s", function () { return iDB.User.find().map(function (x) { return x; }); }, baseline); }).then(function () { return benchmark("MongoDB removing 10 000 documents: %s", function () {
-    return new Promise(function (resolve, reject) {
+}); }).then(function () { return benchmark("Iridium Instances finding (toArray): %s", function () { return iDB.UserWrapped.find().toArray(); }, baseline); }).then(function () { return benchmark("Iridium finding (toArray): %s", function () { return iDB.User.find().toArray(); }, baseline); }).then(function () { return benchmark("Iridium Instances finding (map): %s", function () { return iDB.UserWrapped.find().map(function (x) { return x; }); }, baseline); }).then(function () { return benchmark("Iridium finding (map): %s", function () { return iDB.User.find().map(function (x) { return x; }); }, baseline); }).then(function () { return benchmark("MongoDB removing: %s", function () {
+    return new Bluebird(function (resolve, reject) {
         iDB.connection.collection('mongodb').remove(function (err, objects) {
             if (err)
                 return reject(err);
             return resolve(objects);
         });
     });
-}); }).then(function () { return benchmark("Iridium Instances removing 10 000 documents: %s", function () { return iDB.UserWrapped.remove(); }, baseline); }).then(function () { return benchmark("Iridium removing 10 000 documents: %s", function () { return iDB.User.remove(); }, baseline); }).then(function () { return iDB.close(); }).catch(function (err) { return console.error(err); });
+}); }).then(function () { return benchmark("Iridium Instances removing: %s", function () { return iDB.UserWrapped.remove(); }, baseline); }).then(function () { return benchmark("Iridium removing: %s", function () { return iDB.User.remove(); }, baseline); }).then(function () { return iDB.close(); }).catch(function (err) { return console.error(err); });
 //# sourceMappingURL=mongodb.js.map
