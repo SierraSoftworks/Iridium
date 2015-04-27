@@ -1,6 +1,6 @@
 {
   "name": "iridium",
-  "version": "4.0.1",
+  "version": "5.0.0-alpha",
   "author": "Benjamin Pannell <admin@sierrasoftworks.com>",
   "description": "A custom lightweight ORM for MongoDB designed for power-users",
   "homepage": "https://sierrasoftworks.com/iridium",
@@ -27,14 +27,10 @@
     "node": ">= 0.8"
   },
   "dependencies": {
-    "async": "~0.9",
-    "bluebird": "2.x",
-    "concoction": "~1.0",
-    "debug": "^1.0.4",
-    "functionality": "2.x",
-    "lodash": "*",
-    "mongodb": "^1.4.35",
-    "skmatc": "1.x"
+    "bluebird": "^2.9.24",
+    "lodash": "^3.7.0",
+    "mongodb": "^2.0.28",
+    "skmatc": "^1.1.2"
   },
   "devDependencies": {
     "mocha": "2.x",
@@ -54,7 +50,6 @@
     "odm",
     "iridium",
     "validation",
-    "transformation",
     "preprocessing"
   ]
 }

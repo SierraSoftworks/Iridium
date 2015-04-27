@@ -16,7 +16,7 @@ class Cursor<TDocument extends { _id?: any }, TInstance> {
      * @constructor
      */
     constructor(private model: Model<TDocument, TInstance>, private conditions: any, public cursor: MongoDB.Cursor) {
-        
+
     }
 
     /**
@@ -39,13 +39,14 @@ class Cursor<TDocument extends { _id?: any }, TInstance> {
      * @param {function(Error)} callback A callback which is triggered when all operations have been dispatched
      * @return {Promise} A promise which is resolved when all operations have been dispatched
      */
-    each(handler: (instance: TInstance) => void, callback?: General.Callback<void>): Bluebird<void> {
+    forEach(handler: (instance: TInstance) => void, callback?: General.Callback<void>): Bluebird<void> {
         var helpers = this.model.helpers;
         return new Bluebird<void>((resolve, reject) => {
-            this.cursor.each((err, item: TDocument) => {
-                if (err) return reject(err);
-                if (!item) return resolve(null);
+            this.cursor.forEach((item: TDocument) => {
                 this.model.handlers.documentReceived(this.conditions, item, function () { return helpers.wrapDocument.apply(helpers, arguments); }).then(handler);
+            },(err) => {
+                if (err) return reject(err);
+                return resolve(null);
             });
         }).nodeify(callback);
     }
@@ -60,11 +61,12 @@ class Cursor<TDocument extends { _id?: any }, TInstance> {
         var helpers = this.model.helpers;
         return new Bluebird<TResult[]>((resolve, reject) => {
             var promises: Bluebird<TResult>[] = [];
-            this.cursor.each((err, item: TDocument) => {
-                if (err) return reject(err);
-                if (!item) return resolve(Bluebird.all(promises));
+            this.cursor.forEach((item: TDocument) => {
                 promises.push(this.model.handlers.documentReceived(this.conditions, item, function () { return helpers.wrapDocument.apply(helpers, arguments); })
                     .then(<(instance) => TResult>transform));
+            },(err) => {
+                if (err) return reject(err);
+                return resolve(Bluebird.all(promises));
             });
         }).nodeify(callback);
     }
@@ -93,7 +95,7 @@ class Cursor<TDocument extends { _id?: any }, TInstance> {
      */
     next(callback?: General.Callback<TInstance>): Bluebird<TInstance> {
         return new Bluebird<TDocument>((resolve, reject) => {
-            this.cursor.nextObject((err, result: any) => {
+            this.cursor.next((err, result: any) => {
                 if (err) return reject(err);
                 return resolve(<any>result);
             });
@@ -107,7 +109,8 @@ class Cursor<TDocument extends { _id?: any }, TInstance> {
      * @return {Cursor} The new cursor which starts at the beginning of the results
      */
     rewind(): Cursor<TDocument, TInstance> {
-        return new Cursor(this.model, this.conditions, this.cursor.rewind());
+        this.cursor.rewind();
+        return this;
     }
 
     /**

@@ -410,7 +410,8 @@ declare module "mongodb" {
 
     rewind() : Cursor;
     toArray(callback: (err: Error, results: any[]) => any) : void;
-    each(callback: (err: Error, item: any) => void) : void;
+    each(callback: (err: Error, item: any) => void): void;
+    forEach(iterator: (document: any) => void, callback: (err: Error) => void): void;
     count(applySkipLimit: boolean, callback: (err: Error, count: number) => void) : void;
 
     sort(keyOrList: any, callback? : (err: Error, result: any) => void): Cursor;
@@ -422,7 +423,8 @@ declare module "mongodb" {
     skip(skip: number, callback?: (err: Error, result: any) => void): Cursor;
     batchSize(batchSize: number, callback?: (err: Error, result: any) => void): Cursor;
 
-    nextObject(callback: (err: Error, doc: any) => void) : void;
+    nextObject(callback: (err: Error, doc: any) => void): void;
+    next(callback: (err: Error, doc: any) => void): void;
     explain(callback: (err: Error, result: any) => void) : void;
 
     stream(): CursorStream;

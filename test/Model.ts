@@ -401,25 +401,25 @@ describe("Model",() => {
 
         describe("each()",() => {
             it("should call the handler with each document",() => {
-                return chai.expect(model.find().each((instance) => {
+                return chai.expect(model.find().forEach((instance) => {
                     chai.expect(instance).to.exist;
                 })).to.eventually.not.be.rejected;
             });
 
             it("should return a promise immediately",() => {
-                chai.expect(model.find().each(i => { })).to.be.instanceof(Promise);
+                chai.expect(model.find().forEach(i => { })).to.be.instanceof(Promise);
             });
 
             it("should resolve the promise after all handlers have been dispatched",() => {
                 var count = 0;
-                return chai.expect(model.find().each((instance) => {
+                return chai.expect(model.find().forEach((instance) => {
                     count++;
                 }).then(() => chai.expect(count).to.not.equal(5)).then(() => Promise.delay(10)).then(() => count)).to.eventually.equal(5);
             });
 
             it("should support using callbacks instead of promises",(done) => {
                 var count = 0;
-                model.find().each(i => count++,(err) => {
+                model.find().forEach(i => count++,(err) => {
                     if (err) return done(err);
                     Promise.delay(10).then(() => chai.expect(count).to.eql(5)).then(() => done());
                 });

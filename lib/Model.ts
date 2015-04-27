@@ -453,9 +453,9 @@ class Model<TDocument extends { _id?: any }, TInstance> implements ModelInterfac
             else
                 return this._handlers.creatingDocuments(objects).then((objects) => {
                     return new Bluebird<any[]>((resolve, reject) => {
-                        this.collection.insert(objects, queryOptions,(err, results) => {
+                        this.collection.insert(objects, queryOptions,(err, result) => {
                             if (err) return reject(err);
-                            return resolve(results);
+                            return resolve(result.ops);
                         });
                     });
                 });
@@ -504,9 +504,9 @@ class Model<TDocument extends { _id?: any }, TInstance> implements ModelInterfac
                 conditions['_id'] = this.options.identifier.reverse(conditions['_id']);
 
             return new Bluebird<number>((resolve, reject) => {
-                this.collection.update(conditions, changes, options,(err, changes) => {
+                this.collection.update(conditions, changes, options,(err, result) => {
                     if (err) return reject(err);
-                    return resolve(changes);
+                    return resolve(result.result.nModified);
                 });
             })
         }).nodeify(callback);
@@ -580,9 +580,9 @@ class Model<TDocument extends { _id?: any }, TInstance> implements ModelInterfac
                 conditions['_id'] = this.options.identifier.reverse(conditions['_id']);
 
             return new Bluebird<number>((resolve, reject) => {
-                this.collection.remove(conditions,(err, results) => {
+                this.collection.remove(conditions,(err, response) => {
                     if (err) return reject(err);
-                    return resolve(results);
+                    return resolve(response.result.n);
                 });
             });
         }).then((count) => {
