@@ -3,26 +3,21 @@ import Iridium = require('../index');
 import Bluebird = require('bluebird');
 import MongoDB = require('mongodb');
 import _ = require('lodash');
+import crypto = require('crypto');
 
-var intensity = 1000;
-var samples = 5;
+var intensity = 20000;
+var samples = 1;
 
-var objects = [];
-for (var i = 0; i < intensity; i++)
-    objects.push({ name: 'John', surname: 'Doe', birthday: new Date() });
+interface UserDocument {
+    _id: string;
+}
 
 class User {
     _id: string;
-    name: string;
-    surname: string;
-    birthday: Date;
 }
 
-class WrappedUser extends Iridium.Instance<User, WrappedUser> {
+class WrappedUser extends Iridium.Instance<UserDocument, WrappedUser> {
     _id: string;
-    name: string;
-    surname: string;
-    birthday: Date;
 }
 
 class IridiumDB extends Iridium.Core {
@@ -30,72 +25,43 @@ class IridiumDB extends Iridium.Core {
         super({ database: 'test' });
     }
 
-    User = new Iridium.Model<User, User>(this,(model, doc) => doc, 'iridium', {
-        _id: false,
-        name: String,
-        surname: String,
-        birthday: Date
+    User = new Iridium.Model<UserDocument, User>(this,(model, doc) => doc, 'iridium', {
+        _id: false
     });
 
-    UserWrapped = new Iridium.Model<User, WrappedUser>(this, WrappedUser, 'iridiumWrapped', {
-        _id: false,
-        name: String,
-        surname: String,
-        birthday: Date
+    UserWrapped = new Iridium.Model<UserDocument, WrappedUser>(this, WrappedUser, 'iridiumWrapped', {
+        _id: false
     });
-}
-
-var benchmarks: { [target: string]: { [action: string]: number[] } } = {
-
-};
-
-function benchmark<T>(implementation: string, actionName: string, prepare: () => Bluebird<any>, action: () => Bluebird<T>): Bluebird<number> {
-    var times = [];
-    var promise: Bluebird<any> = Bluebird.resolve();
-
-    for (var i = 0; i < samples; i++)
-        promise = promise.then(prepare).then(() => {
-            var start = new Date();
-
-            return action().then((result) => {
-                var ms = (new Date()).getTime() - start.getTime();
-
-                benchmarks[implementation] = benchmarks[implementation] || {};
-                benchmarks[implementation][actionName] = benchmarks[implementation][actionName] || [];
-
-                benchmarks[implementation][actionName].push(ms);
-                times.push(ms);
-                return ms;
-            });
-        });
-
-    return promise.then(() => {
-        return _.reduce(times,(x, y) => x + y, 0) / samples;
-    });
-}
-
-function printResults(implementation: string, action: string, compareTarget?: string) {
-    if (!benchmarks[implementation][action]) return null;
-    var avg = _.reduce(benchmarks[implementation][action],(x, y) => x + y, 0) / benchmarks[implementation][action].length;
-    var max = _.reduce<number, number>(benchmarks[implementation][action],(x, y) => x > y ? x : y);
-    var min = _.reduce<number, number>(benchmarks[implementation][action],(x, y) => x < y ? x : y);
-
-    console.log("%s %s", implementation, action);
-    console.log("  Average: %dms", avg.toPrecision(2));
-    console.log("  Minimum: %dms", min.toPrecision(2));
-    console.log("  Maximum: %dms", max.toPrecision(2));
-
-    if (compareTarget) {
-        var compareAvg = _.reduce(benchmarks[compareTarget][action],(x, y) => x + y, 0) / benchmarks[implementation][action].length;
-        var speedUp = '';
-        if ((Math.abs(avg - compareAvg) / compareAvg) < 0.2) speedUp = 'About the same';
-        else if (avg > compareAvg) speedUp = (avg / compareAvg).toPrecision(2) + 'x slower';
-        else speedUp = (compareAvg / avg).toPrecision(2) + 'x faster';
-        console.log("  %s", speedUp);
-    }
 }
 
 console.log("Running benchmark with intensity of %d, %d samples", intensity, samples);
+
+var results: { [name: string]: number } = {};
+function benchmark(name: string, prepare: (objects: UserDocument[]) => Bluebird<any>, run: (objects: UserDocument[]) => Bluebird<any>, compareTo?: string) {
+    return Bluebird.resolve(new Array(samples)).map(() => {
+        var objects: UserDocument[] = new Array(intensity);
+        for (var i = 0; i < objects.length; i++)
+            objects[i] = { _id: crypto.pseudoRandomBytes(16).toString('hex') };
+
+        return Promise.resolve().then(() => prepare(objects)).then(() => {
+            var start = new Date();
+            return Promise.resolve().then(() => run(objects)).then(() => {
+                var time = new Date().valueOf() - start.valueOf();
+                return time;
+            });
+        })
+    }, { concurency: 1 }).then(times => {
+        results[name] = _.reduce(<number[]><any>times,(x, y) => x + y, 0) / times.length;
+        console.log("%s: %dms", name, results[name]);
+        if (compareTo) {
+            if (Math.abs(results[name] - results[compareTo]) / results[compareTo] < 0.1);
+            else if (results[name] > results[compareTo]) console.log(" - %dx slower than %s",(results[name] / results[compareTo]).toPrecision(2), compareTo);
+            else if (results[name] < results[compareTo]) console.log(" - %dx faster than %s",(results[name] / results[compareTo]).toPrecision(2), compareTo);
+        }
+
+        return results[name];
+    });
+}
 
 var iDB = new IridiumDB();
 iDB.connect()
@@ -109,14 +75,14 @@ iDB.connect()
         });
     });
 })
-    .then(() => benchmark("MongoDB", "insert()",() => {
+    .then(() => benchmark("MongoDB insert()",() => {
     return new Bluebird((resolve, reject) => {
         iDB.connection.collection('mongodb').remove({},(err) => {
             if (err) return reject(err);
             return resolve(null);
         });
     });
-},() => {
+},(objects) => {
         return new Bluebird<any>((resolve, reject) => {
             iDB.connection.collection('mongodb').insert(objects,(err, objects) => {
                 if (err) return reject(err);
@@ -124,46 +90,45 @@ iDB.connect()
             });
         });
     }))
-    .then(() => printResults("MongoDB", "insert()"))
-    .then(() => benchmark("Iridium", "insert()",() => iDB.User.remove(),() => iDB.User.insert(objects))).then(() => printResults("Iridium", "insert()", "MongoDB"))
-    .then(() => benchmark("Iridium Instances", "insert()",() => iDB.UserWrapped.remove(),() => iDB.UserWrapped.insert(objects))).then(() => printResults("Iridium Instances", "insert()", "MongoDB"))
-    
-    .then(() => benchmark("MongoDB", "find()",() => null,() => {
-        return new Bluebird<any>((resolve, reject) => {
-            iDB.connection.collection('mongodb').find().toArray((err, objects: any) => {
-                if (err) return reject(err);
-                return resolve(objects);
-            });
+    .then(() => benchmark("Iridium insert()",() => iDB.User.remove(),(objects) => iDB.User.insert(objects), "MongoDB insert()"))
+    .then(() => benchmark("Iridium Instances insert()",() => iDB.UserWrapped.remove(),(objects) => iDB.UserWrapped.insert(objects), "MongoDB insert()"))
+
+    .then(() => benchmark("MongoDB find()",() => null,() => {
+    return new Bluebird<any>((resolve, reject) => {
+        iDB.connection.collection('mongodb').find().toArray((err, objects: any) => {
+            if (err) return reject(err);
+            return resolve(objects);
         });
-    })).then(() => printResults("MongoDB", "find()"))
-    .then(() => benchmark("Iridium", "find()",() => null,() => iDB.User.find().toArray())).then(() => printResults("Iridium", "find()", "MongoDB"))
-    .then(() => benchmark("Iridium Instances", "find()",() => null,() => iDB.UserWrapped.find().toArray())).then(() => printResults("Iridium Instances", "find()", "MongoDB"))
+    });
+}))
+    .then(() => benchmark("Iridium find()",() => null,() => iDB.User.find().toArray(), "MongoDB find()"))
+    .then(() => benchmark("Iridium Instances find()",() => null,() => iDB.UserWrapped.find().toArray(), "MongoDB find()"))
 
     .then(() => {
+    return new Bluebird<any>((resolve, reject) => {
+        iDB.connection.collection('mongodb').remove((err, objects: any) => {
+            if (err) return reject(err);
+            return resolve(objects);
+        });
+    });
+})
+    .then(() => benchmark("MongoDB remove()",(objects) => {
+    return new Bluebird<any>((resolve, reject) => {
+        iDB.connection.collection('mongodb').insert(objects,(err, objects) => {
+            if (err) return reject(err);
+            return resolve(objects);
+        });
+    });
+},() => {
         return new Bluebird<any>((resolve, reject) => {
             iDB.connection.collection('mongodb').remove((err, objects: any) => {
                 if (err) return reject(err);
                 return resolve(objects);
             });
         });
-    })
-    .then(() => benchmark("MongoDB", "remove()",() => {
-        return new Bluebird<any>((resolve, reject) => {
-            iDB.connection.collection('mongodb').insert(objects,(err, objects) => {
-                if (err) return reject(err);
-                return resolve(objects);
-            });
-        });
-    },() => {
-        return new Bluebird<any>((resolve, reject) => {
-            iDB.connection.collection('mongodb').remove((err, objects: any) => {
-                if (err) return reject(err);
-                return resolve(objects);
-            });
-        });
-        })).then(() => printResults("MongoDB", "remove()"))
+    }))
     .then(() => iDB.User.remove())
-    .then(() => benchmark("Iridium", "remove()",() => iDB.User.insert(objects),() => iDB.User.remove())).then(() => printResults("Iridium", "remove()", "MongoDB"))
+    .then(() => benchmark("Iridium remove()",(objects) => iDB.User.insert(objects),() => iDB.User.remove(), "MongoDB remove()"))
     .then(() => iDB.UserWrapped.remove())
 
     .catch((err) => console.error(err))
