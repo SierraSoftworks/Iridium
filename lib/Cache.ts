@@ -4,7 +4,7 @@ import Bluebird = require('bluebird');
 export = ICache;
 
 interface ICache {
-    set<T>(key: string, value: T): Bluebird<T>;
+    set<T>(key: string, value: T): void;
     get<T>(key: string): Bluebird<T>;
-    clear(key: string): Bluebird<boolean>
+    clear(key: string): void
 }

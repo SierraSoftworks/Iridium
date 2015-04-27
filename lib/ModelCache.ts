@@ -9,9 +9,9 @@ class ModelCache {
 
     }
 
-    set<T>(value: T): Bluebird<T> {
-        if (!this.model.cacheDirector || !this.model.cacheDirector.valid(value)) return Bluebird.resolve(value);
-        return this.model.core.cache.set(this.model.cacheDirector.buildKey(value), value);
+    set<T>(value: T): void {
+        if (!this.model.cacheDirector || !this.model.cacheDirector.valid(value)) return;;
+        this.model.core.cache.set(this.model.cacheDirector.buildKey(value), value);
     }
 
     get<T>(conditions: any): Bluebird<T> {
@@ -19,8 +19,8 @@ class ModelCache {
         return this.model.core.cache.get<T>(this.model.cacheDirector.buildQueryKey(conditions));
     }
 
-    clear(conditions: any): Bluebird<boolean> {
-        if (!this.model.cacheDirector || !this.model.cacheDirector.validQuery(conditions)) return Bluebird.resolve(false);
-        return this.model.core.cache.clear(this.model.cacheDirector.buildQueryKey(conditions));
+    clear(conditions: any): void {
+        if (!this.model.cacheDirector || !this.model.cacheDirector.validQuery(conditions)) return;
+        this.model.core.cache.clear(this.model.cacheDirector.buildQueryKey(conditions));
     }
 }

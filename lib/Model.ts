@@ -222,7 +222,7 @@ class Model<TDocument extends { _id?: any }, TInstance> implements ModelInterfac
 
         if (conditions.hasOwnProperty('_id'))
             conditions['_id'] = this.options.identifier.reverse(conditions['_id']);
-        
+
         var cursor = this.collection.find(conditions, {
             fields: fields
         });
@@ -488,6 +488,8 @@ class Model<TDocument extends { _id?: any }, TInstance> implements ModelInterfac
             options = {};
         }
 
+        options = options || {};
+
         if (!_.isPlainObject(conditions)) conditions = {
             _id: conditions
         };
@@ -584,8 +586,7 @@ class Model<TDocument extends { _id?: any }, TInstance> implements ModelInterfac
                 });
             });
         }).then((count) => {
-            if (count === 1)
-                return this._cache.clear(conditions).then(() => count);
+            if (count === 1) this._cache.clear(conditions);
             return Bluebird.resolve(count);
         }).nodeify(callback);
     }
@@ -652,10 +653,10 @@ class Model<TDocument extends { _id?: any }, TInstance> implements ModelInterfac
             index = _(<Index.IndexSpecification>specification).map((direction, key) => key + '_' + direction).reduce<string>((x, y) => x + '_' + y);
         }
 
-        return new Bluebird<any>((resolve, reject) => {
-            this.collection.dropIndex(index,(err, count) => {
+        return new Bluebird<boolean>((resolve, reject) => {
+            this.collection.dropIndex(index,(err, result: { ok: number }) => {
                 if (err) return reject(err);
-                return resolve(count);
+                return resolve(<any>!!result.ok);
             });
         }).nodeify(callback);
     }
