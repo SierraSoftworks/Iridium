@@ -86,9 +86,15 @@ describe("Core",() => {
 
         it("should have a default no-op cache provider",() => {
             chai.expect(core.cache).to.exist;
-            return core.cache.set("test", true).then(() => {
-                chai.expect(core.cache.get("test")).to.eventually.not.exist;
-            });
+            core.cache.set("test", true);
+            chai.expect(core.cache.get("test")).to.eventually.not.exist;
+        });
+    });
+
+    describe("settings",() => {
+        it("should be exposed via the settings property",() => {
+            var core = new Iridium.Core({ database: 'test' });
+            chai.expect(core.settings).to.exist.and.eql({ database: 'test' });
         });
     });
 

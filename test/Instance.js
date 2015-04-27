@@ -6,6 +6,7 @@ var __extends = this.__extends || function (d, b) {
 };
 /// <reference path="../_references.d.ts" />
 var Iridium = require('../index');
+var MongoDB = require('mongodb');
 var Test = (function (_super) {
     __extends(Test, _super);
     function Test() {
@@ -41,6 +42,18 @@ describe("Instance", function () {
     before(function () { return core.connect(); });
     after(function () { return core.close(); });
     beforeEach(function () { return core.Test.remove(); });
+    it("should default to isNew", function () {
+        var instance = new core.Test.Instance({
+            answer: 42
+        });
+        chai.expect(instance).to.have.property("_isNew", true);
+    });
+    it("should default to !isPartial", function () {
+        var instance = new core.Test.Instance({
+            answer: 42
+        });
+        chai.expect(instance).to.have.property("_isPartial", false);
+    });
     it("should expose the latest document values", function () {
         var instance = core.Test.helpers.wrapDocument({
             _id: 'aaaaaa',
@@ -93,6 +106,22 @@ describe("Instance", function () {
         });
         chai.expect(instance).to.exist;
         chai.expect(instance.test).to.exist.and.be.a('function');
+    });
+    describe("should handle _id in a special manner", function () {
+        beforeEach(function () { return core.Test.remove().then(function () { return core.Test.insert({ answer: 42 }); }); });
+        afterEach(function () { return core.Test.remove(); });
+        it("get should transform ObjectIDs into hex strings", function () {
+            return core.Test.get().then(function (instance) {
+                chai.expect(instance.document._id._bsontype).to.equal('ObjectID');
+                chai.expect(instance._id).to.be.a('string').with.length(24);
+            });
+        });
+        it("set should transform hex strings into ObjectIDs by default", function () {
+            return core.Test.get().then(function (instance) {
+                instance._id = "aaaaaaaaaaaaaaaaaaaaaaaa";
+                chai.expect(new MongoDB.ObjectID(instance.document._id).toHexString()).to.equal('aaaaaaaaaaaaaaaaaaaaaaaa');
+            });
+        });
     });
     describe("save()", function () {
         beforeEach(function () { return core.Test.remove(); });
