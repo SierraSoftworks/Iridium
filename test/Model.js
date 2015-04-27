@@ -209,8 +209,13 @@ describe("Model", function () {
         it("should allow the removal of documents matching a query", function () {
             return chai.expect(model.remove({ answer: 10 })).to.eventually.equal(1);
         });
+        it("should allow just the ID to be specified", function () {
+            return model.get().then(function (instance) {
+                return chai.expect(model.remove(instance._id)).to.eventually.exist.and.equal(1);
+            });
+        });
         it("should allow the removal of all documents", function () {
-            return chai.expect(model.remove()).to.eventually.equal(4);
+            return chai.expect(model.remove()).to.eventually.equal(3);
         });
         it("should support a callback style instead of promises", function (done) {
             model.remove(function (err, removed) {
@@ -516,6 +521,11 @@ describe("Model", function () {
         it("should select all documents by default", function () {
             return chai.expect(model.count()).to.eventually.exist.and.equal(5);
         });
+        it("should allow just the ID to be specified", function () {
+            return model.get().then(function (instance) {
+                return chai.expect(model.count(instance._id)).to.eventually.exist.and.equal(1);
+            });
+        });
         it("should allow filtering using a selector", function () {
             return chai.expect(model.count({ answer: 10 })).to.eventually.exist.and.equal(1);
         });
@@ -528,9 +538,9 @@ describe("Model", function () {
             });
         });
     });
-    describe("ensureIndex()", function () {
+    describe("update()", function () {
         var model = new Iridium.Model(core, Test, 'test', { _id: false, answer: Number });
-        before(function () {
+        beforeEach(function () {
             return core.connect().then(function () { return model.remove(); }).then(function () { return model.insert([
                 { answer: 10 },
                 { answer: 11 },
@@ -540,6 +550,43 @@ describe("Model", function () {
             ]); });
         });
         after(function () {
+            return model.remove().then(function () { return core.close(); });
+        });
+        it("should exist", function () {
+            chai.expect(model.update).to.exist.and.be.a('function');
+        });
+        it("should use multi update by default", function () {
+            return chai.expect(model.update({ _id: { $exists: true } }, { $inc: { answer: 1 } })).to.eventually.exist.and.equal(5);
+        });
+        it("should allow just the ID to be specified", function () {
+            return model.get().then(function (instance) {
+                return chai.expect(model.update(instance._id, { $inc: { answer: 1 } })).to.eventually.exist.and.equal(1);
+            });
+        });
+        it("should allow filtering using a selector", function () {
+            return chai.expect(model.update({ answer: 10 }, { $inc: { answer: 1 } })).to.eventually.exist.and.equal(1);
+        });
+        it("should support a callback style instead of promises", function (done) {
+            model.update({}, { $inc: { answer: 1 } }, function (err, docs) {
+                if (err)
+                    return done(err);
+                chai.expect(docs).to.exist.and.equal(5);
+                return done();
+            });
+        });
+    });
+    describe("ensureIndex()", function () {
+        var model = new Iridium.Model(core, Test, 'test', { _id: false, answer: Number });
+        beforeEach(function () {
+            return core.connect().then(function () { return model.remove(); }).then(function () { return model.insert([
+                { answer: 10 },
+                { answer: 11 },
+                { answer: 12 },
+                { answer: 13 },
+                { answer: 14 }
+            ]); });
+        });
+        afterEach(function () {
             return model.remove().then(function () { return model.dropIndexes(); }).then(function () { return core.close(); });
         });
         it("should exist", function () {
@@ -547,6 +594,14 @@ describe("Model", function () {
         });
         it("should allow the creation of indexes", function () {
             return chai.expect(model.ensureIndex({ answer: 1 }, { unique: true })).to.eventually.exist;
+        });
+        it("should allow the use of callbacks instead of promises", function (done) {
+            model.ensureIndex({ answer: 1 }, function (err, index) {
+                if (err)
+                    return done(err);
+                chai.expect(index).to.exist;
+                return done();
+            });
         });
     });
     describe("ensureIndexes()", function () {
@@ -590,13 +645,21 @@ describe("Model", function () {
             chai.expect(model.dropIndex).to.exist.and.be.a('function');
         });
         it("should remove the specified index", function () {
-            return chai.expect(model.dropIndex('answer_1')).to.eventually.be.ok;
+            return chai.expect(model.dropIndex('answer_1')).to.eventually.be.true;
         });
         it("should remove the specified index using its definition", function () {
-            return chai.expect(model.dropIndex({ answer: 1 })).to.eventually.be.ok;
+            return chai.expect(model.dropIndex({ answer: 1 })).to.eventually.be.true;
         });
         it("should support removing a compound indexe using its definition", function () {
-            return chai.expect(model.ensureIndex({ _id: 1, answer: 1 }).then(function () { return model.dropIndex({ _id: 1, answer: 1 }); })).to.eventually.be.ok;
+            return chai.expect(model.ensureIndex({ _id: 1, answer: 1 }).then(function () { return model.dropIndex({ _id: 1, answer: 1 }); })).to.eventually.be.true;
+        });
+        it("should allow the use of callbacks instead of promises", function (done) {
+            model.dropIndex({ answer: 1 }, function (err, index) {
+                if (err)
+                    return done(err);
+                chai.expect(index).to.be.true;
+                return done();
+            });
         });
     });
     describe("dropIndexes()", function () {

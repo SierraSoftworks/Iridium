@@ -1,5 +1,6 @@
 ﻿/// <reference path="../_references.d.ts" />
 import Iridium = require('../index');
+import MongoDB = require('mongodb');
 
 interface TestDocument {
     _id?: string;
@@ -43,6 +44,22 @@ describe("Instance",() => {
     after(() => core.close());
 
     beforeEach(() => core.Test.remove());
+
+    it("should default to isNew",() => {
+        var instance = new core.Test.Instance({
+            answer: 42
+        });
+
+        chai.expect(instance).to.have.property("_isNew", true);
+    });
+
+    it("should default to !isPartial",() => {
+        var instance = new core.Test.Instance({
+            answer: 42
+        });
+
+        chai.expect(instance).to.have.property("_isPartial", false);
+    });
 
     it("should expose the latest document values",() => {
         var instance = core.Test.helpers.wrapDocument({
@@ -109,6 +126,25 @@ describe("Instance",() => {
 
         chai.expect(instance).to.exist;
         chai.expect(instance.test).to.exist.and.be.a('function');
+    });
+
+    describe("should handle _id in a special manner",() => {
+        beforeEach(() => core.Test.remove().then(() => core.Test.insert({ answer: 42 })));
+        afterEach(() => core.Test.remove());
+
+        it("get should transform ObjectIDs into hex strings",() => {
+            return core.Test.get().then(instance => {
+                chai.expect((<any>instance.document._id)._bsontype).to.equal('ObjectID');
+                chai.expect(instance._id).to.be.a('string').with.length(24);
+            });
+        });
+
+        it("set should transform hex strings into ObjectIDs by default",() => {
+            return core.Test.get().then(instance => {
+                instance._id = "aaaaaaaaaaaaaaaaaaaaaaaa";
+                chai.expect(new MongoDB.ObjectID(instance.document._id).toHexString()).to.equal('aaaaaaaaaaaaaaaaaaaaaaaa');
+            });
+        });
     });
 
     describe("save()",() => {

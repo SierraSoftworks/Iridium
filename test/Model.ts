@@ -235,8 +235,14 @@ describe("Model",() => {
             return chai.expect(model.remove({ answer: 10 })).to.eventually.equal(1);
         });
 
+        it("should allow just the ID to be specified",() => {
+            return model.get().then(instance => {
+                return chai.expect(model.remove(instance._id)).to.eventually.exist.and.equal(1);
+            });
+        });
+
         it("should allow the removal of all documents",() => {
-            return chai.expect(model.remove()).to.eventually.equal(4);
+            return chai.expect(model.remove()).to.eventually.equal(3);
         });
 
         it("should support a callback style instead of promises",(done) => {
@@ -597,6 +603,12 @@ describe("Model",() => {
             return chai.expect(model.count()).to.eventually.exist.and.equal(5);
         });
 
+        it("should allow just the ID to be specified",() => {
+            return model.get().then(instance => {
+                return chai.expect(model.count(instance._id)).to.eventually.exist.and.equal(1);
+            });
+        });
+
         it("should allow filtering using a selector",() => {
             return chai.expect(model.count({ answer: 10 })).to.eventually.exist.and.equal(1);
         });
@@ -610,10 +622,10 @@ describe("Model",() => {
         });
     });
 
-    describe("ensureIndex()",() => {
+    describe("update()",() => {
         var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { _id: false, answer: Number });
 
-        before(() => {
+        beforeEach(() => {
             return core.connect().then(() => model.remove()).then(() => model.insert([
                 { answer: 10 },
                 { answer: 11 },
@@ -624,6 +636,50 @@ describe("Model",() => {
         });
 
         after(() => {
+            return model.remove().then(() => core.close());
+        });
+
+        it("should exist",() => {
+            chai.expect(model.update).to.exist.and.be.a('function');
+        });
+
+        it("should use multi update by default",() => {
+            return chai.expect(model.update({ _id: { $exists: true } }, { $inc: { answer: 1 } })).to.eventually.exist.and.equal(5);
+        });
+
+        it("should allow just the ID to be specified",() => {
+            return model.get().then(instance => {
+                return chai.expect(model.update(instance._id, { $inc: { answer: 1 } })).to.eventually.exist.and.equal(1);
+            });
+        });
+
+        it("should allow filtering using a selector",() => {
+            return chai.expect(model.update({ answer: 10 }, { $inc: { answer: 1 } })).to.eventually.exist.and.equal(1);
+        });
+
+        it("should support a callback style instead of promises",(done) => {
+            model.update({}, { $inc: { answer: 1 } }, (err, docs) => {
+                if (err) return done(err);
+                chai.expect(docs).to.exist.and.equal(5);
+                return done();
+            });
+        });
+    });
+
+    describe("ensureIndex()",() => {
+        var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { _id: false, answer: Number });
+
+        beforeEach(() => {
+            return core.connect().then(() => model.remove()).then(() => model.insert([
+                { answer: 10 },
+                { answer: 11 },
+                { answer: 12 },
+                { answer: 13 },
+                { answer: 14 }
+            ]));
+        });
+
+        afterEach(() => {
             return model.remove().then(() => model.dropIndexes()).then(() => core.close());
         });
 
@@ -633,6 +689,14 @@ describe("Model",() => {
 
         it("should allow the creation of indexes",() => {
             return chai.expect(model.ensureIndex({ answer: 1 }, { unique: true })).to.eventually.exist;
+        });
+
+        it("should allow the use of callbacks instead of promises",(done) => {
+            model.ensureIndex({ answer: 1 },(err, index) => {
+                if (err) return done(err);
+                chai.expect(index).to.exist;
+                return done();
+            });
         });
     });
 
@@ -686,15 +750,23 @@ describe("Model",() => {
         });
 
         it("should remove the specified index",() => {
-            return chai.expect(model.dropIndex('answer_1')).to.eventually.be.ok;
+            return chai.expect(model.dropIndex('answer_1')).to.eventually.be.true;
         });
 
         it("should remove the specified index using its definition",() => {
-            return chai.expect(model.dropIndex({ answer: 1 })).to.eventually.be.ok;
+            return chai.expect(model.dropIndex({ answer: 1 })).to.eventually.be.true;
         });
 
         it("should support removing a compound indexe using its definition",() => {
-            return chai.expect(model.ensureIndex({ _id: 1, answer: 1 }).then(() => model.dropIndex({ _id: 1, answer: 1 }))).to.eventually.be.ok;
+            return chai.expect(model.ensureIndex({ _id: 1, answer: 1 }).then(() => model.dropIndex({ _id: 1, answer: 1 }))).to.eventually.be.true;
+        });
+
+        it("should allow the use of callbacks instead of promises",(done) => {
+            model.dropIndex({ answer: 1 },(err, index) => {
+                if (err) return done(err);
+                chai.expect(index).to.be.true;
+                return done();
+            });
         });
     });
 
