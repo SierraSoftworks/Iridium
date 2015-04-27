@@ -9,8 +9,8 @@ var Iridium = require('../index');
 var Bluebird = require('bluebird');
 var _ = require('lodash');
 var crypto = require('crypto');
-var intensity = 20000;
-var samples = 1;
+var intensity = 1000;
+var samples = 3;
 var User = (function () {
     function User() {
     }

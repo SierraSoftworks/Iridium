@@ -5,8 +5,8 @@ import MongoDB = require('mongodb');
 import _ = require('lodash');
 import crypto = require('crypto');
 
-var intensity = 20000;
-var samples = 1;
+var intensity = 1000;
+var samples = 3;
 
 interface UserDocument {
     _id: string;
