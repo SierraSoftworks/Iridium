@@ -24,17 +24,6 @@ class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
     validate(document: TDocument): SkmatcCore.IResult {
         return this._validator.validate(document);
     }
-    
-    /**
-     * Creates a selector based on the document's unique _id field in downstream format
-     * @param {any} id The downstream identifier to use when creating the selector
-     * @returns {object} A database selector which can be used to return only this document in downstream form
-     */
-    selectOneDownstream(document: TDocument): any {
-        return _.isPlainObject(document) ? document._id : {
-            _id: document
-        };
-    }
 
     /**
      * Wraps the given document in an instance wrapper for use throughout the application
