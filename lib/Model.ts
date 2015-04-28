@@ -513,7 +513,7 @@ class Model<TDocument extends { _id?: any }, TInstance> implements ModelInterfac
                     if (response.result && response.result.nModified !== undefined) return resolve(response.result.nModified);
 
                     // Legacy response type
-                    return resolve(response.n);
+                    return resolve(response.nModified);
                 });
             })
         }).nodeify(callback);
