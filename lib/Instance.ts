@@ -276,7 +276,7 @@ class Instance<TDocument extends { _id?: any }, TInstance> {
      * Gets the JSON representation of this instance
      * @returns {TDocument}
      */
-    toJSON(): TDocument {
+    toJSON(): any {
         return this.document;
     }
 
