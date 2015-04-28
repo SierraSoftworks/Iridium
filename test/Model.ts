@@ -649,23 +649,23 @@ describe("Model",() => {
         });
 
         it("should use multi update by default",() => {
-            return chai.expect(model.update({ _id: { $exists: true } }, { $inc: { answer: 1 } })).to.eventually.exist.and.equal(5);
+            return chai.expect(model.update({ _id: { $exists: true } }, { $inc: { answer: 1 } })).to.eventually.equal(5);
         });
 
         it("should allow just the ID to be specified",() => {
             return model.get().then(instance => {
-                return chai.expect(model.update(instance._id, { $inc: { answer: 1 } })).to.eventually.exist.and.equal(1);
+                return chai.expect(model.update(instance._id, { $inc: { answer: 1 } })).to.eventually.equal(1);
             });
         });
 
         it("should allow filtering using a selector",() => {
-            return chai.expect(model.update({ answer: 10 }, { $inc: { answer: 1 } })).to.eventually.exist.and.equal(1);
+            return chai.expect(model.update({ answer: 10 }, { $inc: { answer: 1 } })).to.eventually.equal(1);
         });
 
         it("should support a callback style instead of promises",(done) => {
             model.update({}, { $inc: { answer: 1 } }, (err, docs) => {
                 if (err) return done(err);
-                chai.expect(docs).to.exist.and.equal(5);
+                chai.expect(docs).to.equal(5);
                 return done();
             });
         });
