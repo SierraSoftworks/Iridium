@@ -1,14 +1,14 @@
-/// <reference path="../typings/concoction/concoction.d.ts" />
+/// <reference path="../index.d.ts" />
+/// <reference path="../_references.d.ts" />
 
 import _ = require('lodash');
-import Iridium = require('../index');
-import Concoction = require('concoction');
+import Iridium = require('iridium');
 import Promise = require('bluebird');
 
 var settings: any = {};
 
 export interface UserDocument {
-    username: string;
+    _id: string;
     fullname: string;
     email: string;
     password: string;
@@ -43,7 +43,11 @@ export interface UserDocument {
 }
 
 export class User extends Iridium.Instance<UserDocument, User> implements UserDocument {
-    username: string;
+    _id: string;
+    get username() {
+        return this._id;
+    }
+
     fullname: string;
     email: string;
     password: string;
@@ -140,7 +144,7 @@ export class User extends Iridium.Instance<UserDocument, User> implements UserDo
 
 export function Users(core: Iridium.Core): Iridium.Model<UserDocument, User> {
     var schema: Iridium.Schema = {
-        username: /[a-z0-9]+(_[a-z0-9]+)*/,
+        _id: /[a-z0-9]+(_[a-z0-9]+)*/,
         fullname: String,
         email: String,
         password: String,
@@ -212,11 +216,6 @@ export function Users(core: Iridium.Core): Iridium.Model<UserDocument, User> {
                 return Promise.resolve()
             }
         },
-        preprocessors: [
-            new Concoction.Rename({
-                _id: 'username'
-            })
-        ],
         indexes: [
             [{ email: 1 }, { unique: true, background: true }],
             [{ type: 1 }, { background: true }],
