@@ -1,15 +1,15 @@
 # Iridium [![Build Status](https://travis-ci.org/SierraSoftworks/Iridium.png?branch=master)](https://travis-ci.org/SierraSoftworks/Iridium) [![Coverage Status](https://coveralls.io/repos/SierraSoftworks/Iridium/badge.svg?branch=master)](https://coveralls.io/r/SierraSoftworks/Iridium?branch=typescript) [![](https://badge.fury.io/js/iridium.png)](https://npmjs.org/package/iridium) [![Code Climate](https://codeclimate.com/github/SierraSoftworks/Iridium/badges/gpa.svg)](https://codeclimate.com/github/SierraSoftworks/Iridium) [![Test Coverage](https://codeclimate.com/github/SierraSoftworks/Iridium/badges/coverage.svg)](https://codeclimate.com/github/SierraSoftworks/Iridium)
 **A bare metal ODM for MongoDB**
 
+## Version 5 Alpha
+The v5.x implementation of Iridium is not yet finished. While the API is relatively final there are still major architectural changes being made on a daily basis as we prepare v5 for stable release.
+Until then, we recommend you stick with Iridium v4.x in your applications, the documentation below covers the v4.x API and will be updated to match the v5.x API when we are ready for release.
+
+## Introduction
 Iridium isn't your traditional JavaScript ORM, it's the ORM I've always wanted and I hope you'll enjoy using it as much
 as I do. With Iridium, your models are simply JavaScript classes (if you're using ES6 or TypeScript) which means that
 you don't need to learn a new DSL just to define your database structure and that your favourite editor will be able
 to understand your code and provide useful suggestions.
-
-## NOT YET FINISHED
-The TypeScript implementation of Iridium is not yet finished - if you'd like to help out then please get in touch but **DO NOT START BUILDING APPS USING IT YET**. Seriously, it doesn't even have an official version number yet - everything is subject to change.
-
-<script id='fb5ea3m'>(function(i){var f,s=document.getElementById(i);f=document.createElement('iframe');f.src='//api.flattr.com/button/view/?uid=SierraSoftworks&button=compact&url='+encodeURIComponent(document.URL);f.title='Flattr';f.height=20;f.width=110;f.style.borderWidth=0;s.parentNode.insertBefore(f,s);})('fb5ea3m');</script>
 
 Iridium was designed to alleviate many of the issues often present in modern ORMs, especially those designed for NoSQL datastores like MongoDB. Namely, these include a high level of bloat and an excessive amount of documentation - vastly raising the barrier to entry. On the flip side of the coin, they also tend to abstract core database functionality away from the developer to the extent that they end up jumping through unnecessary hoops just to get the results they're looking for.
 
