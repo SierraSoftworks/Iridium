@@ -6,6 +6,7 @@ var __extends = this.__extends || function (d, b) {
 };
 /// <reference path="../_references.d.ts" />
 var Iridium = require('../index');
+var MongoDB = require('mongodb');
 var Cursor = require('../lib/Cursor');
 var Promise = require('bluebird');
 var Test = (function (_super) {
@@ -115,6 +116,9 @@ describe("Model", function () {
             var model = new Iridium.Model(new Iridium.Core('mongodb://localhost/test'), function () {
             }, 'test', { _id: false });
             chai.expect(function () { return model.collection; }).to.throw("Iridium Core not connected to a database.");
+        });
+        it("should return a MongoDB DB object", function () {
+            chai.expect(core.connection).to.exist.and.be.an.instanceof(MongoDB.Db);
         });
     });
     describe("create()", function () {

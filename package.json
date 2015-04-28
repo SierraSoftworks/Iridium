@@ -18,7 +18,7 @@
   "main": "./index",
   "scripts": {
     "test": "npm run coverage",
-	"test:watch": "mocha -w",
+    "test:watch": "mocha -w",
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec --ui bdd",
     "lint": "jshint lib/",
     "benchmark": "node ./benchmarks/mongodb.js"
@@ -27,20 +27,20 @@
     "node": ">= 0.8"
   },
   "dependencies": {
-    "bluebird": "^2.9.24",
+    "bluebird": "^2.9.25",
     "lodash": "^3.7.0",
     "mongodb": "^2.0.28",
     "skmatc": "^1.1.2"
   },
   "devDependencies": {
-    "mocha": "2.x",
+    "mocha": "^2.2.4",
     "chai": "^2.2.0",
     "chai-as-promised": "^5.0.0",
     "chai-fuzzy": "^1.5.0",
     "underscore": "^1.8.3",
-	"tick": "~0.1.1",
-	"istanbul": "~0.3.13",
-	"coveralls": "^2.11.2",
+    "tick": "~0.1.1",
+    "istanbul": "~0.3.13",
+    "coveralls": "^2.11.2",
     "codeclimate-test-reporter": "~0.0.4",
     "jshint": "^2.7.0"
   },

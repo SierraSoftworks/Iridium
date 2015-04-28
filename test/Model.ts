@@ -1,5 +1,6 @@
 ﻿/// <reference path="../_references.d.ts" />
 import Iridium = require('../index');
+import MongoDB = require('mongodb');
 import Cursor = require('../lib/Cursor');
 import Promise = require('bluebird');
 
@@ -119,6 +120,10 @@ describe("Model",() => {
         it("should throw an error if you attempt to access it before connecting to the database",() => {
             var model = new Iridium.Model(new Iridium.Core('mongodb://localhost/test'),() => { }, 'test', { _id: false });
             chai.expect(() => model.collection).to.throw("Iridium Core not connected to a database.");
+        });
+
+        it("should return a MongoDB DB object",() => {
+            chai.expect(core.connection).to.exist.and.be.an.instanceof(MongoDB.Db);
         });
     });
 
