@@ -27,4 +27,4 @@ module Iridium {
     export interface Schema extends _Schema { }
     export interface ICache extends _Cache { }
     export interface ICacheDirector extends _CacheDirector { }
-};
+}

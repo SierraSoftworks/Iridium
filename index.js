@@ -62,6 +62,5 @@ var Iridium;
     })(_IDDirector);
     Iridium.CacheOnID = CacheOnID;
 })(Iridium || (Iridium = {}));
-;
 module.exports = Iridium;
 //# sourceMappingURL=index.js.map
