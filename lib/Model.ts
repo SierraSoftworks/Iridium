@@ -507,12 +507,11 @@ class Model<TDocument extends { _id?: any }, TInstance> implements ModelInterfac
                 this.collection.update(conditions, changes, options,(err, response) => {
                     if (err) return reject(err);
 
-                    console.log("update(): %j", response);
-
                     // New MongoDB 2.6+ response type
                     if (response.result && response.result.nModified !== undefined) return resolve(response.result.nModified);
 
                     // Legacy response type
+                    if (response.nModified === undefined) return resolve(response);
                     return resolve(response.nModified);
                 });
             })
