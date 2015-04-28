@@ -504,9 +504,10 @@ class Model<TDocument extends { _id?: any }, TInstance> implements ModelInterfac
                 conditions['_id'] = this.options.identifier.reverse(conditions['_id']);
 
             return new Bluebird<number>((resolve, reject) => {
-                this.collection.update(conditions, changes, options,(err, result) => {
+                this.collection.update(conditions, changes, options,(err, response) => {
                     if (err) return reject(err);
-                    return resolve(result.result.nModified);
+                    console.log("update(): %j", response);
+                    return resolve(response.result.nModified);
                 });
             })
         }).nodeify(callback);
