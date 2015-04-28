@@ -506,8 +506,12 @@ class Model<TDocument extends { _id?: any }, TInstance> implements ModelInterfac
             return new Bluebird<number>((resolve, reject) => {
                 this.collection.update(conditions, changes, options,(err, response) => {
                     if (err) return reject(err);
-                    console.log("update(): %j", response);
-                    return resolve(response.result.nModified);
+
+                    // New MongoDB 2.6+ response type
+                    if (response.result) return resolve(response.result.nModified);
+
+                    // Legacy response type
+                    return resolve(response.n);
                 });
             })
         }).nodeify(callback);
