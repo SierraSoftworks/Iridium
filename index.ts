@@ -6,6 +6,7 @@ import _Instance = require('./lib/Instance');
 import _Schema = require('./lib/Schema');
 import _Cache = require('./lib/Cache');
 import _CacheDirector = require('./lib/CacheDirector');
+import _ModelOptions = require('./lib/ModelOptions');
 
 import _MemoryCache = require('./lib/caches/MemoryCache');
 import _NoOpCache = require('./lib/caches/NoOpCache');
@@ -27,4 +28,5 @@ module Iridium {
     export interface Schema extends _Schema { }
     export interface ICache extends _Cache { }
     export interface ICacheDirector extends _CacheDirector { }
+    export interface ModelOptions extends _ModelOptions { }
 }
