@@ -1,0 +1,31 @@
+{
+	"version": "0.1.0",
+	"configurations": [
+		{
+			"name": "Run Tests",
+			"type": "node",
+			"program": "node_modules/mocha/bin/mocha",
+			"stopOnEntry": false,
+			"args": ["--debug"],
+			"cwd": ".",
+			"runtimeExecutable": null,
+			"env": { }
+		},
+		{
+			"name": "Run Benchmark",
+			"type": "node",
+			"program": "benchmarks/mongodb.js",
+			"stopOnEntry": true,
+			"args": ["--debug"],
+			"cwd": ".",
+			"runtimeExecutable": null,
+			"env": { }
+		},
+		{
+			"name": "Attach",
+			"type": "node",
+			"address": "localhost",
+			"port": 5858
+		}
+	]
+}

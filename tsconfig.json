@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "ES5",
+		"sourceMap": true
+	},
+	"files": [
+		"lib/Core.ts",
+		"lib/Cursor.ts",
+		"lib/Instance.ts",
+		"lib/Model.ts",
+		"lib/ModelCache.ts",
+		"lib/ModelHandlers.ts",
+		"lib/ModelHelpers.ts",
+		"lib/ModelSpecificInstance.ts",
+		"lib/cacheControllers/IDController.ts",
+		"lib/caches/MemoryCache.ts",
+		"lib/caches/NoOpCache.ts",
+		"lib/middleware/Express.ts",
+		"lib/utils/Omnom.ts"
+	]
+}
