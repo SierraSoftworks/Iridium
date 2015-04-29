@@ -1,6 +1,6 @@
 /// <reference path="../_references.d.ts" />
 export interface Callback<T> {
-    (err: Error, object: T): void;
+    (err: Error, object?: T): void;
 }
 
 export interface Predicate<T> {
