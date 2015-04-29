@@ -26,7 +26,7 @@ class Instance<TDocument extends { _id?: any }, TInstance> {
         this._isNew = !!isNew;
         this._isPartial = isPartial;
         this._original = document;
-        this._modified = _.cloneDeep(document);
+        this._modified = _.cloneDeep<TDocument>(document);
 
         _.each(model.core.plugins,(plugin: IPlugin) => {
             if (plugin.newInstance) plugin.newInstance(this, model);
@@ -134,7 +134,7 @@ class Instance<TDocument extends { _id?: any }, TInstance> {
                 this._isPartial = false;
                 this._isNew = false;
                 this._original = value;
-                this._modified = _.clone(value);
+                this._modified = _.clone<TDocument>(value);
                 return <TInstance><any>this;
             });
         }).nodeify(callback);
@@ -168,15 +168,15 @@ class Instance<TDocument extends { _id?: any }, TInstance> {
             if (!newDocument) {
                 this._isPartial = true;
                 this._isNew = true;
-                this._original = _.cloneDeep(this._modified);
+                this._original = _.cloneDeep<TDocument>(this._modified);
                 return <Bluebird<TInstance>><any>this;
             }
 
-            return this._model.handlers.documentReceived<TDocument>(conditions, newDocument, doc => doc).then((doc) => {
+            return this._model.handlers.documentReceived(conditions, newDocument, (doc) => {
                 this._isNew = false;
                 this._isPartial = false;
                 this._original = doc;
-                this._modified = _.cloneDeep(doc);
+                this._modified = _.cloneDeep<TDocument>(doc);
 
                 return <TInstance><any>this;
             });
