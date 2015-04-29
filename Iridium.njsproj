@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{e9a19872-d84f-418a-8332-3ded543fb1fa}</ProjectGuid>
     <ProjectHome />
-    <ProjectView>ProjectFiles</ProjectView>
+    <ProjectView>ShowAllFiles</ProjectView>
     <StartupFile>node_modules\mocha\bin\mocha</StartupFile>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -23,6 +23,7 @@
   <ItemGroup>
     <Content Include=".gitattributes" />
     <Content Include=".gitignore" />
+    <Content Include=".jshintrc" />
     <Content Include=".travis.yml" />
     <Content Include="CHANGELOG" />
     <Content Include="doc\Migrating from 4.x to 5.x.md" />
@@ -36,6 +37,7 @@
     <Compile Include="example\UserModel.ts" />
     <TypeScriptCompile Include="benchmarks\mongodb.ts" />
     <TypeScriptCompile Include="example\IntelliSense.ts" />
+    <TypeScriptCompile Include="index.d.ts" />
     <TypeScriptCompile Include="lib\Cache.ts" />
     <TypeScriptCompile Include="lib\CacheDirector.ts" />
     <TypeScriptCompile Include="lib\Configuration.ts" />
