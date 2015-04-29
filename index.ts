@@ -28,5 +28,5 @@ module Iridium {
     export interface Schema extends _Schema { }
     export interface ICache extends _Cache { }
     export interface ICacheDirector extends _CacheDirector { }
-    export interface ModelOptions extends _ModelOptions { }
+    export interface ModelOptions<TDocument, TInstance> extends _ModelOptions.IModelOptions<TDocument, TInstance> { }
 }
