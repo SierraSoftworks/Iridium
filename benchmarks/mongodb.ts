@@ -43,9 +43,9 @@ function benchmark(name: string, prepare: (objects: UserDocument[]) => Bluebird<
         for (var i = 0; i < objects.length; i++)
             objects[i] = { _id: crypto.pseudoRandomBytes(16).toString('hex') };
 
-        return Promise.resolve().then(() => prepare(objects)).then(() => {
+        return Bluebird.resolve().then(() => prepare(objects)).then(() => {
             var start = new Date();
-            return Promise.resolve().then(() => run(objects)).then(() => {
+            return Bluebird.resolve().then(() => run(objects)).then(() => {
                 var time = new Date().valueOf() - start.valueOf();
                 return time;
             });
