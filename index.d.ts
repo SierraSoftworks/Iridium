@@ -1,4 +1,4 @@
-?/// <reference path="./index.ts" />
+/// <reference path="./index.ts" />
 
 declare module 'iridium' {
     import Iridium = require('iridium/index');
