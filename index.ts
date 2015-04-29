@@ -3,6 +3,8 @@
 import _Core = require('./lib/Core');
 import _Model = require('./lib/Model');
 import _Instance = require('./lib/Instance');
+
+import _Plugin = require('./lib/Plugins');
 import _Schema = require('./lib/Schema');
 import _Cache = require('./lib/Cache');
 import _CacheDirector = require('./lib/CacheDirector');
@@ -25,8 +27,9 @@ module Iridium {
 
     export class CacheOnID extends _IDDirector { }
 
+    export interface Plugin extends _Plugin { }
     export interface Schema extends _Schema { }
-    export interface ICache extends _Cache { }
-    export interface ICacheDirector extends _CacheDirector { }
+    export interface Cache extends _Cache { }
+    export interface CacheDirector extends _CacheDirector { }
     export interface ModelOptions<TDocument, TInstance> extends _ModelOptions.IModelOptions<TDocument, TInstance> { }
 }
