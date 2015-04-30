@@ -7,15 +7,15 @@ import events = require('events');
 
 import config = require('./Configuration');
 import IPlugin = require('./Plugins');
-import model = require('./Model');
-import instance = require('./Instance');
+import Model = require('./Model');
+import Instance = require('./Instance');
 
 import middleware = require('./Middleware');
-import expressMiddleware = require('./middleware/Express');
+import ExpressMiddleware = require('./middleware/Express');
 
-import cache = require('./Cache');
-import noOpCache = require('./caches/NoOpCache');
-import memoryCache = require('./caches/MemoryCache');
+import Cache = require('./Cache');
+import NoOpCache = require('./caches/NoOpCache');
+import MemoryCache = require('./caches/MemoryCache');
 
 var MongoConnectAsyc = Bluebird.promisify(MongoDB.MongoClient.connect);
 
@@ -26,7 +26,7 @@ class Core {
     private _url: string;
     private _config: config;
     private _connection: MongoDB.Db;
-    private _cache: cache = new noOpCache();
+    private _cache: Cache = new NoOpCache();
     
     /**
      * Gets the plugins registered with this Iridium Core
@@ -82,11 +82,11 @@ class Core {
      * Gets the cache used to store objects retrieved from the database for performance reasons
      * @returns {cache}
      */
-    get cache(): cache {
+    get cache(): Cache {
         return this._cache;
     }
 
-    set cache(value: cache) {
+    set cache(value: Cache) {
         this._cache = value;
     }
 
@@ -166,7 +166,7 @@ class Core {
      * to the current Iridium instance.
      * @returns {Iridium.ExpressMiddleware}
      */
-    express(): expressMiddleware.ExpressMiddleware {
-        return expressMiddleware.ExpressMiddlewareFactory(this);
+    express(): ExpressMiddleware.ExpressMiddleware {
+        return ExpressMiddleware.ExpressMiddlewareFactory(this);
     }
 }

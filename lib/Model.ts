@@ -487,7 +487,7 @@ class Model<TDocument extends { _id?: any }, TInstance> implements ModelInterfac
             callback = <general.Callback<number>>options;
             options = {};
         }
-
+        
         options = options || {};
 
         if (!_.isPlainObject(conditions)) conditions = {

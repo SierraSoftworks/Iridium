@@ -22,7 +22,7 @@
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec --ui bdd",
     "lint": "jshint lib/",
     "benchmark": "node ./benchmarks/mongodb.js",
-    "build": "tsc"
+    "build": "node node_modules/typescript/bin/tsc"
   },
   "engines": {
     "node": ">= 0.10"

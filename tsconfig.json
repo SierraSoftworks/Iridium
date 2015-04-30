@@ -13,7 +13,7 @@
 		"lib/ModelHandlers.ts",
 		"lib/ModelHelpers.ts",
 		"lib/ModelSpecificInstance.ts",
-		"lib/cacheControllers/IDController.ts",
+		"lib/cacheControllers/IDDirector.ts",
 		"lib/caches/MemoryCache.ts",
 		"lib/caches/NoOpCache.ts",
 		"lib/middleware/Express.ts",

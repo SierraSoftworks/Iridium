@@ -17,40 +17,66 @@
 	"tasks": [
 		{
 			"taskName": "build",
-			"args": ["run", "build"],
+			"args": ["run"],
 			"isBuildCommand": true,
-			"problemMatcher": "$tsc"
+			"problemMatcher": ["$tsc", {
+				"fileLocation": "relative",
+				"owner": "typescript",
+				"pattern": {
+					"regexp": "^([^(]+)\\((\\d+,\\d+)\\)\\: (error|warning) TS(\\d+): (.*)$",
+					"file": 1,
+					"location": 2,
+					"code": 3,
+					"severity": 4,
+					"message": 5
+				}
+			}, {
+				"fileLocation": "relative",
+				"owner": "typescript",
+				"pattern": {
+					"regexp": "^(error|warning) TS(\\d+): File '([^']+)'.*$",
+					"file": 3,
+					"location": 2,
+					"code": 2,
+					"severity": 1,
+					"message": 3
+				}
+			}]
 		},
 		{
 			"taskName": "test",
-			"args": ["run", "test"],
+			"args": [],
 			"isTestCommand": true,
 			"problemMatcher": {
 				"owner": "mocha",
 				"pattern": {
-					"regexp": "^\\s*\\d+\\)\\s*(.*)\\:$",
-					"file": -1,
-					"location": -1,
-					"message": 1
+					"regexp": "^\\s*(\\d+)\\)\\s*(.+)\\:$",
+					"file": 1,
+					"message": 2
 				}
 			}
 		},
 		{
+			"taskName": "lint",
+			"args": ["run", "lint", "--", "${file}", "--exclude"],
+			"problemMatcher": "$jshint"
+		},
+		{
 			"taskName": "install",
-			"args": ["install"]	
+			"args": []	
 		},
 		{
 			"taskName": "update",
-			"args": ["update", "--save"]	
+			"args": []	
 		},
 		{
 			"taskName": "benchmark",
-			"args": ["run", "benchmark"],
+			"args": ["run"],
 			"showOutput": "always"
 		},
 		{
 			"taskName": "publish",
-			"args": ["publish"]	
+			"args": []	
 		}
 	]
 }
