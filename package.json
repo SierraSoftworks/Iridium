@@ -17,14 +17,15 @@
   "licence": "MIT",
   "main": "./index",
   "scripts": {
-    "test": "npm run coverage",
+    "test": "mocha",
     "test:watch": "mocha -w",
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec --ui bdd",
     "lint": "jshint lib/",
-    "benchmark": "node ./benchmarks/mongodb.js"
+    "benchmark": "node ./benchmarks/mongodb.js",
+    "build": "tsc"
   },
   "engines": {
-    "node": ">= 0.8"
+    "node": ">= 0.10"
   },
   "dependencies": {
     "bluebird": "^2.9.25",
@@ -42,7 +43,8 @@
     "istanbul": "~0.3.13",
     "coveralls": "^2.11.2",
     "codeclimate-test-reporter": "~0.0.4",
-    "jshint": "^2.7.0"
+    "jshint": "^2.7.0",
+    "typescript": ">=1.5.0-alpha"
   },
   "keywords": [
     "mongodb",
