@@ -432,8 +432,9 @@ class Model<TDocument extends { _id?: any }, TInstance> implements ModelInterfac
             objects = <TDocument[]>[objs];
 
         options = options || {};
-        _.defaults(options, {
-            w: 1
+        _.defaults(options, <ModelOptions.CreateOptions>{
+            w: 'majority',
+            forceServerObjectId: true
         });
 
         return Bluebird.resolve().then(() => {
@@ -453,7 +454,7 @@ class Model<TDocument extends { _id?: any }, TInstance> implements ModelInterfac
             else
                 return this._handlers.creatingDocuments(objects).then((objects) => {
                     return new Bluebird<any[]>((resolve, reject) => {
-                        this.collection.insert(objects, queryOptions,(err, result) => {
+                        this.collection.insertMany(objects, queryOptions,(err, result) => {
                             if (err) return reject(err);
                             return resolve(result.ops);
                         });
@@ -495,7 +496,7 @@ class Model<TDocument extends { _id?: any }, TInstance> implements ModelInterfac
         };
 
         _.defaults(options, {
-            w: 1,
+            w: 'majority',
             multi: true
         });
 
@@ -504,7 +505,7 @@ class Model<TDocument extends { _id?: any }, TInstance> implements ModelInterfac
                 conditions['_id'] = this.options.identifier.reverse(conditions['_id']);
 
             return new Bluebird<number>((resolve, reject) => {
-                this.collection.update(conditions, changes, options,(err, response) => {
+                this.collection.updateMany(conditions, changes, options,(err, response) => {
                     if (err) return reject(err);
 
                     // New MongoDB 2.6+ response type
@@ -568,13 +569,32 @@ class Model<TDocument extends { _id?: any }, TInstance> implements ModelInterfac
      * @returns {Promise<number>}
      */
     remove(conditions: any, callback?: general.Callback<number>): Bluebird<number>;
-    remove(conditions?: any, callback?: general.Callback<number>): Bluebird<number> {
-        if (typeof conditions == 'function') {
+    /**
+     * Removes all documents from the collection which match the conditions
+     * @param {Object} conditions The conditions determining whether an object is removed or not
+     * @param {Object} options The options controlling the way in which the function behaves
+     * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
+     * @returns {Promise<number>}
+     */
+    remove(conditions: any, options: ModelOptions.RemoveOptions, callback?: general.Callback<number>): Bluebird<number>;
+    remove(conditions?: any, options?: ModelOptions.RemoveOptions, callback?: general.Callback<number>): Bluebird<number> {
+        if (typeof options === 'function') {
+            callback = <general.Callback<number>>options;
+            options = {};
+        }
+        
+        if(typeof conditions === 'function') {
             callback = <general.Callback<number>>conditions;
+            options = {};
             conditions = {};
         }
 
         conditions = conditions || {};
+        options = options || {};
+        
+        _.defaults(options, {
+            w: 'majority'
+        });
 
         if (!_.isPlainObject(conditions)) conditions = {
             _id: conditions
@@ -585,7 +605,7 @@ class Model<TDocument extends { _id?: any }, TInstance> implements ModelInterfac
                 conditions['_id'] = this.options.identifier.reverse(conditions['_id']);
 
             return new Bluebird<number>((resolve, reject) => {
-                this.collection.remove(conditions,(err, response) => {
+                this.collection.remove(conditions, options,(err, response) => {
                     if (err) return reject(err);
                     return resolve(response.result.n);
                 });

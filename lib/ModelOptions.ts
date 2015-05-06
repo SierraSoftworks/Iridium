@@ -15,13 +15,26 @@ export interface QueryOptions {
 
 export interface CreateOptions {
     w?: any;
+    wtimeout?: number;
+    j?: number;
+    serializeFunctions?: boolean;
+    forceServerObjectId?: boolean;
     upsert?: boolean;
     cache?: boolean;
 }
 
 export interface UpdateOptions {
     w?: any;
-    multi?: boolean;
+    wtimeout?: number;
+    j?: boolean;
+    upsert?: boolean;
+}
+
+export interface RemoveOptions {
+    w?: any;
+    wtimeout?: number;
+    j?: boolean;
+    single?: boolean;
 }
 
 export interface IModelOptions<TDocument, TInstance> {

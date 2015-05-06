@@ -105,14 +105,14 @@ class Instance<TDocument extends { _id?: any }, TInstance> {
             if (!changes && !this._isNew) return false;
 
             if (this._isNew) return new Bluebird<boolean>((resolve, reject) => {
-                this._model.collection.insert(this._modified,(err, doc) => {
+                this._model.collection.insertOne(this._modified, { w: 'majority' },(err, doc) => {
                     if (err) return reject(err);
                     return resolve(<any>!!doc);
                 });
             });
 
             return new Bluebird<boolean>((resolve: (changed: boolean) => void, reject) => {
-                this._model.collection.update(conditions, changes, { w: 1 },(err: Error, changed: boolean) => {
+                this._model.collection.updateOne(conditions, changes, { w: 'majority' },(err: Error, changed: boolean) => {
                     if (err) return reject(err);
                     return resolve(changed);
                 });
@@ -203,7 +203,7 @@ class Instance<TDocument extends { _id?: any }, TInstance> {
         return Bluebird.resolve().then(() => {
             if (this._isNew) return 0;
             return new Bluebird<number>((resolve, reject) => {
-                this._model.collection.remove(conditions,(err: Error, removed?: any) => {
+                this._model.collection.remove(conditions, { w: 'majority' },(err: Error, removed?: any) => {
                     if (err) return reject(err);
                     return resolve(removed);
                 });
