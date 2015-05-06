@@ -12,6 +12,15 @@ addons:
  code_climate:
     repo_token: 9c90177b42d39905ca635b1f6226580dab5799f87f172b66bab4e8df77b67a13
 
+before_install:
+  - sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+  - echo 'deb http://repo.mongodb.org/apt/ubuntu "$(lsb_release -sc)/mongodb-org/3.0" multiverse' | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
+  - sudo apt-get update
+  - sudo apt-get install -y mongodb-org mongodb-org-server mongodb-org-shell mongodb-org-tools
+
+before_script:
+  - "until nc -z localhost 27017; do echo Waiting for MongoDB; sleep 1; done"
+  
 after_script:
  - npm run coverage
  - coveralls < coverage/lcov.info
