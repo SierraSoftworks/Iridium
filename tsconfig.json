@@ -17,6 +17,18 @@
 		"lib/caches/MemoryCache.ts",
 		"lib/caches/NoOpCache.ts",
 		"lib/middleware/Express.ts",
-		"lib/utils/Omnom.ts"
+		"lib/utils/Omnom.ts",
+		"test/support/chai.ts",
+		"test/support/config.ts",
+		"test/Cache.ts",
+		"test/Core.ts",
+		"test/Hooks.ts",
+		"test/Instance.ts",
+		"test/Iridium.ts",
+		"test/Middleware.ts",
+		"test/Model.ts",
+		"test/Omnom.ts",
+		"test/Plugins.ts",
+		"test/Valdiation.ts"
 	]
 }
