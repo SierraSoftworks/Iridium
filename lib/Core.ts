@@ -69,9 +69,28 @@ class Core {
             url += '@';
         }
 
-        url += (this._config.host || 'localhost');
-        if (this._config.port)
-            url += ':' + this._config.port;
+        var hosts = [];
+        
+        if(this._config.host) {
+            if (this._config.port)
+                hosts.push(this._config.host + ':' + this._config.port);
+            else
+                hosts.push(this._config.host);
+        }
+        
+        if(this._config.hosts) {
+            _.each(this._config.hosts, (host) => {
+                if (host.port)
+                hosts.push(host.address + ':' + host.port);
+            else
+                hosts.push(host.address);
+            });
+        }
+        
+        if(hosts.length)
+            url += _.uniq(hosts).join(',');
+        else
+            url += 'localhost';
 
         url += '/' + this._config.database;
 
