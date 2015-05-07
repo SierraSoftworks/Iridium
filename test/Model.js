@@ -22,8 +22,7 @@ describe("Model", function () {
     describe("constructor", function () {
         it("should throw an error if you don't provide a valid core", function () {
             chai.expect(function () {
-                new Iridium.Model(null, function () {
-                }, 'test', { _id: false });
+                new Iridium.Model(null, function () { }, 'test', { _id: false });
             }).to.throw("You failed to provide a valid Iridium core for this model");
         });
         it("should throw an error if you don't provide a valid instanceType", function () {
@@ -33,39 +32,31 @@ describe("Model", function () {
         });
         it("should throw an error if you don't provide a collection name", function () {
             chai.expect(function () {
-                new Iridium.Model(core, function () {
-                }, null, { _id: false });
+                new Iridium.Model(core, function () { }, null, { _id: false });
             }).to.throw("You failed to provide a valid collection name for this model");
             chai.expect(function () {
-                new Iridium.Model(core, function () {
-                }, '', { _id: false });
+                new Iridium.Model(core, function () { }, '', { _id: false });
             }).to.throw("You failed to provide a valid collection name for this model");
             chai.expect(function () {
-                new Iridium.Model(core, function () {
-                }, 4, { _id: false });
+                new Iridium.Model(core, function () { }, 4, { _id: false });
             }).to.throw("You failed to provide a valid collection name for this model");
         });
         it("should throw an error if you don't provide a valid schema", function () {
             chai.expect(function () {
-                new Iridium.Model(core, function () {
-                }, 'test', null);
+                new Iridium.Model(core, function () { }, 'test', null);
             }).to.throw("You failed to provide a valid schema for this model");
             chai.expect(function () {
-                new Iridium.Model(core, function () {
-                }, 'test', { id: false });
+                new Iridium.Model(core, function () { }, 'test', { id: false });
             }).to.throw("You failed to provide a valid schema for this model");
         });
         it("should correctly set the core", function () {
-            chai.expect(new Iridium.Model(core, function () {
-            }, 'test', { _id: false }).core).to.equal(core);
+            chai.expect(new Iridium.Model(core, function () { }, 'test', { _id: false }).core).to.equal(core);
         });
         it("should correctly set the collectionName", function () {
-            chai.expect(new Iridium.Model(core, function () {
-            }, 'test', { _id: false }).collectionName).to.equal('test');
+            chai.expect(new Iridium.Model(core, function () { }, 'test', { _id: false }).collectionName).to.equal('test');
         });
         it("should correctly set the schema", function () {
-            chai.expect(new Iridium.Model(core, function () {
-            }, 'test', { _id: false }).schema).to.eql({ _id: false });
+            chai.expect(new Iridium.Model(core, function () { }, 'test', { _id: false }).schema).to.eql({ _id: false });
         });
     });
     describe("methods", function () {
@@ -113,8 +104,7 @@ describe("Model", function () {
     });
     describe("collection", function () {
         it("should throw an error if you attempt to access it before connecting to the database", function () {
-            var model = new Iridium.Model(new Iridium.Core('mongodb://localhost/test'), function () {
-            }, 'test', { _id: false });
+            var model = new Iridium.Model(new Iridium.Core('mongodb://localhost/test'), function () { }, 'test', { _id: false });
             chai.expect(function () { return model.collection; }).to.throw("Iridium Core not connected to a database.");
         });
         it("should return a MongoDB DB object", function () {
@@ -357,8 +347,7 @@ describe("Model", function () {
                 })).to.eventually.not.be.rejected;
             });
             it("should return a promise immediately", function () {
-                chai.expect(model.find().forEach(function (i) {
-                })).to.be.instanceof(Promise);
+                chai.expect(model.find().forEach(function (i) { })).to.be.instanceof(Promise);
             });
             it("should resolve the promise after all handlers have been dispatched", function () {
                 var count = 0;
