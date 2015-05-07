@@ -20,10 +20,10 @@ describe("Validation", function () {
         name: String,
         dateOfBirth: Date,
         siblings: [{
-            name: String,
-            related: Boolean,
-            ageDifference: Number
-        }]
+                name: String,
+                related: Boolean,
+                ageDifference: Number
+            }]
     });
     before(function () { return core.connect(); });
     after(function () { return model.remove().then(function () { return core.close(); }); });
@@ -34,10 +34,10 @@ describe("Validation", function () {
                 name: 'John',
                 dateOfBirth: new Date(),
                 siblings: [{
-                    name: 'Jane',
-                    related: true,
-                    ageDifference: -2
-                }]
+                        name: 'Jane',
+                        related: true,
+                        ageDifference: -2
+                    }]
             })).to.eventually.be.ok;
         });
         it("should fail to validate single documents which do not match the schema", function () {
@@ -45,10 +45,10 @@ describe("Validation", function () {
                 name: 'John',
                 dateOfBirth: 0,
                 siblings: [{
-                    name: 'Jane',
-                    related: true,
-                    ageDifference: -2
-                }]
+                        name: 'Jane',
+                        related: true,
+                        ageDifference: -2
+                    }]
             })).to.eventually.be.rejected;
         });
         it("should not insert a document into the database if it fails validation", function () {
@@ -56,87 +56,87 @@ describe("Validation", function () {
                 name: 'John',
                 dateOfBirth: 0,
                 siblings: [{
-                    name: 'Jane',
-                    related: true,
-                    ageDifference: -2
-                }]
+                        name: 'Jane',
+                        related: true,
+                        ageDifference: -2
+                    }]
             }).catch(function () { return chai.expect(model.findOne({ dateOfBirth: 0 })).to.eventually.be.null; });
         });
         it("should successfully validate multiple documents which match the schema", function () {
             return chai.expect(model.insert([{
-                name: 'Frank',
-                dateOfBirth: new Date(),
-                siblings: [{
-                    name: 'Francie',
-                    related: false,
-                    ageDifference: -2
-                }]
-            }, {
-                name: 'Jack',
-                dateOfBirth: new Date(),
-                siblings: [{
-                    name: 'Jill',
-                    related: true,
-                    ageDifference: 2
-                }]
-            }])).to.eventually.be.ok;
+                    name: 'Frank',
+                    dateOfBirth: new Date(),
+                    siblings: [{
+                            name: 'Francie',
+                            related: false,
+                            ageDifference: -2
+                        }]
+                }, {
+                    name: 'Jack',
+                    dateOfBirth: new Date(),
+                    siblings: [{
+                            name: 'Jill',
+                            related: true,
+                            ageDifference: 2
+                        }]
+                }])).to.eventually.be.ok;
         });
         it("should fail to validate multiple documents which do not match the schema", function () {
             return chai.expect(model.insert([{
-                name: 'Frank',
-                dateOfBirth: new Date(),
-                siblings: [{
-                    name: 'Francie',
-                    related: 'related',
-                    ageDifference: -2
-                }]
-            }, {
-                name: 5,
-                dateOfBirth: new Date(),
-                siblings: [{
-                    name: 'Jill',
-                    related: true,
-                    ageDifference: 2
-                }]
-            }])).to.eventually.be.rejected;
+                    name: 'Frank',
+                    dateOfBirth: new Date(),
+                    siblings: [{
+                            name: 'Francie',
+                            related: 'related',
+                            ageDifference: -2
+                        }]
+                }, {
+                    name: 5,
+                    dateOfBirth: new Date(),
+                    siblings: [{
+                            name: 'Jill',
+                            related: true,
+                            ageDifference: 2
+                        }]
+                }])).to.eventually.be.rejected;
         });
         it("should fail to validate multiple documents where some do not match the schema", function () {
             return chai.expect(model.insert([{
-                name: 'Frank',
-                dateOfBirth: new Date(),
-                siblings: [{
-                    name: 'Francie',
-                    related: 'related',
-                    ageDifference: -2
-                }]
-            }, {
-                name: 'Jack',
-                dateOfBirth: new Date(),
-                siblings: [{
-                    name: 'Jill',
-                    related: true,
-                    ageDifference: 2
-                }]
-            }])).to.eventually.be.rejected;
+                    name: 'Frank',
+                    dateOfBirth: new Date(),
+                    siblings: [{
+                            name: 'Francie',
+                            related: 'related',
+                            ageDifference: -2
+                        }]
+                }, {
+                    name: 'Jack',
+                    dateOfBirth: new Date(),
+                    siblings: [{
+                            name: 'Jill',
+                            related: true,
+                            ageDifference: 2
+                        }]
+                }])).to.eventually.be.rejected;
         });
         it("should fail to validate multiple documents where some do not match the schema", function () {
             return model.insert([{
-                name: 'Frank',
-                dateOfBirth: new Date(),
-                siblings: [{
-                    name: 'Francie',
-                    related: 'related',
-                    ageDifference: -2
-                }]
-            }, {
-                name: 'Jack',
-                dateOfBirth: new Date(),
-                siblings: [{
-                    name: 'Jill',
-                    related: true,
-                    ageDifference: 2
-                }]
-            }]).catch(function () { return chai.expect(model.findOne({ 'siblings.related': 'related' })).to.eventually.be.null; });
+                    name: 'Frank',
+                    dateOfBirth: new Date(),
+                    siblings: [{
+                            name: 'Francie',
+                            related: 'related',
+                            ageDifference: -2
+                        }]
+                }, {
+                    name: 'Jack',
+                    dateOfBirth: new Date(),
+                    siblings: [{
+                            name: 'Jill',
+                            related: true,
+                            ageDifference: 2
+                        }]
+                }]).catch(function () { return chai.expect(model.findOne({ 'siblings.related': 'related' })).to.eventually.be.null; });
         });
     });
     describe("instances", function () {

@@ -2,7 +2,8 @@
 	"compilerOptions": {
 		"module": "commonjs",
 		"target": "ES5",
-		"sourceMap": true
+		"sourceMap": true,
+		"declaration": true
 	},
 	"files": [
 		"lib/Core.ts",
@@ -29,6 +30,6 @@
 		"test/Model.ts",
 		"test/Omnom.ts",
 		"test/Plugins.ts",
-		"test/Valdiation.ts"
+		"test/Validation.ts"
 	]
 }
