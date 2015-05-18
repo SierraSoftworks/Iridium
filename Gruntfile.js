@@ -86,13 +86,13 @@ module.exports = function (grunt) {
 		});
 	});
 	
-	grunt.renameTask('release', '_release');
-	
     grunt.loadNpmTasks("grunt-ts");
 	grunt.loadNpmTasks("grunt-mocha-cli");
 	grunt.loadNpmTasks("grunt-mocha-istanbul");
 	grunt.loadNpmTasks("grunt-contrib-clean");
 	grunt.loadNpmTasks("grunt-release");
+	
+	grunt.renameTask('release', '_release');
 	
     grunt.registerTask("default", ["clean", "ts:dev"]);
 	grunt.registerTask("test", ["clean", "ts:test", "mochacli"]);
