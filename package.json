@@ -1,6 +1,6 @@
 {
   "name": "iridium",
-  "version": "5.0.1-0",
+  "version": "5.0.1",
   "author": "Benjamin Pannell <admin@sierrasoftworks.com>",
   "description": "A custom lightweight ORM for MongoDB designed for power-users",
   "homepage": "https://sierrasoftworks.com/iridium",
@@ -17,12 +17,11 @@
   "licence": "MIT",
   "main": "./index",
   "scripts": {
-    "test": "mocha",
-    "test:watch": "mocha -w",
-    "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec --ui bdd",
+    "test": "grunt test",
+    "coverage": "grunt coverage",
     "lint": "jshint lib/",
     "benchmark": "node ./benchmarks/mongodb.js",
-    "build": "node node_modules/typescript/bin/tsc"
+    "build": "grunt build"
   },
   "typescript": {
     "definition": "iridium.d.ts"
@@ -44,6 +43,7 @@
     "coveralls": "^2.11.2",
     "dts-generator": "^1.4.1",
     "grunt": "~0.4.5",
+    "grunt-cli": "~0.1.13",
     "grunt-contrib-clean": "~0.6.0",
     "grunt-mocha-cli": "^1.13.0",
     "grunt-mocha-istanbul": "^2.4.0",
