@@ -6,7 +6,7 @@ module.exports = function (grunt) {
 	grunt.initConfig({
 		ts: {
 			options: tsconfig.compilerOptions,
-			
+
 			dev: {
 				src: tsconfig.files,
 				watch: 'lib'
@@ -30,9 +30,9 @@ module.exports = function (grunt) {
 				files: "test/*.js",
 				timeout: '10s'
 			},
-			
+
 			default: {
-				
+
 			}
 		},
 		mocha_istanbul: {
@@ -50,7 +50,7 @@ module.exports = function (grunt) {
 					}
 				}
 			},
-			
+
 			coveralls: {
 				src: 'test',
 				root: 'lib',
@@ -63,12 +63,22 @@ module.exports = function (grunt) {
 				}
 			}
 		},
-		
+
 		clean: {
 			definitions: ["*.d.ts", "!iridium.d.ts", "!_references.d.ts", "benchmarks/**/*.d.ts", "example/**/*.d.ts", "lib/**/*.d.ts", "test/**/*.d.ts"],
 			sourceMaps: ["*.map", "benchmarks/**/*.map", "example/**/*.map", "lib/**/*.map", "test/**/*.map"],
 			compiledFiles: ["*.js", "!Gruntfile.js", "benchmarks/**/*.js", "example/**/*.js", "lib/**/*.js", "test/**/*.js"],
 			coverage: ["coverage"]
+		},
+
+		release: {
+			options: {
+				beforeBump: ["clean"],
+				beforeRelease: ["ts:release"],
+				github: {
+					repo: "SierraSoftworks/Iridium"
+				}
+			}
 		}
 	});
     
@@ -83,10 +93,10 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks("grunt-mocha-cli");
 	grunt.loadNpmTasks("grunt-mocha-istanbul");
 	grunt.loadNpmTasks("grunt-contrib-clean");
+	grunt.loadNpmTasks("grunt-release");
 	
     grunt.registerTask("default", ["clean", "ts:dev"]);
 	grunt.registerTask("test", ["clean", "ts:test", "mochacli"]);
 	grunt.registerTask("coverage", ["clean", "ts:test", "mocha_istanbul:coverage"]);
 	grunt.registerTask("coveralls", ["clean", "ts:test", "mocha_istanbul:coveralls"]);
-	grunt.registerTask("release", ["clean", "ts:release"]);
 };
