@@ -1,6 +1,6 @@
 {
   "name": "iridium",
-  "version": "5.0.0-alpha.10",
+  "version": "5.0.0-alpha.11",
   "author": "Benjamin Pannell <admin@sierrasoftworks.com>",
   "description": "A custom lightweight ORM for MongoDB designed for power-users",
   "homepage": "https://sierrasoftworks.com/iridium",
@@ -37,23 +37,24 @@
     "skmatc": "^1.1.2"
   },
   "devDependencies": {
-    "mocha": "^2.2.4",
     "chai": "^2.2.0",
     "chai-as-promised": "^5.0.0",
     "chai-fuzzy": "^1.5.0",
-    "underscore": "^1.8.3",
-    "tick": "~0.1.1",
-    "istanbul": "~0.3.13",
-    "coveralls": "^2.11.2",
     "codeclimate-test-reporter": "~0.0.4",
-    "jshint": "^2.7.0",
-    "typescript": ">=1.5.0-alpha",
+    "coveralls": "^2.11.2",
     "dts-generator": "^1.4.1",
     "grunt": "~0.4.5",
-    "grunt-ts": "^4.1.0",
+    "grunt-contrib-clean": "~0.6.0",
     "grunt-mocha-cli": "^1.13.0",
     "grunt-mocha-istanbul": "^2.4.0",
-    "grunt-contrib-clean": "~0.6.0"
+    "grunt-release": "^0.12.0",
+    "grunt-ts": "^4.1.0",
+    "istanbul": "~0.3.13",
+    "jshint": "^2.7.0",
+    "mocha": "^2.2.4",
+    "tick": "~0.1.1",
+    "typescript": ">=1.5.0-alpha",
+    "underscore": "^1.8.3"
   },
   "keywords": [
     "mongodb",
