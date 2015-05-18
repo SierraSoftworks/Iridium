@@ -98,7 +98,9 @@ describe("Cache", function () {
         describe("should be populated", function () {
             beforeEach(function () { return core.cache = new Iridium.MemoryCache(); });
             it("when a single document is retrieved", function () {
-                return model.get().then(function (instance) { return chai.expect(core.cache.get(instance._id)).to.eventually.exist; });
+                return model.get().then(function (instance) {
+                    return chai.expect(core.cache.get(instance._id)).to.eventually.exist;
+                });
             });
             it("when an instance is modified", function () {
                 return model.get().then(function (instance) {
@@ -113,7 +115,6 @@ describe("Cache", function () {
                 core.cache = new Iridium.MemoryCache();
             }).then(function () { return model.get(); }).then(function (instance) {
                 instanceID = instance._id;
-                // Remove the instance from the database and put it back into the cache
                 return instance.remove().then(function () {
                     return model.cache.set(instance.document);
                 });

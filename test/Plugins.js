@@ -9,17 +9,14 @@ describe("Plugins", function () {
     describe("newModel", function () {
         it("should allow a plugin not to define a handler", function () {
             core.register({
-                newInstance: function (instance, model) {
-                },
+                newInstance: function (instance, model) { },
                 validate: []
             });
         });
         it("should allow a plugin to define a handler", function () {
             core.register({
-                newModel: function (model) {
-                },
-                newInstance: function (instance, model) {
-                },
+                newModel: function (model) { },
+                newInstance: function (instance, model) { },
                 validate: []
             });
         });
@@ -46,25 +43,21 @@ describe("Plugins", function () {
     describe("newInstance", function () {
         it("should allow a plugin not to define a handler", function () {
             core.register({
-                newModel: function (model) {
-                },
+                newModel: function (model) { },
                 validate: []
             });
         });
         it("should allow a plugin to define a handler", function () {
             core.register({
-                newModel: function (model) {
-                },
-                newInstance: function (instance, model) {
-                },
+                newModel: function (model) { },
+                newInstance: function (instance, model) { },
                 validate: []
             });
         });
         it("should be called when an instance is instantiated", function () {
             var wasCalled = false;
             core.register({
-                newModel: function (model) {
-                },
+                newModel: function (model) { },
                 newInstance: function (instance, model) {
                     wasCalled = true;
                 },
@@ -77,8 +70,7 @@ describe("Plugins", function () {
         it("should not be called when the instance doesn't inherit from Iridium.Instance", function () {
             var wasCalled = false;
             core.register({
-                newModel: function (model) {
-                },
+                newModel: function (model) { },
                 newInstance: function (instance, model) {
                     wasCalled = true;
                 },
@@ -92,23 +84,19 @@ describe("Plugins", function () {
     describe("validators", function () {
         it("should allow a plugin to not define validators", function () {
             core.register({
-                newModel: function (model) {
-                },
-                newInstance: function (instance, model) {
-                }
+                newModel: function (model) { },
+                newInstance: function (instance, model) { }
             });
         });
         it("should allow a plugin to define a single validator", function () {
             core.register({
-                newInstance: function (instance, model) {
-                },
+                newInstance: function (instance, model) { },
                 validate: Skmatc.create(function (schema) { return schema == 'Test'; }, function (schema, data) { return _this.assert(data == 'test'); })
             });
         });
         it("should allow a plugin to define multiple validators", function () {
             core.register({
-                newInstance: function (instance, model) {
-                },
+                newInstance: function (instance, model) { },
                 validate: [Skmatc.create(function (schema) { return schema == 'Test'; }, function (schema, data) { return _this.assert(data == 'test'); })]
             });
         });
