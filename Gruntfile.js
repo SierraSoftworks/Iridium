@@ -9,18 +9,23 @@ module.exports = function (grunt) {
 
 			dev: {
 				src: tsconfig.files,
-				watch: 'lib'
+				options: {
+					watch: 'lib',
+					fast: 'never'
+				}
 			},
 			test: {
 				src: tsconfig.files,
 				options: {
-					sourceMap: true
+					sourceMap: true,
+					fast: 'never'
 				}
 			},
 			release: {
 				src: ["lib/**/*.ts"],
 				options: {
-					sourceMap: false
+					sourceMap: false,
+					fast: 'never'
 				}
 			}
 		},
@@ -76,6 +81,27 @@ module.exports = function (grunt) {
 				tagName: "v<%= version %>",
 				commitMessage: "v<%= version %>"
 			}
+		},
+		
+		'string-replace': {
+			packageDependencies: {
+				files: { "_references.d.ts": "_references.d.ts" },
+				options: {
+					replacements: [{
+						pattern: /(\/\/\/ <reference path="\.\/typings\/tsd.d.ts" \/>)/gi,
+						replacement: '//$1'
+					}]
+				}
+			},
+			developmentDependencies: {
+				files: { "_references.d.ts": "_references.d.ts" },
+				options: {
+					replacements: [{
+						pattern: /\/\/(\/\/\/ <reference path="\.\/typings\/tsd.d.ts" \/>)/gi,
+						replacement: '$1'
+					}]
+				}
+			}
 		}
 	});
     
@@ -91,6 +117,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks("grunt-mocha-istanbul");
 	grunt.loadNpmTasks("grunt-contrib-clean");
 	grunt.loadNpmTasks("grunt-release");
+	grunt.loadNpmTasks("grunt-string-replace");
 	
 	grunt.renameTask('release', '_release');
 	
@@ -98,5 +125,13 @@ module.exports = function (grunt) {
 	grunt.registerTask("test", ["clean", "ts:test", "mochacli"]);
 	grunt.registerTask("coverage", ["clean", "ts:test", "mocha_istanbul:coverage"]);
 	grunt.registerTask("coveralls", ["clean", "ts:test", "mocha_istanbul:coveralls"]);
-	grunt.registerTask("release", ["clean", "ts:release", "_release"]);
+	grunt.registerTask("build", ["clean", "ts:release"]);
+	grunt.registerTask("build:package", ["clean", "ts:release", "string-replace:packageDependencies"]);
+	grunt.registerTask("clean:package", ["string-replace:developmentDependencies"]);
+	
+	grunt.registerTask("release", ["build:package", "_release", "clean:package"]);
+	grunt.registerTask("release:prerelease", ["build:package", "_release:prerelease", "clean:package"]);
+	grunt.registerTask("release:patch", ["build:package", "_release:patch", "clean:package"]);
+	grunt.registerTask("release:minor", ["build:package", "_release:minor", "clean:package"]);
+	grunt.registerTask("release:major", ["build:package", "_release:major", "clean:package"]);
 };

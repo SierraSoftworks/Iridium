@@ -1,5 +1,6 @@
 ﻿
-import Iridium = require('../index');
+/// <reference path="../iridium.d.ts" />
+import Iridium = require('iridium');
 
 interface UserDoc {
     _id?: string;

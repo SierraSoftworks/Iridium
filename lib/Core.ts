@@ -70,24 +70,24 @@ class Core {
         }
 
         var hosts = [];
-        
-        if(this._config.host) {
+
+        if (this._config.host) {
             if (this._config.port)
                 hosts.push(this._config.host + ':' + this._config.port);
             else
                 hosts.push(this._config.host);
         }
-        
-        if(this._config.hosts) {
+
+        if (this._config.hosts) {
             _.each(this._config.hosts, (host) => {
                 if (host.port)
-                hosts.push(host.address + ':' + host.port);
-            else
-                hosts.push(host.address);
+                    hosts.push(host.address + ':' + host.port);
+                else
+                    hosts.push(host.address);
             });
         }
-        
-        if(hosts.length)
+
+        if (hosts.length)
             url += _.uniq(hosts).join(',');
         else
             url += 'localhost';
@@ -126,14 +126,14 @@ class Core {
 
         var args = Array.prototype.slice.call(arguments, 0);
         uri = config = null;
-        for(var i = 0; i < args.length; i++) {
-            if(typeof args[i] == 'string')
+        for (var i = 0; i < args.length; i++) {
+            if (typeof args[i] == 'string')
                 uri = args[i];
-            else if(typeof args[i] == 'object')
+            else if (typeof args[i] == 'object')
                 config = args[i];
         }
 
-        if(!uri && !config) throw new Error("Expected either a URI or config object to be supplied when initializing Iridium");
+        if (!uri && !config) throw new Error("Expected either a URI or config object to be supplied when initializing Iridium");
 
         this._url = <string>uri;
         this._config = config;
@@ -159,7 +159,7 @@ class Core {
         return Bluebird.bind(this).then(function() {
             if (self._connection) return self._connection;
             return MongoConnectAsyc(self.url);
-        }).then(function (db: MongoDB.Db) {
+        }).then(function(db: MongoDB.Db) {
             self._connection = db;
             return self;
         }).nodeify(callback);
