@@ -1,5 +1,4 @@
-﻿/// <reference path="../_references.d.ts" />
-import Iridium = require('./Core');
+﻿import Iridium = require('./Core');
 import ISchema = require('./Schema');
 import MongoDB = require('mongodb');
 import Model = require('./Model');

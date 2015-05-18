@@ -1,4 +1,3 @@
-/// <reference path="../../_references.d.ts" />
 import http = require('http');
 import Middleware = require('../Middleware');
 import Core = require('../Core');

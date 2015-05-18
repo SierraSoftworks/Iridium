@@ -1,5 +1,4 @@
-﻿/// <reference path="../_references.d.ts" />
-import ModelInterfaces = require('./ModelInterfaces');
+﻿import ModelInterfaces = require('./ModelInterfaces');
 import Bluebird = require('bluebird');
 
 export = ModelCache;

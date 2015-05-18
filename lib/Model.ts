@@ -1,5 +1,4 @@
-﻿/// <reference path="../_references.d.ts" />
-import MongoDB = require('mongodb');
+﻿import MongoDB = require('mongodb');
 import Skmatc = require('skmatc');
 import Concoction = require('concoction');
 import Bluebird = require('bluebird');

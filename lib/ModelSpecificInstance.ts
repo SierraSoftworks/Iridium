@@ -1,5 +1,4 @@
-﻿/// <reference path="../_references.d.ts" />
-import Model = require('./Model');
+﻿import Model = require('./Model');
 import ModelInterfaces = require('./ModelInterfaces');
 import util = require('util');
 import _ = require('lodash');

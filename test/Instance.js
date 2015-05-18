@@ -156,30 +156,22 @@ describe("Instance", function () {
         it("should allow you to specify a custom update query", function () {
             return core.Test.insert({
                 answer: 1
-            })
-                .then(function () { return core.Test.get(); })
-                .then(function (instance) { return chai.expect(instance.save({ $set: { answer: 10 } })).to.eventually.have.property('answer', 10); });
+            }).then(function () { return core.Test.get(); }).then(function (instance) { return chai.expect(instance.save({ $set: { answer: 10 } })).to.eventually.have.property('answer', 10); });
         });
         it("should allow you tp specify a custom update query and conditions for the update", function () {
             return core.Test.insert({
                 answer: 1
-            })
-                .then(function () { return core.Test.get(); })
-                .then(function (instance) { return chai.expect(instance.save({ answer: { $lt: 5 } }, { $set: { answer: 10 } })).to.eventually.have.property('answer', 10); });
+            }).then(function () { return core.Test.get(); }).then(function (instance) { return chai.expect(instance.save({ answer: { $lt: 5 } }, { $set: { answer: 10 } })).to.eventually.have.property('answer', 10); });
         });
         it("should return a promise for the instance", function () {
             return core.Test.insert({
                 answer: 1
-            })
-                .then(function () { return core.Test.get(); })
-                .then(function (instance) { return chai.expect(instance.save()).to.eventually.equal(instance); });
+            }).then(function () { return core.Test.get(); }).then(function (instance) { return chai.expect(instance.save()).to.eventually.equal(instance); });
         });
         it("should allow the use of a callback instead of promises", function (done) {
             core.Test.insert({
                 answer: 1
-            })
-                .then(function () { return core.Test.get(); })
-                .then(function (instance) {
+            }).then(function () { return core.Test.get(); }).then(function (instance) {
                 instance.save(function (err, result) {
                     if (err)
                         return done(err);

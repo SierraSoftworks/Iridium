@@ -1,5 +1,3 @@
-/// <reference path="./_references.d.ts" />
-
 import _Core = require('./lib/Core');
 import _Model = require('./lib/Model');
 import _Instance = require('./lib/Instance');

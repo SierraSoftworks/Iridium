@@ -1,4 +1,3 @@
-/// <reference path="../../_references.d.ts" />
 import Bluebird = require('bluebird');
 import cache = require('../Cache');
 

@@ -1,9 +1,9 @@
 {
 	"compilerOptions": {
 		"module": "commonjs",
-		"target": "ES5",
+		"target": "es5",
 		"sourceMap": true,
-		"declaration": true
+    "declaration": false
 	},
 	"files": [
 		"lib/Core.ts",

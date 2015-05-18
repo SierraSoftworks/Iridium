@@ -1,4 +1,3 @@
-/// <reference path="../_references.d.ts" />
 export interface Callback<T> {
     (err: Error, object?: T): void;
 }

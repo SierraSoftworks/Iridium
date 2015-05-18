@@ -1,4 +1,3 @@
-/// <reference path="../_references.d.ts" />
 import Bluebird = require('bluebird');
 
 export = ICache;
