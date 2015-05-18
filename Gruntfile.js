@@ -9,19 +9,16 @@ module.exports = function (grunt) {
 			
 			dev: {
 				src: tsconfig.files,
-				reference: 'iridium.d.ts',
 				watch: 'lib'
 			},
 			test: {
 				src: tsconfig.files,
-				reference: 'iridium.d.ts',
 				options: {
 					sourceMap: true
 				}
 			},
 			release: {
-				src: tsconfig.files,
-				reference: 'iridium.d.ts',
+				src: ["lib/**/*.ts"],
 				options: {
 					sourceMap: false
 				}
@@ -65,6 +62,13 @@ module.exports = function (grunt) {
 					require: ["test/support/chai", "test/support/config"]
 				}
 			}
+		},
+		
+		clean: {
+			definitions: ["*.d.ts", "!iridium.d.ts", "!_references.d.ts", "benchmarks/**/*.d.ts", "example/**/*.d.ts", "lib/**/*.d.ts", "test/**/*.d.ts"],
+			sourceMaps: ["*.map", "benchmarks/**/*.map", "example/**/*.map", "lib/**/*.map", "test/**/*.map"],
+			compiledFiles: ["*.js", "!Gruntfile.js", "benchmarks/**/*.js", "example/**/*.js", "lib/**/*.js", "test/**/*.js"],
+			coverage: ["coverage"]
 		}
 	});
     
@@ -78,10 +82,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-ts");
 	grunt.loadNpmTasks("grunt-mocha-cli");
 	grunt.loadNpmTasks("grunt-mocha-istanbul");
+	grunt.loadNpmTasks("grunt-contrib-clean");
 	
-    grunt.registerTask("default", ["ts:dev"]);
-	grunt.registerTask("test", ["ts:test", "mochacli"]);
-	grunt.registerTask("coverage", ["ts:test", "mocha_istanbul:coverage"]);
-	grunt.registerTask("coveralls", ["ts:test", "mocha_istanbul:coveralls"]);
-	grunt.registerTask("release", ["ts:release"]);
+    grunt.registerTask("default", ["clean", "ts:dev"]);
+	grunt.registerTask("test", ["clean", "ts:test", "mochacli"]);
+	grunt.registerTask("coverage", ["clean", "ts:test", "mocha_istanbul:coverage"]);
+	grunt.registerTask("coveralls", ["clean", "ts:test", "mocha_istanbul:coveralls"]);
+	grunt.registerTask("release", ["clean", "ts:release"]);
 };
