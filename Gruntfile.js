@@ -71,12 +71,10 @@ module.exports = function (grunt) {
 			coverage: ["coverage"]
 		},
 
-		release: {
+		_release: {
 			options: {
 				tagName: "v<%= version %>",
-				commitMessage: "v<%= version %>",
-				beforeBump: ["clean"],
-				beforeRelease: ["ts:release"]
+				commitMessage: "v<%= version %>"
 			}
 		}
 	});
@@ -88,6 +86,8 @@ module.exports = function (grunt) {
 		});
 	});
 	
+	grunt.renameTask('release', '_release');
+	
     grunt.loadNpmTasks("grunt-ts");
 	grunt.loadNpmTasks("grunt-mocha-cli");
 	grunt.loadNpmTasks("grunt-mocha-istanbul");
@@ -98,4 +98,5 @@ module.exports = function (grunt) {
 	grunt.registerTask("test", ["clean", "ts:test", "mochacli"]);
 	grunt.registerTask("coverage", ["clean", "ts:test", "mocha_istanbul:coverage"]);
 	grunt.registerTask("coveralls", ["clean", "ts:test", "mocha_istanbul:coveralls"]);
+	grunt.registerTask("release", ["clean", "ts:release", "_release"]);
 };
