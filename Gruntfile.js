@@ -73,6 +73,8 @@ module.exports = function (grunt) {
 
 		release: {
 			options: {
+				tagName: "v<%= version %>",
+				commitMessage: "v<%= version %>",
 				beforeBump: ["clean"],
 				beforeRelease: ["ts:release"],
 				github: {
