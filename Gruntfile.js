@@ -76,10 +76,7 @@ module.exports = function (grunt) {
 				tagName: "v<%= version %>",
 				commitMessage: "v<%= version %>",
 				beforeBump: ["clean"],
-				beforeRelease: ["ts:release"],
-				github: {
-					repo: "SierraSoftworks/Iridium"
-				}
+				beforeRelease: ["ts:release"]
 			}
 		}
 	});
