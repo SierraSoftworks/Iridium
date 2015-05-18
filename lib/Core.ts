@@ -1,3 +1,4 @@
+/// <reference path="../_references.d.ts" />
 import Bluebird = require('bluebird');
 import MongoDB = require('mongodb');
 import _ = require('lodash');

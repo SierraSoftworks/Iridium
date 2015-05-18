@@ -1,4 +1,5 @@
-﻿import MongoDB = require('mongodb');
+﻿/// <reference path="../_references.d.ts" />
+import MongoDB = require('mongodb');
 import Index = require('./Index');
 import Hooks = require('./Hooks');
 import CacheDirector = require('./CacheDirector');

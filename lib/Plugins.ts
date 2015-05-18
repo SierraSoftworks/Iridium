@@ -1,3 +1,4 @@
+/// <reference path="../_references.d.ts" />
 import core = require('./Core');
 import ModelInterfaces = require('./ModelInterfaces');
 import instance = require('./Instance');

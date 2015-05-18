@@ -1,3 +1,4 @@
+/// <reference path="../../_references.d.ts" />
 import _ = require('lodash');
 import MongoDB = require('mongodb');
 

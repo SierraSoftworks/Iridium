@@ -1,4 +1,5 @@
-﻿import iridium = require('./Core');
+﻿/// <reference path="../_references.d.ts" />
+import iridium = require('./Core');
 import Model = require('./Model');
 import IPlugin = require('./Plugins');
 import _ = require('lodash');
