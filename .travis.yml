@@ -22,8 +22,11 @@ before_install:
 before_script:
   - "until nc -z localhost 27017; do echo Waiting for MongoDB; sleep 1; done"
   - "mongo --version"
-  
+
+script:
+  - grunt test
+
 after_script:
- - npm run coverage
- - coveralls < coverage/lcov.info
+ - grunt coveralls
+ - grunt coverage
  - codeclimate < coverage/lcov.info
