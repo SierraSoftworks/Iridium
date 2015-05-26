@@ -3,6 +3,7 @@
   "version": "5.2.1",
   "author": "Benjamin Pannell <admin@sierrasoftworks.com>",
   "description": "A custom lightweight ORM for MongoDB designed for power-users",
+  "license": "MIT",
   "homepage": "https://sierrasoftworks.com/iridium",
   "repository": {
     "url": "https://github.com/sierrasoftworks/iridium",
