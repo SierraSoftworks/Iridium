@@ -41,7 +41,41 @@ describe("Core",() => {
                 chai.expect(core.url).to.equal("mongodb://user:password@localhost:27016/test");
             });
             
+            it("when only a single host is specified with no port",() => {
+                var core = new Iridium.Core({
+                    host: 'localhost',
+                    database: 'test',
+                    username: 'user',
+                    password: 'password'
+                });
+    
+                chai.expect(core.url).to.equal("mongodb://user:password@localhost/test");
+            });
+            
             it("when multiple hosts are specified",() => {
+                var core = new Iridium.Core({
+                    hosts: [{ address: 'localhost' }, { address: '127.0.0.1' }],
+                    database: 'test',
+                    port: 27016,
+                    username: 'user',
+                    password: 'password'
+                });
+    
+                chai.expect(core.url).to.equal("mongodb://user:password@localhost:27016,127.0.0.1:27016/test");
+            });
+            
+            it("when multiple hosts are specified with no port",() => {
+                var core = new Iridium.Core({
+                    hosts: [{ address: 'localhost' }, { address: '127.0.0.1' }],
+                    database: 'test',
+                    username: 'user',
+                    password: 'password'
+                });
+    
+                chai.expect(core.url).to.equal("mongodb://user:password@localhost,127.0.0.1/test");
+            });
+            
+            it("when multiple hosts are specified with different ports",() => {
                 var core = new Iridium.Core({
                     hosts: [{ address: 'localhost', port: 27016 }, { address: '127.0.0.1', port: 27017 }],
                     database: 'test',

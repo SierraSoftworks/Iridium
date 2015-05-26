@@ -22,6 +22,36 @@ var MongoConnectAsyc = Bluebird.promisify(MongoDB.MongoClient.connect);
 export = Core;
 
 class Core {
+    /**
+     * Creates a new Iridium Core instance connected to the specified MongoDB instance
+     * @param {Iridium.IridiumConfiguration} config The config object defining the database to connect to
+     * @constructs Core
+     */
+    constructor(config: config);
+    /**
+     * Creates a new Iridium Core instance connected to the specified MongoDB instance
+     * @param {String} url The URL of the MongoDB instance to connect to
+     * @param {Iridium.IridiumConfiguration} config The config object made available as settings
+     * @constructs Core
+     */
+    constructor(uri: string, config?: config);
+    constructor(uri: string | config, config?: config) {
+
+        var args = Array.prototype.slice.call(arguments, 0);
+        uri = config = null;
+        for (var i = 0; i < args.length; i++) {
+            if (typeof args[i] == 'string')
+                uri = args[i];
+            else if (typeof args[i] == 'object')
+                config = args[i];
+        }
+
+        if (!uri && !config) throw new Error("Expected either a URI or config object to be supplied when initializing Iridium");
+
+        this._url = <string>uri;
+        this._config = config;
+    }
+    
     private _plugins: IPlugin[] = [];
     private _url: string;
     private _config: config;
@@ -82,6 +112,8 @@ class Core {
             _.each(this._config.hosts, (host) => {
                 if (host.port)
                     hosts.push(host.address + ':' + host.port);
+                else if(this._config.port)
+                    hosts.push(host.address + ':' + this._config.port);
                 else
                     hosts.push(host.address);
             });
@@ -107,36 +139,6 @@ class Core {
 
     set cache(value: Cache) {
         this._cache = value;
-    }
-
-    /**
-     * Creates a new Iridium Core instance connected to the specified MongoDB instance
-     * @param {Iridium.IridiumConfiguration} config The config object defining the database to connect to
-     * @constructs Core
-     */
-    constructor(config: config);
-    /**
-     * Creates a new Iridium Core instance connected to the specified MongoDB instance
-     * @param {String} url The URL of the MongoDB instance to connect to
-     * @param {Iridium.IridiumConfiguration} config The config object made available as settings
-     * @constructs Core
-     */
-    constructor(uri: string, config?: config);
-    constructor(uri: string | config, config?: config) {
-
-        var args = Array.prototype.slice.call(arguments, 0);
-        uri = config = null;
-        for (var i = 0; i < args.length; i++) {
-            if (typeof args[i] == 'string')
-                uri = args[i];
-            else if (typeof args[i] == 'object')
-                config = args[i];
-        }
-
-        if (!uri && !config) throw new Error("Expected either a URI or config object to be supplied when initializing Iridium");
-
-        this._url = <string>uri;
-        this._config = config;
     }
 
     /**
