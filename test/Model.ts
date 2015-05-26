@@ -218,7 +218,7 @@ describe("Model",() => {
     describe("remove()",() => {
         var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { _id: false, answer: Number });
 
-        before(() => {
+        beforeEach(() => {
             return core.connect().then(() => model.remove()).then(() => model.insert([
                 { answer: 10 },
                 { answer: 11 },
@@ -247,13 +247,29 @@ describe("Model",() => {
         });
 
         it("should allow the removal of all documents",() => {
-            return chai.expect(model.remove()).to.eventually.equal(3);
+            return chai.expect(model.remove()).to.eventually.equal(5);
         });
 
         it("should support a callback style instead of promises",(done) => {
             model.remove((err, removed) => {
                 if (err) return done(err);
-                chai.expect(removed).to.exist.and.equal(0);
+                chai.expect(removed).to.exist.and.equal(5);
+                return done();
+            });
+        });
+
+        it("should support a callback style instead of promises when conditions are specified",(done) => {
+            model.remove({ answer: 10 }, (err, removed) => {
+                if (err) return done(err);
+                chai.expect(removed).to.exist.and.equal(1);
+                return done();
+            });
+        });
+
+        it("should support a callback style instead of promises when options are specified",(done) => {
+            model.remove({ answer: 10 }, { w: 1 }, (err, removed) => {
+                if (err) return done(err);
+                chai.expect(removed).to.exist.and.equal(1);
                 return done();
             });
         });
