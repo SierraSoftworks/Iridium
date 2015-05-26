@@ -1,3 +1,2 @@
-/// <reference path="./typings/tsd.d.ts" />
+/// <reference path="./typings/DefinitelyTyped/tsd.d.ts" />
 /// <reference path="./typings/skmatc/skmatc.d.ts" />
-/// <reference path="./typings/concoction/concoction.d.ts" />

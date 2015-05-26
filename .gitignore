@@ -11,5 +11,5 @@ node_modules/
 dist/
 *.tmp
 coverage/
-typings/**/*.d.ts
+typings/DefinitelyTyped/**/*.d.ts
 .tscache
