@@ -1,8 +1,7 @@
 ﻿/// <reference path="../_references.d.ts" />
 import MongoDB = require('mongodb');
 import Model = require('./Model');
-import Concoction = require('concoction');
-import Skmatc = require('skmatc');
+import skmatc = require('skmatc');
 import Omnom = require('./utils/Omnom');
 import _ = require('lodash');
 import Bluebird = require('bluebird');
@@ -11,17 +10,17 @@ export = ModelHelpers;
 
 class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
     constructor(public model: Model<TDocument, TInstance>) {
-        this._validator = new Skmatc(model.schema);
+        this._validator = new skmatc(model.schema);
     }
 
-    private _validator: Skmatc;
+    private _validator: Skmatc.Skmatc;
 
     /**
      * Validates a document to ensure that it matches the model's ISchema requirements
      * @param {any} document The document to validate against the ISchema
      * @returns {SkmatcCore.IResult} The result of the validation
      */
-    validate(document: TDocument): SkmatcCore.IResult {
+    validate(document: TDocument): Skmatc.Result {
         return this._validator.validate(document);
     }
 

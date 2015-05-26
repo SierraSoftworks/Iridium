@@ -47,7 +47,7 @@ class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
         return Bluebird.all(documents.map((document: any) => {
             return Bluebird.resolve().then(() => {
                 if (this.model.hooks.onRetrieved) this.model.hooks.onCreating(document);
-                var validation: SkmatcCore.IResult = this.model.helpers.validate(document);
+                var validation: Skmatc.Result = this.model.helpers.validate(document);
                 if (validation.failed) return Bluebird.reject(validation.error);
                 return document;
             });
