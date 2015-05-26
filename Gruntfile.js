@@ -46,7 +46,7 @@ module.exports = function (grunt) {
 				root: 'lib',
 				options: {
 					mask: '*.js',
-					reportFormats: ['lcovonly'],
+					reportFormats: ['lcovonly', 'html'],
 					timeout: '10s',
 					require: ["test/support/chai", "test/support/config"],
 					check: {
