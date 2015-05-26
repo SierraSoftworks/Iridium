@@ -22,7 +22,7 @@ module.exports = function (grunt) {
 				}
 			},
 			release: {
-				src: ["lib/**/*.ts"],
+				src: ["index.ts", "lib/**/*.ts"],
 				options: {
 					sourceMap: false,
 					fast: 'never'
