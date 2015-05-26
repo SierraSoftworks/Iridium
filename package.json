@@ -1,6 +1,6 @@
 {
   "name": "iridium",
-  "version": "5.0.1",
+  "version": "5.1.0",
   "author": "Benjamin Pannell <admin@sierrasoftworks.com>",
   "description": "A custom lightweight ORM for MongoDB designed for power-users",
   "homepage": "https://sierrasoftworks.com/iridium",
