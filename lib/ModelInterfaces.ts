@@ -5,6 +5,7 @@ import MongoDB = require('mongodb');
 import Model = require('./Model');
 import ModelCache = require('./ModelCache');
 import CacheDirector = require('./CacheDirector');
+import Hooks = require('./Hooks');
 
 export interface IModelBase {
     collection: MongoDB.Collection;
@@ -19,7 +20,7 @@ export interface IModel<TDocument extends { _id?: any }, TInstance> extends IMod
     Instance: new (doc: TDocument, isNew?: boolean, isPartial?: boolean) => TInstance;
 }
 
-export interface InstanceConstructor<TDocument extends { _id?: any }, TInstance> {
+export interface InstanceImplementation<TDocument extends { _id?: any }, TInstance> extends Hooks<TDocument, TInstance> {
     new (model: Model<TDocument, TInstance>, doc: TDocument, isNew?: boolean, isPartial?: boolean): TInstance;
 }
 

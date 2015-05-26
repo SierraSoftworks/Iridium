@@ -9,7 +9,7 @@ import _ = require('lodash');
 import Iridium = require('./Core');
 import instance = require('./Instance');
 import ISchema = require('./Schema');
-import hooks = require('./Hooks');
+import Hooks = require('./Hooks');
 import IPlugin = require('./Plugins');
 import cache = require('./Cache');
 import CacheDirector = require('./CacheDirector');
@@ -45,14 +45,13 @@ class Model<TDocument extends { _id?: any }, TInstance> implements ModelInterfac
      * @returns {Model}
      * @constructor
      */
-    constructor(core: Iridium, instanceType: ModelInterfaces.InstanceCreator<TDocument, TInstance> | ModelInterfaces.InstanceConstructor<TDocument, TInstance>, collection: string, schema: ISchema, options: ModelOptions.IModelOptions<TDocument, TInstance> = {}) {
+    constructor(core: Iridium, instanceType: ModelInterfaces.InstanceCreator<TDocument, TInstance> | ModelInterfaces.InstanceImplementation<TDocument, TInstance>, collection: string, schema: ISchema, options: ModelOptions.IModelOptions<TDocument, TInstance> = {}) {
         if (!(core instanceof Iridium)) throw new Error("You failed to provide a valid Iridium core for this model");
         if (typeof instanceType != 'function') throw new Error("You failed to provide a valid instance constructor for this model");
         if (typeof collection != 'string' || !collection) throw new Error("You failed to provide a valid collection name for this model");
         if (!_.isPlainObject(schema) || schema._id === undefined) throw new Error("You failed to provide a valid schema for this model");
 
         _.defaults(options, <ModelOptions.IModelOptions<TDocument, TInstance>>{
-            hooks: {},
             identifier: {
                 apply: function (value) {
                     return (value && value._bsontype == 'ObjectID') ? new MongoDB.ObjectID(value.id).toHexString() : value;
@@ -79,10 +78,12 @@ class Model<TDocument extends { _id?: any }, TInstance> implements ModelInterfac
         this._cache = new ModelCache(this);
 
         if ((<Function>instanceType).prototype instanceof instance)
-            this._Instance = ModelSpecificInstance(this, <ModelInterfaces.InstanceConstructor<TDocument, TInstance>>instanceType);
+            this._Instance = ModelSpecificInstance(this, <ModelInterfaces.InstanceImplementation<TDocument, TInstance>>instanceType);
         else
             this._Instance = <ModelInterfaces.ModelSpecificInstanceConstructor<TDocument, TInstance>>((<Function>instanceType).bind(undefined, this));
 
+        this._hooks = <ModelInterfaces.InstanceImplementation<TDocument, TInstance>>instanceType;
+        
         this._helpers = new ModelHelpers(this);
         this._handlers = new ModelHandlers(this);
     }
@@ -91,7 +92,7 @@ class Model<TDocument extends { _id?: any }, TInstance> implements ModelInterfac
     /**
      * Gets the options provided when instantiating this model
      * @public
-     * @returns {IModelOptions<TSchema>}
+     * @returns {ModelOptions.IModelOptions}
      * @description
      * This is intended to be consumed by plugins which require any configuration
      * options. Changes made to this object after the {plugin.newModel} hook are
@@ -104,7 +105,7 @@ class Model<TDocument extends { _id?: any }, TInstance> implements ModelInterfac
     private _helpers: ModelHelpers<TDocument, TInstance>;
     /**
      * Provides helper methods used by Iridium for common tasks
-     * @returns {ModelHelpers<TSchema>}
+     * @returns {ModelHelpers}
      */
     get helpers(): ModelHelpers<TDocument, TInstance> {
         return this._helpers;
@@ -113,10 +114,20 @@ class Model<TDocument extends { _id?: any }, TInstance> implements ModelInterfac
     private _handlers: ModelHandlers<TDocument, TInstance>;
     /**
      * Provides helper methods used by Iridium for hook delegation and common processes
-     * @returns {ModelHandlers<TSchema>}
+     * @returns {ModelHandlers}
      */
     get handlers(): ModelHandlers<TDocument, TInstance> {
         return this._handlers;
+    }
+    
+    private _hooks: Hooks<TDocument, TInstance> = {};
+    
+    /**
+     * Gets the even hooks subscribed on this model for a number of different state changes
+     * @returns {Hooks}
+     */
+    get hooks(): Hooks<TDocument, TInstance> {
+        return this._hooks;
     }
 
     private _schema: ISchema;

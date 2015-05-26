@@ -8,12 +8,28 @@ interface TestDocument {
     answer: number;
 }
 
+var hookEmitter = new Events.EventEmitter();
+
 class Test extends Iridium.Instance<TestDocument, Test> {
     id: string;
     answer: number;
+    
+    static onCreating(document: TestDocument) {
+        hookEmitter.emit('creating', document);
+    }
+    
+    static onReady(instance: Test) {
+        hookEmitter.emit('ready', instance);
+    }
+    
+    static onRetrieved(document: TestDocument) {
+        hookEmitter.emit('retrieved', document);
+    }
+    
+    static onSaving(instance: Test, changes: any) {
+        hookEmitter.emit('saving', instance, changes);
+    }
 }
-
-var hookEmitter = new Events.EventEmitter();
 
 describe("Hooks", function () {
     this.timeout(500);
@@ -22,14 +38,7 @@ describe("Hooks", function () {
     var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', {
         _id: false,
         answer: Number
-    }, {
-            hooks: {
-                creating: (document) => hookEmitter.emit('creating', document),
-                ready: (instance) => hookEmitter.emit('ready', instance),
-                retrieved: (document) => hookEmitter.emit('retrieved', document),
-                saving: (instance, changes) => hookEmitter.emit('saving', instance, changes)
-            }
-        });
+    });
 
     beforeEach(() => core.connect().then(() => model.remove()).then(() => model.insert({ answer: 10 })));
     afterEach(() => model.remove());

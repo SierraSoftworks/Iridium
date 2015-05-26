@@ -9,18 +9,24 @@ interface UserDoc {
     email: string;
     dateOfBirth: Date;
     passwordHash: string;
+    joined?: Date;
 }
 
-class User extends Iridium.Instance<UserDoc, User> implements UserDoc {
+class User extends Iridium.Instance<UserDoc, User> implements UserDoc, Iridium.Hooks<UserDoc, User> {
     _id: string;
     username: string;
     fullname: string;
     email: string;
     dateOfBirth: Date;
     passwordHash: string;
+    joined: Date;
 
     changePassword(newPassword: string) {
         this.passwordHash = newPassword.toLowerCase();
+    }
+    
+    static onCreating(doc: UserDoc) {
+        doc.joined = new Date();
     }
 }
 
@@ -31,7 +37,8 @@ class MyDB extends Iridium.Core {
         fullname: String,
         email: String,
         dateOfBirth: Date,
-        passwordHash: String
+        passwordHash: String,
+        joined: Date
     }, {
         indexes: [
             { email: 1 }
@@ -44,7 +51,8 @@ class MyDB extends Iridium.Core {
         fullname: String,
         email: String,
         dateOfBirth: Date,
-        passwordHash: String
+        passwordHash: String,
+        joined: Date
     }, {
         indexes: [
             { email: 1 }

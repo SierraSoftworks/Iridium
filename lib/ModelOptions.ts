@@ -38,7 +38,6 @@ export interface RemoveOptions {
 }
 
 export interface IModelOptions<TDocument, TInstance> {
-    hooks?: Hooks<TDocument, TInstance>;
     validators?: SkmatcCore.IValidator[];
     cache?: CacheDirector;
     indexes?: (Index.Index | Index.IndexSpecification)[];

@@ -27,7 +27,7 @@ class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
         return Bluebird.resolve(result).then((target: any) => {
             return <Bluebird<TResult>>Bluebird.resolve().then(() => {
                 // Trigger the received hook
-                if (this.model.options.hooks.retrieved) this.model.options.hooks.retrieved(target);
+                if (this.model.hooks.onRetrieved) this.model.hooks.onRetrieved(target);
 
                 // Cache the document if caching is enabled
                 if (this.model.core.cache && options.cache && !options.fields) {
@@ -37,7 +37,7 @@ class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
                 // Wrap the document and trigger the ready hook
                 var wrapped: TResult = wrapper(target, false, !!options.fields);
 
-                if (this.model.options.hooks.ready && wrapped instanceof this.model.Instance) this.model.options.hooks.ready(<TInstance><any>wrapped);
+                if (this.model.hooks.onReady && wrapped instanceof this.model.Instance) this.model.hooks.onReady(<TInstance><any>wrapped);
                 return wrapped;
             });
         });
@@ -46,7 +46,7 @@ class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
     creatingDocuments(documents: TDocument[]): Bluebird<any[]> {
         return Bluebird.all(documents.map((document: any) => {
             return Bluebird.resolve().then(() => {
-                if (this.model.options.hooks.retrieved) this.model.options.hooks.creating(document);
+                if (this.model.hooks.onRetrieved) this.model.hooks.onCreating(document);
                 var validation: SkmatcCore.IResult = this.model.helpers.validate(document);
                 if (validation.failed) return Bluebird.reject(validation.error);
                 return document;
@@ -56,7 +56,7 @@ class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
 
     savingDocument(instance: TInstance, changes: any): Bluebird<TInstance> {
         return Bluebird.resolve().then(() => {
-            if (this.model.options.hooks.saving) this.model.options.hooks.saving(instance, changes);
+            if (this.model.hooks.onSaving) this.model.hooks.onSaving(instance, changes);
             return instance;
         });
     }

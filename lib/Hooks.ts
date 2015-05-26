@@ -4,8 +4,8 @@ import instance = require('./Instance');
 export = IHooks;
 
 interface IHooks<TDocument, TInstance> {
-    creating? (document: TDocument): void;
-    retrieved? (document: TDocument): void;
-    ready? (instance: TInstance): void;
-    saving? (instance: TInstance, changes: any): void;
+    onCreating? (document: TDocument): void;
+    onRetrieved? (document: TDocument): void;
+    onReady? (instance: TInstance): void;
+    onSaving? (instance: TInstance, changes: any): void;
 }
