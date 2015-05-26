@@ -88,7 +88,7 @@ module.exports = function (grunt) {
 				files: { "_references.d.ts": "_references.d.ts" },
 				options: {
 					replacements: [{
-						pattern: /(\/\/\/ <reference path="\.\/typings\/tsd.d.ts" \/>)/gi,
+						pattern: /(\/\/\/ <reference path="\.\/typings\/DefinitelyTyped\/tsd.d.ts" \/>)/gi,
 						replacement: '//$1'
 					}]
 				}
@@ -97,7 +97,7 @@ module.exports = function (grunt) {
 				files: { "_references.d.ts": "_references.d.ts" },
 				options: {
 					replacements: [{
-						pattern: /\/\/(\/\/\/ <reference path="\.\/typings\/tsd.d.ts" \/>)/gi,
+						pattern: /\/\/(\/\/\/ <reference path="\.\/typings\/DefinitelyTyped\/tsd.d.ts" \/>)/gi,
 						replacement: '$1'
 					}]
 				}
