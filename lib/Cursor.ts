@@ -100,6 +100,7 @@ class Cursor<TDocument extends { _id?: any }, TInstance> {
                 return resolve(<any>result);
             });
         }).then((document) => {
+            if (!document) return Bluebird.resolve(<TInstance>null);
             return this.model.handlers.documentReceived(this.conditions, document,(document, isNew?, isPartial?) => this.model.helpers.wrapDocument(document, isNew, isPartial));
         }).nodeify(callback);
     }

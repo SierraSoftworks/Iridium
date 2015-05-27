@@ -437,6 +437,12 @@ describe("Model",() => {
                     count++;
                 }).then(() => chai.expect(count).to.not.equal(5)).then(() => Promise.delay(10)).then(() => count)).to.eventually.equal(5);
             });
+            
+            it("should be capable of functioning correctly with empty result sets",() => {
+                return chai.expect(model.find({ nothing: true }).forEach((instance) => {
+                    chai.assert.fail();
+                })).to.eventually.not.be.rejected;
+            });
 
             it("should support using callbacks instead of promises",(done) => {
                 var count = 0;
@@ -471,6 +477,12 @@ describe("Model",() => {
                     return count++;
                 }).then(() => count)).to.eventually.equal(5);
             });
+            
+            it("should be capable of functioning correctly with empty result sets",() => {
+                return chai.expect(model.find({ nothing: true }).map((instance) => {
+                    chai.assert.fail();
+                })).to.eventually.eql([]);
+            });
 
             it("should support using callbacks instead of promises",(done) => {
                 var count = 0;
@@ -485,6 +497,10 @@ describe("Model",() => {
         describe("toArray()",() => {
             it("should return all documents",() => {
                 return chai.expect(model.find().toArray()).to.eventually.exist.and.have.length(5);
+            });
+            
+            it("should be capable of functioning correctly with empty result sets",() => {
+                return chai.expect(model.find({ nothing: true }).toArray()).to.eventually.eql([]);
             });
 
             it("should support a callback style instead of promises",(done) => {
@@ -503,6 +519,10 @@ describe("Model",() => {
 
             it("which should resolve to the next instance in the query",() => {
                 return chai.expect(model.find().next()).to.eventually.be.an.instanceof(model.Instance);
+            });
+            
+            it("should be capable of functioning correctly with empty result sets",() => {
+                return chai.expect(model.find({ nothing: true }).next()).to.eventually.not.exist;
             });
 
             it("should support using callbacks instead of promises",(done) => {
