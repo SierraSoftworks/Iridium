@@ -300,6 +300,10 @@ describe("Model",() => {
             return chai.expect(model.findOne()).to.eventually.exist.and.have.property('answer').is.a('number');
         });
 
+        it("should support a query which returns nothing",() => {
+            return chai.expect(model.findOne({ nothing: true })).to.eventually.not.exist;
+        });
+
         it("should support retrieving a document using its ID",() => {
             return chai.expect(model.findOne().then((doc) => model.findOne(doc._id))).to.eventually.exist.and.have.property('answer').is.a('number');
         });
@@ -358,6 +362,10 @@ describe("Model",() => {
 
         it("should support retrieving an random document",() => {
             return chai.expect(model.get()).to.eventually.exist.and.have.property('answer').is.a('number');
+        });
+
+        it("should support a query which returns nothing",() => {
+            return chai.expect(model.get({ nothing: true })).to.eventually.not.exist;
         });
 
         it("should support retrieving a document using its ID",() => {
