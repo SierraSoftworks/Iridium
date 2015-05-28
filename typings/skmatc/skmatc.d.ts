@@ -1,5 +1,7 @@
 declare module "skmatc" {
-    export = Skmatc.Skmatc;
+    export = SkmatcCore;
+    
+    class SkmatcCore extends Skmatc.Skmatc { }
 }
 
 declare module Skmatc {
