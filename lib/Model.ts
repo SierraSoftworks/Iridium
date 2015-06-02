@@ -461,14 +461,14 @@ class Model<TDocument extends { _id?: any }, TInstance> implements ModelInterfac
                 });
             }
             else
-                return this._handlers.creatingDocuments(objects).then((objects) => {
+                return this._handlers.creatingDocuments(objects).then(objects => _.chunk(objects, 1000)).map((objects: any[]) => {
                     return new Bluebird<any[]>((resolve, reject) => {
                         this.collection.insertMany(objects, queryOptions,(err, result) => {
                             if (err) return reject(err);
                             return resolve(result.ops);
                         });
                     });
-                });
+                }).then(results => _.flatten(results));
         }).map((inserted: any) => {
             return this._handlers.documentReceived(null, inserted,(document, isNew?, isPartial?) => this._helpers.wrapDocument(document, isNew, isPartial), { cache: options.cache });
         }).then((results: TInstance[]) => {
