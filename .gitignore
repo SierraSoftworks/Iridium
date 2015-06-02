@@ -13,3 +13,4 @@ dist/
 coverage/
 typings/DefinitelyTyped/**/*.d.ts
 .tscache
+*.js
