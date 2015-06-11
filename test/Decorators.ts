@@ -11,9 +11,13 @@ interface TestDocument {
 @Iridium.Index({ name: 1 })
 @Iridium.Index({ email: 1 }, { background: true })
 class Test extends Iridium.Instance<TestDocument, Test> implements TestDocument {
-	_id: string;
-	name: string;
-	email: string;
+	
+	@Iridium.ObjectID
+	get _id(): string { return this.document._id; }
+	set _id(value: string) { this.document._id = value; }
+	
+	@Iridium.Property name: string;
+	@Iridium.Property email: string;
 }
 
 describe("Decorators", () => {
