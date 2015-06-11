@@ -1,7 +1,6 @@
 /// <reference path="../_references.d.ts" />
-import Core = require('./Core');
+import Core from './Core';
 
-export = IMiddlewareFactory;
-interface IMiddlewareFactory<T> {
+export interface MiddlewareFactory<T> {
     (core: Core): T;
 }

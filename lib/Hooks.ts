@@ -1,9 +1,7 @@
 /// <reference path="../_references.d.ts" />
 import instance = require('./Instance');
 
-export = IHooks;
-
-interface IHooks<TDocument, TInstance> {
+export interface Hooks<TDocument, TInstance> {
     onCreating? (document: TDocument): void;
     onRetrieved? (document: TDocument): void;
     onReady? (instance: TInstance): void;

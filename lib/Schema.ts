@@ -1,7 +1,5 @@
 /// <reference path="../_references.d.ts" />
-export = ISchema;
-
-interface ISchema {
+export interface Schema {
     _id: boolean | any;
     [key:string]: any;
 }

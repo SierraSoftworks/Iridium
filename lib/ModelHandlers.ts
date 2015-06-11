@@ -1,16 +1,15 @@
 ﻿/// <reference path="../_references.d.ts" />
-import Iridium = require('./Core');
-import ISchema = require('./Schema');
-import MongoDB = require('mongodb');
-import Model = require('./Model');
-import ModelCache = require('./ModelCache');
-import ModelOptions = require('./ModelOptions');
+import Core from './Core';
+import {Schema} from './Schema';
+import Model from './Model';
+import ModelCache from './ModelCache';
+import * as ModelOptions from './ModelOptions';
+
 import _ = require('lodash');
+import MongoDB = require('mongodb');
 import Bluebird = require('bluebird');
 
-export = ModelHandlers;
-
-class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
+export default class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
     constructor(public model: Model<TDocument, TInstance>) {
 
     }

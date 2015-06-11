@@ -1,11 +1,8 @@
 /// <reference path="../_references.d.ts" />
 import core = require('./Core');
-import ModelInterfaces = require('./ModelInterfaces');
-import instance = require('./Instance');
+import * as ModelInterfaces from './ModelInterfaces';
 
-export = IPlugin;
-
-interface IPlugin {
+export interface Plugin {
     newModel? (model: ModelInterfaces.IModel<any, any>);
     newInstance? (instance: any, model: ModelInterfaces.IModelBase);
     validate?: Skmatc.Validator | Skmatc.Validator[];

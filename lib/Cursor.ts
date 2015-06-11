@@ -1,13 +1,11 @@
 ﻿/// <reference path="../_references.d.ts" />
-import Model = require('./Model');
+import Model from './Model';
 import General = require('./General');
 import MongoDB = require('mongodb');
 import Bluebird = require('bluebird');
-import Index = require('./Index');
+import * as Index from './Index';
 
-export = Cursor;
-
-class Cursor<TDocument extends { _id?: any }, TInstance> {
+export default class Cursor<TDocument extends { _id?: any }, TInstance> {
     /**
      * Creates a new Iridium cursor which wraps a MongoDB cursor object
      * @param {Model} model The Iridium model that this cursor belongs to

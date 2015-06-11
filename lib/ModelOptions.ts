@@ -2,8 +2,8 @@
 import MongoDB = require('mongodb');
 import Index = require('./Index');
 import Hooks = require('./Hooks');
-import CacheDirector = require('./CacheDirector');
-import General = require('./General');
+import {CacheDirector} from './CacheDirector';
+import * as General from './General';
 
 export interface QueryOptions {
     cache?: boolean;

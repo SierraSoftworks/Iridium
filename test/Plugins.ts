@@ -1,4 +1,5 @@
-import Iridium = require('../index');
+/// <reference path="../_references.d.ts" />
+import * as Iridium from '../index';
 import Skmatc = require('skmatc');
 
 describe("Plugins",() => {

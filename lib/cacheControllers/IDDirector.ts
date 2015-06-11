@@ -1,10 +1,8 @@
 /// <reference path="../../_references.d.ts" />
-import cacheDirector = require('../CacheDirector');
+import {CacheDirector} from '../CacheDirector';
 import MongoDB = require('mongodb');
 
-export = IDCacheDirector;
-
-class IDCacheDirector implements cacheDirector{
+export default class IDCacheDirector implements CacheDirector{
     valid(object: { _id: any }) {
         return !!object._id;
     }

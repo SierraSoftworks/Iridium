@@ -1,37 +1,19 @@
-import _Core = require('./lib/Core');
-import _Model = require('./lib/Model');
-import _Instance = require('./lib/Instance');
+import Core from './lib/Core';
+import Model from './lib/Model';
+import Instance from './lib/Instance';
+export {Core, Model, Instance};
 
-import _Plugin = require('./lib/Plugins');
-import _Schema = require('./lib/Schema');
-import _Cache = require('./lib/Cache');
-import _CacheDirector = require('./lib/CacheDirector');
-import _ModelOptions = require('./lib/ModelOptions');
-import _Configuration = require('./lib/Configuration');
-import _Hooks = require('./lib/Hooks');
+export * from './lib/Plugins';
+export * from './lib/Schema';
+export * from './lib/Cache';
+export * from './lib/CacheDirector';
+export * from './lib/ModelOptions';
+export * from './lib/Configuration';
+export * from './lib/Hooks';
 
-import _MemoryCache = require('./lib/caches/MemoryCache');
-import _NoOpCache = require('./lib/caches/NoOpCache');
+import MemoryCache from './lib/caches/MemoryCache';
+import NoOpCache from './lib/caches/NoOpCache';
+export {MemoryCache, NoOpCache};
 
-import _IDDirector = require('./lib/cacheControllers/IDDirector');
-
-export = Iridium;
-
-module Iridium {
-    export class Core extends _Core { }
-    export class Model<TDocument extends { _id?: any }, TInstance> extends _Model<TDocument, TInstance> { }
-    export class Instance<TDocument extends { _id?: any }, TInstance> extends _Instance<TDocument, TInstance> { }
-
-    export class NoOpCache extends _NoOpCache { }
-    export class MemoryCache extends _MemoryCache { }
-
-    export class CacheOnID extends _IDDirector { }
-
-    export interface Configuration extends _Configuration { }
-    export interface Hooks<TDocument, TInstance> extends _Hooks<TDocument, TInstance> { }
-    export interface Plugin extends _Plugin { }
-    export interface Schema extends _Schema { }
-    export interface Cache extends _Cache { }
-    export interface CacheDirector extends _CacheDirector { }
-    export interface ModelOptions<TDocument, TInstance> extends _ModelOptions.IModelOptions<TDocument, TInstance> { }
-}
+import IDDirector from './lib/cacheControllers/IDDirector';
+export {IDDirector as CacheOnID};

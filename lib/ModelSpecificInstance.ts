@@ -1,12 +1,10 @@
 ﻿/// <reference path="../_references.d.ts" />
-import Model = require('./Model');
-import ModelInterfaces = require('./ModelInterfaces');
+import Model from './Model';
+import * as ModelInterfaces from './ModelInterfaces';
 import util = require('util');
 import _ = require('lodash');
 
-export = ModelSpecificInstance;
-
-function ModelSpecificInstance<TDocument extends { _id?: any }, TInstance>(model: Model<TDocument, TInstance>, instanceType: ModelInterfaces.InstanceImplementation<TDocument, TInstance>): new (doc: TDocument, isNew?: boolean, isPartial?: boolean) => TInstance {
+export default function ModelSpecificInstance<TDocument extends { _id?: any }, TInstance>(model: Model<TDocument, TInstance>, instanceType: ModelInterfaces.InstanceImplementation<TDocument, TInstance>): new (doc: TDocument, isNew?: boolean, isPartial?: boolean) => TInstance {
     var constructor = function (doc: TDocument, isNew?: boolean, isPartial?: boolean) {
         instanceType.call(this, model, doc, isNew, isPartial);
     };

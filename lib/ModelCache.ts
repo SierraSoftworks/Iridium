@@ -1,10 +1,8 @@
 ﻿/// <reference path="../_references.d.ts" />
-import ModelInterfaces = require('./ModelInterfaces');
+import * as ModelInterfaces from './ModelInterfaces';
 import Bluebird = require('bluebird');
 
-export = ModelCache;
-
-class ModelCache {
+export default class ModelCache {
     constructor(public model: ModelInterfaces.IModelBase) {
 
     }

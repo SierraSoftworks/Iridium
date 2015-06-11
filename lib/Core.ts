@@ -5,37 +5,36 @@ import _ = require('lodash');
 import http = require('http');
 import events = require('events');
 
-import config = require('./Configuration');
-import IPlugin = require('./Plugins');
-import Model = require('./Model');
-import Instance = require('./Instance');
+import {Configuration} from './Configuration';
+import {Plugin} from './Plugins';
+import Model from './Model';
+import Instance from './Instance';
 
-import middleware = require('./Middleware');
-import ExpressMiddleware = require('./middleware/Express');
+import {MiddlewareFactory} from './Middleware';
+import * as ExpressMiddleware from './middleware/Express';
+import ExpressMiddlewareFactory from './middleware/Express';
 
-import Cache = require('./Cache');
-import NoOpCache = require('./caches/NoOpCache');
-import MemoryCache = require('./caches/MemoryCache');
+import {Cache} from './Cache';
+import NoOpCache from './caches/NoOpCache';
+import MemoryCache from './caches/MemoryCache';
 
 var MongoConnectAsyc = Bluebird.promisify(MongoDB.MongoClient.connect);
 
-export = Core;
-
-class Core {
+export default class Core {
     /**
      * Creates a new Iridium Core instance connected to the specified MongoDB instance
      * @param {Iridium.IridiumConfiguration} config The config object defining the database to connect to
      * @constructs Core
      */
-    constructor(config: config);
+    constructor(config: Configuration);
     /**
      * Creates a new Iridium Core instance connected to the specified MongoDB instance
      * @param {String} url The URL of the MongoDB instance to connect to
      * @param {Iridium.IridiumConfiguration} config The config object made available as settings
      * @constructs Core
      */
-    constructor(uri: string, config?: config);
-    constructor(uri: string | config, config?: config) {
+    constructor(uri: string, config?: Configuration);
+    constructor(uri: string | Configuration, config?: Configuration) {
 
         var args = Array.prototype.slice.call(arguments, 0);
         uri = config = null;
@@ -52,9 +51,9 @@ class Core {
         this._config = config;
     }
     
-    private _plugins: IPlugin[] = [];
+    private _plugins: Plugin[] = [];
     private _url: string;
-    private _config: config;
+    private _config: Configuration;
     private _connection: MongoDB.Db;
     private _cache: Cache = new NoOpCache();
     
@@ -62,7 +61,7 @@ class Core {
      * Gets the plugins registered with this Iridium Core
      * @returns {[Iridium.Plugin]}
      */
-    get plugins(): IPlugin[] {
+    get plugins(): Plugin[] {
         return this._plugins;
     }
 
@@ -71,7 +70,7 @@ class Core {
      * Iridium Core.
      * @returns {Iridium.Configuration}
      */
-    get settings(): config {
+    get settings(): Configuration {
         return this._config;
     }
 
@@ -146,7 +145,7 @@ class Core {
      * @param {Iridium.Plugin} plugin The plugin to register with this Iridium Core
      * @returns {Iridium.Core}
      */
-    register(plugin: IPlugin): Core {
+    register(plugin: Plugin): Core {
         this.plugins.push(plugin);
         return this;
     }
@@ -188,6 +187,6 @@ class Core {
      * @returns {Iridium.ExpressMiddleware}
      */
     express(): ExpressMiddleware.ExpressMiddleware {
-        return ExpressMiddleware.ExpressMiddlewareFactory(this);
+        return ExpressMiddlewareFactory(this);
     }
 }

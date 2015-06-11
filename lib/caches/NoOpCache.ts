@@ -1,10 +1,8 @@
 /// <reference path="../../_references.d.ts" />
-import cache = require('../Cache');
+import {Cache} from '../Cache';
 import Bluebird = require('bluebird');
 
-export = NoOpCache;
-
-class NoOpCache implements cache {
+export default class NoOpCache implements Cache {
     set<T>(key: string, object: T): Bluebird<T> {
         return Bluebird.resolve(object);
     }

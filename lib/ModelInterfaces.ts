@@ -1,17 +1,17 @@
 ﻿/// <reference path="../_references.d.ts" />
-import Iridium = require('./Core');
-import ISchema = require('./Schema');
+import Iridium from './Core';
+import {Schema} from './Schema';
 import MongoDB = require('mongodb');
-import Model = require('./Model');
-import ModelCache = require('./ModelCache');
-import CacheDirector = require('./CacheDirector');
-import Hooks = require('./Hooks');
+import Model from './Model';
+import ModelCache from './ModelCache';
+import {CacheDirector} from './CacheDirector';
+import {Hooks} from './Hooks';
 
 export interface IModelBase {
     collection: MongoDB.Collection;
     collectionName: string;
     core: Iridium;
-    schema: ISchema;
+    schema: Schema;
     cache: ModelCache;
     cacheDirector: CacheDirector;
 }

@@ -1,9 +1,7 @@
 /// <reference path="../_references.d.ts" />
 import Bluebird = require('bluebird');
 
-export = ICache;
-
-interface ICache {
+export interface Cache {
     set<T>(key: string, value: T): void;
     get<T>(key: string): Bluebird<T>;
     clear(key: string): void

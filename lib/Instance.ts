@@ -1,13 +1,13 @@
 ﻿/// <reference path="../_references.d.ts" />
-import iridium = require('./Core');
-import Model = require('./Model');
-import IPlugin = require('./Plugins');
+import Core from './Core';
+import Model from './Model';
+import {Plugin} from './Plugins';
+import * as General from './General';
+
 import _ = require('lodash');
 import Bluebird = require('bluebird');
 
-import general = require('./General');
-
-class Instance<TDocument extends { _id?: any }, TInstance> {
+export default class Instance<TDocument extends { _id?: any }, TInstance> {
     /**
      * Creates a new instance which represents the given document as a type of model
      * @param {model.Model} model The model that the document represents
@@ -28,7 +28,7 @@ class Instance<TDocument extends { _id?: any }, TInstance> {
         this._original = document;
         this._modified = _.cloneDeep<TDocument>(document);
 
-        _.each(model.core.plugins,(plugin: IPlugin) => {
+        _.each(model.core.plugins,(plugin: Plugin) => {
             if (plugin.newInstance) plugin.newInstance(this, model);
         });
     }
@@ -53,14 +53,14 @@ class Instance<TDocument extends { _id?: any }, TInstance> {
      * @param {function(Error, IInstance)} callback A callback which is triggered when the save operation completes
      * @returns {Promise<TInstance>}
      */
-    save(callback?: general.Callback<TInstance>): Bluebird<TInstance>;
+    save(callback?: General.Callback<TInstance>): Bluebird<TInstance>;
     /**
      * Saves the given changes to this instance and updates the instance to match the latest database document.
      * @param {Object} changes The MongoDB changes object to be used when updating this instance
      * @param {function(Error, IInstance)} callback A callback which is triggered when the save operation completes
      * @returns {Promise<TInstance>}
      */
-    save(changes: Object, callback?: general.Callback<TInstance>): Bluebird<TInstance>;
+    save(changes: Object, callback?: General.Callback<TInstance>): Bluebird<TInstance>;
     /**
      * Saves the given changes to this instance and updates the instance to match the latest database document.
      * @param {Object} conditions The conditions under which the update will take place - these will be merged with an _id query
@@ -68,9 +68,9 @@ class Instance<TDocument extends { _id?: any }, TInstance> {
      * @param {function(Error, IInstance)} callback A callback which is triggered when the save operation completes
      * @returns {Promise<TInstance>}
      */
-    save(conditions: Object, changes: Object, callback?: general.Callback<TInstance>): Bluebird<TInstance>;
+    save(conditions: Object, changes: Object, callback?: General.Callback<TInstance>): Bluebird<TInstance>;
     save(...args: any[]): Bluebird<TInstance> {
-        var callback: general.Callback<any> = null;
+        var callback: General.Callback<any> = null;
         var changes: any = null;
         var conditions: any = {};
 
@@ -145,7 +145,7 @@ class Instance<TDocument extends { _id?: any }, TInstance> {
      * @param {function(Error, IInstance)} callback A callback which is triggered when the update completes
      * @returns {Promise<TInstance>}
      */
-    update(callback?: general.Callback<TInstance>): Bluebird<TInstance> {
+    update(callback?: General.Callback<TInstance>): Bluebird<TInstance> {
         return this.refresh(callback);
     }
 
@@ -154,7 +154,7 @@ class Instance<TDocument extends { _id?: any }, TInstance> {
      * @param {function(Error, IInstance)} callback A callback which is triggered when the update completes
      * @returns {Promise<TInstance>}
      */
-    refresh(callback?: general.Callback<TInstance>): Bluebird<TInstance> {
+    refresh(callback?: General.Callback<TInstance>): Bluebird<TInstance> {
         var conditions = { _id: this._original._id };
 
         return Bluebird.resolve().then(() => {
@@ -188,7 +188,7 @@ class Instance<TDocument extends { _id?: any }, TInstance> {
      * @param {function(Error, IInstance)} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    delete(callback?: general.Callback<TInstance>): Bluebird<TInstance> {
+    delete(callback?: General.Callback<TInstance>): Bluebird<TInstance> {
         return this.remove(callback);
     }
 
@@ -197,7 +197,7 @@ class Instance<TDocument extends { _id?: any }, TInstance> {
      * @param {function(Error, IInstance)} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    remove(callback?: general.Callback<TInstance>): Bluebird<TInstance> {
+    remove(callback?: General.Callback<TInstance>): Bluebird<TInstance> {
         var conditions = { _id: this._original._id };
 
         return Bluebird.resolve().then(() => {
@@ -223,15 +223,15 @@ class Instance<TDocument extends { _id?: any }, TInstance> {
      * @param {function(any, Number): Boolean} predicate The function which determines whether to select an element
      * @returns {any}
      */
-    first<T>(collection: T[], predicate: general.Predicate<T>): T;
+    first<T>(collection: T[], predicate: General.Predicate<T>): T;
     /**
      * Retrieves the first element in an enumerable collection which matches the predicate
      * @param {Object} collection The collection from which to retrieve the element
      * @param {function(any, String): Boolean} predicate The function which determines whether to select an element
      * @returns {any}
      */
-    first<T>(collection: { [key: string]: T }, predicate: general.Predicate<T>): T;
-    first<T>(collection: T[]| { [key: string]: T }, predicate: general.Predicate<T>): T {
+    first<T>(collection: { [key: string]: T }, predicate: General.Predicate<T>): T;
+    first<T>(collection: T[]| { [key: string]: T }, predicate: General.Predicate<T>): T {
         var result = null;
 
         _.each(collection,(value: T, key) => {
@@ -250,15 +250,15 @@ class Instance<TDocument extends { _id?: any }, TInstance> {
      * @param {function(any, Number): Boolean} predicate The function which determines the elements to be plucked
      * @returns {any[]}
      */
-    select<T>(collection: T[], predicate: general.Predicate<T>): T[];
+    select<T>(collection: T[], predicate: General.Predicate<T>): T[];
     /**
      * Retrieves a number of elements from an enumerable collection which match the predicate
      * @param {Object} collection The collection from which elements will be plucked
      * @param {function(any, String): Boolean} predicate The function which determines the elements to be plucked
      * @returns {Object}
      */
-    select<T>(collection: { [key: string]: T }, predicate: general.Predicate<T>): { [key: string]: T };
-    select<T>(collection: T[]| { [key: string]: T }, predicate: general.Predicate<T>): any {
+    select<T>(collection: { [key: string]: T }, predicate: General.Predicate<T>): { [key: string]: T };
+    select<T>(collection: T[]| { [key: string]: T }, predicate: General.Predicate<T>): any {
         var isArray = Array.isArray(collection);
         var results: any = isArray ? [] : {};
 
@@ -288,5 +288,3 @@ class Instance<TDocument extends { _id?: any }, TInstance> {
         return JSON.stringify(this.document, null, 2);
     }
 }
-
-export = Instance;

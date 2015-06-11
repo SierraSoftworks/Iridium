@@ -1,10 +1,8 @@
 /// <reference path="../../_references.d.ts" />
 import Bluebird = require('bluebird');
-import cache = require('../Cache');
+import {Cache} from '../Cache';
 
-export = MemoryCache;
-
-class MemoryCache implements cache {
+export default class MemoryCache implements Cache {
     private cache: any = {};
 
     set<T>(key: string, value: T): Bluebird<T> {
