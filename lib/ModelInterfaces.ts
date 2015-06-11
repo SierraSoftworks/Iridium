@@ -6,6 +6,7 @@ import Model from './Model';
 import ModelCache from './ModelCache';
 import {CacheDirector} from './CacheDirector';
 import {Hooks} from './Hooks';
+import * as ModelOptions from './ModelOptions';
 
 export interface IModelBase {
     collection: MongoDB.Collection;
@@ -20,7 +21,7 @@ export interface IModel<TDocument extends { _id?: any }, TInstance> extends IMod
     Instance: new (doc: TDocument, isNew?: boolean, isPartial?: boolean) => TInstance;
 }
 
-export interface InstanceImplementation<TDocument extends { _id?: any }, TInstance> extends Hooks<TDocument, TInstance> {
+export interface InstanceImplementation<TDocument extends { _id?: any }, TInstance> extends Hooks<TDocument, TInstance>, ModelOptions.ModelOptions<TDocument, TInstance> {
     new (model: Model<TDocument, TInstance>, doc: TDocument, isNew?: boolean, isPartial?: boolean): TInstance;
 }
 

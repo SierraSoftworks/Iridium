@@ -2,7 +2,10 @@
 import Core from './Core';
 import Model from './Model';
 import {Plugin} from './Plugins';
+import {CacheDirector} from './CacheDirector';
 import * as General from './General';
+import * as ModelInterfaces from './ModelInterfaces';
+import * as Index from './Index';
 
 import _ = require('lodash');
 import Bluebird = require('bluebird');
@@ -48,6 +51,19 @@ export default class Instance<TDocument extends { _id?: any }, TInstance> {
 
     [name: string]: any;
 
+    static onCreating: (document: { _id?: any }) => void;
+    static onRetrieved: (document: { _id?: any }) => void;
+    static onReady: (instance: Instance<{ _id?: any }, Instance<{ _id?: any }, any>>) => void;
+    static onSaving: (instance: Instance<{ _id?: any }, Instance<{ _id?: any }, any>>, changes: any) => void;
+    
+    static validators: Skmatc.Validator[];
+    static cache: CacheDirector;
+    static indexes: (Index.Index | Index.IndexSpecification)[];
+    static identifier: {
+        apply(fromSource: any): any;
+        reverse(toSource: any): any;
+    };
+    
     /**
      * Saves any changes to this instance, using the built in diff algorithm to write the update query.
      * @param {function(Error, IInstance)} callback A callback which is triggered when the save operation completes

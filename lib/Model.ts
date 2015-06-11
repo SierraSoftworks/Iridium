@@ -41,13 +41,13 @@ export default class Model<TDocument extends { _id?: any }, TInstance> implement
      * @returns {Model}
      * @constructor
      */
-    constructor(core: Core, instanceType: ModelInterfaces.InstanceCreator<TDocument, TInstance> | ModelInterfaces.InstanceImplementation<TDocument, TInstance>, collection: string, schema: Schema, options: ModelOptions.IModelOptions<TDocument, TInstance> = {}) {
+    constructor(core: Core, instanceType: ModelInterfaces.InstanceCreator<TDocument, TInstance> | ModelInterfaces.InstanceImplementation<TDocument, TInstance>, collection: string, schema: Schema, options: ModelOptions.ModelOptions<TDocument, TInstance> = {}) {
         if (!(core instanceof Core)) throw new Error("You failed to provide a valid Iridium core for this model");
         if (typeof instanceType != 'function') throw new Error("You failed to provide a valid instance constructor for this model");
         if (typeof collection != 'string' || !collection) throw new Error("You failed to provide a valid collection name for this model");
         if (!_.isPlainObject(schema) || schema._id === undefined) throw new Error("You failed to provide a valid schema for this model");
 
-        _.defaults(options, <ModelOptions.IModelOptions<TDocument, TInstance>>{
+        _.defaults(options, <ModelOptions.ModelOptions<TDocument, TInstance>>{
             identifier: {
                 apply: function (value) {
                     return (value && value._bsontype == 'ObjectID') ? new MongoDB.ObjectID(value.id).toHexString() : value;
@@ -60,6 +60,8 @@ export default class Model<TDocument extends { _id?: any }, TInstance> implement
             },
             cache: new idCacheController()
         });
+        
+        _.merge(options, instanceType);
 
         this._core = core;
         this._collection = collection;
@@ -84,7 +86,7 @@ export default class Model<TDocument extends { _id?: any }, TInstance> implement
         this._handlers = new ModelHandlers(this);
     }
 
-    private _options: ModelOptions.IModelOptions<TDocument, TInstance>;
+    private _options: ModelOptions.ModelOptions<TDocument, TInstance>;
     /**
      * Gets the options provided when instantiating this model
      * @public
@@ -94,7 +96,7 @@ export default class Model<TDocument extends { _id?: any }, TInstance> implement
      * options. Changes made to this object after the {plugin.newModel} hook are
      * called will not have any effect on this model.
      */
-    get options(): ModelOptions.IModelOptions<TDocument, TInstance> {
+    get options(): ModelOptions.ModelOptions<TDocument, TInstance> {
         return this._options;
     }
 

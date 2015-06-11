@@ -14,6 +14,13 @@ class Test extends Iridium.Instance<TestDocument, Test> implements TestDocument 
     answer: number;
 }
 
+class TestWithCustomID extends Test {
+    static identifier = {
+        apply: x => x * 10,
+        reverse: x => x / 10
+    };
+}
+
 describe("Model",() => {
     var core = new Iridium.Core({ database: 'test' });
 
@@ -842,6 +849,45 @@ describe("Model",() => {
 
         it("should remove all non-_id indexes on the collection",() => {
             return chai.expect(model.dropIndexes()).to.eventually.be.true;
+        });
+    });
+    
+    describe("identifier transforms", () => {
+        it("should have a default converter", () => {
+            var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { _id: false, answer: Number });
+            chai.expect(model.options.identifier).to.exist.and.have.property('apply').which.is.a('function');
+            chai.expect(model.options.identifier).to.exist.and.have.property('reverse').which.is.a('function');
+        });
+        
+        it("should have a default ObjectID to String converter", () => {
+            var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { _id: false, answer: Number });
+            chai.expect(model.options.identifier.apply(MongoDB.ObjectID.createFromHexString('aaaaaaaaaaaaaaaaaaaaaaaa'))).to.eql('aaaaaaaaaaaaaaaaaaaaaaaa');
+            chai.expect(model.options.identifier.reverse('aaaaaaaaaaaaaaaaaaaaaaaa')).to.eql(MongoDB.ObjectID.createFromHexString('aaaaaaaaaaaaaaaaaaaaaaaa'));
+        });
+        
+        it("should allow you to specify a custom converter using the options argument", () => {
+            var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { _id: false, answer: Number }, {
+                identifier: {
+                    apply: x => x * 10,
+                    reverse: x => x / 10
+                }
+            });
+            
+            chai.expect(model.options.identifier).to.exist.and.have.property('apply').which.is.a('function');
+            chai.expect(model.options.identifier).to.exist.and.have.property('reverse').which.is.a('function');
+            
+            chai.expect(model.options.identifier.apply(12)).to.eql(120);
+            chai.expect(model.options.identifier.reverse(120)).to.eql(12);
+        });
+        
+        it("should allow you to specify a custom converter by providing a property on the class", () => {
+            var model = new Iridium.Model<TestDocument, TestWithCustomID>(core, TestWithCustomID, 'test', { _id: false, answer: Number });
+            
+            chai.expect(model.options.identifier).to.exist.and.have.property('apply').which.is.a('function');
+            chai.expect(model.options.identifier).to.exist.and.have.property('reverse').which.is.a('function');
+            
+            chai.expect(model.options.identifier.apply(12)).to.eql(120);
+            chai.expect(model.options.identifier.reverse(120)).to.eql(12);
         });
     });
 });

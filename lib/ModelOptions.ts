@@ -37,11 +37,10 @@ export interface RemoveOptions {
     single?: boolean;
 }
 
-export interface IModelOptions<TDocument, TInstance> {
+export interface ModelOptions<TDocument, TInstance> {
     validators?: Skmatc.Validator[];
     cache?: CacheDirector;
     indexes?: (Index.Index | Index.IndexSpecification)[];
-    properties?: { [key: string]: (General.PropertyGetter<any> | General.Property<any>) };
     identifier?: {
         apply(fromSource: any): any;
         reverse(toSource: any): any;
