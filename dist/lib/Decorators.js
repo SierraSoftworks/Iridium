@@ -22,8 +22,7 @@ exports.Identifier = Identifier;
 function GetDescriptor(target, name) {
     return Object.getOwnPropertyDescriptor(target, name) || {
         configurable: true,
-        enumerable: true,
-        writable: true
+        enumerable: true
     };
 }
 function Property(target, name, descriptor) {

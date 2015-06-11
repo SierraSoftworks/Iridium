@@ -25,8 +25,7 @@ export function Identifier(fromDB: (value: any) => any, toDB: (value: any) => an
 function GetDescriptor(target: Object, name: string): PropertyDescriptor {
 	return Object.getOwnPropertyDescriptor(target, name) || {
 		configurable: true,
-		enumerable: true,
-		writable: true
+		enumerable: true
 	};
 }
 
