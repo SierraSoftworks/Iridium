@@ -18,7 +18,7 @@ import {Cache} from './Cache';
 import NoOpCache from './caches/NoOpCache';
 import MemoryCache from './caches/MemoryCache';
 
-var MongoConnectAsyc = Bluebird.promisify(MongoDB.MongoClient.connect);
+var mongoConnectAsyc = Bluebird.promisify(MongoDB.MongoClient.connect);
 
 export default class Core {
     /**
@@ -159,7 +159,7 @@ export default class Core {
         var self = this;
         return Bluebird.bind(this).then(function() {
             if (self._connection) return self._connection;
-            return MongoConnectAsyc(self.url);
+            return mongoConnectAsyc(self.url);
         }).then(function(db: MongoDB.Db) {
             self._connection = db;
             return self;

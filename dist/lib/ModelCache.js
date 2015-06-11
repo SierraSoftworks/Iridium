@@ -6,7 +6,6 @@ var ModelCache = (function () {
     ModelCache.prototype.set = function (value) {
         if (!this.model.cacheDirector || !this.model.cacheDirector.valid(value))
             return;
-        ;
         this.model.core.cache.set(this.model.cacheDirector.buildKey(value), value);
     };
     ModelCache.prototype.get = function (conditions) {

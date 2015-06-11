@@ -4,7 +4,7 @@ var MongoDB = require('mongodb');
 var _ = require('lodash');
 var Express_1 = require('./middleware/Express');
 var NoOpCache_1 = require('./caches/NoOpCache');
-var MongoConnectAsyc = Bluebird.promisify(MongoDB.MongoClient.connect);
+var mongoConnectAsyc = Bluebird.promisify(MongoDB.MongoClient.connect);
 var Core = (function () {
     function Core(uri, config) {
         this._plugins = [];
@@ -133,7 +133,7 @@ var Core = (function () {
         return Bluebird.bind(this).then(function () {
             if (self._connection)
                 return self._connection;
-            return MongoConnectAsyc(self.url);
+            return mongoConnectAsyc(self.url);
         }).then(function (db) {
             self._connection = db;
             return self;

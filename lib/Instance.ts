@@ -120,20 +120,22 @@ export default class Instance<TDocument extends { _id?: any }, TInstance> {
         }).then((changes) => {
             if (!changes && !this._isNew) return false;
 
-            if (this._isNew) return new Bluebird<boolean>((resolve, reject) => {
-                this._model.collection.insertOne(this._modified, { w: 'majority' },(err, doc) => {
-                    if (err) return reject(err);
-                    return resolve(<any>!!doc);
+            if (this._isNew) {
+                return new Bluebird<boolean>((resolve, reject) => {
+                    this._model.collection.insertOne(this._modified, { w: 'majority' }, (err, doc) => {
+                        if (err) return reject(err);
+                        return resolve(<any>!!doc);
+                    });
                 });
-            });
-
-            return new Bluebird<boolean>((resolve: (changed: boolean) => void, reject) => {
-                this._model.collection.updateOne(conditions, changes, { w: 'majority' },(err: Error, changed: boolean) => {
-                    if (err) return reject(err);
-                    return resolve(changed);
+            } else {
+                return new Bluebird<boolean>((resolve: (changed: boolean) => void, reject) => {
+                    this._model.collection.updateOne(conditions, changes, { w: 'majority' }, (err: Error, changed: boolean) => {
+                        if (err) return reject(err);
+                        return resolve(changed);
+                    });
                 });
-            });
-            }).then((changed: boolean) => {
+            }
+        }).then((changed: boolean) => {
             conditions = { _id: this._modified._id };
             if (!changed) {
                 return _.cloneDeep(this._modified);
@@ -227,7 +229,7 @@ export default class Instance<TDocument extends { _id?: any }, TInstance> {
         }).then((removed) => {
             if (removed) return this._model.cache.clear(conditions);
             return false;
-        }).then((removed) => {
+        }).then(() => {
             this._isNew = true;
             return <TInstance><any>this;
         }).nodeify(callback);

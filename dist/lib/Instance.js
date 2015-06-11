@@ -76,7 +76,7 @@ var Instance = (function () {
         }).then(function (changes) {
             if (!changes && !_this._isNew)
                 return false;
-            if (_this._isNew)
+            if (_this._isNew) {
                 return new Bluebird(function (resolve, reject) {
                     _this._model.collection.insertOne(_this._modified, { w: 'majority' }, function (err, doc) {
                         if (err)
@@ -84,13 +84,16 @@ var Instance = (function () {
                         return resolve(!!doc);
                     });
                 });
-            return new Bluebird(function (resolve, reject) {
-                _this._model.collection.updateOne(conditions, changes, { w: 'majority' }, function (err, changed) {
-                    if (err)
-                        return reject(err);
-                    return resolve(changed);
+            }
+            else {
+                return new Bluebird(function (resolve, reject) {
+                    _this._model.collection.updateOne(conditions, changes, { w: 'majority' }, function (err, changed) {
+                        if (err)
+                            return reject(err);
+                        return resolve(changed);
+                    });
                 });
-            });
+            }
         }).then(function (changed) {
             conditions = { _id: _this._modified._id };
             if (!changed) {
@@ -183,7 +186,7 @@ var Instance = (function () {
             if (removed)
                 return _this._model.cache.clear(conditions);
             return false;
-        }).then(function (removed) {
+        }).then(function () {
             _this._isNew = true;
             return _this;
         }).nodeify(callback);

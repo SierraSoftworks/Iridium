@@ -8,7 +8,7 @@ export default class ModelCache {
     }
 
     set<T>(value: T): void {
-        if (!this.model.cacheDirector || !this.model.cacheDirector.valid(value)) return;;
+        if (!this.model.cacheDirector || !this.model.cacheDirector.valid(value)) return;
         this.model.core.cache.set(this.model.cacheDirector.buildKey(value), value);
     }
 

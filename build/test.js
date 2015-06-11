@@ -1,6 +1,5 @@
 var gulp = require('gulp'),
 	mocha = require('gulp-mocha'),
-	plumber = require('gulp-plumber'),
 	path = require('path');
 
 var paths = require('./paths');
