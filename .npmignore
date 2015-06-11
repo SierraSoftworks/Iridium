@@ -1,5 +1,6 @@
 .travis.yml
 test/
+dist/test/
 example/
 doc/
 benchmarks/
