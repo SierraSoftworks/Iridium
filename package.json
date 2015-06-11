@@ -51,7 +51,6 @@
     "gulp-typescript": "^2.7.6",
     "gulp-sourcemaps": "^1.5.2",
     "gulp-plumber": "^1.0.1",
-    "gulp-changed": "^1.2.1",
     "gulp-mocha": "^2.1.1",
     "gulp-util": "^3.0.5",
     "gulp-bump": "~0.3.1",
