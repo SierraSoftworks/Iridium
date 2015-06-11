@@ -25,7 +25,7 @@ before_script:
   - gulp build
 
 script:
-  - gulp test
+  - gulp ci
 
 after_script:
  - gulp coverage
