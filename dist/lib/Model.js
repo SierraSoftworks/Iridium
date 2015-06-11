@@ -51,6 +51,7 @@ var Model = (function () {
             },
             cache: new IDDirector_1.default()
         });
+        _.merge(options, instanceType);
         this._core = core;
         this._collection = collection;
         this._schema = schema;
