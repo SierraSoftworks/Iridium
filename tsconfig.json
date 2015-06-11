@@ -1,35 +1,9 @@
 {
 	"compilerOptions": {
+		"version": true,
 		"module": "commonjs",
 		"target": "es5",
 		"sourceMap": true,
     	"declaration": false
-	},
-	"files": [
-		"lib/Core.ts",
-		"lib/Cursor.ts",
-		"lib/Instance.ts",
-		"lib/Model.ts",
-		"lib/ModelCache.ts",
-		"lib/ModelHandlers.ts",
-		"lib/ModelHelpers.ts",
-		"lib/ModelSpecificInstance.ts",
-		"lib/cacheControllers/IDDirector.ts",
-		"lib/caches/MemoryCache.ts",
-		"lib/caches/NoOpCache.ts",
-		"lib/middleware/Express.ts",
-		"lib/utils/Omnom.ts",
-		"test/support/chai.ts",
-		"test/support/config.ts",
-		"test/Cache.ts",
-		"test/Core.ts",
-		"test/Hooks.ts",
-		"test/Instance.ts",
-		"test/Iridium.ts",
-		"test/Middleware.ts",
-		"test/Model.ts",
-		"test/Omnom.ts",
-		"test/Plugins.ts",
-		"test/Validation.ts"
-	]
+	}
 }
