@@ -230,7 +230,7 @@ export default class Model<TDocument extends { _id?: any }, TInstance> implement
         if (!_.isPlainObject(conditions)) conditions = { _id: conditions };
 
         if (conditions.hasOwnProperty('_id'))
-            conditions['_id'] = this.options.identifier.reverse(conditions['_id']);
+            conditions._id = this.options.identifier.reverse(conditions._id);
 
         var cursor = this.collection.find(conditions, {
             fields: fields
@@ -338,7 +338,7 @@ export default class Model<TDocument extends { _id?: any }, TInstance> implement
 
         return Bluebird.resolve().bind(this).then(() => {
             if (conditions.hasOwnProperty('_id'))
-                conditions['_id'] = this.options.identifier.reverse(conditions['_id']);
+                conditions._id = this.options.identifier.reverse(conditions._id);
 
             return this._cache.get<TDocument>(conditions);
         }).then((cachedDocument: TDocument) => {
@@ -434,7 +434,6 @@ export default class Model<TDocument extends { _id?: any }, TInstance> implement
             callback = args[1];
         }
 
-        var returnArray: boolean = false;
         if (Array.isArray(objs))
             objects = <TDocument[]>objs;
         else
@@ -511,7 +510,7 @@ export default class Model<TDocument extends { _id?: any }, TInstance> implement
 
         return Bluebird.resolve().then(() => {
             if (conditions.hasOwnProperty('_id'))
-                conditions['_id'] = this.options.identifier.reverse(conditions['_id']);
+                conditions._id = this.options.identifier.reverse(conditions._id);
 
             return new Bluebird<number>((resolve, reject) => {
                 this.collection.updateMany(conditions, changes, options,(err, response) => {
@@ -554,7 +553,7 @@ export default class Model<TDocument extends { _id?: any }, TInstance> implement
 
         return Bluebird.resolve().then(() => {
             if (conditions.hasOwnProperty('_id'))
-                conditions['_id'] = this.options.identifier.reverse(conditions['_id']);
+                conditions._id = this.options.identifier.reverse(conditions._id);
 
             return new Bluebird<number>((resolve, reject) => {
                 this.collection.count(conditions,(err, results) => {
@@ -611,7 +610,7 @@ export default class Model<TDocument extends { _id?: any }, TInstance> implement
 
         return Bluebird.resolve().then(() => {
             if (conditions.hasOwnProperty('_id'))
-                conditions['_id'] = this.options.identifier.reverse(conditions['_id']);
+                conditions._id = this.options.identifier.reverse(conditions._id);
 
             return new Bluebird<number>((resolve, reject) => {
                 this.collection.remove(conditions, options,(err, response) => {
