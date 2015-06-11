@@ -16,7 +16,7 @@
     }
   ],
   "licence": "MIT",
-  "main": "./index",
+  "main": "./dist/index.js",
   "scripts": {
     "test": "grunt test",
     "coverage": "grunt coverage",
