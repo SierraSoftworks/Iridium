@@ -22,11 +22,12 @@ before_install:
 before_script:
   - "until nc -z localhost 27017; do echo Waiting for MongoDB; sleep 1; done"
   - "mongo --version"
+  - gulp build
 
 script:
-  - grunt test
+  - gulp test
 
 after_script:
- - grunt coveralls
- - grunt coverage
+ - gulp coverage
+ - coveralls < coverage/lcov.info
  - codeclimate < coverage/lcov.info
