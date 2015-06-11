@@ -3,7 +3,8 @@ var gulp = require('gulp'),
 	gutil = require('gulp-util'),
 	git = require('gulp-git'),
 	minimist = require('minimist'),
-	semver = require('semver');
+    semver = require('semver'),
+    runSequence = require('run-sequence');
 	
 var paths = require('./paths');
 
