@@ -215,7 +215,7 @@ var Model = (function () {
         if (!_.isPlainObject(conditions))
             conditions = { _id: conditions };
         if (conditions.hasOwnProperty('_id'))
-            conditions['_id'] = this.options.identifier.reverse(conditions['_id']);
+            conditions._id = this.options.identifier.reverse(conditions._id);
         var cursor = this.collection.find(conditions, {
             fields: fields
         });
@@ -256,7 +256,7 @@ var Model = (function () {
         });
         return Bluebird.resolve().bind(this).then(function () {
             if (conditions.hasOwnProperty('_id'))
-                conditions['_id'] = _this.options.identifier.reverse(conditions['_id']);
+                conditions._id = _this.options.identifier.reverse(conditions._id);
             return _this._cache.get(conditions);
         }).then(function (cachedDocument) {
             if (cachedDocument)
@@ -301,7 +301,6 @@ var Model = (function () {
             options = args[0];
             callback = args[1];
         }
-        var returnArray = false;
         if (Array.isArray(objs))
             objects = objs;
         else
@@ -360,7 +359,7 @@ var Model = (function () {
         });
         return Bluebird.resolve().then(function () {
             if (conditions.hasOwnProperty('_id'))
-                conditions['_id'] = _this.options.identifier.reverse(conditions['_id']);
+                conditions._id = _this.options.identifier.reverse(conditions._id);
             return new Bluebird(function (resolve, reject) {
                 _this.collection.updateMany(conditions, changes, options, function (err, response) {
                     if (err)
@@ -374,10 +373,11 @@ var Model = (function () {
             });
         }).nodeify(callback);
     };
-    Model.prototype.count = function (conditions, callback) {
+    Model.prototype.count = function (conds, callback) {
         var _this = this;
-        if (typeof conditions == 'function') {
-            callback = conditions;
+        var conditions = conds;
+        if (typeof conds == 'function') {
+            callback = conds;
             conditions = {};
         }
         conditions = conditions || {};
@@ -387,7 +387,7 @@ var Model = (function () {
             };
         return Bluebird.resolve().then(function () {
             if (conditions.hasOwnProperty('_id'))
-                conditions['_id'] = _this.options.identifier.reverse(conditions['_id']);
+                conditions._id = _this.options.identifier.reverse(conditions._id);
             return new Bluebird(function (resolve, reject) {
                 _this.collection.count(conditions, function (err, results) {
                     if (err)
@@ -397,14 +397,15 @@ var Model = (function () {
             });
         }).nodeify(callback);
     };
-    Model.prototype.remove = function (conditions, options, callback) {
+    Model.prototype.remove = function (conds, options, callback) {
         var _this = this;
+        var conditions = conds;
         if (typeof options === 'function') {
             callback = options;
             options = {};
         }
-        if (typeof conditions === 'function') {
-            callback = conditions;
+        if (typeof conds == 'function') {
+            callback = conds;
             options = {};
             conditions = {};
         }
@@ -419,7 +420,7 @@ var Model = (function () {
             };
         return Bluebird.resolve().then(function () {
             if (conditions.hasOwnProperty('_id'))
-                conditions['_id'] = _this.options.identifier.reverse(conditions['_id']);
+                conditions._id = _this.options.identifier.reverse(conditions._id);
             return new Bluebird(function (resolve, reject) {
                 _this.collection.remove(conditions, options, function (err, response) {
                     if (err)
