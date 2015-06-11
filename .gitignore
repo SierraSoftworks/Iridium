@@ -8,9 +8,8 @@ node_modules/
 .vs
 *.dat
 .idea
-dist/
 *.tmp
 coverage/
 typings/DefinitelyTyped/**/*.d.ts
 .tscache
-*.js
+dist/test/
