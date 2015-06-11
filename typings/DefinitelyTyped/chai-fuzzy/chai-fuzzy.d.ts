@@ -6,6 +6,15 @@
 ///<reference path="../chai/chai.d.ts" />
 
 declare module chai {
+	interface LanguageChains {
+		like(exp:any, msg?:string);
+		notLike(exp:any, msg?:string);
+		containOneLike(exp:any, msg?:string);
+		notContainOneLike(exp:any, msg?:string);
+		jsonOf(exp:any, msg?:string);
+		notJsonOf(exp:any, msg?:string);
+	}
+	
 	interface Assert {
 		like(act:any, exp:any, msg?:string);
 		notLike(act:any, exp:any, msg?:string);
