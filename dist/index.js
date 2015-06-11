@@ -7,6 +7,7 @@ var Model_1 = require('./lib/Model');
 exports.Model = Model_1.default;
 var Instance_1 = require('./lib/Instance');
 exports.Instance = Instance_1.default;
+__export(require('./lib/Decorators'));
 __export(require('./lib/Plugins'));
 __export(require('./lib/Schema'));
 __export(require('./lib/Cache'));

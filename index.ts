@@ -3,6 +3,8 @@ import Model from './lib/Model';
 import Instance from './lib/Instance';
 export {Core, Model, Instance};
 
+export * from './lib/Decorators';
+
 export * from './lib/Plugins';
 export * from './lib/Schema';
 export * from './lib/Cache';
