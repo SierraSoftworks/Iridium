@@ -1,7 +1,6 @@
 var gulp       = require('gulp'),
 	typescript = require('gulp-typescript'),
 	sourcemaps = require('gulp-sourcemaps'),
-	plumber    = require('gulp-plumber'),
 	changed    = require('gulp-changed');
 	
 var paths = require('./paths');
@@ -16,7 +15,6 @@ gulp.task('build', ['build-lib', 'build-tests']);
 
 gulp.task('build-lib', function () {
 	var tsResult = gulp.src(paths.buildFiles, { base: paths.projectRoot })
-		.pipe(plumber())
 		.pipe(sourcemaps.init())
 		.pipe(typescript(tsProject));
 		
@@ -27,7 +25,6 @@ gulp.task('build-lib', function () {
 
 gulp.task('build-tests', function () {
 	var tsResult = gulp.src(paths.testFiles, { base: paths.projectRoot })
-		.pipe(plumber())
 		.pipe(sourcemaps.init())
 		.pipe(typescript(tsProject));
 		
