@@ -4,7 +4,8 @@ var gulp = require('gulp'),
 	git = require('gulp-git'),
 	minimist = require('minimist'),
     semver = require('semver'),
-    runSequence = require('run-sequence');
+    runSequence = require('run-sequence'),
+    fs = require('fs');
 	
 var paths = require('./paths');
 
@@ -16,10 +17,9 @@ function getPackageJsonVersion() {
 gulp.task('version-bump', function () {
     var args = minimist(process.argv);
     
-    var ver = args._.pop();
     var options = {};
-    if (semver.valid(ver)) options.version = ver;
-    else options.type = ver;
+    if (semver.valid(args.version)) options.version = args.version;
+    else options.type = args.version;
     
     return gulp.src(['./package.json'])
         .pipe(bump(options).on('error', gutil.log))
@@ -29,7 +29,7 @@ gulp.task('version-bump', function () {
 gulp.task('version-commit', function () {
     var version = getPackageJsonVersion();
     return gulp.src('.')
-        .pipe(git.commit('Version ' + version, { args: '-a' }));
+        .pipe(git.commit('Version ' + version));
 });
 
 gulp.task('version-push', function (cb) {
