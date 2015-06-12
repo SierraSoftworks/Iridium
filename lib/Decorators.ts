@@ -65,5 +65,12 @@ export function ObjectID(target: { constructor: typeof Instance }, name: string)
 			if (value && /^[a-f0-9]{24}$/.test(value)) return MongoDB.ObjectID.createFromHexString(value);
 			return value;
 		}
+export function Transform(fromDB: (value: any) => any, toDB: (value: any) => any) {
+	return function(target: any, property: string) {
+		target.constructor.transforms = _.clone(target.constructor.transforms || {})
+		target.constructor.transforms[property] = {
+			fromDB: fromDB,
+			toDB: toDB
+		};
 	};
 }
