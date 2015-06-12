@@ -49,18 +49,6 @@ export function Property(...args: any[]): (target: any, name?: string) => void {
 	}
 }
 
-export function ObjectID(target: { constructor: typeof Instance }, name: string) {
-	target.constructor.schema = target.constructor.schema || <Schema>{};
-	target.constructor.schema[name] = { $required: false, $type: /^[0-9a-f]{24}$/ };
-	target.constructor.identifier = {
-		apply: function(value) { 
-			return (value && value._bsontype == 'ObjectID') ? new MongoDB.ObjectID(value.id).toHexString() : value;
-		},
-		reverse: function (value) {
-			if (value === null || value === undefined) return undefined;
-			if (value && /^[a-f0-9]{24}$/.test(value)) return MongoDB.ObjectID.createFromHexString(value);
-			return value;
-		}
 export function Transform(fromDB: (value: any) => any, toDB: (value: any) => any) {
 	return function(target: any, property: string) {
 		target.constructor.transforms = _.clone(target.constructor.transforms || {})
@@ -69,4 +57,9 @@ export function Transform(fromDB: (value: any) => any, toDB: (value: any) => any
 			toDB: toDB
 		};
 	};
+}
+
+export function ObjectID(target: { constructor: typeof Instance }, name: string) {
+	target.constructor.schema = <Schema>_.clone(target.constructor.schema || {});
+	target.constructor.schema[name] = MongoDB.ObjectID;
 }
