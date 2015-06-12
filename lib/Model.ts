@@ -47,6 +47,13 @@ export default class Model<TDocument extends { _id?: any }, TInstance> {
         if (!_.isPlainObject(instanceType.schema) || instanceType.schema._id === undefined) throw new Error("You failed to provide a valid schema for this model");
         
         this._core = core;
+        
+        this.loadExternal(instanceType);
+        this.onNewModel();
+        this.loadInternal();
+    }
+    
+    private loadExternal(instanceType: InstanceImplementation<TDocument, TInstance>) {
         this._collection = instanceType.collection;
         this._schema = instanceType.schema;
         this._hooks = instanceType;
@@ -55,20 +62,20 @@ export default class Model<TDocument extends { _id?: any }, TInstance> {
         this._validators = instanceType.validators || [];
         this._indexes = instanceType.indexes || [];
 
-        core.plugins.forEach((plugin: Plugin) => {
-            if (plugin.newModel) plugin.newModel(this);
-        });
-
-        this._cache = new ModelCache(this);
-
         if ((<Function>instanceType).prototype instanceof Instance)
             this._Instance = ModelSpecificInstance(this, instanceType);
         else
             this._Instance = instanceType.bind(undefined, this);
-
-        
+    }
+    
+    private loadInternal() {
+        this._cache = new ModelCache(this);
         this._helpers = new ModelHelpers(this);
         this._handlers = new ModelHandlers(this);
+    }
+    
+    private onNewModel() {
+        this._core.plugins.forEach(plugin => plugin.newModel && plugin.newModel(this));
     }
 
     private _helpers: ModelHelpers<TDocument, TInstance>;
