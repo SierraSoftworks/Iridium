@@ -34,7 +34,6 @@ export default class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
                 }
 
                 // Wrap the document and trigger the ready hook
-                var wrapped: TResult = wrapper(target, false, !!options.fields);
 
                 if (this.model.hooks.onReady && wrapped instanceof this.model.Instance) this.model.hooks.onReady(<TInstance><any>wrapped);
                 return wrapped;
@@ -46,8 +45,10 @@ export default class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
         return Bluebird.all(documents.map((document: any) => {
             return Bluebird.resolve().then(() => {
                 if (this.model.hooks.onCreating) this.model.hooks.onCreating(document);
-                var validation: Skmatc.Result = this.model.helpers.validate(document);
+                document = this.model.helpers.convertToDB(document);
+                let validation: Skmatc.Result = this.model.helpers.validate(document);
                 if (validation.failed) return Bluebird.reject(validation.error);
+                
                 return document;
             });
         }));

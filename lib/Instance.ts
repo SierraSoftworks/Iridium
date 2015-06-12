@@ -9,6 +9,7 @@ import * as Index from './Index';
 import {Schema} from './Schema';
 
 import _ = require('lodash');
+import MongoDB = require('mongodb');
 import Bluebird = require('bluebird');
 import skmatc = require('skmatc');
 
@@ -61,6 +62,12 @@ export default class Instance<TDocument extends { _id?: any }, TInstance> {
     static collection: string;
     static schema: Schema;
     static validators: Skmatc.Validator[] = [];
+    static transforms: { [property: string]: { fromDB: (value: any) => any; toDB: (value: any) => any; } } = {
+        _id: {
+            fromDB: value => value._bsontype == 'ObjectID' ? new MongoDB.ObjectID(value.id).toHexString() : value,
+            toDB: value => value && typeof value === 'string' ? new MongoDB.ObjectID(value) : value
+        }
+    };
     static cache: CacheDirector;
     static indexes: (Index.Index | Index.IndexSpecification)[] = [];
     static identifier: {
@@ -103,7 +110,10 @@ export default class Instance<TDocument extends { _id?: any }, TInstance> {
         });
 
         return Bluebird.resolve().then(() => {
+            conditions = _.cloneDeep(conditions);
             _.merge(conditions, { _id: this._modified._id });
+            
+            conditions = this._model.helpers.transformToDB(conditions);
             
             if (!changes) {
                 var validation = this._model.helpers.validate(this._modified);
@@ -140,7 +150,7 @@ export default class Instance<TDocument extends { _id?: any }, TInstance> {
                 });
             }
         }).then((changed: boolean) => {
-            conditions = { _id: this._modified._id };
+            conditions = this._model.helpers.convertToDB({ _id: this._modified._id });
             if (!changed) {
                 return _.cloneDeep(this._modified);
             }

@@ -68,6 +68,7 @@ export default class Model<TDocument extends { _id?: any }, TInstance> implement
         this._schema = instanceType.schema;
         this._hooks = instanceType;
         this._cacheDirector = instanceType.cache;
+        this._transforms = instanceType.transforms || {};
 
         core.plugins.forEach((plugin: Plugin) => {
             if (plugin.newModel) plugin.newModel(this);
@@ -203,6 +204,11 @@ export default class Model<TDocument extends { _id?: any }, TInstance> implement
         return this._Instance;
     }
     
+    private _transforms: { [property: string]: { fromDB: (value: any) => any; toDB: (value: any) => any; } };
+    
+    get transforms() {
+        return this._transforms;
+    }
     /**
      * Retrieves all documents in the collection and wraps them as instances
      * @param {function(Error, TInstance[])} callback An optional callback which will be triggered when results are available
@@ -227,9 +233,7 @@ export default class Model<TDocument extends { _id?: any }, TInstance> implement
         fields = fields || {};
 
         if (!_.isPlainObject(conditions)) conditions = { _id: conditions };
-
-        if (conditions.hasOwnProperty('_id'))
-            conditions._id = this.options.identifier.reverse(conditions._id);
+        conditions = this._helpers.convertToDB(conditions);
 
         var cursor = this.collection.find(conditions, {
             fields: fields
@@ -336,8 +340,7 @@ export default class Model<TDocument extends { _id?: any }, TInstance> implement
         });
 
         return Bluebird.resolve().bind(this).then(() => {
-            if (conditions.hasOwnProperty('_id'))
-                conditions._id = this.options.identifier.reverse(conditions._id);
+            conditions = this._helpers.convertToDB(conditions);
 
             return this._cache.get<TDocument>(conditions);
         }).then((cachedDocument: TDocument) => {
@@ -508,8 +511,7 @@ export default class Model<TDocument extends { _id?: any }, TInstance> implement
         });
 
         return Bluebird.resolve().then(() => {
-            if (conditions.hasOwnProperty('_id'))
-                conditions._id = this.options.identifier.reverse(conditions._id);
+            conditions = this._helpers.convertToDB(conditions);
 
             return new Bluebird<number>((resolve, reject) => {
                 this.collection.updateMany(conditions, changes, options,(err, response) => {
@@ -552,8 +554,7 @@ export default class Model<TDocument extends { _id?: any }, TInstance> implement
         };
 
         return Bluebird.resolve().then(() => {
-            if (conditions.hasOwnProperty('_id'))
-                conditions._id = this.options.identifier.reverse(conditions._id);
+            conditions = this._helpers.convertToDB(conditions);
 
             return new Bluebird<number>((resolve, reject) => {
                 this.collection.count(conditions,(err, results) => {
@@ -611,8 +612,7 @@ export default class Model<TDocument extends { _id?: any }, TInstance> implement
         };
 
         return Bluebird.resolve().then(() => {
-            if (conditions.hasOwnProperty('_id'))
-                conditions._id = this.options.identifier.reverse(conditions._id);
+            conditions = this._helpers.convertToDB(conditions);
 
             return new Bluebird<number>((resolve, reject) => {
                 this.collection.remove(conditions, options,(err, response) => {

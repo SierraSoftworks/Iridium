@@ -37,12 +37,6 @@ export interface RemoveOptions {
     single?: boolean;
 }
 
-export interface ModelOptions<TDocument, TInstance> {
-    validators?: Skmatc.Validator[];
-    cache?: CacheDirector;
-    indexes?: (Index.Index | Index.IndexSpecification)[];
-    identifier?: {
-        apply(fromSource: any): any;
-        reverse(toSource: any): any;
-    };
+export interface Transforms {
+    [property: string]: { fromDB: (value: any) => any; toDB: (value: any) => any; };
 }
