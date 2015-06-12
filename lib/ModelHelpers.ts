@@ -47,19 +47,6 @@ export default class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
     }
     
     /**
-     * Converts the given document from its database form into a form for local consumption
-     * using the transforms defined on the model.
-     * @param {any} document The document to be converted
-     * @returns {any} A new document cloned from the original and transformed
-     */
-    transformFromDB<T>(document: T): T {
-        for (var property in this.model.transforms)
-            if (document.hasOwnProperty(property))
-                document[property] = this.model.transforms[property].fromDB(document[property]);
-        return document;
-    }
-    
-    /**
      * Converts the given document to its database form into a form
      * using the transforms defined on the model.
      * @param {any} document The document to be converted
@@ -68,17 +55,6 @@ export default class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
     convertToDB<T>(document: T): T {
         var doc: T = _.cloneDeep(document);
         return this.transformToDB(doc);
-    }
-    
-    /**
-     * Converts the given document from its database form into a form for local consumption
-     * using the transforms defined on the model.
-     * @param {any} document The document to be converted
-     * @returns {any} A new document cloned from the original and transformed
-     */
-    convertFromDB<T>(document: T): T {
-        var doc: T = _.cloneDeep(document);
-        return this.transformFromDB(doc);
     }
 
     /**
