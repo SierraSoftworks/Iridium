@@ -3,8 +3,10 @@ var Omnom_1 = require('./utils/Omnom');
 var _ = require('lodash');
 var ModelHelpers = (function () {
     function ModelHelpers(model) {
+        var _this = this;
         this.model = model;
         this._validator = new skmatc(model.schema);
+        model.validators.forEach(function (validator) { return _this._validator.register(validator); });
     }
     /**
      * Validates a document to ensure that it matches the model's ISchema requirements
@@ -37,18 +39,6 @@ var ModelHelpers = (function () {
         return document;
     };
     /**
-     * Converts the given document from its database form into a form for local consumption
-     * using the transforms defined on the model.
-     * @param {any} document The document to be converted
-     * @returns {any} A new document cloned from the original and transformed
-     */
-    ModelHelpers.prototype.transformFromDB = function (document) {
-        for (var property in this.model.transforms)
-            if (document.hasOwnProperty(property))
-                document[property] = this.model.transforms[property].fromDB(document[property]);
-        return document;
-    };
-    /**
      * Converts the given document to its database form into a form
      * using the transforms defined on the model.
      * @param {any} document The document to be converted
@@ -57,16 +47,6 @@ var ModelHelpers = (function () {
     ModelHelpers.prototype.convertToDB = function (document) {
         var doc = _.cloneDeep(document);
         return this.transformToDB(doc);
-    };
-    /**
-     * Converts the given document from its database form into a form for local consumption
-     * using the transforms defined on the model.
-     * @param {any} document The document to be converted
-     * @returns {any} A new document cloned from the original and transformed
-     */
-    ModelHelpers.prototype.convertFromDB = function (document) {
-        var doc = _.cloneDeep(document);
-        return this.transformFromDB(doc);
     };
     /**
      * Performs a diff operation between two documents and creates a MongoDB changes object to represent the differences
