@@ -104,12 +104,7 @@ describe("Decorators", () => {
 	
 	describe("ObjectID", () => {
 		it("should populate the constructor's schema object", () => {
-			chai.expect(Test.schema).to.exist.and.have.property('_id').and.eql({ $required: false, $type: /^[0-9a-f]{24}$/ });
-		});
-		
-		it("should populate the constructor's identifier object", () => {
-			chai.expect(Test.identifier).to.exist.and.have.property('apply').which.is.a('function');
-			chai.expect(Test.identifier).to.exist.and.have.property('reverse').which.is.a('function');
+			chai.expect(Test.schema).to.exist.and.have.property('_id').and.eql(MongoDB.ObjectID);
 		});
 	});
 	
@@ -122,7 +117,14 @@ describe("Decorators", () => {
 		it("should populate the constructor's schema object when to the constructor", () => {
 			chai.expect(Test.schema).to.exist.and.have.property('version', 'version');
 		});
-	});
+		
+        it("should not pollute the parent's schema object", () => {
+            chai.expect(Iridium.Instance.schema).to.exist.and.not.have.property('name');
+			chai.expect(Iridium.Instance.schema).to.exist.and.not.have.property('email');
+			chai.expect(Iridium.Instance.schema).to.exist.and.not.have.property('version');
+        });
+    });
+	
     describe("Transform", () => {
         it("should not remove existing entries in the transforms object", () => {
             chai.expect(Test.transforms).to.exist.and.have.property('_id').with.property('fromDB').which.is.a('function');

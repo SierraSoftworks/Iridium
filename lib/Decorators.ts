@@ -15,17 +15,13 @@ export function Collection(name: string) {
 
 export function Index(spec: IndexSpecification, options?: MongoDB.IndexOptions) {
 	return function(target: InstanceImplementation<any,any>) {
-		target.indexes = target.indexes || [];
-		
-		if (options) target.indexes.push(<Index>{ spec: spec, options: options });
-		else target.indexes.push(<Index>{ spec: spec });
+		target.indexes = (target.indexes || []).concat(<Index>{ spec: spec, options: options || {} });
 	}
 }
 
 export function Validate(forType: any, validate: (schema: any, data: any, path: string) => Skmatc.Result) {
 	return function(target: InstanceImplementation<any,any>) {
-		target.validators = target.validators || [];
-		target.validators.push(skmatc.create(schema => schema === forType, validate));
+		target.validators = (target.validators || []).concat(skmatc.create(schema => schema === forType, validate));
 	}
 }
 
@@ -47,7 +43,7 @@ export function Property(...args: any[]): (target: any, name?: string) => void {
 		}
 		asType = args.pop();
 		
-		target.schema = target.schema || <Schema>{};
+		target.schema = _.clone(target.schema || {});
 		if(!required) target.schema[name] = { $required: required, $type: asType };
 		else target.schema[name] = asType;
 	}
