@@ -1,6 +1,5 @@
 /// <reference path="../_references.d.ts" />
 import * as Iridium from '../index';
-import 'reflect-metadata';
 import skmatc = require('skmatc');
 import MongoDB = require('mongodb');
 
@@ -19,6 +18,7 @@ function VersionValidator(schema, data) {
 @Iridium.Index({ email: 1 }, { background: true })
 @Iridium.Validate('version', VersionValidator)
 @Iridium.Property('version', 'version')    
+@Iridium.Property('optional2', Boolean, false)    
 class Test extends Iridium.Instance<TestDocument, Test> implements TestDocument {
 	@Iridium.ObjectID
 	_id: string;
@@ -31,6 +31,10 @@ class Test extends Iridium.Instance<TestDocument, Test> implements TestDocument 
 	email: string;
 	
 	version: string;
+	
+	@Iridium.Property(Boolean, false)
+	optional1: boolean;
+	optional2: boolean;
 }
 
 describe("Decorators", () => {
@@ -118,10 +122,20 @@ describe("Decorators", () => {
 			chai.expect(Test.schema).to.exist.and.have.property('version', 'version');
 		});
 		
+		it("should correctly handle optional properties defined on instance fields", () => {
+			chai.expect(Test.schema).to.exist.and.have.property('optional1').eql({ $required: false, $type: Boolean });
+		});
+		
+		it("should correctly handle optional properties defined on the constructor", () => {
+			chai.expect(Test.schema).to.exist.and.have.property('optional2').eql({ $required: false, $type: Boolean });
+		});
+		
         it("should not pollute the parent's schema object", () => {
             chai.expect(Iridium.Instance.schema).to.exist.and.not.have.property('name');
 			chai.expect(Iridium.Instance.schema).to.exist.and.not.have.property('email');
 			chai.expect(Iridium.Instance.schema).to.exist.and.not.have.property('version');
+			chai.expect(Iridium.Instance.schema).to.exist.and.not.have.property('optional1');
+			chai.expect(Iridium.Instance.schema).to.exist.and.not.have.property('optional2');
         });
     });
 	

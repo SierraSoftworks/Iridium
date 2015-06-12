@@ -41,10 +41,10 @@ export function Property(...args: any[]): (target: any, name?: string) => void {
 			name = property;
 			target = target.constructor;
 		}
-		asType = args.pop();
+		asType = args.pop() || false;
 		
 		target.schema = _.clone(target.schema || {});
-		if(!required) target.schema[name] = { $required: required, $type: asType };
+		if(!required && typeof asType !== 'boolean') target.schema[name] = { $required: required, $type: asType };
 		else target.schema[name] = asType;
 	}
 }
