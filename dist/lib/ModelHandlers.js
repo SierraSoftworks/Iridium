@@ -13,13 +13,13 @@ var ModelHandlers = (function () {
         });
         return Bluebird.resolve(result).then(function (target) {
             return Bluebird.resolve().then(function () {
-                // Trigger the received hook
-                if (_this.model.hooks.onRetrieved)
-                    _this.model.hooks.onRetrieved(target);
                 // Cache the document if caching is enabled
                 if (_this.model.core.cache && options.cache && !options.fields) {
                     _this.model.cache.set(target); // Does not block execution pipeline - fire and forget
                 }
+                // Trigger the received hook
+                if (_this.model.hooks.onRetrieved)
+                    _this.model.hooks.onRetrieved(target);
                 // Wrap the document and trigger the ready hook
                 var wrapped = wrapper(target, false, !!options.fields);
                 if (_this.model.hooks.onReady && wrapped instanceof _this.model.Instance)
@@ -34,6 +34,7 @@ var ModelHandlers = (function () {
             return Bluebird.resolve().then(function () {
                 if (_this.model.hooks.onCreating)
                     _this.model.hooks.onCreating(document);
+                document = _this.model.helpers.convertToDB(document);
                 var validation = _this.model.helpers.validate(document);
                 if (validation.failed)
                     return Bluebird.reject(validation.error);

@@ -1,11 +1,8 @@
-/// <reference path="../_references.d.ts" />
-var MongoDB = require('mongodb');
 var Bluebird = require('bluebird');
 var _ = require('lodash');
 var Core_1 = require('./Core');
 var Instance_1 = require('./Instance');
 var Cursor_1 = require('./Cursor');
-var IDDirector_1 = require('./cacheControllers/IDDirector');
 var ModelCache_1 = require('./ModelCache');
 var ModelHelpers_1 = require('./ModelHelpers');
 var ModelHandlers_1 = require('./ModelHandlers');
@@ -18,9 +15,7 @@ var Model = (function () {
     /**
      * Creates a new Iridium model representing a given ISchema and backed by a collection whose name is specified
      * @param {Iridium} core The Iridium core that this model should use for database access
-     * @param {String} collection The name of the collection within the database which should be used by this model
-     * @param {schema} schema The schema defining the data validations to be performed on the model
-     * @param {IModelOptions} options The options dictating the behaviour of the model
+     * @param {ModelInterfaces.InstanceImplementation} instanceType The class which will be instantiated for each document retrieved from the database
      * @returns {Model}
      * @constructor
      */
@@ -35,27 +30,14 @@ var Model = (function () {
             throw new Error("You failed to provide a valid collection name for this model");
         if (!_.isPlainObject(instanceType.schema) || instanceType.schema._id === undefined)
             throw new Error("You failed to provide a valid schema for this model");
-        this._options = instanceType;
-        _.defaults(this._options, {
-            identifier: {
-                apply: function (value) {
-                    return (value && value._bsontype == 'ObjectID') ? new MongoDB.ObjectID(value.id).toHexString() : value;
-                },
-                reverse: function (value) {
-                    if (value === null || value === undefined)
-                        return undefined;
-                    if (value && /^[a-f0-9]{24}$/.test(value))
-                        return MongoDB.ObjectID.createFromHexString(value);
-                    return value;
-                }
-            },
-            cache: new IDDirector_1.default()
-        });
         this._core = core;
         this._collection = instanceType.collection;
         this._schema = instanceType.schema;
         this._hooks = instanceType;
         this._cacheDirector = instanceType.cache;
+        this._transforms = instanceType.transforms || {};
+        this._validators = instanceType.validators || [];
+        this._indexes = instanceType.indexes || [];
         core.plugins.forEach(function (plugin) {
             if (plugin.newModel)
                 plugin.newModel(_this);
@@ -68,22 +50,6 @@ var Model = (function () {
         this._helpers = new ModelHelpers_1.default(this);
         this._handlers = new ModelHandlers_1.default(this);
     }
-    Object.defineProperty(Model.prototype, "options", {
-        /**
-         * Gets the options provided when instantiating this model
-         * @public
-         * @returns {ModelOptions.IModelOptions}
-         * @description
-         * This is intended to be consumed by plugins which require any configuration
-         * options. Changes made to this object after the {plugin.newModel} hook are
-         * called will not have any effect on this model.
-         */
-        get: function () {
-            return this._options;
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(Model.prototype, "helpers", {
         /**
          * Provides helper methods used by Iridium for common tasks
@@ -207,13 +173,33 @@ var Model = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Model.prototype, "transforms", {
+        get: function () {
+            return this._transforms;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Model.prototype, "validators", {
+        get: function () {
+            return this._validators;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Model.prototype, "indexes", {
+        get: function () {
+            return this._indexes;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Model.prototype.find = function (conditions, fields) {
         conditions = conditions || {};
         fields = fields || {};
         if (!_.isPlainObject(conditions))
             conditions = { _id: conditions };
-        if (conditions.hasOwnProperty('_id'))
-            conditions._id = this.options.identifier.reverse(conditions._id);
+        conditions = this._helpers.convertToDB(conditions);
         var cursor = this.collection.find(conditions, {
             fields: fields
         });
@@ -253,8 +239,7 @@ var Model = (function () {
             cache: true
         });
         return Bluebird.resolve().bind(this).then(function () {
-            if (conditions.hasOwnProperty('_id'))
-                conditions._id = _this.options.identifier.reverse(conditions._id);
+            conditions = _this._helpers.convertToDB(conditions);
             return _this._cache.get(conditions);
         }).then(function (cachedDocument) {
             if (cachedDocument)
@@ -356,8 +341,7 @@ var Model = (function () {
             multi: true
         });
         return Bluebird.resolve().then(function () {
-            if (conditions.hasOwnProperty('_id'))
-                conditions._id = _this.options.identifier.reverse(conditions._id);
+            conditions = _this._helpers.convertToDB(conditions);
             return new Bluebird(function (resolve, reject) {
                 _this.collection.updateMany(conditions, changes, options, function (err, response) {
                     if (err)
@@ -384,8 +368,7 @@ var Model = (function () {
                 _id: conditions
             };
         return Bluebird.resolve().then(function () {
-            if (conditions.hasOwnProperty('_id'))
-                conditions._id = _this.options.identifier.reverse(conditions._id);
+            conditions = _this._helpers.convertToDB(conditions);
             return new Bluebird(function (resolve, reject) {
                 _this.collection.count(conditions, function (err, results) {
                     if (err)
@@ -417,8 +400,7 @@ var Model = (function () {
                 _id: conditions
             };
         return Bluebird.resolve().then(function () {
-            if (conditions.hasOwnProperty('_id'))
-                conditions._id = _this.options.identifier.reverse(conditions._id);
+            conditions = _this._helpers.convertToDB(conditions);
             return new Bluebird(function (resolve, reject) {
                 _this.collection.remove(conditions, options, function (err, response) {
                     if (err)
@@ -453,7 +435,7 @@ var Model = (function () {
      */
     Model.prototype.ensureIndexes = function (callback) {
         var _this = this;
-        return Bluebird.resolve(this.options.indexes).map(function (index) {
+        return Bluebird.resolve(this._indexes).map(function (index) {
             return _this.ensureIndex(index.spec || index, index.options || {});
         }).nodeify(callback);
     };

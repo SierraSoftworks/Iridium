@@ -6,15 +6,16 @@ function ModelSpecificInstance(model, instanceType) {
     };
     util.inherits(constructor, instanceType);
     _.each(Object.keys(model.schema), function (property) {
-        if (property === '_id') {
+        if (model.transforms.hasOwnProperty(property)) {
             return Object.defineProperty(constructor.prototype, property, {
                 get: function () {
-                    return model.options.identifier.apply(this._modified._id);
+                    return model.transforms[property].fromDB(this._modified._id);
                 },
                 set: function (value) {
-                    this._modified._id = model.options.identifier.reverse(value);
+                    this._modified._id = model.transforms[property].toDB(value);
                 },
-                enumerable: true
+                enumerable: true,
+                configurable: true
             });
         }
         Object.defineProperty(constructor.prototype, property, {

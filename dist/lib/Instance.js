@@ -1,5 +1,7 @@
 var _ = require('lodash');
+var MongoDB = require('mongodb');
 var Bluebird = require('bluebird');
+var skmatc = require('skmatc');
 var Instance = (function () {
     /**
      * Creates a new instance which represents the given document as a type of model
@@ -57,7 +59,9 @@ var Instance = (function () {
             }
         });
         return Bluebird.resolve().then(function () {
+            conditions = _.cloneDeep(conditions);
             _.merge(conditions, { _id: _this._modified._id });
+            conditions = _this._model.helpers.transformToDB(conditions);
             if (!changes) {
                 var validation = _this._model.helpers.validate(_this._modified);
                 if (validation.failed)
@@ -95,7 +99,7 @@ var Instance = (function () {
                 });
             }
         }).then(function (changed) {
-            conditions = { _id: _this._modified._id };
+            conditions = _this._model.helpers.convertToDB({ _id: _this._modified._id });
             if (!changed) {
                 return _.cloneDeep(_this._modified);
             }
@@ -230,7 +234,20 @@ var Instance = (function () {
     Instance.prototype.toString = function () {
         return JSON.stringify(this.document, null, 2);
     };
-    Instance.validators = [];
+    Instance.schema = {
+        _id: MongoDB.ObjectID
+    };
+    Instance.validators = [
+        skmatc.create(function (schema) { return schema === MongoDB.ObjectID; }, function (schema, data) {
+            return this.assert(!data || data instanceof MongoDB.ObjectID);
+        }, { name: 'ObjectID validation' })
+    ];
+    Instance.transforms = {
+        _id: {
+            fromDB: function (value) { return value._bsontype == 'ObjectID' ? new MongoDB.ObjectID(value.id).toHexString() : value; },
+            toDB: function (value) { return value && typeof value === 'string' ? new MongoDB.ObjectID(value) : value; }
+        }
+    };
     Instance.indexes = [];
     return Instance;
 })();

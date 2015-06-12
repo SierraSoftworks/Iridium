@@ -1,5 +1,6 @@
 /// <reference path="../_references.d.ts" />
 var MongoDB = require('mongodb');
+var _ = require('lodash');
 var skmatc = require('skmatc');
 function Collection(name) {
     return function (target) {
@@ -9,18 +10,13 @@ function Collection(name) {
 exports.Collection = Collection;
 function Index(spec, options) {
     return function (target) {
-        target.indexes = target.indexes || [];
-        if (options)
-            target.indexes.push({ spec: spec, options: options });
-        else
-            target.indexes.push({ spec: spec });
+        target.indexes = (target.indexes || []).concat({ spec: spec, options: options || {} });
     };
 }
 exports.Index = Index;
 function Validate(forType, validate) {
     return function (target) {
-        target.validators = target.validators || [];
-        target.validators.push(skmatc.create(function (schema) { return schema === forType; }, validate));
+        target.validators = (target.validators || []).concat(skmatc.create(function (schema) { return schema === forType; }, validate));
     };
 }
 exports.Validate = Validate;
@@ -40,7 +36,7 @@ function Property() {
             target = target.constructor;
         }
         asType = args.pop();
-        target.schema = target.schema || {};
+        target.schema = _.clone(target.schema || {});
         if (!required)
             target.schema[name] = { $required: required, $type: asType };
         else
@@ -48,21 +44,19 @@ function Property() {
     };
 }
 exports.Property = Property;
-function ObjectID(target, name) {
-    target.constructor.schema = target.constructor.schema || {};
-    target.constructor.schema[name] = { $required: false, $type: /^[0-9a-f]{24}$/ };
-    target.constructor.identifier = {
-        apply: function (value) {
-            return (value && value._bsontype == 'ObjectID') ? new MongoDB.ObjectID(value.id).toHexString() : value;
-        },
-        reverse: function (value) {
-            if (value === null || value === undefined)
-                return undefined;
-            if (value && /^[a-f0-9]{24}$/.test(value))
-                return MongoDB.ObjectID.createFromHexString(value);
-            return value;
-        }
+function Transform(fromDB, toDB) {
+    return function (target, property) {
+        target.constructor.transforms = _.clone(target.constructor.transforms || {});
+        target.constructor.transforms[property] = {
+            fromDB: fromDB,
+            toDB: toDB
+        };
     };
+}
+exports.Transform = Transform;
+function ObjectID(target, name) {
+    target.constructor.schema = _.clone(target.constructor.schema || {});
+    target.constructor.schema[name] = MongoDB.ObjectID;
 }
 exports.ObjectID = ObjectID;
 
