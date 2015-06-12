@@ -34,7 +34,6 @@
     "bluebird": "^2.9.25",
     "lodash": "^3.7.0",
     "mongodb": "^2.0.28",
-    "reflect-metadata": "^0.1.0",
     "skmatc": "^1.1.2"
   },
   "devDependencies": {
