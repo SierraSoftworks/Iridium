@@ -1,9 +1,9 @@
 ﻿/// <reference path="../_references.d.ts" />
-import * as ModelInterfaces from './ModelInterfaces';
+import Model from './Model';
 import Bluebird = require('bluebird');
 
 export default class ModelCache {
-    constructor(public model: ModelInterfaces.IModelBase) {
+    constructor(public model: Model<any,any>) {
 
     }
 

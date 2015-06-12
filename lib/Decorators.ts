@@ -5,7 +5,7 @@ import skmatc = require('skmatc');
 import Instance from './Instance';
 import {Index, IndexSpecification} from './Index';
 import {Schema} from './Schema';
-import {InstanceImplementation} from './ModelInterfaces';
+import InstanceImplementation from './InstanceInterface';
 
 export function Collection(name: string) {
 	return function(target: InstanceImplementation<any, any>) {

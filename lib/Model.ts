@@ -26,49 +26,34 @@ import ModelHelpers from './ModelHelpers';
 import ModelHandlers from './ModelHandlers';
 import * as ModelInterfaces from './ModelInterfaces';
 import ModelSpecificInstance from './ModelSpecificInstance';
+import InstanceImplementation from './InstanceInterface';
 
 /**
  * An Iridium Model which represents a structured MongoDB collection
  * @class
  */
-export default class Model<TDocument extends { _id?: any }, TInstance> implements ModelInterfaces.IModel<TDocument, TInstance> {
+export default class Model<TDocument extends { _id?: any }, TInstance> {
     /**
      * Creates a new Iridium model representing a given ISchema and backed by a collection whose name is specified
      * @param {Iridium} core The Iridium core that this model should use for database access
-     * @param {String} collection The name of the collection within the database which should be used by this model
-     * @param {schema} schema The schema defining the data validations to be performed on the model
-     * @param {IModelOptions} options The options dictating the behaviour of the model
+     * @param {ModelInterfaces.InstanceImplementation} instanceType The class which will be instantiated for each document retrieved from the database
      * @returns {Model}
      * @constructor
      */
-    constructor(core: Core, instanceType: ModelInterfaces.InstanceImplementation<TDocument, TInstance>) {
+    constructor(core: Core, instanceType: InstanceImplementation<TDocument, TInstance>) {
         if (!(core instanceof Core)) throw new Error("You failed to provide a valid Iridium core for this model");
         if (typeof instanceType != 'function') throw new Error("You failed to provide a valid instance constructor for this model");
         if (typeof instanceType.collection != 'string' || !instanceType.collection) throw new Error("You failed to provide a valid collection name for this model");
         if (!_.isPlainObject(instanceType.schema) || instanceType.schema._id === undefined) throw new Error("You failed to provide a valid schema for this model");
         
-        this._options = instanceType;
-        
-        _.defaults(this._options, <ModelOptions.ModelOptions<TDocument, TInstance>>{
-            identifier: {
-                apply: function (value) {
-                    return (value && value._bsontype == 'ObjectID') ? new MongoDB.ObjectID(value.id).toHexString() : value;
-                },
-                reverse: function (value) {
-                    if (value === null || value === undefined) return undefined;
-                    if (value && /^[a-f0-9]{24}$/.test(value)) return MongoDB.ObjectID.createFromHexString(value);
-                    return value;
-                }
-            },
-            cache: new idCacheController()
-        });
-
         this._core = core;
         this._collection = instanceType.collection;
         this._schema = instanceType.schema;
         this._hooks = instanceType;
         this._cacheDirector = instanceType.cache;
         this._transforms = instanceType.transforms || {};
+        this._validators = instanceType.validators || [];
+        this._indexes = instanceType.indexes || [];
 
         core.plugins.forEach((plugin: Plugin) => {
             if (plugin.newModel) plugin.newModel(this);
@@ -84,20 +69,6 @@ export default class Model<TDocument extends { _id?: any }, TInstance> implement
         
         this._helpers = new ModelHelpers(this);
         this._handlers = new ModelHandlers(this);
-    }
-
-    private _options: ModelOptions.ModelOptions<TDocument, TInstance>;
-    /**
-     * Gets the options provided when instantiating this model
-     * @public
-     * @returns {ModelOptions.IModelOptions}
-     * @description
-     * This is intended to be consumed by plugins which require any configuration
-     * options. Changes made to this object after the {plugin.newModel} hook are
-     * called will not have any effect on this model.
-     */
-    get options(): ModelOptions.ModelOptions<TDocument, TInstance> {
-        return this._options;
     }
 
     private _helpers: ModelHelpers<TDocument, TInstance>;
@@ -209,6 +180,19 @@ export default class Model<TDocument extends { _id?: any }, TInstance> implement
     get transforms() {
         return this._transforms;
     }
+    
+    private _validators: Skmatc.Validator[];
+    
+    get validators() {
+        return this._validators;
+    }
+    
+    private _indexes: (Index.Index | Index.IndexSpecification)[];
+    
+    get indexes() {
+        return this._indexes;
+    }
+    
     /**
      * Retrieves all documents in the collection and wraps them as instances
      * @param {function(Error, TInstance[])} callback An optional callback which will be triggered when results are available
@@ -661,7 +645,7 @@ export default class Model<TDocument extends { _id?: any }, TInstance> implement
      * @returns {Promise<String[]>} The names of the indexes
      */
     ensureIndexes(callback?: General.Callback<string[]>): Bluebird<string[]> {
-        return Bluebird.resolve(this.options.indexes).map((index: Index.Index | Index.IndexSpecification) => {
+        return Bluebird.resolve(this._indexes).map((index: Index.Index | Index.IndexSpecification) => {
             return this.ensureIndex((<Index.Index>index).spec || <Index.IndexSpecification>index,(<Index.Index>index).options || {});
         }).nodeify(callback);
     }
