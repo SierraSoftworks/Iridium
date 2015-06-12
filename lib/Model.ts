@@ -41,13 +41,15 @@ export default class Model<TDocument extends { _id?: any }, TInstance> implement
      * @returns {Model}
      * @constructor
      */
-    constructor(core: Core, instanceType: ModelInterfaces.InstanceCreator<TDocument, TInstance> | ModelInterfaces.InstanceImplementation<TDocument, TInstance>, collection: string, schema: Schema, options: ModelOptions.ModelOptions<TDocument, TInstance> = {}) {
+    constructor(core: Core, instanceType: ModelInterfaces.InstanceImplementation<TDocument, TInstance>) {
         if (!(core instanceof Core)) throw new Error("You failed to provide a valid Iridium core for this model");
         if (typeof instanceType != 'function') throw new Error("You failed to provide a valid instance constructor for this model");
-        if (typeof collection != 'string' || !collection) throw new Error("You failed to provide a valid collection name for this model");
-        if (!_.isPlainObject(schema) || schema._id === undefined) throw new Error("You failed to provide a valid schema for this model");
-
-        _.defaults(options, <ModelOptions.ModelOptions<TDocument, TInstance>>{
+        if (typeof instanceType.collection != 'string' || !instanceType.collection) throw new Error("You failed to provide a valid collection name for this model");
+        if (!_.isPlainObject(instanceType.schema) || instanceType.schema._id === undefined) throw new Error("You failed to provide a valid schema for this model");
+        
+        this._options = instanceType;
+        
+        _.defaults(this._options, <ModelOptions.ModelOptions<TDocument, TInstance>>{
             identifier: {
                 apply: function (value) {
                     return (value && value._bsontype == 'ObjectID') ? new MongoDB.ObjectID(value.id).toHexString() : value;
@@ -60,27 +62,24 @@ export default class Model<TDocument extends { _id?: any }, TInstance> implement
             },
             cache: new idCacheController()
         });
-        
-        _.merge(options, instanceType);
 
         this._core = core;
-        this._collection = collection;
-        this._schema = schema;
-        this._options = options;
+        this._collection = instanceType.collection;
+        this._schema = instanceType.schema;
+        this._hooks = instanceType;
+        this._cacheDirector = instanceType.cache;
 
         core.plugins.forEach((plugin: Plugin) => {
             if (plugin.newModel) plugin.newModel(this);
         });
 
-        this._cacheDirector = options.cache;
         this._cache = new ModelCache(this);
 
         if ((<Function>instanceType).prototype instanceof Instance)
-            this._Instance = ModelSpecificInstance(this, <ModelInterfaces.InstanceImplementation<TDocument, TInstance>>instanceType);
+            this._Instance = ModelSpecificInstance(this, instanceType);
         else
-            this._Instance = <ModelInterfaces.ModelSpecificInstanceConstructor<TDocument, TInstance>>((<Function>instanceType).bind(undefined, this));
+            this._Instance = instanceType.bind(undefined, this);
 
-        this._hooks = <ModelInterfaces.InstanceImplementation<TDocument, TInstance>>instanceType;
         
         this._helpers = new ModelHelpers(this);
         this._handlers = new ModelHandlers(this);

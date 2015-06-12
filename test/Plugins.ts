@@ -2,6 +2,15 @@
 import * as Iridium from '../index';
 import Skmatc = require('skmatc');
 
+class Test extends Iridium.Instance<any, Test> {
+    static collection = 'test';
+    static schema: Iridium.Schema = {
+        _id: false
+    };
+    
+    _id: string;
+}
+
 describe("Plugins",() => {
     var core: Iridium.Core;
     beforeEach(() => {
@@ -31,7 +40,7 @@ describe("Plugins",() => {
                     wasCalled = true;
                 }
             });
-            var model = new Iridium.Model<any, any>(core,(model, doc) => doc, 'test', { _id: false });
+            var model = new Iridium.Model<any, Test>(core, Test);
             chai.expect(wasCalled).to.be.true;
         });
 
@@ -42,7 +51,7 @@ describe("Plugins",() => {
                 }
             });
 
-            var model = new Iridium.Model(core,(model, doc) => doc, 'test', { _id: false });
+            var model = new Iridium.Model<any, Test>(core, Test);
             chai.expect(model.collectionName).to.exist.and.be.equal('changed');
         });
     });
@@ -73,7 +82,7 @@ describe("Plugins",() => {
                 validate: []
             });
 
-            var model = new Iridium.Model(core, Iridium.Instance, 'test', { _id: false });
+            var model = new Iridium.Model<any, Test>(core, Test);
             var instance = new model.Instance({});
             chai.expect(wasCalled).to.be.true;
         });
@@ -88,7 +97,13 @@ describe("Plugins",() => {
                 validate: []
             });
 
-            var model = new Iridium.Model(core, (model, doc) => doc, 'test', { _id: false });
+            var instanceImplementation: any = function() { return {}; };
+            instanceImplementation.collection = 'test';
+            instanceImplementation.schema = {
+                _id: false
+            };
+            
+            var model = new Iridium.Model(core, instanceImplementation);
             var instance = new model.Instance({});
             chai.expect(wasCalled).to.be.false;
         });

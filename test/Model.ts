@@ -3,6 +3,7 @@ import * as Iridium from '../index';
 import MongoDB = require('mongodb');
 import Cursor from '../lib/Cursor';
 import Promise = require('bluebird');
+import _ = require('lodash');
 
 interface TestDocument {
     _id?: string;
@@ -10,6 +11,12 @@ interface TestDocument {
 }
 
 class Test extends Iridium.Instance<TestDocument, Test> implements TestDocument {
+    static collection = 'test';
+    static schema: Iridium.Schema = {
+        _id: false,
+        answer: Number
+    };
+    
     _id: string;
     answer: number;
 }
@@ -26,61 +33,89 @@ describe("Model",() => {
 
     before(() => core.connect());
 
-    describe("constructor",() => {
+    describe("constructor", () => {
+        function createInstanceImplementation(properties): any {
+            var fn = function() { return {}; };
+            _.merge(fn, properties);
+            return fn;
+        }
+        
         it("should throw an error if you don't provide a valid core",() => {
             chai.expect(() => {
-                new Iridium.Model<any, any>(null,() => { }, 'test', { _id: false })
+                new Iridium.Model<any, any>(null, createInstanceImplementation({
+                    collection: 'test',
+                    schema: { _id: false }
+                }))
             }).to.throw("You failed to provide a valid Iridium core for this model");
         });
 
         it("should throw an error if you don't provide a valid instanceType",() => {
             chai.expect(() => {
-                new Iridium.Model<any, any>(core, null, 'test', { _id: false })
+                new Iridium.Model<any, any>(core, null)
             }).to.throw("You failed to provide a valid instance constructor for this model");
         });
 
         it("should throw an error if you don't provide a collection name",() => {
             chai.expect(() => {
-                new Iridium.Model<any, any>(core,() => { }, null, { _id: false })
+                new Iridium.Model<any, any>(core,createInstanceImplementation({
+                    schema: { _id: false }
+                }))
             }).to.throw("You failed to provide a valid collection name for this model");
 
             chai.expect(() => {
-                new Iridium.Model<any, any>(core,() => { }, '', { _id: false })
+                new Iridium.Model<any, any>(core, createInstanceImplementation({
+                    collection: '',
+                    schema: { _id: false }
+                }))
             }).to.throw("You failed to provide a valid collection name for this model");
 
             chai.expect(() => {
-                new Iridium.Model<any, any>(core,() => { }, <any>4, { _id: false })
+                new Iridium.Model<any, any>(core,createInstanceImplementation({
+                    collection: 4,
+                    schema: { _id: false }
+                }))
             }).to.throw("You failed to provide a valid collection name for this model");
         });
 
         it("should throw an error if you don't provide a valid schema",() => {
             chai.expect(() => {
-                new Iridium.Model<any, any>(core,() => { }, 'test', null)
+                new Iridium.Model<any, any>(core, createInstanceImplementation({
+                    collection: 'test'
+                }))
             }).to.throw("You failed to provide a valid schema for this model");
 
             chai.expect(() => {
-                new Iridium.Model<any, any>(core,() => { }, 'test', <any>{ id: false })
+                new Iridium.Model<any, any>(core,createInstanceImplementation({
+                    collection: 'test',
+                    schema: { id: false }
+                }))
             }).to.throw("You failed to provide a valid schema for this model");
         });
 
         it("should correctly set the core",() => {
-            chai.expect(new Iridium.Model(core,() => { }, 'test', { _id: false }).core).to.equal(core);
+            chai.expect(new Iridium.Model(core, createInstanceImplementation({
+                    collection: 'test',
+                    schema: { _id: false }
+                })).core).to.equal(core);
         });
 
         it("should correctly set the collectionName",() => {
-            chai.expect(new Iridium.Model(core,() => { }, 'test', { _id: false }).collectionName).to.equal('test');
+            chai.expect(new Iridium.Model(core, createInstanceImplementation({
+                    collection: 'test',
+                    schema: { _id: false }
+                })).collectionName).to.equal('test');
         });
 
         it("should correctly set the schema",() => {
-            chai.expect(new Iridium.Model(core,() => { }, 'test', { _id: false }).schema).to.eql({ _id: false });
+            chai.expect(new Iridium.Model(core, createInstanceImplementation({
+                    collection: 'test',
+                    schema: { _id: false }
+                })).schema).to.eql({ _id: false });
         });
     });
 
     describe("methods",() => {
-        var test = new Iridium.Model(core, Test, 'test', {
-            _id: false,
-            answer: Number
-        });
+        var test = new Iridium.Model(core, Test);
 
         it("should expose create()",() => chai.expect(test.create).to.exist.and.be.a('function'));
         it("should expose insert()",() => chai.expect(test.insert).to.exist.and.be.a('function'));
@@ -96,10 +131,7 @@ describe("Model",() => {
     });
 
     describe("properties",() => {
-        var test = new Iridium.Model(core, Test, 'test', {
-            _id: false,
-            answer: Number
-        });
+        var test = new Iridium.Model(core, Test);
 
         it("should expose core",() => {
             chai.expect(test).to.have.property('core');
@@ -125,7 +157,7 @@ describe("Model",() => {
 
     describe("collection",() => {
         it("should throw an error if you attempt to access it before connecting to the database",() => {
-            var model = new Iridium.Model(new Iridium.Core('mongodb://localhost/test'),() => { }, 'test', { _id: false });
+            var model = new Iridium.Model(new Iridium.Core('mongodb://localhost/test'), Test);
             chai.expect(() => model.collection).to.throw("Iridium Core not connected to a database.");
         });
 
@@ -135,7 +167,7 @@ describe("Model",() => {
     });
 
     describe("create()",() => {
-        var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { _id: false, answer: Number });
+        var model = new Iridium.Model<TestDocument, Test>(core, Test);
 
         before(() => {
             return core.connect()
@@ -179,7 +211,7 @@ describe("Model",() => {
     });
 
     describe("insert()",() => {
-        var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { _id: false, answer: Number });
+        var model = new Iridium.Model<TestDocument, Test>(core, Test);
 
         before(() => {
             return core.connect()
@@ -223,7 +255,7 @@ describe("Model",() => {
     });
 
     describe("remove()",() => {
-        var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { _id: false, answer: Number });
+        var model = new Iridium.Model<TestDocument, Test>(core, Test);
 
         beforeEach(() => {
             return core.connect().then(() => model.remove()).then(() => model.insert([
@@ -283,7 +315,7 @@ describe("Model",() => {
     });
 
     describe("findOne()",() => {
-        var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { _id: false, answer: Number });
+        var model = new Iridium.Model<TestDocument, Test>(core, Test);
 
         before(() => {
             return core.connect().then(() => model.remove()).then(() => model.insert([
@@ -347,7 +379,7 @@ describe("Model",() => {
     });
 
     describe("get()",() => {
-        var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { _id: false, answer: Number });
+        var model = new Iridium.Model<TestDocument, Test>(core, Test);
 
         before(() => {
             return core.connect().then(() => model.remove()).then(() => model.insert([
@@ -411,7 +443,7 @@ describe("Model",() => {
     });
 
     describe("find()",() => {
-        var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { _id: false, answer: Number });
+        var model = new Iridium.Model<TestDocument, Test>(core, Test);
 
         before(() => {
             return core.connect().then(() => model.remove()).then(() => model.insert([
@@ -635,7 +667,7 @@ describe("Model",() => {
     });
 
     describe("count()",() => {
-        var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { _id: false, answer: Number });
+        var model = new Iridium.Model<TestDocument, Test>(core, Test);
 
         before(() => {
             return core.connect().then(() => model.remove()).then(() => model.insert([
@@ -679,7 +711,7 @@ describe("Model",() => {
     });
 
     describe("update()",() => {
-        var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { _id: false, answer: Number });
+        var model = new Iridium.Model<TestDocument, Test>(core, Test);
 
         beforeEach(() => {
             return core.connect().then(() => model.remove()).then(() => model.insert([
@@ -723,7 +755,7 @@ describe("Model",() => {
     });
 
     describe("ensureIndex()",() => {
-        var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { _id: false, answer: Number });
+        var model = new Iridium.Model<TestDocument, Test>(core, Test);
 
         beforeEach(() => {
             return core.connect().then(() => model.remove()).then(() => model.insert([
@@ -756,12 +788,12 @@ describe("Model",() => {
         });
     });
 
-    describe("ensureIndexes()",() => {
-        var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { _id: false, answer: Number }, {
-            indexes: [{ answer: 1 }]
-        });
+    describe("ensureIndexes()", () => {
+        
+        var model = new Iridium.Model<TestDocument, Test>(core, Test);
 
         before(() => {
+            Test.indexes = [{ answer: 1 }];
             return core.connect().then(() => model.remove()).then(() => model.insert([
                 { answer: 10 },
                 { answer: 11 },
@@ -772,6 +804,7 @@ describe("Model",() => {
         });
 
         after(() => {
+            Test.indexes = [];
             return model.remove().then(() => model.dropIndexes()).then(() => core.close());
         });
 
@@ -785,7 +818,7 @@ describe("Model",() => {
     });
 
     describe("dropIndex()",() => {
-        var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { _id: false, answer: Number });
+        var model = new Iridium.Model<TestDocument, Test>(core, Test);
 
         beforeEach(() => {
             return core.connect().then(() => model.remove()).then(() => model.insert([
@@ -827,7 +860,7 @@ describe("Model",() => {
     });
 
     describe("dropIndexes()",() => {
-        var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { _id: false, answer: Number });
+        var model = new Iridium.Model<TestDocument, Test>(core, Test);
 
         before(() => {
             return core.connect().then(() => model.remove()).then(() => model.insert([
@@ -854,34 +887,19 @@ describe("Model",() => {
     
     describe("identifier transforms", () => {
         it("should have a default converter", () => {
-            var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { _id: false, answer: Number });
+            var model = new Iridium.Model<TestDocument, Test>(core, Test);
             chai.expect(model.options.identifier).to.exist.and.have.property('apply').which.is.a('function');
             chai.expect(model.options.identifier).to.exist.and.have.property('reverse').which.is.a('function');
         });
         
         it("should have a default ObjectID to String converter", () => {
-            var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { _id: false, answer: Number });
+            var model = new Iridium.Model<TestDocument, Test>(core, Test);
             chai.expect(model.options.identifier.apply(MongoDB.ObjectID.createFromHexString('aaaaaaaaaaaaaaaaaaaaaaaa'))).to.eql('aaaaaaaaaaaaaaaaaaaaaaaa');
             chai.expect(model.options.identifier.reverse('aaaaaaaaaaaaaaaaaaaaaaaa')).to.eql(MongoDB.ObjectID.createFromHexString('aaaaaaaaaaaaaaaaaaaaaaaa'));
         });
         
-        it("should allow you to specify a custom converter using the options argument", () => {
-            var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', { _id: false, answer: Number }, {
-                identifier: {
-                    apply: x => x * 10,
-                    reverse: x => x / 10
-                }
-            });
-            
-            chai.expect(model.options.identifier).to.exist.and.have.property('apply').which.is.a('function');
-            chai.expect(model.options.identifier).to.exist.and.have.property('reverse').which.is.a('function');
-            
-            chai.expect(model.options.identifier.apply(12)).to.eql(120);
-            chai.expect(model.options.identifier.reverse(120)).to.eql(12);
-        });
-        
         it("should allow you to specify a custom converter by providing a property on the class", () => {
-            var model = new Iridium.Model<TestDocument, TestWithCustomID>(core, TestWithCustomID, 'test', { _id: false, answer: Number });
+            var model = new Iridium.Model<TestDocument, TestWithCustomID>(core, TestWithCustomID);
             
             chai.expect(model.options.identifier).to.exist.and.have.property('apply').which.is.a('function');
             chai.expect(model.options.identifier).to.exist.and.have.property('reverse').which.is.a('function');

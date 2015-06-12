@@ -230,6 +230,8 @@ var Instance = (function () {
     Instance.prototype.toString = function () {
         return JSON.stringify(this.document, null, 2);
     };
+    Instance.validators = [];
+    Instance.indexes = [];
     return Instance;
 })();
 exports.default = Instance;

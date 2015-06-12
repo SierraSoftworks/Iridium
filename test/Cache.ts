@@ -6,6 +6,10 @@ interface Document {
 }
 
 class Instance extends Iridium.Instance<Document, Instance> {
+    static collection = 'test';
+    static schema: Iridium.Schema = { _id: false };
+    static cache = new Iridium.CacheOnID();
+    
     _id: string;
 }
 
@@ -93,9 +97,7 @@ describe("Cache",() => {
             database: 'test'
         });
 
-        var model = new Iridium.Model<Document, Instance>(core, Instance, 'test', { _id: false }, {
-            cache: new Iridium.CacheOnID()
-        });
+        var model = new Iridium.Model<Document, Instance>(core, Instance);
 
         before(() => core.connect().then(() => {
             core.cache = new Iridium.MemoryCache();

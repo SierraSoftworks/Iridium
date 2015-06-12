@@ -6,9 +6,11 @@ import {CacheDirector} from './CacheDirector';
 import * as General from './General';
 import * as ModelInterfaces from './ModelInterfaces';
 import * as Index from './Index';
+import {Schema} from './Schema';
 
 import _ = require('lodash');
 import Bluebird = require('bluebird');
+import skmatc = require('skmatc');
 
 export default class Instance<TDocument extends { _id?: any }, TInstance> {
     /**
@@ -56,9 +58,11 @@ export default class Instance<TDocument extends { _id?: any }, TInstance> {
     static onReady: (instance: Instance<{ _id?: any }, Instance<{ _id?: any }, any>>) => void;
     static onSaving: (instance: Instance<{ _id?: any }, Instance<{ _id?: any }, any>>, changes: any) => void;
     
-    static validators: Skmatc.Validator[];
+    static collection: string;
+    static schema: Schema;
+    static validators: Skmatc.Validator[] = [];
     static cache: CacheDirector;
-    static indexes: (Index.Index | Index.IndexSpecification)[];
+    static indexes: (Index.Index | Index.IndexSpecification)[] = [];
     static identifier: {
         apply(fromSource: any): any;
         reverse(toSource: any): any;

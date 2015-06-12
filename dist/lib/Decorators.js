@@ -1,5 +1,12 @@
 /// <reference path="../_references.d.ts" />
 var MongoDB = require('mongodb');
+var skmatc = require('skmatc');
+function Collection(name) {
+    return function (target) {
+        target.collection = name;
+    };
+}
+exports.Collection = Collection;
 function Index(spec, options) {
     return function (target) {
         target.indexes = target.indexes || [];
@@ -10,61 +17,53 @@ function Index(spec, options) {
     };
 }
 exports.Index = Index;
-function Identifier(fromDB, toDB) {
+function Validate(forType, validate) {
     return function (target) {
-        target.identifier = {
-            apply: fromDB,
-            reverse: toDB
-        };
+        target.validators = target.validators || [];
+        target.validators.push(skmatc.create(function (schema) { return schema === forType; }, validate));
     };
 }
-exports.Identifier = Identifier;
-function GetDescriptor(target, name) {
-    return Object.getOwnPropertyDescriptor(target, name) || {
-        configurable: true,
-        enumerable: true
+exports.Validate = Validate;
+function Property() {
+    var args = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        args[_i - 0] = arguments[_i];
+    }
+    var name = null, asType = false, required = true;
+    if (args.length > 1 && typeof args[args.length - 1] === 'boolean')
+        required = args.pop();
+    return function (target, property) {
+        if (!property)
+            name = args.shift();
+        else {
+            name = property;
+            target = target.constructor;
+        }
+        asType = args.pop();
+        target.schema = target.schema || {};
+        if (!required)
+            target.schema[name] = { $required: required, $type: asType };
+        else
+            target.schema[name] = asType;
     };
-}
-function Property(target, name, descriptor) {
-    var desc = descriptor || GetDescriptor(target, name);
-    desc.get = function () { return this.document[name]; };
-    desc.set = function (value) { this.document[name] = value; };
-    if (descriptor)
-        return desc;
-    Object.defineProperty(target, name, desc);
 }
 exports.Property = Property;
-function ObjectID(target, name, descriptor) {
-    var desc = descriptor || GetDescriptor(target, name);
-    desc = Transform(function (value) {
-        return (value && value._bsontype == 'ObjectID') ? new MongoDB.ObjectID(value.id).toHexString() : value;
-    }, function (value) {
-        if (value === null || value === undefined)
-            return undefined;
-        if (value && /^[a-f0-9]{24}$/.test(value))
-            return MongoDB.ObjectID.createFromHexString(value);
-        return value;
-    });
-    if (descriptor)
-        return desc;
-    Object.defineProperty(target, name, desc);
-}
-exports.ObjectID = ObjectID;
-function Transform(fromDB, toDB) {
-    return function (target, name, descriptor) {
-        var desc = descriptor || GetDescriptor(target, name);
-        var get = desc.get || function () { return this.document[name]; }, set = desc.set || function (value) { this.document[name] = value; };
-        desc.get = function () {
-            return fromDB(get.call(this));
-        };
-        desc.set = function (value) {
-            return set.call(this, toDB(value));
-        };
-        if (descriptor)
-            return desc;
-        Object.defineProperty(target, name, desc);
+function ObjectID(target, name) {
+    target.constructor.schema = target.constructor.schema || {};
+    target.constructor.schema[name] = { $required: false, $type: /^[0-9a-f]{24}$/ };
+    target.constructor.identifier = {
+        apply: function (value) {
+            return (value && value._bsontype == 'ObjectID') ? new MongoDB.ObjectID(value.id).toHexString() : value;
+        },
+        reverse: function (value) {
+            if (value === null || value === undefined)
+                return undefined;
+            if (value && /^[a-f0-9]{24}$/.test(value))
+                return MongoDB.ObjectID.createFromHexString(value);
+            return value;
+        }
     };
 }
-exports.Transform = Transform;
+exports.ObjectID = ObjectID;
 
 //# sourceMappingURL=../lib/Decorators.js.map

@@ -12,6 +12,18 @@ interface Document {
 }
 
 class Person extends Iridium.Instance<Document, Person> {
+    static collection = 'test';
+    static schema: Iridium.Schema = {
+        _id: false,
+        name: String,
+        dateOfBirth: Date,
+        siblings: [{
+            name: String,
+            related: Boolean,
+            ageDifference: Number
+        }]
+    };
+    
     name: string;
     dateOfBirth: Date;
     siblings: {
@@ -23,16 +35,7 @@ class Person extends Iridium.Instance<Document, Person> {
 
 describe("Validation", () => {
     var core = new Iridium.Core({ database: 'test' });
-    var model = new Iridium.Model<Document, Person>(core, Person, 'test', {
-        _id: false,
-        name: String,
-        dateOfBirth: Date,
-        siblings: [{
-            name: String,
-            related: Boolean,
-            ageDifference: Number
-        }]
-    });
+    var model = new Iridium.Model<Document, Person>(core, Person);
 
     before(() => core.connect());
 

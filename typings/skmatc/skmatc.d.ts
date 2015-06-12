@@ -1,23 +1,21 @@
 declare module "skmatc" {
-    export = SkmatcCore;
-    
-    class SkmatcCore extends Skmatc.Skmatc { }
+    export = Skmatc.Skmatc;
 }
 
 declare module Skmatc {
     export class Skmatc {
         constructor(schema: any);
     
-        static validators: [Validator];
+        static validators: Validator[];
         static Validator: typeof Validator;
         static Result: typeof Result;
         static Failure: typeof Failure;
         static create(handles: (schema: any) => boolean, validate: (schema: any, data: any, path: string) => Result, options?: any): Validator;
-        static validate(validators: [Validator], schema: any, data: any, path?: string): Result;
+        static validate(validators: Validator[], schema: any, data: any, path?: string): Result;
         static register(validator: Validator);
     
         schema: any;
-        validators: [Validator];
+        validators: Validator[];
         validate(data: any, path?: string): Result;
         register(validator: Validator);
     }
@@ -36,14 +34,14 @@ declare module Skmatc {
     }
     
     export class Result {
-        constructor(failures: [Failure]);
-        static compound(results: [Result]): Result;
+        constructor(failures: Failure[]);
+        static compound(results: Result[]): Result;
         
-        failures: [Failure];
+        failures: Failure[];
         success: boolean;
         failed: boolean;
         message: string;
-        messages: [string];
+        messages: string[];
         error: Error;
     }
     

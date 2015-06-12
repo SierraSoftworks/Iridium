@@ -7,6 +7,7 @@ import ModelCache from './ModelCache';
 import {CacheDirector} from './CacheDirector';
 import {Hooks} from './Hooks';
 import * as ModelOptions from './ModelOptions';
+import * as Index from './Index';
 
 export interface IModelBase {
     collection: MongoDB.Collection;
@@ -21,8 +22,19 @@ export interface IModel<TDocument extends { _id?: any }, TInstance> extends IMod
     Instance: new (doc: TDocument, isNew?: boolean, isPartial?: boolean) => TInstance;
 }
 
-export interface InstanceImplementation<TDocument extends { _id?: any }, TInstance> extends Hooks<TDocument, TInstance>, ModelOptions.ModelOptions<TDocument, TInstance> {
+export interface InstanceImplementation<TDocument extends { _id?: any }, TInstance> extends Hooks<TDocument, TInstance> {
     new (model: Model<TDocument, TInstance>, doc: TDocument, isNew?: boolean, isPartial?: boolean): TInstance;
+    
+    collection: string;
+    schema: Schema;
+    indexes?: (Index.Index | Index.IndexSpecification)[];
+
+    cache?: CacheDirector;
+    validators?: Skmatc.Validator[];
+    identifier?: {
+        apply(fromSource: any): any;
+        reverse(toSource: any): any;
+    };
 }
 
 export interface InstanceCreator<TDocument extends { _id?: any }, TInstance> {

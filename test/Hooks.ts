@@ -11,6 +11,12 @@ interface TestDocument {
 var hookEmitter = new Events.EventEmitter();
 
 class Test extends Iridium.Instance<TestDocument, Test> {
+    static collection = 'test';
+    static schema: Iridium.Schema = {
+        _id: false,
+        answer: Number
+    };
+    
     id: string;
     answer: number;
     
@@ -35,10 +41,7 @@ describe("Hooks", function () {
     this.timeout(500);
 
     var core = new Iridium.Core({ database: 'test' });
-    var model = new Iridium.Model<TestDocument, Test>(core, Test, 'test', {
-        _id: false,
-        answer: Number
-    });
+    var model = new Iridium.Model<TestDocument, Test>(core, Test);
 
     beforeEach(() => core.connect().then(() => model.remove()).then(() => model.insert({ answer: 10 })));
     afterEach(() => model.remove());

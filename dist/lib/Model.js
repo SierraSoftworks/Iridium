@@ -24,19 +24,19 @@ var Model = (function () {
      * @returns {Model}
      * @constructor
      */
-    function Model(core, instanceType, collection, schema, options) {
+    function Model(core, instanceType) {
         var _this = this;
-        if (options === void 0) { options = {}; }
         this._hooks = {};
         if (!(core instanceof Core_1.default))
             throw new Error("You failed to provide a valid Iridium core for this model");
         if (typeof instanceType != 'function')
             throw new Error("You failed to provide a valid instance constructor for this model");
-        if (typeof collection != 'string' || !collection)
+        if (typeof instanceType.collection != 'string' || !instanceType.collection)
             throw new Error("You failed to provide a valid collection name for this model");
-        if (!_.isPlainObject(schema) || schema._id === undefined)
+        if (!_.isPlainObject(instanceType.schema) || instanceType.schema._id === undefined)
             throw new Error("You failed to provide a valid schema for this model");
-        _.defaults(options, {
+        this._options = instanceType;
+        _.defaults(this._options, {
             identifier: {
                 apply: function (value) {
                     return (value && value._bsontype == 'ObjectID') ? new MongoDB.ObjectID(value.id).toHexString() : value;
@@ -51,22 +51,20 @@ var Model = (function () {
             },
             cache: new IDDirector_1.default()
         });
-        _.merge(options, instanceType);
         this._core = core;
-        this._collection = collection;
-        this._schema = schema;
-        this._options = options;
+        this._collection = instanceType.collection;
+        this._schema = instanceType.schema;
+        this._hooks = instanceType;
+        this._cacheDirector = instanceType.cache;
         core.plugins.forEach(function (plugin) {
             if (plugin.newModel)
                 plugin.newModel(_this);
         });
-        this._cacheDirector = options.cache;
         this._cache = new ModelCache_1.default(this);
         if (instanceType.prototype instanceof Instance_1.default)
             this._Instance = ModelSpecificInstance_1.default(this, instanceType);
         else
-            this._Instance = (instanceType.bind(undefined, this));
-        this._hooks = instanceType;
+            this._Instance = instanceType.bind(undefined, this);
         this._helpers = new ModelHelpers_1.default(this);
         this._handlers = new ModelHandlers_1.default(this);
     }

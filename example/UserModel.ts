@@ -1,9 +1,10 @@
-/// <reference path="../index.d.ts" />
+/// <reference path="../iridium.d.ts" />
 /// <reference path="../_references.d.ts" />
 
 import _ = require('lodash');
-import Iridium = require('iridium');
 import Promise = require('bluebird');
+import * as Iridium from 'iridium';
+import {Index, Property} from 'iridium';
 
 var settings: any = {};
 
@@ -42,23 +43,43 @@ export interface UserDocument {
     last_seen: Date;
 }
 
+@Iridium.Collection('user')
+@Index({ email: 1 }, { unique: true })
+@Index({ sessions: 1 }, { sparse: true })
+@Index({ 'skill.xp': -1 }, { background: true }) 
 export class User extends Iridium.Instance<UserDocument, User> implements UserDocument {
-    _id: string;
+    @Iridium.Property(/^[a-z][a-z0-9_]{7,}$/) _id: string;
     get username() {
         return this._id;
     }
 
-    fullname: string;
-    email: string;
-    password: string;
-    type: string;
-    banned: boolean;
+    @Property(String) fullname: string;
+    @Property(/^.+@.+$/) email: string;
+    @Property(String) password: string;
+    @Property(/Player|Moderator|Admin/) type: string;
+    @Property(Boolean) banned: boolean;
+
+    @Property({
+        won: Number,
+        drawn: Number,
+        lost: Number,
+        incomplete: Number
+    })
     statistics: {
         won: number;
         drawn: number;
         lost: number;
         incomplete: number;
     };
+    
+    @Property({
+        matchmaking: Number,
+        trend: Number,
+        level: Number,
+        xp: Number,
+        current_level: Number,
+        next_level: Number
+    })
     skill: {
         matchmaking: number;
         trend: number;
@@ -67,8 +88,17 @@ export class User extends Iridium.Instance<UserDocument, User> implements UserDo
         current_level: number;
         next_level: number;
     };
+    
+    @Property([String])
     friends: string[];
 
+    @Property([{
+        from: String,
+        time: Date,
+        message: String,
+        group: { $required: false, $type: String },
+        game: { $required: false, $type: String }
+    }])    
     pending_messages: {
         from: string;
         time: Date;
@@ -76,10 +106,48 @@ export class User extends Iridium.Instance<UserDocument, User> implements UserDo
         group?: string;
         game?: string;
     }[];
+    
+    @Property([String])
     sessions: string[];
+    
+    @Property([String])
     friend_requests: string[];
+    
+    @Property(Date)
     last_seen: Date;
 
+    static onCreating(user: UserDocument) {
+        var passwordTest = /(?=^.{8,}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*/;
+
+        if (!passwordTest.test(user.password || '')) return Promise.reject(new Error('Password didn\'t meet the minimum safe password requirements. Passwords should be at least 8 characters long, and contain at least 3 of the following categories: lowercase letters, uppercase letters, numbers, characters'));
+
+        user.password = require('crypto').createHash('sha512').update(settings.security.salt).update(user.password).digest('hex');
+
+        _.defaults(user, {
+            type: "Player",
+            banned: false,
+            statistics: {
+                won: 0,
+                drawn: 0,
+                lost: 0,
+                incomplete: 0
+            },
+            skill: {
+                matchmaking: 0,
+                trend: 0,
+                level: 0,
+                xp: 0,
+                current_level: 0,
+                next_level: 1200
+            },
+            friends: [],
+            friend_requests: [],
+            pending_messages: [],
+            sessions: [],
+            last_seen: new Date()
+        });
+    }
+    
     get API() {
         var $ = this;
 
@@ -143,88 +211,7 @@ export class User extends Iridium.Instance<UserDocument, User> implements UserDo
 }
 
 export function Users(core: Iridium.Core): Iridium.Model<UserDocument, User> {
-    var schema: Iridium.Schema = {
-        _id: /[a-z0-9]+(_[a-z0-9]+)*/,
-        fullname: String,
-        email: String,
-        password: String,
-        type: /Player|Moderator|Admin/,
-        banned: Boolean,
-        statistics: {
-            won: Number,
-            drawn: Number,
-            lost: Number,
-            incomplete: Number
-        },
-        skill: {
-            matchmaking: Number,
-            trend: Number,
-            level: Number,
-            xp: Number,
-            current_level: Number,
-            next_level: Number
-        },
-        friends: [String],
-        pending_messages: [{
-            from: String,
-            time: Date,
-            message: String,
-            group: { $type: String, $required: false },
-            game: { $type: String, $required: false }
-        }],
-        sessions: [String],
-        friend_requests: [String],
-        last_seen: Date
-    };
-
-    var options = {
-        hooks: {
-            creating: function (item) {
-                item._id = item.username;
-                if (item.username) delete item.username;
-
-                var passwordTest = /(?=^.{8,}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*/;
-
-                if (!passwordTest.test(item.password || '')) return Promise.reject(new Error('Password didn\'t meet the minimum safe password requirements. Passwords should be at least 8 characters long, and contain at least 3 of the following categories: lowercase letters, uppercase letters, numbers, characters'));
-
-                item.password = require('crypto').createHash('sha512').update(settings.security.salt).update(item.password).digest('hex');
-
-                _.defaults(item, {
-                    type: "Player",
-                    banned: false,
-                    statistics: {
-                        won: 0,
-                        drawn: 0,
-                        lost: 0,
-                        incomplete: 0
-                    },
-                    skill: {
-                        matchmaking: 0,
-                        trend: 0,
-                        level: 0,
-                        xp: 0,
-                        current_level: 0,
-                        next_level: 1200
-                    },
-                    friends: [],
-                    friend_requests: [],
-                    pending_messages: [],
-                    sessions: [],
-                    last_seen: new Date()
-                });
-
-                return Promise.resolve()
-            }
-        },
-        indexes: [
-            [{ email: 1 }, { unique: true, background: true }],
-            [{ type: 1 }, { background: true }],
-            [{ sessions: 1 }, { sparse: true, background: true }],
-            [{ 'skill.xp': -1 }, { background: true }]
-        ]
-    };
-
-    return new Iridium.Model<UserDocument, User>(core, User, "users", schema, options);
+    return new Iridium.Model<UserDocument, User>(core, User);
 }
 
 var usrModel = Users(null);

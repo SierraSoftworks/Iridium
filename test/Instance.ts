@@ -10,6 +10,14 @@ interface TestDocument {
 }
 
 class Test extends Iridium.Instance<TestDocument, Test> implements TestDocument {
+    static collection = 'test';
+    static schema: Iridium.Schema = {
+        _id: false,
+        answer: Number,
+        lots: { $required: false, $type: [Number] },
+        less: { $required: false, $propertyType: Number }
+    };
+    
     _id: string;
     answer: number;
     lots: number[];
@@ -29,12 +37,7 @@ class TestDB extends Iridium.Core {
         super("mongodb://localhost/test");
     }
 
-    Test = new Iridium.Model<TestDocument, Test>(this, Test, 'test', {
-        _id: false,
-        answer: Number,
-        lots: { $required: false, $type: [Number] },
-        less: { $required: false, $propertyType: Number }
-    });
+    Test = new Iridium.Model<TestDocument, Test>(this, Test);
 }
 
 describe("Instance",() => {
