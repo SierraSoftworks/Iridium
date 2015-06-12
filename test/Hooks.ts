@@ -8,7 +8,7 @@ interface TestDocument {
     answer: number;
 }
 
-var hookEmitter = new Events.EventEmitter();
+let hookEmitter = new Events.EventEmitter();
 
 class Test extends Iridium.Instance<TestDocument, Test> {
     static collection = 'test';
@@ -40,8 +40,8 @@ class Test extends Iridium.Instance<TestDocument, Test> {
 describe("Hooks", function () {
     this.timeout(500);
 
-    var core = new Iridium.Core({ database: 'test' });
-    var model = new Iridium.Model<TestDocument, Test>(core, Test);
+    let core = new Iridium.Core({ database: 'test' });
+    let model = new Iridium.Model<TestDocument, Test>(core, Test);
 
     beforeEach(() => core.connect().then(() => model.remove()).then(() => model.insert({ answer: 10 })));
     afterEach(() => model.remove());
@@ -54,7 +54,7 @@ describe("Hooks", function () {
         });
 
         it("should be passed the document being created",() => {
-            var result: Promise<void>;
+            let result: Promise<void>;
 
             hookEmitter.once('creating',(document) => {
                 result = Promise.resolve().then(() => {
@@ -68,7 +68,7 @@ describe("Hooks", function () {
 
     describe("ready",() => {
         it("should be called when an instance is prepared",() => {
-            var result: Promise<void>;
+            let result: Promise<void>;
 
             hookEmitter.once('ready',() => {
                 result = Promise.resolve();
@@ -78,7 +78,7 @@ describe("Hooks", function () {
         });
 
         it("should be passed the instance which was created",() => {
-            var result: Promise<void>;
+            let result: Promise<void>;
 
             hookEmitter.once('ready',(instance) => {
                 result = Promise.resolve().then(() => {
@@ -92,7 +92,7 @@ describe("Hooks", function () {
 
     describe("retreived",() => {
         it("should be called when a document is being retrieved",() => {
-            var result: Promise<void>;
+            let result: Promise<void>;
 
             hookEmitter.once('retrieved',() => {
                 result = Promise.resolve();
@@ -102,7 +102,7 @@ describe("Hooks", function () {
         });
 
         it("should be passed the document being retrieved",() => {
-            var result: Promise<void>;
+            let result: Promise<void>;
 
             hookEmitter.once('retrieved',(document) => {
                 result = Promise.resolve().then(() => {
@@ -116,7 +116,7 @@ describe("Hooks", function () {
 
     describe("saving",() => {
         it("should be triggered when save() is called on an instance",() => {
-            var result: Promise<void>;
+            let result: Promise<void>;
 
             hookEmitter.once('saving',() => {
                 result = Promise.resolve();
@@ -129,7 +129,7 @@ describe("Hooks", function () {
         });
 
         it("should be passed the instance being saved",() => {
-            var result: Promise<void>;
+            let result: Promise<void>;
 
             hookEmitter.once('saving',(instance) => {
                 result = Promise.resolve().then(() => {
@@ -144,7 +144,7 @@ describe("Hooks", function () {
         });
 
         it("should be passed the changes being made to the instance",() => {
-            var result: Promise<void>;
+            let result: Promise<void>;
 
             hookEmitter.once('saving',(instance, changes) => {
                 result = Promise.resolve().then(() => {

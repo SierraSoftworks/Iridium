@@ -4,7 +4,7 @@ import MongoDB = require('mongodb');
 
 describe("Omnom",() => {
     it("should correctly diff basic objects",() => {
-        var oldObject = {
+        let oldObject = {
             a: 1,
             b: 'test',
             c: 2,
@@ -12,7 +12,7 @@ describe("Omnom",() => {
             e: 'old'
         };
 
-        var newObject = {
+        let newObject = {
             a: 3,
             b: 'tested',
             c: 2,
@@ -20,7 +20,7 @@ describe("Omnom",() => {
             f: 'new'
         };
 
-        var expectedDiff = {
+        let expectedDiff = {
             $set: { a: 3, b: 'tested', f: 'new' },
             $unset: { e: 1 }
         };
@@ -29,7 +29,7 @@ describe("Omnom",() => {
     });
 
     it("should correctly diff basic objects with atomic number changes",() => {
-        var oldObject = {
+        let oldObject = {
             a: 1,
             b: 'test',
             c: 2,
@@ -37,7 +37,7 @@ describe("Omnom",() => {
             e: 'old'
         };
 
-        var newObject = {
+        let newObject = {
             a: 3,
             b: 'tested',
             c: 2,
@@ -45,7 +45,7 @@ describe("Omnom",() => {
             f: 'new'
         };
 
-        var expectedDiff = {
+        let expectedDiff = {
             $set: { b: 'tested', f: 'new' },
             $inc: { a: 2 },
             $unset: { e: 1 }
@@ -55,7 +55,7 @@ describe("Omnom",() => {
     });
 
     it('should correctly diff complex objects', function () {
-        var oldObject = {
+        let oldObject = {
             a: { value: 1 },
             b: { value1: 1, value2: 1 },
             c: { value: 2 },
@@ -63,7 +63,7 @@ describe("Omnom",() => {
             e: { value: true }
         };
 
-        var newObject = {
+        let newObject = {
             a: { value: 3 },
             b: { value1: 'tested', value2: 2 },
             c: { value: 2 },
@@ -71,7 +71,7 @@ describe("Omnom",() => {
             e: { value2: false }
         };
 
-        var expectedDiff = {
+        let expectedDiff = {
             $set: { 'a.value': 3, 'b.value1': 'tested', 'b.value2': 2, 'e.value2': false },
             $unset: { 'e.value': 1 }
         };
@@ -80,12 +80,12 @@ describe("Omnom",() => {
     });
 
     it('should correctly diff ObjectIDs', function () {
-        var oldID = new MongoDB.ObjectID();
-        var newID = MongoDB.ObjectID.createFromHexString(oldID.toHexString());
+        let oldID = new MongoDB.ObjectID();
+        let newID = MongoDB.ObjectID.createFromHexString(oldID.toHexString());
 
-        var oldObject = { _id: oldID };
-        var newObject = { _id: newID };
-        var expectedDiff = {
+        let oldObject = { _id: oldID };
+        let newObject = { _id: newID };
+        let expectedDiff = {
 
         };
 
@@ -104,9 +104,9 @@ describe("Omnom",() => {
 
     describe('arrays', function () {
         it('should correctly handle two pure arrays',() => {
-            var oldObject = [1, 2, 3];
-            var newObject = [4, 5, 6];
-            var expectedDiff = {
+            let oldObject = [1, 2, 3];
+            let newObject = [4, 5, 6];
+            let expectedDiff = {
                 $set: { undefined: [4, 5, 6] }
             };
 
@@ -114,9 +114,9 @@ describe("Omnom",() => {
         });
 
         it('should correctly handle arrays which can be pulled', function () {
-            var oldObject = { a: [1, 2, 3, 4], b: [1, 2, 3, 4], c: [1,2,3,4,5] };
-            var newObject = { a: [1, 3, 4], b: [1, 3], c: [1] };
-            var expectedDiff = {
+            let oldObject = { a: [1, 2, 3, 4], b: [1, 2, 3, 4], c: [1,2,3,4,5] };
+            let newObject = { a: [1, 3, 4], b: [1, 3], c: [1] };
+            let expectedDiff = {
                 $pull: { a: 2 },
                 $pullAll: { b: [2, 4], c: [2,3,4,5] }
             };
@@ -125,9 +125,9 @@ describe("Omnom",() => {
         });
 
         it('should correctly handle arrays which can be pushed', function () {
-            var oldObject = { a: [1, 2, 3, 4], b: [1, 2, 3, 4], c: [1] };
-            var newObject = { a: [1, 2, 3, 4, 5], b: [1, 2, 3, 4, 5, 6], c: [1,2,3,4,5] };
-            var expectedDiff = {
+            let oldObject = { a: [1, 2, 3, 4], b: [1, 2, 3, 4], c: [1] };
+            let newObject = { a: [1, 2, 3, 4, 5], b: [1, 2, 3, 4, 5, 6], c: [1,2,3,4,5] };
+            let expectedDiff = {
                 $push: { a: 5, b: { $each: [5, 6] }, c: { $each: [2, 3, 4, 5] } }
             };
 
@@ -135,9 +135,9 @@ describe("Omnom",() => {
         });
 
         it('should correctly handle arrays which should be replaced', function () {
-            var oldObject = { a: [1, 2], b: [1, 2, 3] };
-            var newObject = { a: [5, 4, 3], b: [5, 4, 3, 2] };
-            var expectedDiff = {
+            let oldObject = { a: [1, 2], b: [1, 2, 3] };
+            let newObject = { a: [5, 4, 3], b: [5, 4, 3, 2] };
+            let expectedDiff = {
                 $set: {
                     a: [5, 4, 3],
                     b: [5, 4, 3, 2]
@@ -148,9 +148,9 @@ describe("Omnom",() => {
         });
         
         it("should correctly handle arrays which shrink in size and can't be pulled", () => {
-            var oldObject = { a: [1, 2, 3, 4], b: [1, 2, 3, 4] };
-            var newObject = { a: [1, 3, 5], b: [1, 3] };
-            var expectedDiff = {
+            let oldObject = { a: [1, 2, 3, 4], b: [1, 2, 3, 4] };
+            let newObject = { a: [1, 3, 5], b: [1, 3] };
+            let expectedDiff = {
                 $set: { a: [1,3,5] },
                 $pullAll: { b: [2, 4] }
             };
@@ -159,9 +159,9 @@ describe("Omnom",() => {
         });
 
         it("should correctly handle arrays which can be partially modified", function () {
-            var oldObject = { a: [1, 2, 3, 4], b: [1, 2, 3, 4] };
-            var newObject = { a: [1, 2, 5, 4, 5], b: [1, 2, 5, 4, 5, 6] };
-            var expectedDiff = {
+            let oldObject = { a: [1, 2, 3, 4], b: [1, 2, 3, 4] };
+            let newObject = { a: [1, 2, 5, 4, 5], b: [1, 2, 5, 4, 5, 6] };
+            let expectedDiff = {
                 $set: {
                     'a.2': 5,
                     'a.4': 5,
@@ -175,8 +175,8 @@ describe("Omnom",() => {
         });
 
         it("should correctly diff array elements as objects", function () {
-            var postDate = new Date();
-            var oldObject = {
+            let postDate = new Date();
+            let oldObject = {
                 comments: [
                     { id: 1, title: 'Title 1', text: 'test text 1', posted: postDate },
                     { id: 2, title: 'Title 2', text: 'test text 2', posted: postDate },
@@ -184,8 +184,8 @@ describe("Omnom",() => {
                 ]
             };
 
-            var newDate = new Date(postDate.getTime() + 50);
-            var newObject = {
+            let newDate = new Date(postDate.getTime() + 50);
+            let newObject = {
                 comments: [
                     { id: 1, title: 'Title 1', text: 'tested text 1', posted: postDate },
                     { id: 2, title: 'Title 2', text: 'tested text 2', posted: postDate },
@@ -193,7 +193,7 @@ describe("Omnom",() => {
                 ]
             };
 
-            var expectedDiff = {
+            let expectedDiff = {
                 $set: {
                     'comments.0.text': 'tested text 1',
                     'comments.1.text': 'tested text 2',

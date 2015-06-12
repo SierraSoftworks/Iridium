@@ -2,7 +2,7 @@
 import * as Iridium from '../index';
 
 describe("Middleware",() => {
-    var core = new Iridium.Core({
+    let core = new Iridium.Core({
         database: 'test'
     });
 
@@ -18,8 +18,8 @@ describe("Middleware",() => {
         });
 
         it("which sets req.db to the core instance",(done) => {
-            var req: any  = {};
-            var res: any = {};
+            let req: any  = {};
+            let res: any = {};
             core.express()(req, res,(err) => {
                 if (err) return done(err);
                 chai.expect(req.db).to.exist.and.be.an.instanceof(Iridium.Core);
@@ -28,8 +28,8 @@ describe("Middleware",() => {
         });
 
         it("which checks that the core is connected",(done) => {
-            var req: any = {};
-            var res: any = {};
+            let req: any = {};
+            let res: any = {};
             core.express()(req, res,(err) => {
                 if (err) return done(err);
                 chai.expect(core.connection).to.exist;

@@ -17,7 +17,7 @@ describe("Cache",() => {
     describe("implementations",() => {
 
         describe("NoOp",() => {
-            var noOpCache = new Iridium.NoOpCache();
+            let noOpCache = new Iridium.NoOpCache();
 
             it("should pretend to cache objects",() => {
                 return chai.expect(noOpCache.set("test", {})).to.eventually.be.eql({});
@@ -37,7 +37,7 @@ describe("Cache",() => {
         });
 
         describe("Memory",() => {
-            var memCache = new Iridium.MemoryCache();
+            let memCache = new Iridium.MemoryCache();
 
             it("should cache objects",() => {
                 return chai.expect(memCache.set("test", {})).to.eventually.be.eql({});
@@ -69,7 +69,7 @@ describe("Cache",() => {
     describe("controllers",() => {
 
         describe("CacheOnID",() => {
-            var director = new Iridium.CacheOnID();
+            let director = new Iridium.CacheOnID();
 
             it("should only report that objects with an _id field are cacheable",() => {
                 chai.expect(director.valid({ _id: 'test' })).to.be.true;
@@ -93,11 +93,11 @@ describe("Cache",() => {
     });
 
     describe("integration",() => {
-        var core = new Iridium.Core({
+        let core = new Iridium.Core({
             database: 'test'
         });
 
-        var model = new Iridium.Model<Document, Instance>(core, Instance);
+        let model = new Iridium.Model<Document, Instance>(core, Instance);
 
         before(() => core.connect().then(() => {
             core.cache = new Iridium.MemoryCache();
@@ -139,7 +139,7 @@ describe("Cache",() => {
         });
 
         describe("should be hit",() => {
-            var instanceID;
+            let instanceID;
             beforeEach(() => core.connect().then(() => model.remove()).then(() => model.insert({})).then(() => {
                 core.cache = new Iridium.MemoryCache();
             }).then(() => model.get()).then(instance => {

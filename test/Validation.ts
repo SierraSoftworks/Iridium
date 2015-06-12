@@ -34,8 +34,8 @@ class Person extends Iridium.Instance<Document, Person> {
 }
 
 describe("Validation", () => {
-    var core = new Iridium.Core({ database: 'test' });
-    var model = new Iridium.Model<Document, Person>(core, Person);
+    let core = new Iridium.Core({ database: 'test' });
+    let model = new Iridium.Model<Document, Person>(core, Person);
 
     before(() => core.connect());
 
@@ -190,7 +190,7 @@ describe("Validation", () => {
         });
 
         it("should not reverse the changes made to the instance if validation fails", () => {
-            var staticFrank: Person;
+            let staticFrank: Person;
             return chai.expect(model.get({ name: 'Frank' }).then((frank) => {
                 staticFrank = frank;
                 frank.siblings.push({ name: 'Francette', related: <any>'related', ageDifference: 0 });

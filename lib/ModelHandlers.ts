@@ -35,6 +35,7 @@ export default class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
                 if (this.model.hooks.onRetrieved) this.model.hooks.onRetrieved(target);
 
                 // Wrap the document and trigger the ready hook
+                let wrapped: TResult = wrapper(target, false, !!options.fields);
 
                 if (this.model.hooks.onReady && wrapped instanceof this.model.Instance) this.model.hooks.onReady(<TInstance><any>wrapped);
                 return wrapped;

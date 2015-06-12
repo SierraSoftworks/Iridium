@@ -14,7 +14,7 @@ class InheritedCoreWithCustomConstructor extends Iridium.Core {
 describe("Core",() => {
     describe("constructor",() => {
         it("should accept a URI string",() => {
-            var core = new Iridium.Core("mongodb://localhost/test");
+            let core = new Iridium.Core("mongodb://localhost/test");
             chai.expect(core.url).to.equal("mongodb://localhost/test");
         });
 
@@ -30,7 +30,7 @@ describe("Core",() => {
 
         describe("should correctly convert the configuration object into a URI string", () => {
             it("when only a single host is specified",() => {
-                var core = new Iridium.Core({
+                let core = new Iridium.Core({
                     host: 'localhost',
                     port: 27016,
                     database: 'test',
@@ -42,7 +42,7 @@ describe("Core",() => {
             });
             
             it("when only a single host is specified with no port",() => {
-                var core = new Iridium.Core({
+                let core = new Iridium.Core({
                     host: 'localhost',
                     database: 'test',
                     username: 'user',
@@ -53,7 +53,7 @@ describe("Core",() => {
             });
             
             it("when multiple hosts are specified",() => {
-                var core = new Iridium.Core({
+                let core = new Iridium.Core({
                     hosts: [{ address: 'localhost' }, { address: '127.0.0.1' }],
                     database: 'test',
                     port: 27016,
@@ -65,7 +65,7 @@ describe("Core",() => {
             });
             
             it("when multiple hosts are specified with no port",() => {
-                var core = new Iridium.Core({
+                let core = new Iridium.Core({
                     hosts: [{ address: 'localhost' }, { address: '127.0.0.1' }],
                     database: 'test',
                     username: 'user',
@@ -76,7 +76,7 @@ describe("Core",() => {
             });
             
             it("when multiple hosts are specified with different ports",() => {
-                var core = new Iridium.Core({
+                let core = new Iridium.Core({
                     hosts: [{ address: 'localhost', port: 27016 }, { address: '127.0.0.1', port: 27017 }],
                     database: 'test',
                     username: 'user',
@@ -87,7 +87,7 @@ describe("Core",() => {
             });
             
             it("when a combination of single and multiple hosts is specified",() => {
-                var core = new Iridium.Core({
+                let core = new Iridium.Core({
                     host: 'localhost',
                     port: 27016,
                     hosts: [{ address: 'localhost', port: 27017 }, { address: '127.0.0.1', port: 27018 }],
@@ -100,7 +100,7 @@ describe("Core",() => {
             });
             
             it("when a combination of single and multiple hosts is specified and there are duplicates",() => {
-                var core = new Iridium.Core({
+                let core = new Iridium.Core({
                     host: 'localhost',
                     port: 27016,
                     hosts: [{ address: 'localhost', port: 27016 }, { address: '127.0.0.1', port: 27017 }],
@@ -114,7 +114,7 @@ describe("Core",() => {
         });
 
         it("should make logical assumptions about the default host",() => {
-            var core = new Iridium.Core({
+            let core = new Iridium.Core({
                 database: 'test'
             });
 
@@ -123,11 +123,11 @@ describe("Core",() => {
     });
 
     describe("plugins",() => {
-        var core = new Iridium.Core({
+        let core = new Iridium.Core({
             database: 'test'
         });
 
-        var plugin = {
+        let plugin = {
             newModel: (model) => {
 
             }
@@ -142,7 +142,7 @@ describe("Core",() => {
     });
 
     describe("middleware",() => {
-        var core = new Iridium.Core({
+        let core = new Iridium.Core({
             database: 'test'
         });
 
@@ -153,7 +153,7 @@ describe("Core",() => {
     });
 
     describe("cache",() => {
-        var core = new Iridium.Core({
+        let core = new Iridium.Core({
             database: 'test'
         });
 
@@ -166,13 +166,13 @@ describe("Core",() => {
 
     describe("settings",() => {
         it("should be exposed via the settings property",() => {
-            var core = new Iridium.Core({ database: 'test' });
+            let core = new Iridium.Core({ database: 'test' });
             chai.expect(core.settings).to.exist.and.eql({ database: 'test' });
         });
     });
 
     describe("connect",() => {
-        var core: Iridium.Core;
+        let core: Iridium.Core;
         if (!process.env.CI_SERVER)
             it("should return a rejection if the connection fails",() => {
                 core = new Iridium.Core("mongodb://0.0.0.0/test");
@@ -191,7 +191,7 @@ describe("Core",() => {
     });
 
     describe("close",() => {
-        var core = new Iridium.Core("mongodb://localhost/test");
+        let core = new Iridium.Core("mongodb://localhost/test");
 
         it("should not fail if called when not connected",() => {
             return core.close();
@@ -209,7 +209,7 @@ describe("Core",() => {
         });
 
         it("should pass through constructor arguments to the core",() => {
-            var core = new InheritedCore({
+            let core = new InheritedCore({
                 database: 'test'
             });
 
@@ -217,7 +217,7 @@ describe("Core",() => {
         });
 
         it("should pass through the properties of the object",() => {
-            var core = new InheritedCore({
+            let core = new InheritedCore({
                 database: 'test'
             });
 
@@ -225,7 +225,7 @@ describe("Core",() => {
         });
 
         it("should support custom constructors",() => {
-            var core = new InheritedCoreWithCustomConstructor();
+            let core = new InheritedCoreWithCustomConstructor();
             chai.expect(core.url).to.equal("mongodb://localhost/test");
         });
     });

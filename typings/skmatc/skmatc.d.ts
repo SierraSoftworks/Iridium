@@ -10,7 +10,7 @@ declare module Skmatc {
         static Validator: typeof Validator;
         static Result: typeof Result;
         static Failure: typeof Failure;
-        static create(handles: (schema: any) => boolean, validate: (schema: any, data: any, path: string) => Result, options?: any): Validator;
+        static create(handles: (schema: any) => boolean, validate: (schema: any, data: any, path: string) => Result, options?: { name?: string }): Validator;
         static validate(validators: Validator[], schema: any, data: any, path?: string): Result;
         static register(validator: Validator);
     
@@ -22,8 +22,8 @@ declare module Skmatc {
     
     export class Validator {
         constructor(skmatc: Skmatc, options?: any);
-        static create(handles: (schema: any) => boolean, validate: (schema: any, data: any, path: string) => Result, options?: any): Validator;
-        static module(handles: (schema: any) => boolean, validate: (schema: any, data: any, path: string) => Result, options?: any): Validator;
+        static create(handles: (schema: any) => boolean, validate: (schema: any, data: any, path: string) => Result, options?: { name?: string }): Validator;
+        static module(handles: (schema: any) => boolean, validate: (schema: any, data: any, path: string) => Result, options?: { name?: string }): Validator;
 
         name: string;
         skmatc: Skmatc;

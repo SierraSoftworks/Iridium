@@ -41,7 +41,7 @@ class TestDB extends Iridium.Core {
 }
 
 describe("Instance",() => {
-    var core = new TestDB();
+    let core = new TestDB();
 
     before(() => core.connect());
     after(() => core.close());
@@ -49,7 +49,7 @@ describe("Instance",() => {
     beforeEach(() => core.Test.remove());
 
     it("should default to isNew",() => {
-        var instance = new core.Test.Instance({
+        let instance = new core.Test.Instance({
             answer: 42
         });
 
@@ -57,7 +57,7 @@ describe("Instance",() => {
     });
 
     it("should default to !isPartial",() => {
-        var instance = new core.Test.Instance({
+        let instance = new core.Test.Instance({
             answer: 42
         });
 
@@ -65,7 +65,7 @@ describe("Instance",() => {
     });
 
     it("should expose the latest document values",() => {
-        var instance = core.Test.helpers.wrapDocument({
+        let instance = core.Test.helpers.wrapDocument({
             _id: 'aaaaaa',
             answer: 2
         });
@@ -112,7 +112,7 @@ describe("Instance",() => {
     });
 
     it("should expose additional getters and setters",() => {
-        var instance = core.Test.helpers.wrapDocument({
+        let instance = core.Test.helpers.wrapDocument({
             id: 'aaaaaa',
             answer: 2
         });
@@ -122,7 +122,7 @@ describe("Instance",() => {
     });
 
     it("should expose additional methods",() => {
-        var instance = core.Test.helpers.wrapDocument({
+        let instance = core.Test.helpers.wrapDocument({
             id: 'aaaaaa',
             answer: 2
         });
@@ -155,7 +155,7 @@ describe("Instance",() => {
         beforeEach(() => core.Test.remove());
 
         it("should avoid making calls to the database if no changes were made to the instance",() => {
-            var update = core.Test.collection.update;
+            let update = core.Test.collection.update;
             core.Test.collection.update = () => {
                 chai.assert.fail();
             };
@@ -170,7 +170,7 @@ describe("Instance",() => {
         });
 
         it("should insert the instance if it is not present in the database",() => {
-            var instance = new core.Test.Instance({
+            let instance = new core.Test.Instance({
                 answer: 1
             });
 
@@ -329,7 +329,7 @@ describe("Instance",() => {
 
         it("should be a no-op if the object is marked as _isNew",() => {
             return core.Test.get().then(instance => {
-                var newInstance = new core.Test.Instance(instance.document);
+                let newInstance = new core.Test.Instance(instance.document);
                 return newInstance.remove();
             }).then(() => chai.expect(core.Test.count()).to.eventually.equal(1));
         });
@@ -368,7 +368,7 @@ describe("Instance",() => {
 
         it("should be a no-op if the object is marked as _isNew",() => {
             return core.Test.get().then(instance => {
-                var newInstance = new core.Test.Instance(instance.document);
+                let newInstance = new core.Test.Instance(instance.document);
                 return newInstance.delete();
             }).then(() => chai.expect(core.Test.count()).to.eventually.equal(1));
         });

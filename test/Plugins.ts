@@ -12,7 +12,7 @@ class Test extends Iridium.Instance<any, Test> {
 }
 
 describe("Plugins",() => {
-    var core: Iridium.Core;
+    let core: Iridium.Core;
     beforeEach(() => {
         core = new Iridium.Core({ database: 'test' });
     });
@@ -34,13 +34,13 @@ describe("Plugins",() => {
         });
 
         it("should be called when a new model is created",() => {
-            var wasCalled = false;
+            let wasCalled = false;
             core.register({
                 newModel: (model) => {
                     wasCalled = true;
                 }
             });
-            var model = new Iridium.Model<any, Test>(core, Test);
+            let model = new Iridium.Model<any, Test>(core, Test);
             chai.expect(wasCalled).to.be.true;
         });
 
@@ -51,7 +51,7 @@ describe("Plugins",() => {
                 }
             });
 
-            var model = new Iridium.Model<any, Test>(core, Test);
+            let model = new Iridium.Model<any, Test>(core, Test);
             chai.expect(model.collectionName).to.exist.and.be.equal('changed');
         });
     });
@@ -73,7 +73,7 @@ describe("Plugins",() => {
         });
 
         it("should be called when an instance is instantiated",() => {
-            var wasCalled = false;
+            let wasCalled = false;
             core.register({
                 newModel: (model) => { },
                 newInstance: (instance, model) => {
@@ -82,13 +82,13 @@ describe("Plugins",() => {
                 validate: []
             });
 
-            var model = new Iridium.Model<any, Test>(core, Test);
-            var instance = new model.Instance({});
+            let model = new Iridium.Model<any, Test>(core, Test);
+            let instance = new model.Instance({});
             chai.expect(wasCalled).to.be.true;
         });
 
         it("should not be called when the instance doesn't inherit from Iridium.Instance",() => {
-            var wasCalled = false;
+            let wasCalled = false;
             core.register({
                 newModel: (model) => { },
                 newInstance: (instance, model) => {
@@ -97,14 +97,14 @@ describe("Plugins",() => {
                 validate: []
             });
 
-            var instanceImplementation: any = function() { return {}; };
+            let instanceImplementation: any = function() { return {}; };
             instanceImplementation.collection = 'test';
             instanceImplementation.schema = {
                 _id: false
             };
             
-            var model = new Iridium.Model(core, instanceImplementation);
-            var instance = new model.Instance({});
+            let model = new Iridium.Model(core, instanceImplementation);
+            let instance = new model.Instance({});
             chai.expect(wasCalled).to.be.false;
         });
     });
