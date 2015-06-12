@@ -25,13 +25,14 @@ export default class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
 
         return Bluebird.resolve(result).then((target: any) => {
             return <Bluebird<TResult>>Bluebird.resolve().then(() => {
-                // Trigger the received hook
-                if (this.model.hooks.onRetrieved) this.model.hooks.onRetrieved(target);
 
                 // Cache the document if caching is enabled
                 if (this.model.core.cache && options.cache && !options.fields) {
                     this.model.cache.set(target); // Does not block execution pipeline - fire and forget
                 }
+                
+                // Trigger the received hook
+                if (this.model.hooks.onRetrieved) this.model.hooks.onRetrieved(target);
 
                 // Wrap the document and trigger the ready hook
 
