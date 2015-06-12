@@ -22,7 +22,7 @@ class Test extends Iridium.Instance<TestDocument, Test> implements TestDocument 
 }
 
 class TestWithCustomID extends Test {
-    static transforms: { [key: string]: { fromDB: (value: any) => any; toDB: (value: any) => any; }} = {
+    static transforms: Iridium.Transforms = {
         _id: {
             fromDB: x => x * 10,
             toDB: x => x / 10
@@ -203,6 +203,10 @@ describe("Model",() => {
         it("should allow you to provide options to control the creation",() => {
             return chai.expect(model.create({ answer: 14 }, { upsert: true })).to.eventually.exist;
         });
+        
+        it("should return an error if you don't meet the schema validation requirements",() => {
+           return chai.expect(model.create(<any>{ answer: 'wrong' })).to.eventually.be.rejected;
+        });
 
         it("should support a callback style instead of promises",(done) => {
             model.create({ answer: 15 },(err, inserted) => {
@@ -246,6 +250,10 @@ describe("Model",() => {
 
         it("should allow you to provide options to control the creation",() => {
             return chai.expect(model.insert({ answer: 14 }, { upsert: true })).to.eventually.exist;
+        });
+        
+        it("should return an error if you don't meet the schema validation requirements",() => {
+           return chai.expect(model.insert(<any>{ answer: 'wrong' })).to.eventually.be.rejected;
         });
 
         it("should support a callback style instead of promises",(done) => {

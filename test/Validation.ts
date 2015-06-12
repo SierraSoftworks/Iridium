@@ -1,5 +1,6 @@
 /// <reference path="../_references.d.ts" />
 import * as Iridium from '../index';
+import skmatc = require('skmatc');
 
 interface Document {
     name: string;
@@ -11,12 +12,15 @@ interface Document {
     }[];
 }
 
+@Iridium.Validate('Over18', function(schema, data) {
+    return this.assert(data.getTime && data.getTime() < (new Date().getTime() - 365 * 86400 * 18));
+})
 class Person extends Iridium.Instance<Document, Person> {
     static collection = 'test';
     static schema: Iridium.Schema = {
         _id: false,
         name: String,
-        dateOfBirth: Date,
+        dateOfBirth: 'Over18',
         siblings: [{
             name: String,
             related: Boolean,
@@ -42,12 +46,38 @@ describe("Validation", () => {
     after(() => model.remove().then(() => core.close()));
 
     beforeEach(() => model.remove());
+    
+    describe("custom validators", () => {
+        it("should successfully validate documents which are valid", () => {
+            return chai.expect(model.insert({
+                name: 'John',
+                dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
+                siblings: [{
+                    name: 'Jane',
+                    related: true,
+                    ageDifference: -2
+                }]
+            })).to.eventually.be.ok;
+        });
+        
+        it("should fail to validate documents which are invalid", () => {
+            return chai.expect(model.insert({
+                name: 'John',
+                dateOfBirth: new Date('2013-02-14T00:00:00.000Z'),
+                siblings: [{
+                    name: 'Jane',
+                    related: true,
+                    ageDifference: -2
+                }]
+            })).to.eventually.be.ok;
+        });
+    });
 
     describe("inserting", () => {
         it("should successfully validate single documents which match the schema", () => {
             return chai.expect(model.insert({
                 name: 'John',
-                dateOfBirth: new Date(),
+                dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
                 siblings: [{
                     name: 'Jane',
                     related: true,
@@ -83,7 +113,7 @@ describe("Validation", () => {
         it("should successfully validate multiple documents which match the schema", () => {
             return chai.expect(model.insert([{
                 name: 'Frank',
-                dateOfBirth: new Date(),
+                dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
                 siblings: [{
                     name: 'Francie',
                     related: false,
@@ -91,7 +121,7 @@ describe("Validation", () => {
                 }]
             }, {
                 name: 'Jack',
-                dateOfBirth: new Date(),
+                dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
                 siblings: [{
                     name: 'Jill',
                     related: true,
@@ -103,7 +133,7 @@ describe("Validation", () => {
         it("should fail to validate multiple documents which do not match the schema", () => {
             return chai.expect(model.insert([{
                 name: 'Frank',
-                dateOfBirth: new Date(),
+                dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
                 siblings: [{
                     name: 'Francie',
                     related: <any>'related',
@@ -131,7 +161,7 @@ describe("Validation", () => {
                 }]
             }, {
                 name: 'Jack',
-                dateOfBirth: new Date(),
+                dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
                 siblings: [{
                     name: 'Jill',
                     related: true,
@@ -151,7 +181,7 @@ describe("Validation", () => {
                 }]
             }, {
                 name: 'Jack',
-                dateOfBirth: new Date(),
+                dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
                 siblings: [{
                     name: 'Jill',
                     related: true,
@@ -164,7 +194,7 @@ describe("Validation", () => {
     describe("instances", () => {
         beforeEach(() => model.remove().then(() => model.insert({
             name: 'Frank',
-            dateOfBirth: new Date(),
+            dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
             siblings: []
         })));
 

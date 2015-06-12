@@ -9,6 +9,7 @@ import Bluebird = require('bluebird');
 export default class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
     constructor(public model: Model<TDocument, TInstance>) {
         this._validator = new skmatc(model.schema);
+        model.validators.forEach(validator => this._validator.register(validator));
     }
 
     private _validator: Skmatc.Skmatc;
