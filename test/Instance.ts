@@ -419,4 +419,35 @@ describe("Instance",() => {
             return chai.expect(core.Test.get().then(instance => instance.select(instance.less, lot => lot > 100))).to.eventually.be.eql({});
         });
     });
+    
+    describe("modifications", () => {
+        beforeEach(() => core.Test.remove().then(() => core.Test.insert({ answer: 1, lots: [1, 2, 3, 4], less: { 'a': 1, 'b': 2 } })));
+        
+        it("should correctly diff simple property changes", () => {
+            return core.Test.get().then(instance => {
+                instance.answer = 2;
+                return instance.save();
+            }).then(instance => {
+                chai.expect(instance).to.have.property('answer', 2);
+            });
+        });
+        
+        it("should correctly diff deep property changes", () => {
+            return core.Test.get().then(instance => {
+                instance.less['a'] = 2;
+                return instance.save();
+            }).then(instance => {
+                chai.expect(instance).to.have.property('less').eql({ a: 2, b: 2 });
+            });
+        });
+        
+        it("should correctly diff array operations", () => {
+            return core.Test.get().then(instance => {
+                instance.lots.push(5);
+                return instance.save();
+            }).then(instance => {
+                chai.expect(instance).to.have.property('lots').eql([1,2,3,4,5]);
+            });
+        });
+    });
 });
