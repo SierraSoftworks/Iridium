@@ -1,0 +1,1 @@
+{"version":3,"sources":["lib/Schema.ts"],"names":[],"mappings":"AAAA,AACA,4CAD4C;AAI3C","file":"lib/Schema.js","sourcesContent":["/// <reference path=\"../_references.d.ts\" />\r\nexport interface Schema {\r\n    _id: boolean | any;\r\n    [key:string]: any;\r\n}"],"sourceRoot":"/source/"}

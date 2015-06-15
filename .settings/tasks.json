@@ -1,0 +1,82 @@
+// Available variables which can be used inside of strings.
+// ${workspaceRoot}: the root folder of the team
+// ${file}: the current opened file
+// ${fileBasename}: the current opened file's basename
+// ${fileDirname}: the current opened file's dirname
+// ${fileExtname}: the current opened file's extension
+// ${cwd}: the current working directory of the spawned process
+{
+	"version": "0.1.0",
+	"command": "npm",
+	"showOutput": "silent",
+	
+	"windows": {
+		"command": "npm.cmd"
+	},
+	
+	"tasks": [
+		{
+			"taskName": "build",
+			"args": ["run"],
+			"isBuildCommand": true,
+			"problemMatcher": ["$tsc", {
+				"fileLocation": "relative",
+				"owner": "typescript",
+				"pattern": {
+					"regexp": "^([^(]+)\\((\\d+,\\d+)\\)\\: (error|warning) TS(\\d+): (.*)$",
+					"file": 1,
+					"location": 2,
+					"code": 3,
+					"severity": 4,
+					"message": 5
+				}
+			}, {
+				"fileLocation": "relative",
+				"owner": "typescript",
+				"pattern": {
+					"regexp": "^(error|warning) TS(\\d+): File '([^']+)'.*$",
+					"file": 3,
+					"location": 2,
+					"code": 2,
+					"severity": 1,
+					"message": 3
+				}
+			}]
+		},
+		{
+			"taskName": "test",
+			"args": [],
+			"isTestCommand": true,
+			"problemMatcher": {
+				"owner": "mocha",
+				"pattern": {
+					"regexp": "^\\s*(\\d+)\\)\\s*(.+)\\:$",
+					"file": 1,
+					"message": 2
+				}
+			}
+		},
+		{
+			"taskName": "lint",
+			"args": ["run", "lint", "--", "${file}", "--exclude"],
+			"problemMatcher": "$jshint"
+		},
+		{
+			"taskName": "install",
+			"args": []	
+		},
+		{
+			"taskName": "update",
+			"args": []	
+		},
+		{
+			"taskName": "benchmark",
+			"args": ["run"],
+			"showOutput": "always"
+		},
+		{
+			"taskName": "publish",
+			"args": []	
+		}
+	]
+}

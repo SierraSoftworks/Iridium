@@ -1,0 +1,1 @@
+{"version":3,"sources":["lib/Cache.ts"],"names":[],"mappings":"AAOC","file":"lib/Cache.js","sourcesContent":["/// <reference path=\"../_references.d.ts\" />\r\nimport Bluebird = require('bluebird');\r\n\r\nexport interface Cache {\r\n    set<T>(key: string, value: T): void;\r\n    get<T>(key: string): Bluebird<T>;\r\n    clear(key: string): void\r\n}"],"sourceRoot":"/source/"}
