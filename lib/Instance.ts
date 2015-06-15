@@ -123,8 +123,6 @@ export default class Instance<TDocument extends { _id?: any }, TInstance> {
             conditions = _.cloneDeep(conditions);
             _.merge(conditions, { _id: this._modified._id });
             
-            conditions = this._model.helpers.transformToDB(conditions);
-            
             if (!changes) {
                 var validation = this._model.helpers.validate(this._modified);
                 if (validation.failed) return Bluebird.reject(validation.error).bind(this).nodeify(callback);
@@ -160,23 +158,27 @@ export default class Instance<TDocument extends { _id?: any }, TInstance> {
                 });
             }
         }).then((changed: boolean) => {
-            conditions = this._model.helpers.convertToDB({ _id: this._modified._id });
-            if (!changed) {
-                return _.cloneDeep(this._modified);
-            }
+            conditions = { _id: this._modified._id };
+            if (!changed) return this._modified;
 
             return new Bluebird<TDocument>((resolve, reject) => {
-                this._model.collection.findOne(conditions,(err: Error, latest) => {
+                this._model.collection.findOne(conditions, (err: Error, latest) => {
                     if (err) return reject(err);
                     return resolve(latest);
                 });
             });
         }).then((latest: TDocument) => {
-            return this._model.handlers.documentReceived(conditions, latest,(value) => {
+            if(!latest) {
+                this._isNew = true;
+                this._original = _.cloneDeep(this._modified);
+                return Bluebird.resolve(<TInstance><any>this);
+            }
+            
+            return this._model.handlers.documentReceived(conditions, latest, (value) => {
                 this._isPartial = false;
                 this._isNew = false;
-                this._original = value;
-                this._modified = _.clone<TDocument>(value);
+                this._modified = value;
+                this._original = _.cloneDeep(value);
                 return <TInstance><any>this;
             });
         }).nodeify(callback);

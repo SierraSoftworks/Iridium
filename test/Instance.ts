@@ -1,6 +1,7 @@
 ﻿/// <reference path="../_references.d.ts" />
 import * as Iridium from '../index';
 import MongoDB = require('mongodb');
+import Bluebird = require('bluebird');
 
 interface TestDocument {
     _id?: string;
@@ -450,4 +451,48 @@ describe("Instance",() => {
             });
         });
     });
+        
+    describe("after a save", () => {
+        var instance: Test;
+        
+        before(() => core.Test.remove().then(() => core.Test.insert({ answer: 1, lots: [1, 2, 3, 4], less: { 'a': 1, 'b': 2 } })).then(i => {
+            i.answer = 3;
+            return i.save();
+        }).then(i => instance = i));
+        
+        it("should return the instance", () => {
+            chai.expect(instance).to.exist;
+        });
+    
+        it("should correctly diff simple property changes", () => {
+            return Bluebird.resolve(instance).then(i => {
+                i.answer = 2;
+                return i.save();
+            }).then(i => {
+                chai.expect(i).to.exist;
+                chai.expect(i).to.have.property('answer', 2);
+            });
+        });
+        
+        it("should correctly diff deep property changes", () => {
+            return Bluebird.resolve(instance).then(i => {
+                i.less['a'] = 2;
+                return i.save();
+            }).then(i => {
+                chai.expect(i).to.exist;
+                chai.expect(i).to.have.property('less').eql({ a: 2, b: 2 });
+            });
+        });
+        
+        it("should correctly diff array operations", () => {
+            return Bluebird.resolve(instance).then(i => {
+                i.lots.push(5);
+                return i.save();
+            }).then(i => {
+                chai.expect(i).to.exist;
+                chai.expect(i).to.have.property('lots').eql([1,2,3,4,5]);
+            });
+        });
+            
+   });
 });

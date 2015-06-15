@@ -61,7 +61,6 @@ var Instance = (function () {
         return Bluebird.resolve().then(function () {
             conditions = _.cloneDeep(conditions);
             _.merge(conditions, { _id: _this._modified._id });
-            conditions = _this._model.helpers.transformToDB(conditions);
             if (!changes) {
                 var validation = _this._model.helpers.validate(_this._modified);
                 if (validation.failed)
@@ -99,10 +98,9 @@ var Instance = (function () {
                 });
             }
         }).then(function (changed) {
-            conditions = _this._model.helpers.convertToDB({ _id: _this._modified._id });
-            if (!changed) {
-                return _.cloneDeep(_this._modified);
-            }
+            conditions = { _id: _this._modified._id };
+            if (!changed)
+                return _this._modified;
             return new Bluebird(function (resolve, reject) {
                 _this._model.collection.findOne(conditions, function (err, latest) {
                     if (err)
@@ -111,11 +109,16 @@ var Instance = (function () {
                 });
             });
         }).then(function (latest) {
+            if (!latest) {
+                _this._isNew = true;
+                _this._original = _.cloneDeep(_this._modified);
+                return Bluebird.resolve(_this);
+            }
             return _this._model.handlers.documentReceived(conditions, latest, function (value) {
                 _this._isPartial = false;
                 _this._isNew = false;
-                _this._original = value;
-                _this._modified = _.clone(value);
+                _this._modified = value;
+                _this._original = _.cloneDeep(value);
                 return _this;
             });
         }).nodeify(callback);
