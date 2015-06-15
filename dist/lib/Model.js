@@ -20,7 +20,6 @@ var Model = (function () {
      * @constructor
      */
     function Model(core, instanceType) {
-        var _this = this;
         this._hooks = {};
         if (!(core instanceof Core_1.default))
             throw new Error("You failed to provide a valid Iridium core for this model");
@@ -31,6 +30,11 @@ var Model = (function () {
         if (!_.isPlainObject(instanceType.schema) || instanceType.schema._id === undefined)
             throw new Error("You failed to provide a valid schema for this model");
         this._core = core;
+        this.loadExternal(instanceType);
+        this.onNewModel();
+        this.loadInternal();
+    }
+    Model.prototype.loadExternal = function (instanceType) {
         this._collection = instanceType.collection;
         this._schema = instanceType.schema;
         this._hooks = instanceType;
@@ -38,18 +42,20 @@ var Model = (function () {
         this._transforms = instanceType.transforms || {};
         this._validators = instanceType.validators || [];
         this._indexes = instanceType.indexes || [];
-        core.plugins.forEach(function (plugin) {
-            if (plugin.newModel)
-                plugin.newModel(_this);
-        });
-        this._cache = new ModelCache_1.default(this);
         if (instanceType.prototype instanceof Instance_1.default)
             this._Instance = ModelSpecificInstance_1.default(this, instanceType);
         else
             this._Instance = instanceType.bind(undefined, this);
+    };
+    Model.prototype.loadInternal = function () {
+        this._cache = new ModelCache_1.default(this);
         this._helpers = new ModelHelpers_1.default(this);
         this._handlers = new ModelHandlers_1.default(this);
-    }
+    };
+    Model.prototype.onNewModel = function () {
+        var _this = this;
+        this._core.plugins.forEach(function (plugin) { return plugin.newModel && plugin.newModel(_this); });
+    };
     Object.defineProperty(Model.prototype, "helpers", {
         /**
          * Provides helper methods used by Iridium for common tasks
