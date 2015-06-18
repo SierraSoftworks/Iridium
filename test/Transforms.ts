@@ -69,8 +69,8 @@ describe("Transforms", () => {
 		chai.expect(db.Person).to.have.property('transforms').with.property('_id');
 	});
 	
-	describe("should be applied", () => {
-		it("when creating a new object", () => {
+	describe("during creation", () => {
+		it("should be applied", () => {
 			return db.Person.insert({
 				name: 'Test User',
 				email: 'Test@email.com'
@@ -79,7 +79,7 @@ describe("Transforms", () => {
 			});
 		});
 		
-		it("when creating a new object, after onCreating", () => {
+		it("should only be applied after onCreating", () => {
 			let onCreatingCalled = false;
 			hookEmitter.once('creating', (doc) => {
 				onCreatingCalled = true;
@@ -94,7 +94,7 @@ describe("Transforms", () => {
 			});
 		});
 		
-		it("when creating a new object, before validation", () => {
+		it("should be applied before validation", () => {
 			db.Person.schema['email'] = /^test@email.com$/;
 			return db.Person.insert({
 				name: 'Test User',
