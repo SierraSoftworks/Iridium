@@ -110,6 +110,11 @@ describe("Decorators", () => {
 		it("should populate the constructor's schema object", () => {
 			chai.expect(Test.schema).to.exist.and.have.property('_id').and.eql(MongoDB.ObjectID);
 		});
+		
+		it("should populate the constructor's transforms object", () => {
+			chai.expect(Test.transforms).to.exist.and.have.property('_id').with.property('fromDB').which.is.a('function');
+			chai.expect(Test.transforms).to.exist.and.have.property('_id').with.property('toDB').which.is.a('function');
+		});
 	});
 	
 	describe("Property", () => {
