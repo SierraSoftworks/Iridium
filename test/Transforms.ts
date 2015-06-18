@@ -20,7 +20,7 @@ class Person extends Iridium.Instance<Document, Person> {
 	
 	static transforms: Iridium.Transforms = {
 		email: {
-			fromDB: x => x,
+			fromDB: x => x.toUpperCase(),
 			toDB: x => x.toLowerCase().trim()
 		}
 	};
@@ -75,7 +75,7 @@ describe("Transforms", () => {
 				name: 'Test User',
 				email: 'Test@email.com'
 			}).then(user => {
-				chai.expect(user).to.exist.and.have.property('email', 'test@email.com');
+				chai.expect(user).to.exist.and.have.property('email', 'TEST@EMAIL.COM');
 			});
 		});
 		
@@ -99,6 +99,48 @@ describe("Transforms", () => {
 			return db.Person.insert({
 				name: 'Test User',
 				email: 'Test@email.com'
+			});
+		});
+	});
+	
+	describe("with an instance", () => {
+		beforeEach(() => db.Person.insert({
+			name: 'Test User',
+			email: 'test@email.com'
+		}));
+		
+		it("should apply the transform on property reads", () => {
+			return db.Person.get().then(person => {
+				chai.expect(person.email).to.eql('TEST@EMAIL.COM');
+				chai.expect(person.document.email).to.eql('test@email.com');
+			});
+		});
+		
+		it("should apply the transform on property writes", () => {
+			return db.Person.get().then(person => {
+				person.email = 'Test@email.com';
+				chai.expect(person.email).to.eql('TEST@EMAIL.COM');
+				chai.expect(person.document.email).to.eql('test@email.com');
+			});
+		});
+		
+		it("should diff the transformed property", () => {
+			let changesChecked = false;
+			hookEmitter.once('saving', (instance, changes) => {
+				chai.expect(changes).to.eql({ $set: { name: 'Testy User' }});
+				changesChecked = true;
+			});
+			
+			return db.Person.get().then(person => {
+				person.name = 'Testy User';
+				person.email = 'Test@email.com';
+				chai.expect(person.email).to.eql('TEST@EMAIL.COM');
+				chai.expect(person.document.email).to.eql('test@email.com');
+				
+				return person.save();
+			}).then(person => {
+				chai.expect(person).to.have.property('email', 'TEST@EMAIL.COM');	
+				chai.expect(changesChecked).to.be.true;
 			});
 		});
 	});
