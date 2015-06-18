@@ -19,7 +19,7 @@ gulp.task('coverage', function (cb) {
 				}))
 				.pipe(istanbul.writeReports({
 					dir: paths.coverageFolder,
-					reporters: ['lcov', 'json', 'html'],
+					reporters: ['lcovonly', 'json', 'html'],
 					reportOpts: { dir: paths.coverageFolder }
 				}))
 				.pipe(istanbul.enforceThresholds({ thresholds: { global: 90 } }))
