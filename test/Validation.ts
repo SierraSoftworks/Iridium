@@ -1,6 +1,7 @@
 /// <reference path="../_references.d.ts" />
 import * as Iridium from '../index';
 import skmatc = require('skmatc');
+import MongoDB = require('mongodb');
 
 interface Document {
     name: string;
@@ -18,7 +19,7 @@ interface Document {
 class Person extends Iridium.Instance<Document, Person> {
     static collection = 'test';
     static schema: Iridium.Schema = {
-        _id: false,
+        _id: MongoDB.ObjectID,
         name: String,
         dateOfBirth: 'Over18',
         siblings: [{

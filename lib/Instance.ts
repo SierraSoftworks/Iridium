@@ -67,7 +67,7 @@ export default class Instance<TDocument extends { _id?: any }, TInstance> {
     
     static validators: Skmatc.Validator[] = [
         skmatc.create(schema => schema === MongoDB.ObjectID, function(schema, data) {
-            return this.assert(!data || data instanceof MongoDB.ObjectID);
+            return this.assert(!data || data instanceof MongoDB.ObjectID || (data._bsontype === 'ObjectID' && data.id));
         }, { name: 'ObjectID validation' })
     ];
     

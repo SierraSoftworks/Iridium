@@ -242,7 +242,7 @@ var Instance = (function () {
     };
     Instance.validators = [
         skmatc.create(function (schema) { return schema === MongoDB.ObjectID; }, function (schema, data) {
-            return this.assert(!data || data instanceof MongoDB.ObjectID);
+            return this.assert(!data || data instanceof MongoDB.ObjectID || (data._bsontype === 'ObjectID' && data.id));
         }, { name: 'ObjectID validation' })
     ];
     Instance.transforms = {
