@@ -1,3 +1,5 @@
+/// <reference path="../_references.d.ts" />
+var MongoDB = require('mongodb');
 var Bluebird = require('bluebird');
 var _ = require('lodash');
 var Core_1 = require('./Core');
@@ -42,6 +44,13 @@ var Model = (function () {
         this._transforms = instanceType.transforms || {};
         this._validators = instanceType.validators || [];
         this._indexes = instanceType.indexes || [];
+        if (!this._schema._id)
+            this._schema._id = MongoDB.ObjectID;
+        if (this._schema._id === MongoDB.ObjectID && !this._transforms['_id'])
+            this._transforms['_id'] = {
+                fromDB: function (value) { return value._bsontype == 'ObjectID' ? new MongoDB.ObjectID(value.id).toHexString() : value; },
+                toDB: function (value) { return value && typeof value === 'string' ? new MongoDB.ObjectID(value) : value; }
+            };
         if (instanceType.prototype instanceof Instance_1.default)
             this._Instance = ModelSpecificInstance_1.default(this, instanceType);
         else
