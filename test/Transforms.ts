@@ -6,6 +6,7 @@ import Events = require('events');
 let hookEmitter = new Events.EventEmitter();
 
 interface Document {
+	_id?: string;
     name: string;
 	email: string;
 }
@@ -141,6 +142,23 @@ describe("Transforms", () => {
 			}).then(person => {
 				chai.expect(person).to.have.property('email', 'TEST@EMAIL.COM');	
 				chai.expect(changesChecked).to.be.true;
+			});
+		});
+		
+		describe("the default ObjectID transform", () => {
+			it("should return a string", () => {
+				return db.Person.get().then(person => {
+					chai.expect(person._id).to.be.a('string');
+					chai.expect(person.document._id).to.be.a('object');
+				});
+			});
+			
+			it("should convert a string to an ObjectID", () => {
+				return db.Person.get().then(person => {
+					person._id = 'aaaaaaaaaaaaaaaaaaaaaaaa';
+					chai.expect(person._id).to.eql('aaaaaaaaaaaaaaaaaaaaaaaa');
+					chai.expect(person.document._id).to.be.a('object');
+				});
 			});
 		});
 	});
