@@ -20,6 +20,9 @@ function VersionValidator(schema, data) {
 @Iridium.Property('version', 'version')    
 @Iridium.Property('optional2', Boolean, false)    
 class Test extends Iridium.Instance<TestDocument, Test> implements TestDocument {
+	static transforms: Iridium.Transforms = {};
+	static indexes = [];
+	
 	@Iridium.ObjectID
 	_id: string;
 	
@@ -114,6 +117,16 @@ describe("Decorators", () => {
 		it("should populate the constructor's transforms object", () => {
 			chai.expect(Test.transforms).to.exist.and.have.property('_id').with.property('fromDB').which.is.a('function');
 			chai.expect(Test.transforms).to.exist.and.have.property('_id').with.property('toDB').which.is.a('function');
+		});
+		
+		describe("the ObjectID transform", () => {
+			it("should convert an ObjectID to a string", () => {
+				chai.expect(Test.transforms['_id'].fromDB({ _bsontype: 'ObjectID', id: 'aaaaaaaaaaaaaaaaaaaaaaaa' })).to.eql('aaaaaaaaaaaaaaaaaaaaaaaa');
+			});
+			
+			it("should convert a string to an ObjectID", () => {
+				chai.expect(Test.transforms['_id'].toDB('aaaaaaaaaaaaaaaaaaaaaaaa')).to.be.instanceOf(MongoDB.ObjectID);
+			});
 		});
 	});
 	
