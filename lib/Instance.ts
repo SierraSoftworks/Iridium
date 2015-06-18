@@ -62,7 +62,7 @@ export default class Instance<TDocument extends { _id?: any }, TInstance> {
     static collection: string;
     
     static schema: Schema = {
-        _id: MongoDB.ObjectID
+        _id: false
     };
     
     static validators: Skmatc.Validator[] = [
@@ -72,10 +72,7 @@ export default class Instance<TDocument extends { _id?: any }, TInstance> {
     ];
     
     static transforms: { [property: string]: { fromDB: (value: any) => any; toDB: (value: any) => any; } } = {
-        _id: {
-            fromDB: value => value._bsontype == 'ObjectID' ? new MongoDB.ObjectID(value.id).toHexString() : value,
-            toDB: value => value && typeof value === 'string' ? new MongoDB.ObjectID(value) : value
-        }
+        
     };
     
     static cache: CacheDirector;

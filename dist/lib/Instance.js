@@ -238,19 +238,14 @@ var Instance = (function () {
         return JSON.stringify(this.document, null, 2);
     };
     Instance.schema = {
-        _id: MongoDB.ObjectID
+        _id: false
     };
     Instance.validators = [
         skmatc.create(function (schema) { return schema === MongoDB.ObjectID; }, function (schema, data) {
             return this.assert(!data || data instanceof MongoDB.ObjectID || (data._bsontype === 'ObjectID' && data.id));
         }, { name: 'ObjectID validation' })
     ];
-    Instance.transforms = {
-        _id: {
-            fromDB: function (value) { return value._bsontype == 'ObjectID' ? new MongoDB.ObjectID(value.id).toHexString() : value; },
-            toDB: function (value) { return value && typeof value === 'string' ? new MongoDB.ObjectID(value) : value; }
-        }
-    };
+    Instance.transforms = {};
     Instance.indexes = [];
     return Instance;
 })();
