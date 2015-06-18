@@ -111,8 +111,8 @@ describe("Model",() => {
         it("should correctly set the schema",() => {
             chai.expect(new Iridium.Model(core, createInstanceImplementation({
                     collection: 'test',
-                    schema: { _id: false }
-                })).schema).to.eql({ _id: false });
+                    schema: { _id: true }
+                })).schema).to.eql({ _id: true });
         });
     });
 
