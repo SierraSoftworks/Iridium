@@ -114,6 +114,13 @@ describe("Model",() => {
                     schema: { _id: true }
                 })).schema).to.eql({ _id: true });
         });
+
+        it("should correctly default to ObjectID if no _id schema type is specified",() => {
+            chai.expect(new Iridium.Model(core, createInstanceImplementation({
+                    collection: 'test',
+                    schema: { _id: false }
+                })).schema).to.eql({ _id: MongoDB.ObjectID });
+        });
     });
 
     describe("methods",() => {
