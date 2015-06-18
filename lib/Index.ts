@@ -7,5 +7,5 @@ export interface Index {
 }
 
 export interface IndexSpecification {
-    [key: string]: number;
+    [key: string]: number | string;
 }
