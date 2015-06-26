@@ -36,7 +36,7 @@ gulp.task('version-push', function (cb) {
 
 gulp.task('version-tag', function (cb) {
     var version = getPackageJsonVersion();
-    git.tag(version, 'Version ' + version, function (error) {
+    git.tag('v' + version, 'Version ' + version, function (error) {
         if (error) {
             return cb(error);
         }
