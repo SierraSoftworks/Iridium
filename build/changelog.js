@@ -30,6 +30,7 @@ gulp.task('changelog', function(done) {
 });
 
 gulp.task('changelog-commit', function () {
-    return gulp.src('.')
+    return gulp.src('CHANGELOG.md')
+		.pipe(git.add())
         .pipe(git.commit('Updated CHANGELOG'));
 });
