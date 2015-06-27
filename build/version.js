@@ -36,20 +36,22 @@ gulp.task('version-push', function (cb) {
 
 gulp.task('version-tag', function (cb) {
     var version = getPackageJsonVersion();
-    git.tag('v' + version, 'Version ' + version, function (error) {
-        if (error) {
-            return cb(error);
-        }
-        git.push('origin', 'master', { args: '--tags' }, cb);
-    });
+    git.tag('v' + version, 'Version ' + version, cb);
+});
+
+gulp.task('version-push-tags', function (cb) {
+    git.push('origin', 'master', { args: '--tags' }, cb);
 });
 
 gulp.task('version', function (callback) {
     runSequence(
         'version-bump',
         'version-commit',
-        'version-push',
         'version-tag',
+        'changelog',
+        'changelog-commit',
+        'version-push',
+        'version-push-tags',
         function (error) {
             if (error) {
                 console.log(error.message);
