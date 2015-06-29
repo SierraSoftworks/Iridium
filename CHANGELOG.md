@@ -1,10 +1,14 @@
+
 ## [Working Changes](https://github.com/sierrasoftworks/iridium)
-- [70337bf](https://github.com/sierrasoftworks/iridium/commit/70337bf) Updated CHANGELOG
+- [b0e3dd7](https://github.com/sierrasoftworks/iridium/commit/b0e3dd7) Version 5.7.1
+- [bad22e2](https://github.com/sierrasoftworks/iridium/commit/bad22e2) Handle null ObjectID fields correctly
+- [9d2bedf](https://github.com/sierrasoftworks/iridium/commit/9d2bedf) (origin/release) Updated CHANGELOG
+- [70337bf](https://github.com/sierrasoftworks/iridium/commit/70337bf) (master) Updated CHANGELOG
 
 ## [v5.7.0](https://github.com/sierrasoftworks/iridium/tree/v5.7.0)
 - [3c25d1c](https://github.com/sierrasoftworks/iridium/commit/3c25d1c) Version 5.7.0
 - [ca5b130](https://github.com/sierrasoftworks/iridium/commit/ca5b130) Merge remote-tracking branch 'origin/release' into release
-- [709d145](https://github.com/sierrasoftworks/iridium/commit/709d145) (origin/release) Removed old changelog
+- [709d145](https://github.com/sierrasoftworks/iridium/commit/709d145) Removed old changelog
 - [453b6d1](https://github.com/sierrasoftworks/iridium/commit/453b6d1) Updated CHANGELOG
 
 ## [v5.6.3](https://github.com/sierrasoftworks/iridium/tree/v5.6.3)
