@@ -55,12 +55,8 @@ function Transform(fromDB, toDB) {
 }
 exports.Transform = Transform;
 function ObjectID(target, name) {
-    target.constructor.schema = _.clone(target.constructor.schema || {});
-    target.constructor.schema[name] = MongoDB.ObjectID;
-    target.constructor.transforms[name] = {
-        fromDB: function (value) { return value && value._bsontype == 'ObjectID' ? new MongoDB.ObjectID(value.id).toHexString() : value; },
-        toDB: function (value) { return value && typeof value === 'string' ? new MongoDB.ObjectID(value) : value; }
-    };
+    Property(MongoDB.ObjectID)(target, name);
+    Transform(function (value) { return value && value._bsontype == 'ObjectID' ? new MongoDB.ObjectID(value.id).toHexString() : value; }, function (value) { return value && typeof value === 'string' ? new MongoDB.ObjectID(value) : value; })(target, name);
 }
 exports.ObjectID = ObjectID;
 

@@ -60,10 +60,9 @@ export function Transform(fromDB: (value: any) => any, toDB: (value: any) => any
 }
 
 export function ObjectID(target: { constructor: typeof Instance }, name: string) {
-	target.constructor.schema = <Schema>_.clone(target.constructor.schema || {});
-	target.constructor.schema[name] = MongoDB.ObjectID;
-	target.constructor.transforms[name] = {
-        fromDB: value => value && value._bsontype == 'ObjectID' ? new MongoDB.ObjectID(value.id).toHexString() : value,
-        toDB: value => value && typeof value === 'string' ? new MongoDB.ObjectID(value) : value
-    };
+	Property(MongoDB.ObjectID)(target, name);
+	Transform(
+		value => value && value._bsontype == 'ObjectID' ? new MongoDB.ObjectID(value.id).toHexString() : value,
+		value => value && typeof value === 'string' ? new MongoDB.ObjectID(value) : value
+	)(target, name);
 }
