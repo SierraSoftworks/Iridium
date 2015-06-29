@@ -58,7 +58,7 @@ function ObjectID(target, name) {
     target.constructor.schema = _.clone(target.constructor.schema || {});
     target.constructor.schema[name] = MongoDB.ObjectID;
     target.constructor.transforms[name] = {
-        fromDB: function (value) { return value._bsontype == 'ObjectID' ? new MongoDB.ObjectID(value.id).toHexString() : value; },
+        fromDB: function (value) { return value && value._bsontype == 'ObjectID' ? new MongoDB.ObjectID(value.id).toHexString() : value; },
         toDB: function (value) { return value && typeof value === 'string' ? new MongoDB.ObjectID(value) : value; }
     };
 }

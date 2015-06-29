@@ -127,6 +127,11 @@ describe("Decorators", () => {
 			it("should convert a string to an ObjectID", () => {
 				chai.expect(Test.transforms['_id'].toDB('aaaaaaaaaaaaaaaaaaaaaaaa')).to.be.instanceOf(MongoDB.ObjectID);
 			});
+			
+			it("should handle undefined values correctly", () => {
+				chai.expect(Test.transforms['_id'].toDB(undefined)).to.not.exist;
+				chai.expect(Test.transforms['_id'].fromDB(undefined)).to.not.exist;
+			});
 		});
 	});
 	
