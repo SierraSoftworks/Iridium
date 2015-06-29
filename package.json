@@ -1,6 +1,6 @@
 {
   "name": "iridium",
-  "version": "5.6.0",
+  "version": "5.6.3",
   "author": "Benjamin Pannell <admin@sierrasoftworks.com>",
   "description": "A custom lightweight ORM for MongoDB designed for power-users",
   "license": "MIT",
@@ -18,11 +18,13 @@
   "licence": "MIT",
   "main": "./dist/index.js",
   "scripts": {
-    "test": "grunt test",
-    "coverage": "grunt coverage",
+    "prepublish": "gulp prepublish",
+    "postpublish": "gulp postpublish",
+    "test": "gulp build && gulp ci",
+    "coverage": "gulp coverage",
     "lint": "jshint lib/",
     "benchmark": "node ./benchmarks/mongodb.js",
-    "build": "grunt build"
+    "build": "gulp build"
   },
   "typescript": {
     "definition": "iridium.d.ts"
