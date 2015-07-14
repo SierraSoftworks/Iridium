@@ -2,8 +2,8 @@
 **A High Performance, IDE Friendly ODM for MongoDB**
 
 [![NPM Module](https://badge.fury.io/js/iridium.png)](https://npmjs.org/package/iridium)
-[![Build Status](https://travis-ci.org/SierraSoftworks/Iridium.png?branch=master)](https://travis-ci.org/SierraSoftworks/Iridium)
-[![Coverage Status](https://coveralls.io/repos/SierraSoftworks/Iridium/badge.svg?branch=master)](https://coveralls.io/r/SierraSoftworks/Iridium?branch=typescript)
+[![Build Status](https://travis-ci.org/SierraSoftworks/Iridium.png?branch=release)](https://travis-ci.org/SierraSoftworks/Iridium)
+[![Coverage Status](https://coveralls.io/repos/SierraSoftworks/Iridium/badge.svg?branch=release)](https://coveralls.io/r/SierraSoftworks/Iridium?branch=release)
 [![Code Climate](https://codeclimate.com/github/SierraSoftworks/Iridium/badges/gpa.svg)](https://codeclimate.com/github/SierraSoftworks/Iridium)
 [![Test Coverage](https://codeclimate.com/github/SierraSoftworks/Iridium/badges/coverage.svg)](https://codeclimate.com/github/SierraSoftworks/Iridium)
 
@@ -65,7 +65,7 @@ interface Car {
 interface HouseDocument {
     _id?: string;
     name: string;
-    
+
     cars?: Car[];
 }
 
@@ -75,7 +75,7 @@ class House extends Instance<HouseDocument, House> implements HouseDocument {
     @ObjectID _id: string;
     @Property(/^.+$/)
     name: string;
-    
+
     @Property([{
         make: String,
         model: String,
@@ -86,11 +86,11 @@ class House extends Instance<HouseDocument, House> implements HouseDocument {
         }
     }])
     cars: Car[];
-    
+
     static onCreating(doc: HouseDocument) {
         doc.cars = doc.cars || [];
     }
-    
+
     addCar(make: string, model: string, colour: Colour) {
         this.cars.push({
             make: make,
@@ -98,7 +98,7 @@ class House extends Instance<HouseDocument, House> implements HouseDocument {
             colour: colour
         });
     }
-    
+
     get numberOfCars() {
         return this.cars.length;
     }
@@ -169,15 +169,15 @@ interface Document {
 
 class InstanceType {
     constructor(model: Model<Document, Instance>, document: Document, isNew: boolean = true, isPartial: boolean = false) {
-        
+
     }
-    
+
     _id: string;
-    
+
     static schema: Iridium.Schema = {
         _id: false
     };
-    
+
     static collection = 'myCollection';
 }
 ```
@@ -185,12 +185,12 @@ class InstanceType {
 **JavaScript**
 ```javascript
 module.exports = function(model, document, isNew, isPartial) {
-    
+
 }
 
 module.exports.collection = 'myCollection';
 module.exports.schema = {
-    _id: false  
+    _id: false
 };
 ```
 
@@ -211,7 +211,7 @@ rule.
 class InstanceType {
     _id: string;
     email: string;
-    
+
     static schema: Iridium.Schema = {
         _id: false,
         email: /^.+@.+$/
@@ -246,7 +246,7 @@ class InstanceType extends Iridium.Instance<Document, InstanceType> {
 new Iridium.Model<Document, InstanceType>(core, InstanceType);
 ```
 
-**JavaScript** 
+**JavaScript**
 ```javascript
 function InstanceType() {
     Iridium.Instance.apply(this, arguments);
