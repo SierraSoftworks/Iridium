@@ -87,7 +87,7 @@ export default class Omnom {
 
         // Unset removed properties
         _.each(original, function (value, key) {
-            if (modified[key] === undefined || modified[key] === null) return this.unset(this.resolve(changePath, key));
+            if (modified[key] === undefined) return this.unset(this.resolve(changePath, key));
         }, this);
     }
 
