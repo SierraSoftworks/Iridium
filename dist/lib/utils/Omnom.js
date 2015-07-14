@@ -44,7 +44,7 @@ var Omnom = (function () {
         }, this);
         // Unset removed properties
         _.each(original, function (value, key) {
-            if (modified[key] === undefined || modified[key] === null)
+            if (modified[key] === undefined)
                 return this.unset(this.resolve(changePath, key));
         }, this);
     };

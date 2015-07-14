@@ -102,6 +102,41 @@ describe("Omnom",() => {
         chai.expect(Omnom.diff(oldObject, newObject)).to.exist.and.be.eql(expectedDiff);
     });
 
+    describe('unset', function() {
+        it("should correctly unset properties which are removed", () => {
+            let oldObject = {
+                a: 10,
+                b: 10
+            };
+            let newObject = {
+                a: 10
+            };
+
+            let expectedDiff = {
+                $unset: { b: 1 }
+            };
+
+            chai.expect(Omnom.diff(oldObject, newObject)).to.exist.and.be.eql(expectedDiff);
+        });
+
+        it("should correctly handle properties which are set to null", () => {
+            let oldObject = {
+                a: 10,
+                b: 10
+            };
+            let newObject = {
+                a: 10,
+                b: null
+            };
+            
+            let expectedDiff = {
+                $set: { b: null }
+            };
+
+            chai.expect(Omnom.diff(oldObject, newObject)).to.exist.and.be.eql(expectedDiff);
+        });
+    });
+
     describe('arrays', function () {
         it('should correctly handle two pure arrays',() => {
             let oldObject = [1, 2, 3];
@@ -146,7 +181,7 @@ describe("Omnom",() => {
 
             chai.expect(Omnom.diff(oldObject, newObject)).to.exist.and.be.eql(expectedDiff);
         });
-        
+
         it("should correctly handle arrays which shrink in size and can't be pulled", () => {
             let oldObject = { a: [1, 2, 3, 4], b: [1, 2, 3, 4] };
             let newObject = { a: [1, 3, 5], b: [1, 3] };
