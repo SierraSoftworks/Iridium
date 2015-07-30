@@ -21,5 +21,7 @@ var NoOpCache_1 = require('./lib/caches/NoOpCache');
 exports.NoOpCache = NoOpCache_1.default;
 var IDDirector_1 = require('./lib/cacheControllers/IDDirector');
 exports.CacheOnID = IDDirector_1.default;
+var ObjectID_1 = require('./lib/utils/ObjectID');
+exports.toObjectID = ObjectID_1.toObjectID;
 
 //# sourceMappingURL=index.js.map
