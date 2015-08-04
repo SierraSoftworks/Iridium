@@ -429,6 +429,16 @@ var Model = (function () {
             return Bluebird.resolve(count);
         }).nodeify(callback);
     };
+    Model.prototype.aggregate = function (pipeline) {
+        var _this = this;
+        return new Bluebird(function (resolve, reject) {
+            _this.collection.aggregate(pipeline, function (err, results) {
+                if (err)
+                    return reject(err);
+                return resolve(results);
+            });
+        });
+    };
     Model.prototype.ensureIndex = function (specification, options, callback) {
         var _this = this;
         if (typeof options == 'function') {
