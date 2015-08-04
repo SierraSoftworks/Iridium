@@ -27,6 +27,7 @@ import ModelHandlers from './ModelHandlers';
 import * as ModelInterfaces from './ModelInterfaces';
 import ModelSpecificInstance from './ModelSpecificInstance';
 import InstanceImplementation from './InstanceInterface';
+import * as AggregationPipeline from './Aggregate';
 
 /**
  * An Iridium Model which represents a structured MongoDB collection
@@ -45,14 +46,14 @@ export default class Model<TDocument extends { _id?: any }, TInstance> {
         if (typeof instanceType != 'function') throw new Error("You failed to provide a valid instance constructor for this model");
         if (typeof instanceType.collection != 'string' || !instanceType.collection) throw new Error("You failed to provide a valid collection name for this model");
         if (!_.isPlainObject(instanceType.schema) || instanceType.schema._id === undefined) throw new Error("You failed to provide a valid schema for this model");
-        
+
         this._core = core;
-        
+
         this.loadExternal(instanceType);
         this.onNewModel();
         this.loadInternal();
     }
-    
+
     private loadExternal(instanceType: InstanceImplementation<TDocument, TInstance>) {
         this._collection = instanceType.collection;
         this._schema = instanceType.schema;
@@ -61,9 +62,9 @@ export default class Model<TDocument extends { _id?: any }, TInstance> {
         this._transforms = instanceType.transforms || {};
         this._validators = instanceType.validators || [];
         this._indexes = instanceType.indexes || [];
-        
+
         if(!this._schema._id) this._schema._id = MongoDB.ObjectID;
-        
+
         if(this._schema._id === MongoDB.ObjectID && !this._transforms['_id'])
             this._transforms['_id'] = {
                 fromDB: value => value._bsontype == 'ObjectID' ? new MongoDB.ObjectID(value.id).toHexString() : value,
@@ -75,13 +76,13 @@ export default class Model<TDocument extends { _id?: any }, TInstance> {
         else
             this._Instance = instanceType.bind(undefined, this);
     }
-    
+
     private loadInternal() {
         this._cache = new ModelCache(this);
         this._helpers = new ModelHelpers(this);
         this._handlers = new ModelHandlers(this);
     }
-    
+
     private onNewModel() {
         this._core.plugins.forEach(plugin => plugin.newModel && plugin.newModel(this));
     }
@@ -103,9 +104,9 @@ export default class Model<TDocument extends { _id?: any }, TInstance> {
     get handlers(): ModelHandlers<TDocument, TInstance> {
         return this._handlers;
     }
-    
+
     private _hooks: Hooks<TDocument, TInstance> = {};
-    
+
     /**
      * Gets the even hooks subscribed on this model for a number of different state changes
      * @returns {Hooks}
@@ -144,7 +145,7 @@ export default class Model<TDocument extends { _id?: any }, TInstance> {
         if (!this.core.connection) throw new Error("Iridium Core not connected to a database.");
         return this.core.connection.collection(this._collection);
     }
-    
+
     /**
      * Gets the name of the underlying MongoDB collection from which this model's documents are retrieved
      * @public
@@ -189,25 +190,25 @@ export default class Model<TDocument extends { _id?: any }, TInstance> {
     get Instance(): ModelInterfaces.ModelSpecificInstanceConstructor<TDocument, TInstance> {
         return this._Instance;
     }
-    
+
     private _transforms: { [property: string]: { fromDB: (value: any) => any; toDB: (value: any) => any; } };
-    
+
     get transforms() {
         return this._transforms;
     }
-    
+
     private _validators: Skmatc.Validator[];
-    
+
     get validators() {
         return this._validators;
     }
-    
+
     private _indexes: (Index.Index | Index.IndexSpecification)[];
-    
+
     get indexes() {
         return this._indexes;
     }
-    
+
     /**
      * Retrieves all documents in the collection and wraps them as instances
      * @param {function(Error, TInstance[])} callback An optional callback which will be triggered when results are available
@@ -497,7 +498,7 @@ export default class Model<TDocument extends { _id?: any }, TInstance> {
             callback = <General.Callback<number>>options;
             options = {};
         }
-        
+
         options = options || {};
 
         if (!_.isPlainObject(conditions)) conditions = {
@@ -587,12 +588,12 @@ export default class Model<TDocument extends { _id?: any }, TInstance> {
     remove(conditions: { _id?: any, [key: string]: any }, options: ModelOptions.RemoveOptions, callback?: General.Callback<number>): Bluebird<number>;
     remove(conds?: any, options?: ModelOptions.RemoveOptions, callback?: General.Callback<number>): Bluebird<number> {
         var conditions: { _id?: any, [key: string]: any } = <{ _id?: any, [key: string]: any }>conds;
-        
+
         if (typeof options === 'function') {
             callback = <General.Callback<number>>options;
             options = {};
         }
-        
+
         if (typeof conds == 'function') {
             callback = <General.Callback<number>>conds;
             options = {};
@@ -601,7 +602,7 @@ export default class Model<TDocument extends { _id?: any }, TInstance> {
 
         conditions = conditions || {};
         options = options || {};
-        
+
         _.defaults(options, {
             w: 'majority'
         });
@@ -623,6 +624,15 @@ export default class Model<TDocument extends { _id?: any }, TInstance> {
             if (count === 1) this._cache.clear(conditions);
             return Bluebird.resolve(count);
         }).nodeify(callback);
+    }
+
+    aggregate<T>(pipeline: AggregationPipeline.Stage[]): Bluebird<T[]> {
+        return new Bluebird<T[]>((resolve, reject) => {
+            this.collection.aggregate(pipeline, (err, results) => {
+                if(err) return reject(err);
+                return resolve(results);
+            });
+        });
     }
 
     /**
