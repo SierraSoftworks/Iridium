@@ -14,11 +14,11 @@ function getPackageJsonVersion() {
 
 gulp.task('version-bump', function () {
     var args = minimist(process.argv);
-    
+
     var options = {};
     if (semver.valid(args.version)) options.version = args.version;
     else options.type = args.version;
-    
+
     return gulp.src(['./package.json'])
         .pipe(bump(options).on('error', gutil.log))
         .pipe(gulp.dest('./'));
@@ -45,6 +45,7 @@ gulp.task('version-push-tags', function (cb) {
 
 gulp.task('version', function (callback) {
     runSequence(
+        'postpublish',
         'version-bump',
         'version-commit',
         'version-tag',
