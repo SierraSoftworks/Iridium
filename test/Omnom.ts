@@ -79,6 +79,71 @@ describe("Omnom",() => {
         chai.expect(Omnom.diff(oldObject, newObject)).to.exist.and.be.eql(expectedDiff);
     });
 
+    it('should correctly diff deep objects', function () {
+        let oldObject = {
+            a: {
+                b: {
+                    c: {
+                        m: {
+                            x: 1,
+                            y: 2,
+                            z: 'test'
+                        }
+                    },
+                    d: {
+                        m: {
+                            x: 1,
+                            y: 2,
+                            z: 'test'
+                        }
+                    },
+                    e: {
+                        m: {
+                            x: 1,
+                            y: 2,
+                            z: 'test'
+                        }
+                    }
+                }
+           }
+        };
+
+        let newObject = {
+            a: {
+                b: {
+                    c: {
+                        n: {
+                            x: 1,
+                            y: 2,
+                            z: 'test'
+                        }
+                    },
+                    d: {
+                        m: {
+                            w: 1,
+                            y: 2,
+                            z: 'test'
+                        }
+                    },
+                    e: {
+                        m: {
+                            x: 1,
+                            y: 4,
+                            z: 'test'
+                        }
+                    }
+                }
+           }
+        };
+
+        let expectedDiff = {
+            $set: { 'a.b.c.n': { x: 1, y: 2, z: 'test' }, 'a.b.d.m.w': 1, 'a.b.e.m.y': 4 },
+            $unset: { 'a.b.c.m': 1, 'a.b.d.m.x': 1 }
+        };
+
+        chai.expect(Omnom.diff(oldObject, newObject)).to.exist.and.be.eql(expectedDiff);
+    });
+
     it('should correctly diff ObjectIDs', function () {
         let oldID = new MongoDB.ObjectID();
         let newID = MongoDB.ObjectID.createFromHexString(oldID.toHexString());
@@ -128,7 +193,7 @@ describe("Omnom",() => {
                 a: 10,
                 b: null
             };
-            
+
             let expectedDiff = {
                 $set: { b: null }
             };
