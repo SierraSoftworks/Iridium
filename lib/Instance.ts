@@ -159,7 +159,7 @@ export default class Instance<TDocument extends { _id?: any }, TInstance> {
                     });
                 });
             }
-        }, err => {
+        }).catch(err => {
             err['original'] = this._original;
             err['modified'] = this._modified;
             return Bluebird.reject(err);
