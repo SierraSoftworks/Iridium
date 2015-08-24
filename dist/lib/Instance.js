@@ -100,7 +100,7 @@ var Instance = (function () {
                     });
                 });
             }
-        }, function (err) {
+        }).catch(function (err) {
             err['original'] = _this._original;
             err['modified'] = _this._modified;
             return Bluebird.reject(err);
