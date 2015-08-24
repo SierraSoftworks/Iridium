@@ -50,13 +50,15 @@ export default class Core {
         this._url = <string>uri;
         this._config = config;
     }
-    
+
     private _plugins: Plugin[] = [];
     private _url: string;
     private _config: Configuration;
     private _connection: MongoDB.Db;
     private _cache: Cache = new NoOpCache();
-    
+
+    private _connectPromise: Bluebird<MongoDB.Db>;
+
     /**
      * Gets the plugins registered with this Iridium Core
      * @returns {[Iridium.Plugin]}
@@ -159,10 +161,15 @@ export default class Core {
         var self = this;
         return Bluebird.bind(this).then(function() {
             if (self._connection) return self._connection;
-            return mongoConnectAsyc(self.url);
+            if (self._connectPromise) return this._connectPromise;
+            return self._connectPromise = mongoConnectAsyc(self.url);
         }).then(function(db: MongoDB.Db) {
             self._connection = db;
+            self._connectPromise = null;
             return self;
+        }, function(err) {
+            self._connectPromise = null;
+            return Bluebird.reject(err);
         }).nodeify(callback);
     }
 

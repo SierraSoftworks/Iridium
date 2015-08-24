@@ -133,10 +133,16 @@ var Core = (function () {
         return Bluebird.bind(this).then(function () {
             if (self._connection)
                 return self._connection;
-            return mongoConnectAsyc(self.url);
+            if (self._connectPromise)
+                return this._connectPromise;
+            return self._connectPromise = mongoConnectAsyc(self.url);
         }).then(function (db) {
             self._connection = db;
+            self._connectPromise = null;
             return self;
+        }, function (err) {
+            self._connectPromise = null;
+            return Bluebird.reject(err);
         }).nodeify(callback);
     };
     /**
