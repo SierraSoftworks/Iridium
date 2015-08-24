@@ -50,13 +50,15 @@ export default class Core {
         this._url = <string>uri;
         this._config = config;
     }
-    
+
     private _plugins: Plugin[] = [];
     private _url: string;
     private _config: Configuration;
     private _connection: MongoDB.Db;
     private _cache: Cache = new NoOpCache();
-    
+
+    private _connectPromise: Bluebird<MongoDB.Db>;
+
     /**
      * Gets the plugins registered with this Iridium Core
      * @returns {[Iridium.Plugin]}
@@ -156,13 +158,17 @@ export default class Core {
      * @returns {Promise}
      */
     connect(callback?: (err: Error, core: Core) => any): Bluebird<Core> {
-        var self = this;
-        return Bluebird.bind(this).then(function() {
-            if (self._connection) return self._connection;
-            return mongoConnectAsyc(self.url);
-        }).then(function(db: MongoDB.Db) {
-            self._connection = db;
-            return self;
+        return Bluebird.bind(this).then(() => {
+            if (this._connection) return this._connection;
+            if (this._connectPromise) return this._connectPromise;
+            return this._connectPromise = mongoConnectAsyc(this.url);
+        }).then((db: MongoDB.Db) => {
+            this._connection = db;
+            this._connectPromise = null;
+            return this;
+        }, (err) => {
+            this._connectPromise = null;
+            return Bluebird.reject(err);
         }).nodeify(callback);
     }
 
@@ -171,11 +177,10 @@ export default class Core {
      * @type {Promise}
      */
     close(): Bluebird<Core> {
-        var self = this;
-        return Bluebird.bind(this).then(function() {
-            if (!self._connection) return this;
-            var conn: MongoDB.Db = self._connection;
-            self._connection = null;
+        return Bluebird.bind(this).then(() => {
+            if (!this._connection) return this;
+            var conn: MongoDB.Db = this._connection;
+            this._connection = null;
             conn.close();
             return this;
         });
