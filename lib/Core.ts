@@ -158,17 +158,16 @@ export default class Core {
      * @returns {Promise}
      */
     connect(callback?: (err: Error, core: Core) => any): Bluebird<Core> {
-        var self = this;
-        return Bluebird.bind(this).then(function() {
-            if (self._connection) return self._connection;
-            if (self._connectPromise) return this._connectPromise;
-            return self._connectPromise = mongoConnectAsyc(self.url);
-        }).then(function(db: MongoDB.Db) {
-            self._connection = db;
-            self._connectPromise = null;
-            return self;
-        }, function(err) {
-            self._connectPromise = null;
+        return Bluebird.bind(this).then(() => {
+            if (this._connection) return this._connection;
+            if (this._connectPromise) return this._connectPromise;
+            return this._connectPromise = mongoConnectAsyc(this.url);
+        }).then((db: MongoDB.Db) => {
+            this._connection = db;
+            this._connectPromise = null;
+            return this;
+        }, (err) => {
+            this._connectPromise = null;
             return Bluebird.reject(err);
         }).nodeify(callback);
     }
@@ -178,11 +177,10 @@ export default class Core {
      * @type {Promise}
      */
     close(): Bluebird<Core> {
-        var self = this;
-        return Bluebird.bind(this).then(function() {
-            if (!self._connection) return this;
-            var conn: MongoDB.Db = self._connection;
-            self._connection = null;
+        return Bluebird.bind(this).then(() => {
+            if (!this._connection) return this;
+            var conn: MongoDB.Db = this._connection;
+            this._connection = null;
             conn.close();
             return this;
         });

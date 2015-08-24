@@ -129,19 +129,19 @@ var Core = (function () {
      * @returns {Promise}
      */
     Core.prototype.connect = function (callback) {
-        var self = this;
+        var _this = this;
         return Bluebird.bind(this).then(function () {
-            if (self._connection)
-                return self._connection;
-            if (self._connectPromise)
-                return this._connectPromise;
-            return self._connectPromise = mongoConnectAsyc(self.url);
+            if (_this._connection)
+                return _this._connection;
+            if (_this._connectPromise)
+                return _this._connectPromise;
+            return _this._connectPromise = mongoConnectAsyc(_this.url);
         }).then(function (db) {
-            self._connection = db;
-            self._connectPromise = null;
-            return self;
+            _this._connection = db;
+            _this._connectPromise = null;
+            return _this;
         }, function (err) {
-            self._connectPromise = null;
+            _this._connectPromise = null;
             return Bluebird.reject(err);
         }).nodeify(callback);
     };
@@ -150,14 +150,14 @@ var Core = (function () {
      * @type {Promise}
      */
     Core.prototype.close = function () {
-        var self = this;
+        var _this = this;
         return Bluebird.bind(this).then(function () {
-            if (!self._connection)
-                return this;
-            var conn = self._connection;
-            self._connection = null;
+            if (!_this._connection)
+                return _this;
+            var conn = _this._connection;
+            _this._connection = null;
             conn.close();
-            return this;
+            return _this;
         });
     };
     /**
