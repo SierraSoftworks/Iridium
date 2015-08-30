@@ -1,7 +1,7 @@
 ﻿/// <reference path="../_references.d.ts" />
 import * as Iridium from '../index';
 import MongoDB = require('mongodb');
-import Cursor from '../lib/Cursor';
+import {Cursor} from '../lib/Cursor';
 import Promise = require('bluebird');
 import _ = require('lodash');
 
@@ -831,7 +831,6 @@ describe("Model",() => {
         });
 
         it("should configure all indexes defined in the model's options", () => {
-            console.log(model.indexes);
             return chai.expect(model.ensureIndexes()).to.eventually.exist.and.have.length(1);
         });
     });

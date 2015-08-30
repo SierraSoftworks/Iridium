@@ -1,7 +1,7 @@
 /// <reference path="../_references.d.ts" />
 import * as Iridium from '../index';
 import MongoDB = require('mongodb');
-import Cursor from '../lib/Cursor';
+import {Cursor} from '../lib/Cursor';
 import Promise = require('bluebird');
 import _ = require('lodash');
 

@@ -1,8 +1,13 @@
 ﻿/// <reference path="../_references.d.ts" />
-import Model from './Model';
+import {Model} from './Model';
 import Bluebird = require('bluebird');
 
-export default class ModelCache {
+/**
+ * A centralized class which ties the cache and cache directors together in a cohesive way
+ * for use by Iridium.
+ * @internal
+ */
+export class ModelCache {
     constructor(public model: Model<any,any>) {
 
     }

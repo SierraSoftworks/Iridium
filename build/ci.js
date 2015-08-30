@@ -7,7 +7,7 @@ var path = require('path');
 var paths = require('./paths');
 
 gulp.task('ci', function () {
-	return runSequence('build', 'ci-test');
+	return runSequence('postpublish','build', 'ci-test');
 });
 
 gulp.task('ci-test', function () {

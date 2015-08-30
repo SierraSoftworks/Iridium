@@ -1,7 +1,6 @@
-import Core from './lib/Core';
-import Model from './lib/Model';
-import Instance from './lib/Instance';
-export {Core, Model, Instance};
+export * from './lib/Core';
+export * from './lib/Model';
+export * from './lib/Instance';
 
 export * from './lib/Decorators';
 
@@ -12,13 +11,11 @@ export * from './lib/CacheDirector';
 export * from './lib/ModelOptions';
 export * from './lib/Configuration';
 export * from './lib/Hooks';
+export * from './lib/Transforms';
 
-import MemoryCache from './lib/caches/MemoryCache';
-import NoOpCache from './lib/caches/NoOpCache';
-export {MemoryCache, NoOpCache};
+export * from './lib/caches/MemoryCache';
+export * from './lib/caches/NoOpCache';
 
-import IDDirector from './lib/cacheControllers/IDDirector';
-export {IDDirector as CacheOnID};
+export * from './lib/cacheControllers/IDDirector';
 
-import {toObjectID} from './lib/utils/ObjectID';
-export {toObjectID};
+export * from './lib/utils/ObjectID';
