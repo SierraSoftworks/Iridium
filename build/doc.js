@@ -8,26 +8,30 @@ var gulp = require('gulp'),
 var paths = require('./paths');
 	
 gulp.task('doc', function() {
-	return runSequence('doc-compile', 'doc-submodule', 'doc-commit');
+	return runSequence('doc-build', 'doc-publish');
+});
+	
+gulp.task('doc-build', function() {
+	return runSequence('doc-compile', 'doc-submodule');
 });
 	
 gulp.task('doc-submodule', function(cb) {
 	fs.writeFile('doc/.git', 'gitdir: ../.git/modules/doc', cb);
 });
 
-gulp.task('doc-commit', function(cb) {
+gulp.task('doc-publish', function(cb) {
 	git.exec({ args: 'diff-files', quiet: true, cwd: 'doc' }, function(err, stdout) {
-		if(err && err.code === 1) runSequence('doc-commit-changes', 'doc-commit-newdocs', 'doc-push', cb);
+		if(err && err.code === 1) runSequence('doc-commit', 'doc-update-ref', 'doc-push', cb);
 		else cb();
 	});
 });
 
-gulp.task('doc-commit-changes', function() {
+gulp.task('doc-commit', function() {
 	return gulp.src('.', { cwd: 'doc' })
 		.pipe(git.commit('Updated documentation', { options: '--quiet', cwd: 'doc', quiet: true }));
 });
 	
-gulp.task('doc-commit-newdocs', function() {
+gulp.task('doc-update-ref', function() {
 	return gulp.src('.')
 		.pipe(git.commit('Updated documentation', { options: '--quiet', quiet: true }));
 });
