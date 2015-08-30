@@ -45,7 +45,7 @@ gulp.task('doc-update-ref', function() {
 });
 	
 gulp.task('doc-push', function(cb) {
-	git.push('origin', 'gh-pages', cb);
+	git.push('origin', 'gh-pages', { cwd: 'doc' }, cb);
 });
 	
 gulp.task('doc-compile', function() {
