@@ -58,30 +58,30 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
     static onRetrieved: (document: { _id?: any }) => void;
     static onReady: (instance: Instance<{ _id?: any }, Instance<{ _id?: any }, any>>) => void;
     static onSaving: (instance: Instance<{ _id?: any }, Instance<{ _id?: any }, any>>, changes: any) => void;
-    
+
     static collection: string;
-    
+
     static schema: Schema = {
         _id: false
     };
-    
+
     static validators: Skmatc.Validator[] = [
         skmatc.create(schema => schema === MongoDB.ObjectID, function(schema, data) {
             return this.assert(!data || data instanceof MongoDB.ObjectID || (data._bsontype === 'ObjectID' && data.id));
         }, { name: 'ObjectID validation' })
     ];
-    
+
     static transforms: { [property: string]: { fromDB: (value: any) => any; toDB: (value: any) => any; } } = {
-        
+
     };
-    
+
     static cache: CacheDirector;
     static indexes: (Index.Index | Index.IndexSpecification)[] = [];
     static identifier: {
         apply(fromSource: any): any;
         reverse(toSource: any): any;
     };
-    
+
     /**
      * Saves any changes to this instance, using the built in diff algorithm to write the update query.
      * @param {function(Error, IInstance)} callback A callback which is triggered when the save operation completes
@@ -119,7 +119,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
         return Bluebird.resolve().then(() => {
             conditions = _.cloneDeep(conditions);
             _.merge(conditions, { _id: this._modified._id });
-            
+
             if (!changes) {
                 var validation = this._model.helpers.validate(this._modified);
                 if (validation.failed) return Bluebird.reject(validation.error).bind(this).nodeify(callback);
@@ -149,11 +149,20 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
             } else {
                 return new Bluebird<boolean>((resolve: (changed: boolean) => void, reject) => {
                     this._model.collection.updateOne(conditions, changes, { w: 'majority' }, (err: Error, changed: boolean) => {
-                        if (err) return reject(err);
+                        if(err) {
+                            err['conditions'] = conditions;
+                            err['changes'] = changes;
+                            return reject(err);
+                        }
+
                         return resolve(changed);
                     });
                 });
             }
+        }).catch(err => {
+            err['original'] = this._original;
+            err['modified'] = this._modified;
+            return Bluebird.reject(err);
         }).then((changed: boolean) => {
             conditions = { _id: this._modified._id };
             if (!changed) return this._modified;
@@ -170,7 +179,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
                 this._original = _.cloneDeep(this._modified);
                 return Bluebird.resolve(<TInstance><any>this);
             }
-            
+
             return this._model.handlers.documentReceived(conditions, latest, (value) => {
                 this._isPartial = false;
                 this._isNew = false;

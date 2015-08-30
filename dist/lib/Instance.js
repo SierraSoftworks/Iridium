@@ -91,12 +91,19 @@ var Instance = (function () {
             else {
                 return new Bluebird(function (resolve, reject) {
                     _this._model.collection.updateOne(conditions, changes, { w: 'majority' }, function (err, changed) {
-                        if (err)
+                        if (err) {
+                            err['conditions'] = conditions;
+                            err['changes'] = changes;
                             return reject(err);
+                        }
                         return resolve(changed);
                     });
                 });
             }
+        }).catch(function (err) {
+            err['original'] = _this._original;
+            err['modified'] = _this._modified;
+            return Bluebird.reject(err);
         }).then(function (changed) {
             conditions = { _id: _this._modified._id };
             if (!changed)

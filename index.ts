@@ -19,3 +19,6 @@ export {MemoryCache, NoOpCache};
 
 import IDDirector from './lib/cacheControllers/IDDirector';
 export {IDDirector as CacheOnID};
+
+import {toObjectID} from './lib/utils/ObjectID';
+export {toObjectID};
