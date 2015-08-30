@@ -17,7 +17,7 @@ gulp.task('doc-submodule', function(cb) {
 
 gulp.task('doc-commit', function(cb) {
 	git.exec({ args: 'diff-files', quiet: true, cwd: 'doc' }, function(err, stdout) {
-		if(err && err.code === 1) runSequence('doc-commit-changes', 'doc-commit-newdocs', cb);
+		if(err && err.code === 1) runSequence('doc-commit-changes', 'doc-commit-newdocs', 'doc-push', cb);
 		else cb();
 	});
 });
