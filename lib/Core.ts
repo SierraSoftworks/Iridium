@@ -18,6 +18,13 @@ import {Cache} from './Cache';
 import {NoOpCache} from './caches/NoOpCache';
 import {MemoryCache} from './caches/MemoryCache';
 
+/**
+ * The Iridium Core, responsible for managing the connection to the database as well
+ * as any plugins you are making use of.
+ * 
+ * Generally you will subclass this to provide your own custom core with the models you
+ * make use of within your application.
+ */
 export class Core {
     /**
      * Creates a new Iridium Core instance connected to the specified MongoDB instance

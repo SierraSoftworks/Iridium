@@ -2,10 +2,16 @@
 import MongoDB = require('mongodb');
 import {Model} from './Model';
 import skmatc = require('skmatc');
-import Omnom from './utils/Omnom';
+import {Omnom} from './utils/Omnom';
 import _ = require('lodash');
 import Bluebird = require('bluebird');
 
+/**
+ * A number of helper methods used commonly within Iridium, they provide a means to transform,
+ * validate, wrap and diff instances and documents. By keeping these methods in one place we
+ * help to improve testability and reduce code duplication (mouse abuse) throughout the codebase.
+ * @internal
+ */
 export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
     constructor(public model: Model<TDocument, TInstance>) {
         this._validator = new skmatc(model.schema);

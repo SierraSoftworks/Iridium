@@ -9,6 +9,14 @@ import _ = require('lodash');
 import MongoDB = require('mongodb');
 import Bluebird = require('bluebird');
 
+/**
+ * Provides a number of methods which are used to handle events that occur within
+ * the Iridium workflow - such as what happens when a document is received from
+ * the database, or how to handle the creation of new documents and saving of instances.
+ * 
+ * Mostly this is for cache support, wrapping and hook triggering.
+ * @internal
+ */
 export class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
     constructor(public model: Model<TDocument, TInstance>) {
 
