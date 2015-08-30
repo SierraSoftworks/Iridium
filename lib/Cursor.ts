@@ -1,5 +1,5 @@
 ﻿/// <reference path="../_references.d.ts" />
-import Model from './Model';
+import {Model} from './Model';
 import General = require('./General');
 import MongoDB = require('mongodb');
 import Bluebird = require('bluebird');

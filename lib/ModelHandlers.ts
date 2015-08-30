@@ -1,15 +1,15 @@
 ﻿/// <reference path="../_references.d.ts" />
-import Core from './Core';
+import {Core} from './Core';
 import {Schema} from './Schema';
-import Model from './Model';
-import ModelCache from './ModelCache';
+import {Model} from './Model';
+import {ModelCache} from './ModelCache';
 import * as ModelOptions from './ModelOptions';
 
 import _ = require('lodash');
 import MongoDB = require('mongodb');
 import Bluebird = require('bluebird');
 
-export default class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
+export class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
     constructor(public model: Model<TDocument, TInstance>) {
 
     }

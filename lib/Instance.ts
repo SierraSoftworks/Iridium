@@ -1,6 +1,6 @@
 ﻿/// <reference path="../_references.d.ts" />
-import Core from './Core';
-import Model from './Model';
+import {Core} from './Core';
+import {Model} from './Model';
 import {Plugin} from './Plugins';
 import {CacheDirector} from './CacheDirector';
 import * as General from './General';
@@ -13,7 +13,7 @@ import MongoDB = require('mongodb');
 import Bluebird = require('bluebird');
 import skmatc = require('skmatc');
 
-export default class Instance<TDocument extends { _id?: any }, TInstance> {
+export class Instance<TDocument extends { _id?: any }, TInstance> {
     /**
      * Creates a new instance which represents the given document as a type of model
      * @param {model.Model} model The model that the document represents

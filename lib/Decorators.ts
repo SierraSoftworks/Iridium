@@ -2,10 +2,10 @@
 import MongoDB = require('mongodb');
 import _ = require('lodash');
 import skmatc = require('skmatc');
-import Instance from './Instance';
+import {Instance} from './Instance';
 import {Index, IndexSpecification} from './Index';
 import {Schema} from './Schema';
-import InstanceImplementation from './InstanceInterface';
+import {InstanceImplementation} from './InstanceInterface';
 
 export function Collection(name: string) {
 	return function(target: InstanceImplementation<any, any>) {

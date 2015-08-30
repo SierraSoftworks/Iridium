@@ -4,8 +4,8 @@ import Bluebird = require('bluebird');
 import util = require('util');
 import _ = require('lodash');
 
-import Core from './Core';
-import Instance from './Instance';
+import {Core} from './Core';
+import {Instance} from './Instance';
 import {Schema} from './Schema';
 import {Hooks} from './Hooks';
 import {Plugin} from './Plugins';
@@ -21,18 +21,18 @@ import memoryCache from './caches/MemoryCache';
 import idCacheController from './cacheControllers/IDDirector';
 
 import Omnom from './utils/Omnom';
-import ModelCache from './ModelCache';
-import ModelHelpers from './ModelHelpers';
-import ModelHandlers from './ModelHandlers';
+import {ModelCache} from './ModelCache';
+import {ModelHelpers} from './ModelHelpers';
+import {ModelHandlers} from './ModelHandlers';
 import * as ModelInterfaces from './ModelInterfaces';
-import ModelSpecificInstance from './ModelSpecificInstance';
-import InstanceImplementation from './InstanceInterface';
+import {ModelSpecificInstance} from './ModelSpecificInstance';
+import {InstanceImplementation} from './InstanceInterface';
 
 /**
  * An Iridium Model which represents a structured MongoDB collection
  * @class
  */
-export default class Model<TDocument extends { _id?: any }, TInstance> {
+export class Model<TDocument extends { _id?: any }, TInstance> {
     /**
      * Creates a new Iridium model representing a given ISchema and backed by a collection whose name is specified
      * @param {Iridium} core The Iridium core that this model should use for database access

@@ -1,7 +1,7 @@
 /// <reference path="../../_references.d.ts" />
 import http = require('http');
 import {MiddlewareFactory} from '../Middleware';
-import Core from '../Core';
+import {Core} from '../Core';
 
 export default function ExpressMiddlewareFactory(core: Core): ExpressMiddleware {
     return function (req: http.ServerRequest, res: http.ServerResponse, next:(err?: Error, route?: String) => void) {

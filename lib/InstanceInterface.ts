@@ -1,13 +1,10 @@
 /// <reference path="../_references.d.ts" />
-import Iridium from './Core';
 import {Schema} from './Schema';
-import Model from './Model';
+import {Model} from './Model';
 import * as Index from './Index';
 import {CacheDirector} from './CacheDirector';
 
-export default InstanceImplementation;
-
-interface InstanceImplementation<TDocument extends { _id ?: any }, TInstance> {
+export interface InstanceImplementation<TDocument extends { _id ?: any }, TInstance> {
     new (model: Model<TDocument, TInstance>, doc: TDocument, isNew?: boolean, isPartial?: boolean): TInstance;
     
     collection: string;

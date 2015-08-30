@@ -1,12 +1,12 @@
 ﻿/// <reference path="../_references.d.ts" />
 import MongoDB = require('mongodb');
-import Model from './Model';
+import {Model} from './Model';
 import skmatc = require('skmatc');
 import Omnom from './utils/Omnom';
 import _ = require('lodash');
 import Bluebird = require('bluebird');
 
-export default class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
+export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
     constructor(public model: Model<TDocument, TInstance>) {
         this._validator = new skmatc(model.schema);
         model.validators.forEach(validator => this._validator.register(validator));

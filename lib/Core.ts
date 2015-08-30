@@ -7,8 +7,8 @@ import events = require('events');
 
 import {Configuration} from './Configuration';
 import {Plugin} from './Plugins';
-import Model from './Model';
-import Instance from './Instance';
+import {Model} from './Model';
+import {Instance} from './Instance';
 
 import {MiddlewareFactory} from './Middleware';
 import * as ExpressMiddleware from './middleware/Express';
@@ -18,9 +18,7 @@ import {Cache} from './Cache';
 import NoOpCache from './caches/NoOpCache';
 import MemoryCache from './caches/MemoryCache';
 
-var mongoConnectAsyc = Bluebird.promisify(MongoDB.MongoClient.connect);
-
-export default class Core {
+export class Core {
     /**
      * Creates a new Iridium Core instance connected to the specified MongoDB instance
      * @param {Iridium.IridiumConfiguration} config The config object defining the database to connect to
@@ -50,6 +48,8 @@ export default class Core {
         this._url = <string>uri;
         this._config = config;
     }
+    
+    private mongoConnectAsyc = Bluebird.promisify(MongoDB.MongoClient.connect);
     
     private _plugins: Plugin[] = [];
     private _url: string;
@@ -159,7 +159,7 @@ export default class Core {
         var self = this;
         return Bluebird.bind(this).then(function() {
             if (self._connection) return self._connection;
-            return mongoConnectAsyc(self.url);
+            return this.mongoConnectAsyc(self.url);
         }).then(function(db: MongoDB.Db) {
             self._connection = db;
             return self;

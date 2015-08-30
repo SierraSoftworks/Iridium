@@ -1,6 +1,6 @@
-import Core from './lib/Core';
-import Model from './lib/Model';
-import Instance from './lib/Instance';
+import {Core} from './lib/Core';
+import {Model} from './lib/Model';
+import {Instance} from './lib/Instance';
 export {Core, Model, Instance};
 
 export * from './lib/Decorators';
