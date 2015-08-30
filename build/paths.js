@@ -26,6 +26,7 @@ module.exports = {
 		"lib/ModelOptions.ts",
 		"lib/Configuration.ts",
 		"lib/Hooks.ts",
+		"lib/Transforms.ts",
 		
 		"lib/caches/MemoryCache.ts",
 		"lib/caches/NoOpCache.ts",

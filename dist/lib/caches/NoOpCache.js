@@ -1,4 +1,11 @@
 var Bluebird = require('bluebird');
+/**
+ * A cache implementation which does not cache any received documents
+ * and returns nothing when requested - mimicking an empty cache.
+ *
+ * This is the default cache used if one is not supplied and should
+ * not impose any significant performance overhead.
+ */
 var NoOpCache = (function () {
     function NoOpCache() {
     }
@@ -13,6 +20,6 @@ var NoOpCache = (function () {
     };
     return NoOpCache;
 })();
-exports.default = NoOpCache;
+exports.NoOpCache = NoOpCache;
 
 //# sourceMappingURL=../../lib/caches/NoOpCache.js.map

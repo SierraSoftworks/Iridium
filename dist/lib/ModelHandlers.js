@@ -1,5 +1,13 @@
 var _ = require('lodash');
 var Bluebird = require('bluebird');
+/**
+ * Provides a number of methods which are used to handle events that occur within
+ * the Iridium workflow - such as what happens when a document is received from
+ * the database, or how to handle the creation of new documents and saving of instances.
+ *
+ * Mostly this is for cache support, wrapping and hook triggering.
+ * @internal
+ */
 var ModelHandlers = (function () {
     function ModelHandlers(model) {
         this.model = model;
@@ -52,6 +60,6 @@ var ModelHandlers = (function () {
     };
     return ModelHandlers;
 })();
-exports.default = ModelHandlers;
+exports.ModelHandlers = ModelHandlers;
 
 //# sourceMappingURL=../lib/ModelHandlers.js.map

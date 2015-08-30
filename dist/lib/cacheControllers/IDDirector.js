@@ -1,25 +1,31 @@
 var MongoDB = require('mongodb');
-var IDCacheDirector = (function () {
-    function IDCacheDirector() {
+/**
+ * Caches documents using their _id field as the unique cache key. This
+ * is useful if you primarily query your documents using their _id field,
+ * however can be suboptimal (or even a complete waste) if you use different
+ * types of queries.
+ */
+var CacheOnID = (function () {
+    function CacheOnID() {
     }
-    IDCacheDirector.prototype.valid = function (object) {
+    CacheOnID.prototype.valid = function (object) {
         return !!object._id;
     };
-    IDCacheDirector.prototype.buildKey = function (object) {
+    CacheOnID.prototype.buildKey = function (object) {
         if (object._id._bsontype == 'ObjectID')
             return new MongoDB.ObjectID(object._id.id).toHexString();
         return object._id;
     };
-    IDCacheDirector.prototype.validQuery = function (conditions) {
+    CacheOnID.prototype.validQuery = function (conditions) {
         return !!conditions._id;
     };
-    IDCacheDirector.prototype.buildQueryKey = function (conditions) {
+    CacheOnID.prototype.buildQueryKey = function (conditions) {
         if (conditions._id._bsontype == 'ObjectID')
             return new MongoDB.ObjectID(conditions._id.id).toHexString();
         return conditions._id;
     };
-    return IDCacheDirector;
+    return CacheOnID;
 })();
-exports.default = IDCacheDirector;
+exports.CacheOnID = CacheOnID;
 
 //# sourceMappingURL=../../lib/cacheControllers/IDDirector.js.map

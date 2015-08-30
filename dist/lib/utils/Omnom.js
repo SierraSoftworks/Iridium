@@ -182,6 +182,6 @@ var Omnom = (function () {
     };
     return Omnom;
 })();
-exports.default = Omnom;
+exports.Omnom = Omnom;
 
 //# sourceMappingURL=../../lib/utils/Omnom.js.map

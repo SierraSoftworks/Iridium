@@ -2,18 +2,28 @@ var _ = require('lodash');
 var MongoDB = require('mongodb');
 var Bluebird = require('bluebird');
 var skmatc = require('skmatc');
+/**
+ * The default Iridium Instance implementation which provides methods for saving, refreshing and
+ * removing the wrapped document from the collection, as well as integrating with Omnom, our
+ * built in document diff processor which allows clean, atomic, document updates to be performed
+ * without needing to write the update queries yourself.
+ *
+ * @param TDocument The interface representing the structure of the documents in the collection.
+ * @param TInstance The type of instance which wraps the documents, generally the subclass of this class.
+ *
+ * This class will be subclassed automatically by Iridium to create a model specific instance
+ * which takes advantage of some of v8's optimizations to boost performance significantly.
+ * The instance returned by the model, and all of this instance's methods, will be of type
+ * TInstance - which should represent the merger of TSchema and IInstance for best results.
+ */
 var Instance = (function () {
     /**
      * Creates a new instance which represents the given document as a type of model
-     * @param {model.Model} model The model that the document represents
-     * @param {TSchema} document The document which should be wrapped by this instance
-     * @param {Boolean} isNew Whether the document is new (doesn't exist in the database) or not
-     * @param {Boolean} isPartial Whether the document has only a subset of its fields populated
-     * @description
-     * This class will be subclassed automatically by Iridium to create a model specific instance
-     * which takes advantage of some of v8's optimizations to boost performance significantly.
-     * The instance returned by the model, and all of this instance's methods, will be of type
-     * TInstance - which should represent the merger of TSchema and IInstance for best results.
+     * @param model The model that dictates the collection the document originated from as well as how validations are performed.
+     * @param document The document which should be wrapped by this instance
+     * @param isNew Whether the document is new (doesn't exist in the database) or not
+     * @param isPartial Whether the document has only a subset of its fields populated
+     *
      */
     function Instance(model, document, isNew, isPartial) {
         var _this = this;
@@ -244,18 +254,30 @@ var Instance = (function () {
     Instance.prototype.toString = function () {
         return JSON.stringify(this.document, null, 2);
     };
+    /**
+     * The schema used to validate documents of this type before being stored in the database.
+     */
     Instance.schema = {
         _id: false
     };
+    /**
+     * Additional which should be made available for use in the schema definition for this instance.
+     */
     Instance.validators = [
         skmatc.create(function (schema) { return schema === MongoDB.ObjectID; }, function (schema, data) {
             return this.assert(!data || data instanceof MongoDB.ObjectID || (data._bsontype === 'ObjectID' && data.id));
         }, { name: 'ObjectID validation' })
     ];
+    /**
+     * The transformations which should be applied to properties of documents of this type.
+     */
     Instance.transforms = {};
+    /**
+     * The indexes which should be managed by Iridium for the collection used by this type.
+     */
     Instance.indexes = [];
     return Instance;
 })();
-exports.default = Instance;
+exports.Instance = Instance;
 
 //# sourceMappingURL=../lib/Instance.js.map

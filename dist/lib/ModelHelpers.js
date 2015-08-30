@@ -1,6 +1,12 @@
 var skmatc = require('skmatc');
 var Omnom_1 = require('./utils/Omnom');
 var _ = require('lodash');
+/**
+ * A number of helper methods used commonly within Iridium, they provide a means to transform,
+ * validate, wrap and diff instances and documents. By keeping these methods in one place we
+ * help to improve testability and reduce code duplication (mouse abuse) throughout the codebase.
+ * @internal
+ */
 var ModelHelpers = (function () {
     function ModelHelpers(model) {
         var _this = this;
@@ -54,12 +60,12 @@ var ModelHelpers = (function () {
      * @param {any} modified The document after changes were made
      */
     ModelHelpers.prototype.diff = function (original, modified) {
-        var omnom = new Omnom_1.default();
+        var omnom = new Omnom_1.Omnom();
         omnom.diff(original, modified);
         return omnom.changes;
     };
     return ModelHelpers;
 })();
-exports.default = ModelHelpers;
+exports.ModelHelpers = ModelHelpers;
 
 //# sourceMappingURL=../lib/ModelHelpers.js.map
