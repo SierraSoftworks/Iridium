@@ -16,10 +16,6 @@ import Cursor from './Cursor';
 import * as Index from './Index';
 import * as ModelOptions from './ModelOptions';
 
-import noOpCache from './caches/NoOpCache';
-import memoryCache from './caches/MemoryCache';
-import idCacheController from './cacheControllers/IDDirector';
-
 import Omnom from './utils/Omnom';
 import {ModelCache} from './ModelCache';
 import {ModelHelpers} from './ModelHelpers';

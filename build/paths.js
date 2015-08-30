@@ -13,10 +13,25 @@ module.exports = {
 	testSupportFiles: ['dist/test/support/chai'],
 	
 	docSourceFiles: [
-		"index.ts"
-		// "lib/Core.ts",
-		// "lib/Model.ts",
-		// "lib/Instance.ts",
-		// "lib/Instance.ts"
+		"lib/Core.ts",
+		"lib/Model.ts",
+		"lib/Instance.ts",
+		
+		"lib/Decorators.ts",
+		
+		"lib/Plugins.ts",
+		"lib/Schema.ts",
+		"lib/Cache.ts",
+		"lib/CacheDirector.ts",
+		"lib/ModelOptions.ts",
+		"lib/Configuration.ts",
+		"lib/Hooks.ts",
+		
+		"lib/caches/MemoryCache.ts",
+		"lib/caches/NoOpCache.ts",
+		
+		"lib/cacheControllers/IDDirector.ts",
+		
+		"lib/utils/ObjectID.ts"
 	]
 };

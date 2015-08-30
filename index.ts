@@ -13,11 +13,11 @@ export * from './lib/ModelOptions';
 export * from './lib/Configuration';
 export * from './lib/Hooks';
 
-import MemoryCache from './lib/caches/MemoryCache';
-import NoOpCache from './lib/caches/NoOpCache';
+import {MemoryCache} from './lib/caches/MemoryCache';
+import {NoOpCache} from './lib/caches/NoOpCache';
 export {MemoryCache, NoOpCache};
 
-import IDDirector from './lib/cacheControllers/IDDirector';
+import {IDDirector} from './lib/cacheControllers/IDDirector';
 export {IDDirector as CacheOnID};
 
 import {toObjectID} from './lib/utils/ObjectID';

@@ -7,7 +7,7 @@ gulp.task('doc', function() {
 	return gulp.src(paths.docSourceFiles).pipe(typedoc({
 		module: 'commonjs',
 		target: 'es5',
-		mode: 'modules',
+		mode: 'file',
 		entryPoint: 'iridium',
 		
 		out: './doc',

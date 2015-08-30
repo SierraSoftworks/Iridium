@@ -12,11 +12,11 @@ import {Instance} from './Instance';
 
 import {MiddlewareFactory} from './Middleware';
 import * as ExpressMiddleware from './middleware/Express';
-import ExpressMiddlewareFactory from './middleware/Express';
+import {ExpressMiddlewareFactory} from './middleware/Express';
 
 import {Cache} from './Cache';
-import NoOpCache from './caches/NoOpCache';
-import MemoryCache from './caches/MemoryCache';
+import {NoOpCache} from './caches/NoOpCache';
+import {MemoryCache} from './caches/MemoryCache';
 
 export class Core {
     /**

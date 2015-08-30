@@ -2,7 +2,7 @@
 import {CacheDirector} from '../CacheDirector';
 import MongoDB = require('mongodb');
 
-export default class IDCacheDirector implements CacheDirector{
+export class CacheOnID implements CacheDirector{
     valid(object: { _id: any }) {
         return !!object._id;
     }

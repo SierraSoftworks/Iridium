@@ -2,7 +2,7 @@
 import {Cache} from '../Cache';
 import Bluebird = require('bluebird');
 
-export default class NoOpCache implements Cache {
+export class NoOpCache implements Cache {
     set<T>(key: string, object: T): Bluebird<T> {
         return Bluebird.resolve(object);
     }

@@ -2,7 +2,7 @@
 import Bluebird = require('bluebird');
 import {Cache} from '../Cache';
 
-export default class MemoryCache implements Cache {
+export class MemoryCache implements Cache {
     private cache: any = {};
 
     set<T>(key: string, value: T): Bluebird<T> {
