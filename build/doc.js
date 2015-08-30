@@ -16,17 +16,20 @@ gulp.task('doc-submodule', function(cb) {
 });
 
 gulp.task('doc-commit', function(cb) {
-	runSequence('doc-commit-changes', 'doc-commit-newdocs', cb);
+	git.exec({ args: 'diff-files', quiet: true, cwd: 'doc' }, function(err, stdout) {
+		if(err && err.code === 1) runSequence('doc-commit-changes', 'doc-commit-newdocs', cb);
+		else cb();
+	});
 });
 
 gulp.task('doc-commit-changes', function() {
-	return gulp.src('doc')
-		.pipe(git.commit('Updated documentation'));
+	return gulp.src('.', { cwd: 'doc' })
+		.pipe(git.commit('Updated documentation', { options: '--quiet', cwd: 'doc', quiet: true }));
 });
 	
 gulp.task('doc-commit-newdocs', function() {
 	return gulp.src('.')
-		.pipe(git.commit('Updated documentation'));
+		.pipe(git.commit('Updated documentation', { options: '--quiet', quiet: true }));
 });
 	
 gulp.task('doc-push', function(cb) {
