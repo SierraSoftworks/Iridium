@@ -1,5 +1,7 @@
 ﻿/// <reference path="../_references.d.ts" />
 import * as Iridium from '../index';
+import events = require('events');
+import Bluebird = require('bluebird');
 
 class InheritedCore extends Iridium.Core {
     theAnswer = 42;
@@ -8,6 +10,28 @@ class InheritedCore extends Iridium.Core {
 class InheritedCoreWithCustomConstructor extends Iridium.Core {
     constructor() {
         super("mongodb://localhost/test");
+    }
+}
+
+class InheritedCoreWithHooks extends Iridium.Core {
+    constructor() {
+        super("mongodb://localhost/test");
+        this.events = new events.EventEmitter();
+    }
+
+    events: events.EventEmitter;
+
+    onConnectingResult: (connection) => Bluebird<any> = (connection) => Bluebird.resolve(connection);
+    onConnectedResult: () => Bluebird<void> = () => Bluebird.resolve();
+
+    protected onConnecting(db) {
+        this.events.emit('connecting', db);
+        return this.onConnectingResult(db);
+    }
+
+    protected onConnected() {
+        this.events.emit('connected');
+        return this.onConnectedResult();
     }
 }
 
@@ -37,10 +61,10 @@ describe("Core",() => {
                     username: 'user',
                     password: 'password'
                 });
-    
+
                 chai.expect(core.url).to.equal("mongodb://user:password@localhost:27016/test");
             });
-            
+
             it("when only a single host is specified with no port",() => {
                 let core = new Iridium.Core({
                     host: 'localhost',
@@ -48,10 +72,10 @@ describe("Core",() => {
                     username: 'user',
                     password: 'password'
                 });
-    
+
                 chai.expect(core.url).to.equal("mongodb://user:password@localhost/test");
             });
-            
+
             it("when multiple hosts are specified",() => {
                 let core = new Iridium.Core({
                     hosts: [{ address: 'localhost' }, { address: '127.0.0.1' }],
@@ -60,10 +84,10 @@ describe("Core",() => {
                     username: 'user',
                     password: 'password'
                 });
-    
+
                 chai.expect(core.url).to.equal("mongodb://user:password@localhost:27016,127.0.0.1:27016/test");
             });
-            
+
             it("when multiple hosts are specified with no port",() => {
                 let core = new Iridium.Core({
                     hosts: [{ address: 'localhost' }, { address: '127.0.0.1' }],
@@ -71,10 +95,10 @@ describe("Core",() => {
                     username: 'user',
                     password: 'password'
                 });
-    
+
                 chai.expect(core.url).to.equal("mongodb://user:password@localhost,127.0.0.1/test");
             });
-            
+
             it("when multiple hosts are specified with different ports",() => {
                 let core = new Iridium.Core({
                     hosts: [{ address: 'localhost', port: 27016 }, { address: '127.0.0.1', port: 27017 }],
@@ -82,10 +106,10 @@ describe("Core",() => {
                     username: 'user',
                     password: 'password'
                 });
-    
+
                 chai.expect(core.url).to.equal("mongodb://user:password@localhost:27016,127.0.0.1:27017/test");
             });
-            
+
             it("when a combination of single and multiple hosts is specified",() => {
                 let core = new Iridium.Core({
                     host: 'localhost',
@@ -95,10 +119,10 @@ describe("Core",() => {
                     username: 'user',
                     password: 'password'
                 });
-    
+
                 chai.expect(core.url).to.equal("mongodb://user:password@localhost:27016,localhost:27017,127.0.0.1:27018/test");
             });
-            
+
             it("when a combination of single and multiple hosts is specified and there are duplicates",() => {
                 let core = new Iridium.Core({
                     host: 'localhost',
@@ -108,7 +132,7 @@ describe("Core",() => {
                     username: 'user',
                     password: 'password'
                 });
-    
+
                 chai.expect(core.url).to.equal("mongodb://user:password@localhost:27016,127.0.0.1:27017/test");
             });
         });
@@ -179,7 +203,7 @@ describe("Core",() => {
                 return chai.expect(core.connect()).to.be.rejected;
             });
         else it.skip("should return a rejection if the connection fails");
-        
+
         it("should open a connection to the correct database and return the core",() => {
             core = new Iridium.Core("mongodb://localhost/test");
             return chai.expect(core.connect()).to.eventually.exist.and.equal(core);
@@ -227,6 +251,94 @@ describe("Core",() => {
         it("should support custom constructors",() => {
             let core = new InheritedCoreWithCustomConstructor();
             chai.expect(core.url).to.equal("mongodb://localhost/test");
+        });
+    });
+
+    describe("hooks", () => {
+        describe("onConnecting", () => {
+            it("should be called whenever a low level connection is established", (done) => {
+                let core = new InheritedCoreWithHooks();
+                core.events.once('connecting', (connection) => {
+                    done();
+                });
+
+                chai.expect(core.connect()).to.eventually.equal(core);
+            });
+
+            it("should be passed the underlying connection", (done) => {
+                let core = new InheritedCoreWithHooks();
+                core.events.once('connecting', (connection) => {
+                    chai.expect(connection).to.exist;
+                    done();
+                });
+
+                chai.expect(core.connect()).to.eventually.equal(core);
+            });
+
+            it("should be triggered before the connection is established", (done) => {
+                let core = new InheritedCoreWithHooks();
+                core.events.once('connecting', (connection) => {
+                    chai.expect(core.connection).to.not.exist;
+                    done();
+                });
+
+                chai.expect(core.connect()).to.eventually.equal(core);
+            });
+
+            it("should abort the connection if it throws an error", () => {
+                let core = new InheritedCoreWithHooks();
+                core.onConnectingResult = (conn) => Bluebird.reject(new Error('Test error'));
+
+                chai.expect(core.connect()).to.eventually.be.rejectedWith('Test error');
+            });
+
+            it("should leave the Iridium core disconnected if it throws an error", () => {
+                let core = new InheritedCoreWithHooks();
+                core.onConnectingResult = (conn) => Bluebird.reject(new Error('Test error'));
+
+                chai.expect(core.connect().then(() => false, (err) => {
+                    chai.expect(core.connection).to.not.exist;
+                    return Bluebird.resolve(true);
+                })).to.eventually.be.true;
+            });
+        });
+
+        describe("onConnected", () => {
+            it("should be called whenever a connection is accepted", (done) => {
+                let core = new InheritedCoreWithHooks();
+                core.events.once('connected', () => {
+                    done();
+                });
+
+                chai.expect(core.connect()).to.eventually.equal(core);
+            });
+
+            it("should be triggered after the connection is accepted", (done) => {
+                let core = new InheritedCoreWithHooks();
+                core.events.once('connected', () => {
+                    chai.expect(core.connection).to.exist;
+                    done();
+                });
+
+                chai.expect(core.connect()).to.eventually.equal(core);
+            });
+
+            it("should abort the connection if it throws an error", () => {
+                let core = new InheritedCoreWithHooks();
+                core.onConnectedResult = () => Bluebird.reject(new Error('Test error'));
+
+                chai.expect(core.connect()).to.eventually.be.rejectedWith('Test error');
+            });
+
+            it("should leave the Iridium core disconnected if it throws an error", () => {
+                let core = new InheritedCoreWithHooks();
+                core.onConnectedResult = () => Bluebird.reject(new Error('Test error'));
+
+                chai.expect(core.connect().then(() => false, (err) => {
+                    chai.expect(core.connection).to.not.exist;
+                    return Bluebird.resolve(true);
+                })).to.eventually.be.true;
+            });
         });
     });
 });
