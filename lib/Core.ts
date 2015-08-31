@@ -21,7 +21,7 @@ import {MemoryCache} from './caches/MemoryCache';
 /**
  * The Iridium Core, responsible for managing the connection to the database as well
  * as any plugins you are making use of.
- * 
+ *
  * Generally you will subclass this to provide your own custom core with the models you
  * make use of within your application.
  */
@@ -55,9 +55,9 @@ export class Core {
         this._url = <string>uri;
         this._config = config;
     }
-    
+
     private mongoConnectAsyc = Bluebird.promisify(MongoDB.MongoClient.connect);
-    
+
     private _plugins: Plugin[] = [];
     private _url: string;
     private _config: Configuration;
@@ -170,10 +170,16 @@ export class Core {
             if (this._connectPromise) return this._connectPromise;
             return this._connectPromise = this.mongoConnectAsyc(this.url);
         }).then((db: MongoDB.Db) => {
+            return this.onConnecting(db);
+        }).then(db => {
             this._connection = db;
             this._connectPromise = null;
+            return this.onConnected();
+        }).then(() => {
             return this;
         }, (err) => {
+            if (this._connection) this._connection.close();
+            this._connection = null;
             this._connectPromise = null;
             return Bluebird.reject(err);
         }).nodeify(callback);
@@ -200,5 +206,31 @@ export class Core {
      */
     express(): ExpressMiddleware.ExpressMiddleware {
         return ExpressMiddlewareFactory(this);
+    }
+
+    /**
+     * A method which is called whenever a new connection is made to the database.
+     *
+     * @param connection The underlying MongoDB connection which was created, you can modify or replace this if you wish.
+     * @returns A promise for the connection, allowing you to perform any asynchronous initialization required by your application.
+     *
+     * In subclassed Iridium Cores this method can be overridden to manipulate the properties
+     * of the underlying MongoDB connection object, such as authenticating. Until this method
+     * resolves a connection object, Iridium will be unable to execute any queries. If you wish
+     * to run Iridium queries then look at the onConnected method.
+     */
+    protected onConnecting(connection: MongoDB.Db): Bluebird<MongoDB.Db> {
+        return Bluebird.resolve(connection);
+    }
+
+    /**
+     * A method which is called once a database connection has been established and accepted by Iridium
+     *
+     * In subclassed Iridium cores this method can be overridden to perform tasks whenever a
+     * connection to the database has been established - such as setting up indexes for your
+     * collections or seeding the database.
+     */
+    protected onConnected(): Bluebird<void> {
+        return Bluebird.resolve();
     }
 }
