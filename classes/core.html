@@ -123,6 +123,8 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="core.html#close" class="tsd-kind-icon">close</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="core.html#connect" class="tsd-kind-icon">connect</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="core.html#express" class="tsd-kind-icon">express</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="core.html#onconnected" class="tsd-kind-icon">on<wbr>Connected</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="core.html#onconnecting" class="tsd-kind-icon">on<wbr>Connecting</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="core.html#register" class="tsd-kind-icon">register</a></li>
 							</ul>
 						</section>
@@ -444,7 +446,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Core.ts#L186">Core.ts:186</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Core.ts#L192">Core.ts:192</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -520,7 +522,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Core.ts#L201">Core.ts:201</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Core.ts#L207">Core.ts:207</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -530,6 +532,67 @@
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/expressmiddleware.html" class="tsd-signature-type">ExpressMiddleware</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+					<a name="onconnected" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> on<wbr>Connected</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Connected<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Bluebird</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Core.ts#L233">Core.ts:233</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>A method which is called once a database connection has been established and accepted by Iridium</p>
+								</div>
+								<p>In subclassed Iridium cores this method can be overridden to perform tasks whenever a
+									connection to the database has been established - such as setting up indexes for your
+								collections or seeding the database.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Bluebird</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+					<a name="onconnecting" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> on<wbr>Connecting</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Connecting<span class="tsd-signature-symbol">(</span>connection<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Db</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Bluebird</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Db</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Core.ts#L222">Core.ts:222</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>A method which is called whenever a new connection is made to the database.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>connection: <span class="tsd-signature-type">Db</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The underlying MongoDB connection which was created, you can modify or replace this if you wish.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Bluebird</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Db</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>A promise for the connection, allowing you to perform any asynchronous initialization required by your application.</p>
+							<p>In subclassed Iridium Cores this method can be overridden to manipulate the properties
+								of the underlying MongoDB connection object, such as authenticating. Until this method
+								resolves a connection object, Iridium will be unable to execute any queries. If you wish
+							to run Iridium queries then look at the onConnected method.</p>
 						</li>
 					</ul>
 				</section>
@@ -628,6 +691,12 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="core.html#express" class="tsd-kind-icon">express</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+								<a href="core.html#onconnected" class="tsd-kind-icon">on<wbr>Connected</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+								<a href="core.html#onconnecting" class="tsd-kind-icon">on<wbr>Connecting</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="core.html#register" class="tsd-kind-icon">register</a>
