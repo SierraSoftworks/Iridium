@@ -28,6 +28,8 @@ methods returning promises for their results and sensible, type annotated result
    on ES5 compliant approaches.
  - **Fall into Success** with Iridium's carefully designed API - which is structured to help ensure your code remains maintainable
    regardless of how large your project becomes.
+ - **Amazing Documentation** which covers the full Iridium API, and is always up to date thanks to the brilliant TypeDoc project,
+   can be found at [sierrasoftworks.github.io/Iridium](http://sierrasoftworks.github.io/Iridium).
 
 ## Requirements
 Iridium is built on top of a number of very modern technologies, including TypeScript 1.5, JavaScript ES6 (though we do compile
