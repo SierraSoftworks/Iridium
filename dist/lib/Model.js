@@ -10,20 +10,25 @@ var ModelHelpers_1 = require('./ModelHelpers');
 var ModelHandlers_1 = require('./ModelHandlers');
 var ModelSpecificInstance_1 = require('./ModelSpecificInstance');
 /**
- * An Iridium Model which represents a structured MongoDB collection
+ * An Iridium Model which represents a structured MongoDB collection.
+ * Models expose the methods you will generally use to query those collections, and ensure that
+ * the results of those queries are returned as {TInstance} instances.
+ *
+ * @param TDocument The interface used to determine the schema of documents in the collection.
+ * @param TInstance The interface or class used to represent collection documents in the JS world.
+ *
  * @class
  */
 var Model = (function () {
     /**
      * Creates a new Iridium model representing a given ISchema and backed by a collection whose name is specified
-     * @param {Iridium} core The Iridium core that this model should use for database access
-     * @param {ModelInterfaces.InstanceImplementation} instanceType The class which will be instantiated for each document retrieved from the database
-     * @returns {Model}
+     * @param core The Iridium core that this model should use for database access
+     * @param instanceType The class which will be instantiated for each document retrieved from the database
      * @constructor
      */
     function Model(core, instanceType) {
         this._hooks = {};
-        if (!(core instanceof Core_1.default))
+        if (!(core instanceof Core_1.Core))
             throw new Error("You failed to provide a valid Iridium core for this model");
         if (typeof instanceType != 'function')
             throw new Error("You failed to provide a valid instance constructor for this model");
@@ -36,6 +41,9 @@ var Model = (function () {
         this.onNewModel();
         this.loadInternal();
     }
+    /**
+     * Loads any externally available properties (generally accessed using public getters/setters).
+     */
     Model.prototype.loadExternal = function (instanceType) {
         this._collection = instanceType.collection;
         this._schema = instanceType.schema;
@@ -51,16 +59,24 @@ var Model = (function () {
                 fromDB: function (value) { return value._bsontype == 'ObjectID' ? new MongoDB.ObjectID(value.id).toHexString() : value; },
                 toDB: function (value) { return value && typeof value === 'string' ? new MongoDB.ObjectID(value) : value; }
             };
-        if (instanceType.prototype instanceof Instance_1.default)
-            this._Instance = ModelSpecificInstance_1.default(this, instanceType);
+        if (instanceType.prototype instanceof Instance_1.Instance)
+            this._Instance = ModelSpecificInstance_1.ModelSpecificInstance(this, instanceType);
         else
             this._Instance = instanceType.bind(undefined, this);
     };
+    /**
+     * Loads any internally (protected/private) properties and helpers only used within Iridium itself.
+     */
     Model.prototype.loadInternal = function () {
-        this._cache = new ModelCache_1.default(this);
-        this._helpers = new ModelHelpers_1.default(this);
-        this._handlers = new ModelHandlers_1.default(this);
+        this._cache = new ModelCache_1.ModelCache(this);
+        this._helpers = new ModelHelpers_1.ModelHelpers(this);
+        this._handlers = new ModelHandlers_1.ModelHandlers(this);
     };
+    /**
+     * Process any callbacks and plugin delegation for the creation of this model.
+     * It will generally be called whenever a new Iridium Core is created, however is
+     * more specifically tied to the lifespan of the models themselves.
+     */
     Model.prototype.onNewModel = function () {
         var _this = this;
         this._core.plugins.forEach(function (plugin) { return plugin.newModel && plugin.newModel(_this); });
@@ -68,7 +84,7 @@ var Model = (function () {
     Object.defineProperty(Model.prototype, "helpers", {
         /**
          * Provides helper methods used by Iridium for common tasks
-         * @returns {ModelHelpers}
+         * @returns A set of helper methods which are used within Iridium for common tasks
          */
         get: function () {
             return this._helpers;
@@ -79,7 +95,7 @@ var Model = (function () {
     Object.defineProperty(Model.prototype, "handlers", {
         /**
          * Provides helper methods used by Iridium for hook delegation and common processes
-         * @returns {ModelHandlers}
+         * @returns A set of helper methods which perform common event and response handling tasks within Iridium.
          */
         get: function () {
             return this._handlers;
@@ -89,8 +105,10 @@ var Model = (function () {
     });
     Object.defineProperty(Model.prototype, "hooks", {
         /**
-         * Gets the even hooks subscribed on this model for a number of different state changes
-         * @returns {Hooks}
+         * Gets the even hooks subscribed on this model for a number of different state changes.
+         * These hooks are primarily intended to allow lifecycle manipulation logic to be added
+         * in the user's model definition, allowing tasks such as the setting of default values
+         * or automatic client-side joins to take place.
          */
         get: function () {
             return this._hooks;
@@ -100,9 +118,14 @@ var Model = (function () {
     });
     Object.defineProperty(Model.prototype, "schema", {
         /**
-         * Gets the ISchema dictating the data structure represented by this model
+         * Gets the schema dictating the data structure represented by this model.
+         * The schema is used by skmatc to validate documents before saving to the database, however
+         * until MongoDB 3.1 becomes widely available (with server side validation support) we are
+         * limited in our ability to validate certain types of updates. As such, these validations
+         * act more as a data-integrity check than anything else, unless you purely make use of Omnom
+         * updates within instances.
          * @public
-         * @returns {schema}
+         * @returns The defined validation schema for this model
          */
         get: function () {
             return this._schema;
@@ -112,9 +135,9 @@ var Model = (function () {
     });
     Object.defineProperty(Model.prototype, "core", {
         /**
-         * Gets the Iridium core that this model is associated with
+         * Gets the Iridium core that this model is associated with.
          * @public
-         * @returns {Iridium}
+         * @returns The Iridium core that this model is bound to
          */
         get: function () {
             return this._core;
@@ -124,7 +147,10 @@ var Model = (function () {
     });
     Object.defineProperty(Model.prototype, "collection", {
         /**
-         * Gets the underlying MongoDB collection from which this model's documents are retrieved
+         * Gets the underlying MongoDB collection from which this model's documents are retrieved.
+         * You can make use of this object if you require any low level access to the MongoDB collection,
+         * however we recommend you make use of the Iridium methods whereever possible, as we cannot
+         * guarantee the accuracy of the type definitions for the underlying MongoDB driver.
          * @public
          * @returns {Collection}
          */
@@ -189,6 +215,11 @@ var Model = (function () {
         configurable: true
     });
     Object.defineProperty(Model.prototype, "transforms", {
+        /**
+         * Gets the transforms which are applied whenever a document is received from the database, or
+         * prior to storing a document in the database. Tasks such as converting an ObjectID to a string
+         * and vice versa are all listed in this object.
+         */
         get: function () {
             return this._transforms;
         },
@@ -196,6 +227,11 @@ var Model = (function () {
         configurable: true
     });
     Object.defineProperty(Model.prototype, "validators", {
+        /**
+         * Gets the custom validation types available for this model. These validators are added to the
+         * default skmatc validators, as well as those available through plugins, for use when checking
+         * your instances.
+         */
         get: function () {
             return this._validators;
         },
@@ -203,6 +239,9 @@ var Model = (function () {
         configurable: true
     });
     Object.defineProperty(Model.prototype, "indexes", {
+        /**
+         * Gets the indexes which Iridium will manage on this model's database collection.
+         */
         get: function () {
             return this._indexes;
         },
@@ -218,7 +257,7 @@ var Model = (function () {
         var cursor = this.collection.find(conditions, {
             fields: fields
         });
-        return new Cursor_1.default(this, conditions, cursor);
+        return new Cursor_1.Cursor(this, conditions, cursor);
     };
     Model.prototype.get = function () {
         var args = [];
@@ -497,6 +536,6 @@ var Model = (function () {
     };
     return Model;
 })();
-exports.default = Model;
+exports.Model = Model;
 
 //# sourceMappingURL=../lib/Model.js.map

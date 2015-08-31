@@ -1,4 +1,11 @@
 var Bluebird = require('bluebird');
+/**
+ * An Iridium collection cursor which allows the itteration through documents
+ * in the collection, automatically wrapping them in the correct instance type.
+ *
+ * @param TDocument The interface representing the collection's documents
+ * @param TInstance The interface or class used to represent the wrapped documents.
+ */
 var Cursor = (function () {
     /**
      * Creates a new Iridium cursor which wraps a MongoDB cursor object
@@ -139,6 +146,6 @@ var Cursor = (function () {
     };
     return Cursor;
 })();
-exports.default = Cursor;
+exports.Cursor = Cursor;
 
 //# sourceMappingURL=../lib/Cursor.js.map

@@ -1,6 +1,6 @@
 /// <reference path="../_references.d.ts" />
-import core = require('./Core');
-import Model from './Model';
+import {Core} from './Core';
+import {Model} from './Model';
 
 export interface Plugin {
     newModel? (model: Model<any, any>);

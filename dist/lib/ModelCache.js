@@ -1,4 +1,9 @@
 var Bluebird = require('bluebird');
+/**
+ * A centralized class which ties the cache and cache directors together in a cohesive way
+ * for use by Iridium.
+ * @internal
+ */
 var ModelCache = (function () {
     function ModelCache(model) {
         this.model = model;
@@ -20,6 +25,6 @@ var ModelCache = (function () {
     };
     return ModelCache;
 })();
-exports.default = ModelCache;
+exports.ModelCache = ModelCache;
 
 //# sourceMappingURL=../lib/ModelCache.js.map

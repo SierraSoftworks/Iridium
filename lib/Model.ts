@@ -4,41 +4,43 @@ import Bluebird = require('bluebird');
 import util = require('util');
 import _ = require('lodash');
 
-import Core from './Core';
-import Instance from './Instance';
+import {Core} from './Core';
+import {Instance} from './Instance';
 import {Schema} from './Schema';
 import {Hooks} from './Hooks';
 import {Plugin} from './Plugins';
 import {Cache} from './Cache';
 import {CacheDirector} from './CacheDirector';
 import * as General from './General';
-import Cursor from './Cursor';
+import {Cursor} from './Cursor';
 import * as Index from './Index';
 import * as ModelOptions from './ModelOptions';
 
-import noOpCache from './caches/NoOpCache';
-import memoryCache from './caches/MemoryCache';
-import idCacheController from './cacheControllers/IDDirector';
-
-import Omnom from './utils/Omnom';
-import ModelCache from './ModelCache';
-import ModelHelpers from './ModelHelpers';
-import ModelHandlers from './ModelHandlers';
+import {Omnom} from './utils/Omnom';
+import {ModelCache} from './ModelCache';
+import {ModelHelpers} from './ModelHelpers';
+import {ModelHandlers} from './ModelHandlers';
 import * as ModelInterfaces from './ModelInterfaces';
-import ModelSpecificInstance from './ModelSpecificInstance';
-import InstanceImplementation from './InstanceInterface';
+import {ModelSpecificInstance} from './ModelSpecificInstance';
+import {InstanceImplementation} from './InstanceInterface';
+import {Transforms} from './Transforms';
 import * as AggregationPipeline from './Aggregate';
 
 /**
- * An Iridium Model which represents a structured MongoDB collection
+ * An Iridium Model which represents a structured MongoDB collection.
+ * Models expose the methods you will generally use to query those collections, and ensure that
+ * the results of those queries are returned as {TInstance} instances.
+ * 
+ * @param TDocument The interface used to determine the schema of documents in the collection.
+ * @param TInstance The interface or class used to represent collection documents in the JS world.
+ * 
  * @class
  */
-export default class Model<TDocument extends { _id?: any }, TInstance> {
+export class Model<TDocument extends { _id?: any }, TInstance> {
     /**
      * Creates a new Iridium model representing a given ISchema and backed by a collection whose name is specified
-     * @param {Iridium} core The Iridium core that this model should use for database access
-     * @param {ModelInterfaces.InstanceImplementation} instanceType The class which will be instantiated for each document retrieved from the database
-     * @returns {Model}
+     * @param core The Iridium core that this model should use for database access
+     * @param instanceType The class which will be instantiated for each document retrieved from the database
      * @constructor
      */
     constructor(core: Core, instanceType: InstanceImplementation<TDocument, TInstance>) {
@@ -54,6 +56,9 @@ export default class Model<TDocument extends { _id?: any }, TInstance> {
         this.loadInternal();
     }
 
+    /**
+     * Loads any externally available properties (generally accessed using public getters/setters).
+     */
     private loadExternal(instanceType: InstanceImplementation<TDocument, TInstance>) {
         this._collection = instanceType.collection;
         this._schema = instanceType.schema;
@@ -77,12 +82,20 @@ export default class Model<TDocument extends { _id?: any }, TInstance> {
             this._Instance = instanceType.bind(undefined, this);
     }
 
+    /**
+     * Loads any internally (protected/private) properties and helpers only used within Iridium itself.
+     */
     private loadInternal() {
         this._cache = new ModelCache(this);
         this._helpers = new ModelHelpers(this);
         this._handlers = new ModelHandlers(this);
     }
 
+    /**
+     * Process any callbacks and plugin delegation for the creation of this model.
+     * It will generally be called whenever a new Iridium Core is created, however is
+     * more specifically tied to the lifespan of the models themselves.
+     */
     private onNewModel() {
         this._core.plugins.forEach(plugin => plugin.newModel && plugin.newModel(this));
     }
@@ -90,7 +103,7 @@ export default class Model<TDocument extends { _id?: any }, TInstance> {
     private _helpers: ModelHelpers<TDocument, TInstance>;
     /**
      * Provides helper methods used by Iridium for common tasks
-     * @returns {ModelHelpers}
+     * @returns A set of helper methods which are used within Iridium for common tasks
      */
     get helpers(): ModelHelpers<TDocument, TInstance> {
         return this._helpers;
@@ -99,7 +112,7 @@ export default class Model<TDocument extends { _id?: any }, TInstance> {
     private _handlers: ModelHandlers<TDocument, TInstance>;
     /**
      * Provides helper methods used by Iridium for hook delegation and common processes
-     * @returns {ModelHandlers}
+     * @returns A set of helper methods which perform common event and response handling tasks within Iridium.
      */
     get handlers(): ModelHandlers<TDocument, TInstance> {
         return this._handlers;
@@ -108,8 +121,10 @@ export default class Model<TDocument extends { _id?: any }, TInstance> {
     private _hooks: Hooks<TDocument, TInstance> = {};
 
     /**
-     * Gets the even hooks subscribed on this model for a number of different state changes
-     * @returns {Hooks}
+     * Gets the even hooks subscribed on this model for a number of different state changes.
+     * These hooks are primarily intended to allow lifecycle manipulation logic to be added
+     * in the user's model definition, allowing tasks such as the setting of default values
+     * or automatic client-side joins to take place.
      */
     get hooks(): Hooks<TDocument, TInstance> {
         return this._hooks;
@@ -117,9 +132,14 @@ export default class Model<TDocument extends { _id?: any }, TInstance> {
 
     private _schema: Schema;
     /**
-     * Gets the ISchema dictating the data structure represented by this model
+     * Gets the schema dictating the data structure represented by this model.
+     * The schema is used by skmatc to validate documents before saving to the database, however
+     * until MongoDB 3.1 becomes widely available (with server side validation support) we are
+     * limited in our ability to validate certain types of updates. As such, these validations
+     * act more as a data-integrity check than anything else, unless you purely make use of Omnom
+     * updates within instances.
      * @public
-     * @returns {schema}
+     * @returns The defined validation schema for this model
      */
     get schema(): Schema {
         return this._schema;
@@ -127,9 +147,9 @@ export default class Model<TDocument extends { _id?: any }, TInstance> {
 
     private _core: Core;
     /**
-     * Gets the Iridium core that this model is associated with
+     * Gets the Iridium core that this model is associated with.
      * @public
-     * @returns {Iridium}
+     * @returns The Iridium core that this model is bound to
      */
     get core(): Core {
         return this._core;
@@ -137,7 +157,10 @@ export default class Model<TDocument extends { _id?: any }, TInstance> {
 
     private _collection: string;
     /**
-     * Gets the underlying MongoDB collection from which this model's documents are retrieved
+     * Gets the underlying MongoDB collection from which this model's documents are retrieved.
+     * You can make use of this object if you require any low level access to the MongoDB collection,
+     * however we recommend you make use of the Iridium methods whereever possible, as we cannot
+     * guarantee the accuracy of the type definitions for the underlying MongoDB driver.
      * @public
      * @returns {Collection}
      */
@@ -191,20 +214,33 @@ export default class Model<TDocument extends { _id?: any }, TInstance> {
         return this._Instance;
     }
 
-    private _transforms: { [property: string]: { fromDB: (value: any) => any; toDB: (value: any) => any; } };
+    private _transforms: Transforms;
 
+    /**
+     * Gets the transforms which are applied whenever a document is received from the database, or
+     * prior to storing a document in the database. Tasks such as converting an ObjectID to a string
+     * and vice versa are all listed in this object.
+     */
     get transforms() {
         return this._transforms;
     }
 
     private _validators: Skmatc.Validator[];
 
+    /**
+     * Gets the custom validation types available for this model. These validators are added to the
+     * default skmatc validators, as well as those available through plugins, for use when checking
+     * your instances.
+     */
     get validators() {
         return this._validators;
     }
 
     private _indexes: (Index.Index | Index.IndexSpecification)[];
 
+    /**
+     * Gets the indexes which Iridium will manage on this model's database collection.
+     */
     get indexes() {
         return this._indexes;
     }

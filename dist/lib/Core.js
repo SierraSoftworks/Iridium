@@ -4,11 +4,18 @@ var MongoDB = require('mongodb');
 var _ = require('lodash');
 var Express_1 = require('./middleware/Express');
 var NoOpCache_1 = require('./caches/NoOpCache');
-var mongoConnectAsyc = Bluebird.promisify(MongoDB.MongoClient.connect);
+/**
+ * The Iridium Core, responsible for managing the connection to the database as well
+ * as any plugins you are making use of.
+ *
+ * Generally you will subclass this to provide your own custom core with the models you
+ * make use of within your application.
+ */
 var Core = (function () {
     function Core(uri, config) {
+        this.mongoConnectAsyc = Bluebird.promisify(MongoDB.MongoClient.connect);
         this._plugins = [];
-        this._cache = new NoOpCache_1.default();
+        this._cache = new NoOpCache_1.NoOpCache();
         var args = Array.prototype.slice.call(arguments, 0);
         uri = config = null;
         for (var i = 0; i < args.length; i++) {
@@ -135,7 +142,7 @@ var Core = (function () {
                 return _this._connection;
             if (_this._connectPromise)
                 return _this._connectPromise;
-            return _this._connectPromise = mongoConnectAsyc(_this.url);
+            return _this._connectPromise = _this.mongoConnectAsyc(_this.url);
         }).then(function (db) {
             _this._connection = db;
             _this._connectPromise = null;
@@ -166,10 +173,10 @@ var Core = (function () {
      * @returns {Iridium.ExpressMiddleware}
      */
     Core.prototype.express = function () {
-        return Express_1.default(this);
+        return Express_1.ExpressMiddlewareFactory(this);
     };
     return Core;
 })();
-exports.default = Core;
+exports.Core = Core;
 
 //# sourceMappingURL=../lib/Core.js.map

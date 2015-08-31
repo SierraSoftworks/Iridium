@@ -7,20 +7,25 @@ import events = require('events');
 
 import {Configuration} from './Configuration';
 import {Plugin} from './Plugins';
-import Model from './Model';
-import Instance from './Instance';
+import {Model} from './Model';
+import {Instance} from './Instance';
 
 import {MiddlewareFactory} from './Middleware';
 import * as ExpressMiddleware from './middleware/Express';
-import ExpressMiddlewareFactory from './middleware/Express';
+import {ExpressMiddlewareFactory} from './middleware/Express';
 
 import {Cache} from './Cache';
-import NoOpCache from './caches/NoOpCache';
-import MemoryCache from './caches/MemoryCache';
+import {NoOpCache} from './caches/NoOpCache';
+import {MemoryCache} from './caches/MemoryCache';
 
-var mongoConnectAsyc = Bluebird.promisify(MongoDB.MongoClient.connect);
-
-export default class Core {
+/**
+ * The Iridium Core, responsible for managing the connection to the database as well
+ * as any plugins you are making use of.
+ * 
+ * Generally you will subclass this to provide your own custom core with the models you
+ * make use of within your application.
+ */
+export class Core {
     /**
      * Creates a new Iridium Core instance connected to the specified MongoDB instance
      * @param {Iridium.IridiumConfiguration} config The config object defining the database to connect to
@@ -50,7 +55,9 @@ export default class Core {
         this._url = <string>uri;
         this._config = config;
     }
-
+    
+    private mongoConnectAsyc = Bluebird.promisify(MongoDB.MongoClient.connect);
+    
     private _plugins: Plugin[] = [];
     private _url: string;
     private _config: Configuration;
@@ -161,7 +168,7 @@ export default class Core {
         return Bluebird.bind(this).then(() => {
             if (this._connection) return this._connection;
             if (this._connectPromise) return this._connectPromise;
-            return this._connectPromise = mongoConnectAsyc(this.url);
+            return this._connectPromise = this.mongoConnectAsyc(this.url);
         }).then((db: MongoDB.Db) => {
             this._connection = db;
             this._connectPromise = null;

@@ -2,7 +2,13 @@
 import {CacheDirector} from '../CacheDirector';
 import MongoDB = require('mongodb');
 
-export default class IDCacheDirector implements CacheDirector{
+/**
+ * Caches documents using their _id field as the unique cache key. This
+ * is useful if you primarily query your documents using their _id field,
+ * however can be suboptimal (or even a complete waste) if you use different
+ * types of queries.
+ */
+export class CacheOnID implements CacheDirector{
     valid(object: { _id: any }) {
         return !!object._id;
     }

@@ -1,5 +1,5 @@
 ﻿/// <reference path="../_references.d.ts" />
-import Omnom from '../lib/utils/Omnom';
+import {Omnom} from '../lib/utils/Omnom';
 import MongoDB = require('mongodb');
 
 describe("Omnom",() => {

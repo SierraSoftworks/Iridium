@@ -2,7 +2,7 @@
 import _ = require('lodash');
 import MongoDB = require('mongodb');
 
-export default class Omnom {
+export class Omnom {
     constructor(public options: {
         atomicNumbers?: boolean;
     } = {}) {
