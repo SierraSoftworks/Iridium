@@ -83,6 +83,7 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="updateoptions.html#j" class="tsd-kind-icon">j</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="updateoptions.html#multi" class="tsd-kind-icon">multi</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="updateoptions.html#upsert" class="tsd-kind-icon">upsert</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="updateoptions.html#w" class="tsd-kind-icon">w</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="updateoptions.html#wtimeout" class="tsd-kind-icon">wtimeout</a></li>
@@ -99,7 +100,7 @@
 					<div class="tsd-signature tsd-kind-icon">j<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/ModelOptions.ts#L95">ModelOptions.ts:95</a></li>
+							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/ModelOptions.ts#L94">ModelOptions.ts:94</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -111,12 +112,28 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="multi" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> multi</h3>
+					<div class="tsd-signature tsd-kind-icon">multi<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/ModelOptions.ts#L107">ModelOptions.ts:107</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether to update multiple documents at once, defaults to false unless run using a method
+							which explcitly sets it to true.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="upsert" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> upsert</h3>
 					<div class="tsd-signature tsd-kind-icon">upsert<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/ModelOptions.ts#L102">ModelOptions.ts:102</a></li>
+							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/ModelOptions.ts#L101">ModelOptions.ts:101</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -133,7 +150,7 @@
 					<div class="tsd-signature tsd-kind-icon">w<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/ModelOptions.ts#L82">ModelOptions.ts:82</a></li>
+							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/ModelOptions.ts#L81">ModelOptions.ts:81</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -152,7 +169,7 @@
 					<div class="tsd-signature tsd-kind-icon">wtimeout<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/ModelOptions.ts#L88">ModelOptions.ts:88</a></li>
+							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/ModelOptions.ts#L87">ModelOptions.ts:87</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -181,6 +198,9 @@
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="updateoptions.html#j" class="tsd-kind-icon">j</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="updateoptions.html#multi" class="tsd-kind-icon">multi</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="updateoptions.html#upsert" class="tsd-kind-icon">upsert</a>

@@ -134,7 +134,7 @@
 					<a name="collection" class="tsd-anchor"></a>
 					<h3>Collection</h3>
 					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">Collection<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">__function</span></li>
+						<li class="tsd-signature tsd-kind-icon">Collection<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">(Anonymous function)</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -160,7 +160,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">__function</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">(Anonymous function)</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -174,7 +174,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/middleware/Express.ts#L13">middleware/Express.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/middleware/Express.ts#L12">middleware/Express.ts:12</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -208,7 +208,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/ModelSpecificInstance.ts#L20">ModelSpecificInstance.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/ModelSpecificInstance.ts#L19">ModelSpecificInstance.ts:19</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -225,6 +225,9 @@
 							<ul class="tsd-type-parameters">
 								<li>
 									<h4>TDocument<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></h4>
+									<div class="tsd-comment tsd-typography">
+										<p>The interface representing the structure of the documents found in the database.</p>
+									</div>
 								</li>
 								<li>
 									<h4>TInstance</h4>
@@ -256,13 +259,13 @@
 					<a name="objectid" class="tsd-anchor"></a>
 					<h3>ObjectID</h3>
 					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">ObjectID<span class="tsd-signature-symbol">(</span>target<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span>, name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">ObjectID<span class="tsd-signature-symbol">(</span>target<span class="tsd-signature-symbol">: </span><a href="classes/instance.html" class="tsd-signature-type">Instance</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span>, name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Decorators.ts#L125">Decorators.ts:125</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Decorators.ts#L128">Decorators.ts:128</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -276,12 +279,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>target: <span class="tsd-signature-type">object</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter">
-											<h5>constructor<span class="tsd-signature-symbol">: </span><a href="classes/instance.html" class="tsd-signature-type">Instance</a></h5>
-										</li>
-									</ul>
+									<h5>target: <a href="classes/instance.html" class="tsd-signature-type">Instance</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 								<li>
 									<h5>name: <span class="tsd-signature-type">string</span></h5>
@@ -295,13 +293,13 @@
 					<a name="transform" class="tsd-anchor"></a>
 					<h3>Transform</h3>
 					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">Transform<span class="tsd-signature-symbol">(</span>fromDB<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span>, toDB<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">__function</span></li>
+						<li class="tsd-signature tsd-kind-icon">Transform<span class="tsd-signature-symbol">(</span>fromDB<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span>, toDB<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">(Anonymous function)</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Decorators.ts#L107">Decorators.ts:107</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Decorators.ts#L108">Decorators.ts:108</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -364,7 +362,7 @@
 									</ul>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">__function</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">(Anonymous function)</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -372,7 +370,7 @@
 					<a name="validate" class="tsd-anchor"></a>
 					<h3>Validate</h3>
 					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">Validate<span class="tsd-signature-symbol">(</span>forType<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, validate<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">__function</span></li>
+						<li class="tsd-signature tsd-kind-icon">Validate<span class="tsd-signature-symbol">(</span>forType<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, validate<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">(Anonymous function)</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -429,7 +427,7 @@
 									</ul>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">__function</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">(Anonymous function)</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -443,7 +441,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/utils/ObjectID.ts#L17">utils/ObjectID.ts:17</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/utils/ObjectID.ts#L16">utils/ObjectID.ts:16</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
