@@ -7,7 +7,8 @@ var paths = require('./paths');
 var tsProject = {
 	module: 'commonjs',
 	target: 'es5',
-	typescript: require('typescript')
+	typescript: require('typescript'),
+	experimentalDecorators: true
 };
 
 gulp.task('build', ['build-lib', 'build-tests']);
