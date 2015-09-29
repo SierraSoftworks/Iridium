@@ -4,6 +4,12 @@
 		"module": "commonjs",
 		"target": "es5",
 		"sourceMap": true,
-    	"declaration": false
-	}
+    	"declaration": false,
+		"experimentalDecorators": true,
+		"outDir": "./dist/"
+	},
+	"files": [
+		"_references.d.ts",
+		"index.ts"
+	]
 }
