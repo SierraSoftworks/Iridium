@@ -1,5 +1,4 @@
-﻿/// <reference path="../_references.d.ts" />
-import {Core} from './Core';
+﻿import {Core} from './Core';
 import {Schema} from './Schema';
 import {Model} from './Model';
 import {ModelCache} from './ModelCache';
@@ -13,7 +12,7 @@ import Bluebird = require('bluebird');
  * Provides a number of methods which are used to handle events that occur within
  * the Iridium workflow - such as what happens when a document is received from
  * the database, or how to handle the creation of new documents and saving of instances.
- * 
+ *
  * Mostly this is for cache support, wrapping and hook triggering.
  * @internal
  */
@@ -38,7 +37,7 @@ export class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
                 if (this.model.core.cache && options.cache && !options.fields) {
                     this.model.cache.set(target); // Does not block execution pipeline - fire and forget
                 }
-                
+
                 // Trigger the received hook
                 if (this.model.hooks.onRetrieved) this.model.hooks.onRetrieved(target);
 
@@ -58,7 +57,7 @@ export class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
                 document = this.model.helpers.convertToDB(document);
                 let validation: Skmatc.Result = this.model.helpers.validate(document);
                 if (validation.failed) return Bluebird.reject(validation.error);
-                
+
                 return document;
             });
         }));

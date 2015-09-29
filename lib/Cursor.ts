@@ -1,5 +1,4 @@
-﻿/// <reference path="../_references.d.ts" />
-import {Model} from './Model';
+﻿import {Model} from './Model';
 import General = require('./General');
 import MongoDB = require('mongodb');
 import Bluebird = require('bluebird');
@@ -8,7 +7,7 @@ import * as Index from './Index';
 /**
  * An Iridium collection cursor which allows the itteration through documents
  * in the collection, automatically wrapping them in the correct instance type.
- * 
+ *
  * @param TDocument The interface representing the collection's documents
  * @param TInstance The interface or class used to represent the wrapped documents.
  */

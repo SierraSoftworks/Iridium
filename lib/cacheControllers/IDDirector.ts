@@ -1,4 +1,3 @@
-/// <reference path="../../_references.d.ts" />
 import {CacheDirector} from '../CacheDirector';
 import MongoDB = require('mongodb');
 

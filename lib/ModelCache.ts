@@ -1,5 +1,4 @@
-﻿/// <reference path="../_references.d.ts" />
-import {Model} from './Model';
+﻿import {Model} from './Model';
 import Bluebird = require('bluebird');
 
 /**

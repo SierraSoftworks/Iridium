@@ -1,4 +1,3 @@
-/// <reference path="../_references.d.ts" />
 export interface Transforms {
 	[property:string]: PropertyTransform;
 }
@@ -14,7 +13,7 @@ export interface PropertyTransform {
 	 * @returns A derived value which is more useful to the application.
 	 */
 	fromDB(value: any): any;
-	
+
 	/**
 	 * Converts a property's value into a representation more suitable for
 	 * the database.

@@ -1,4 +1,3 @@
-/// <reference path="../_references.d.ts" />
 export interface Configuration {
     host?: string;
     port?: number;

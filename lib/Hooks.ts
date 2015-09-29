@@ -1,4 +1,3 @@
-/// <reference path="../_references.d.ts" />
 import instance = require('./Instance');
 
 export interface Hooks<TDocument, TInstance> {

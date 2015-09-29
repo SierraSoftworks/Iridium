@@ -1,4 +1,3 @@
-/// <reference path="../../_references.d.ts" />
 import http = require('http');
 import {MiddlewareFactory} from '../Middleware';
 import {Core} from '../Core';
@@ -7,7 +6,7 @@ import {Core} from '../Core';
  * A factory method which creates Express/Connect compatible middleware functions to inject
  * a 'db' field on your request objects as well as ensuring that the Iridium Core is connected
  * to a MongoDB database before handling any requests.
- *  
+ *
  * @internal
  */
 export function ExpressMiddlewareFactory(core: Core): ExpressMiddleware {
