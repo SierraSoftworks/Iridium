@@ -24,9 +24,7 @@
     "benchmark": "node ./benchmarks/mongodb.js",
     "build": "gulp build"
   },
-  "typescript": {
-    "definition": "iridium.d.ts"
-  },
+  "typings": "index.d.ts",
   "engines": {
     "node": ">= 0.10"
   },
