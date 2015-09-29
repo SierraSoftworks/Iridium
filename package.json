@@ -18,7 +18,7 @@
   "licence": "MIT",
   "main": "./dist/index.js",
   "scripts": {
-    "test": "gulp build && gulp ci",
+    "test": "gulp ci",
     "coverage": "gulp coverage",
     "lint": "jshint lib/",
     "benchmark": "node ./benchmarks/mongodb.js",
