@@ -1,4 +1,3 @@
-/// <reference path="../_references.d.ts" />
 var MongoDB = require('mongodb');
 var Bluebird = require('bluebird');
 var _ = require('lodash');
@@ -538,4 +537,4 @@ var Model = (function () {
 })();
 exports.Model = Model;
 
-//# sourceMappingURL=../lib/Model.js.map
+//# sourceMappingURL=Model.js.map

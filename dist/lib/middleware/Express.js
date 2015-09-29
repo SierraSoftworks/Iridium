@@ -17,4 +17,4 @@ function ExpressMiddlewareFactory(core) {
 }
 exports.ExpressMiddlewareFactory = ExpressMiddlewareFactory;
 
-//# sourceMappingURL=../../lib/middleware/Express.js.map
+//# sourceMappingURL=Express.js.map

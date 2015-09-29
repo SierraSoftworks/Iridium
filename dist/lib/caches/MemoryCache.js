@@ -1,4 +1,3 @@
-/// <reference path="../../_references.d.ts" />
 var Bluebird = require('bluebird');
 /**
  * A cache implementation which stores documents in an in-memory cache.
@@ -27,4 +26,4 @@ var MemoryCache = (function () {
 })();
 exports.MemoryCache = MemoryCache;
 
-//# sourceMappingURL=../../lib/caches/MemoryCache.js.map
+//# sourceMappingURL=MemoryCache.js.map

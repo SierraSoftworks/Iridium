@@ -68,4 +68,4 @@ var ModelHelpers = (function () {
 })();
 exports.ModelHelpers = ModelHelpers;
 
-//# sourceMappingURL=../lib/ModelHelpers.js.map
+//# sourceMappingURL=ModelHelpers.js.map

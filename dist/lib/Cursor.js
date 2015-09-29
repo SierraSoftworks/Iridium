@@ -148,4 +148,4 @@ var Cursor = (function () {
 })();
 exports.Cursor = Cursor;
 
-//# sourceMappingURL=../lib/Cursor.js.map
+//# sourceMappingURL=Cursor.js.map

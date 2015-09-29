@@ -1,4 +1,3 @@
-/// <reference path="../../_references.d.ts" />
 var _ = require('lodash');
 var MongoDB = require('mongodb');
 var Omnom = (function () {
@@ -184,4 +183,4 @@ var Omnom = (function () {
 })();
 exports.Omnom = Omnom;
 
-//# sourceMappingURL=../../lib/utils/Omnom.js.map
+//# sourceMappingURL=Omnom.js.map

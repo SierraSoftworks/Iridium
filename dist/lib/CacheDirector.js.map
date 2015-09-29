@@ -1,1 +1,1 @@
-{"version":3,"sources":["lib/CacheDirector.ts"],"names":[],"mappings":"AAAA,AACA,4CAD4C;AAO3C","file":"lib/CacheDirector.js","sourcesContent":["/// <reference path=\"../_references.d.ts\" />\r\nexport interface CacheDirector {\r\n    valid<T>(object: T): boolean;\r\n    buildKey<T>(object: T): string;\r\n\r\n    validQuery(conditions: any): boolean;\r\n    buildQueryKey(conditions: any): string;\r\n}"],"sourceRoot":"/source/"}
+{"version":3,"sources":[],"names":[],"mappings":"","file":"lib/CacheDirector.js","sourcesContent":[],"sourceRoot":"/source/"}

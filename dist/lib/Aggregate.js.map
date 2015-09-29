@@ -1,1 +1,1 @@
-{"version":3,"sources":["lib/Aggregate.ts"],"names":[],"mappings":"AAAA,4CAA4C;AAI3C","file":"lib/Aggregate.js","sourcesContent":["/// <reference path=\"../_references.d.ts\" />\r\n\r\nexport interface Stage {\r\n\r\n}"],"sourceRoot":"/source/"}
+{"version":3,"sources":[],"names":[],"mappings":"","file":"lib/Aggregate.js","sourcesContent":[],"sourceRoot":"/source/"}

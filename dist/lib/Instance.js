@@ -280,4 +280,4 @@ var Instance = (function () {
 })();
 exports.Instance = Instance;
 
-//# sourceMappingURL=../lib/Instance.js.map
+//# sourceMappingURL=Instance.js.map
