@@ -4,8 +4,8 @@ module.exports = {
 	projectRoot: path.dirname(__dirname),
 	coverageFolder: path.resolve(__dirname, '../coverage'),
 
-	buildFiles: ["lib/**/*.ts", "index.ts"],
-	testFiles: ["test/**/*.ts"],
+	buildFiles: ["typings/DefinitelyTyped/tsd.d.ts", "lib/**/*.ts", "index.ts"],
+	testFiles: ["typings/DefinitelyTyped/tsd.d.ts", "test/**/*.ts"],
 	cleanFiles: ["coverage", "dist"],
 
 	builtTestFiles: 'dist/test/*.js',

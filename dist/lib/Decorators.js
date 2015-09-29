@@ -1,6 +1,6 @@
 var MongoDB = require('mongodb');
 var _ = require('lodash');
-var skmatc = require('skmatc');
+var Skmatc = require('skmatc');
 /**
  * Specifies the name of the collection to which this instance's documents should be sent.
  * @param name The name of the MongoDB collection to store the documents in.
@@ -43,7 +43,7 @@ exports.Index = Index;
  */
 function Validate(forType, validate) {
     return function (target) {
-        target.validators = (target.validators || []).concat(skmatc.create(function (schema) { return schema === forType; }, validate));
+        target.validators = (target.validators || []).concat(Skmatc.create(function (schema) { return schema === forType; }, validate));
     };
 }
 exports.Validate = Validate;

@@ -1,4 +1,4 @@
-/// <reference path="../_references.d.ts" />
+/// <reference path="../typings/DefinitelyTyped/tsd.d.ts" />
 import * as Iridium from '../index';
 import Skmatc = require('skmatc');
 
@@ -7,7 +7,7 @@ class Test extends Iridium.Instance<any, Test> {
     static schema: Iridium.Schema = {
         _id: false
     };
-    
+
     _id: string;
 }
 
@@ -102,7 +102,7 @@ describe("Plugins",() => {
             instanceImplementation.schema = {
                 _id: false
             };
-            
+
             let model = new Iridium.Model(core, instanceImplementation);
             let instance = new model.Instance({});
             chai.expect(wasCalled).to.be.false;

@@ -1,4 +1,4 @@
-﻿/// <reference path="../_references.d.ts" />
+﻿/// <reference path="../typings/DefinitelyTyped/tsd.d.ts" />
 import * as Iridium from '../index';
 
 describe("Iridium",() => {

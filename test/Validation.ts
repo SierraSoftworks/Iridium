@@ -1,4 +1,4 @@
-/// <reference path="../_references.d.ts" />
+/// <reference path="../typings/DefinitelyTyped/tsd.d.ts" />
 import * as Iridium from '../index';
 import skmatc = require('skmatc');
 import MongoDB = require('mongodb');
@@ -28,7 +28,7 @@ class Person extends Iridium.Instance<Document, Person> {
             ageDifference: Number
         }]
     };
-    
+
     name: string;
     dateOfBirth: Date;
     siblings: {
@@ -47,7 +47,7 @@ describe("Validation", () => {
     after(() => model.remove().then(() => core.close()));
 
     beforeEach(() => model.remove());
-    
+
     describe("custom validators", () => {
         it("should successfully validate documents which are valid", () => {
             return chai.expect(model.insert({
@@ -60,7 +60,7 @@ describe("Validation", () => {
                 }]
             })).to.eventually.be.ok;
         });
-        
+
         it("should fail to validate documents which are invalid", () => {
             return chai.expect(model.insert({
                 name: 'John',
