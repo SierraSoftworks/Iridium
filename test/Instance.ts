@@ -18,7 +18,7 @@ class Test extends Iridium.Instance<TestDocument, Test> implements TestDocument 
         lots: { $required: false, $type: [Number] },
         less: { $required: false, $propertyType: Number }
     };
-    
+
     _id: string;
     answer: number;
     lots: number[];
@@ -78,43 +78,43 @@ describe("Instance",() => {
 
     describe("methods",() => {
         it("should expose save()",() => {
-            chai.expect(core.Test.helpers.wrapDocument({ id: '1', answer: 2 }).save).to.exist.and.be.a('function');
+            chai.expect(core.Test.helpers.wrapDocument({ _id: '1', answer: 2 }).save).to.exist.and.be.a('function');
         });
 
         it("should expose update()",() => {
-            chai.expect(core.Test.helpers.wrapDocument({ id: '1', answer: 2 }).update).to.exist.and.be.a('function');
+            chai.expect(core.Test.helpers.wrapDocument({ _id: '1', answer: 2 }).update).to.exist.and.be.a('function');
         });
 
         it("should expose refresh()",() => {
-            chai.expect(core.Test.helpers.wrapDocument({ id: '1', answer: 2 }).refresh).to.exist.and.be.a('function');
+            chai.expect(core.Test.helpers.wrapDocument({ _id: '1', answer: 2 }).refresh).to.exist.and.be.a('function');
         });
 
         it("should expose delete()",() => {
-            chai.expect(core.Test.helpers.wrapDocument({ id: '1', answer: 2 }).delete).to.exist.and.be.a('function');
+            chai.expect(core.Test.helpers.wrapDocument({ _id: '1', answer: 2 }).delete).to.exist.and.be.a('function');
         });
 
         it("should expose remove()",() => {
-            chai.expect(core.Test.helpers.wrapDocument({ id: '1', answer: 2 }).remove).to.exist.and.be.a('function');
+            chai.expect(core.Test.helpers.wrapDocument({ _id: '1', answer: 2 }).remove).to.exist.and.be.a('function');
         });
 
         it("should override toJSON()",() => {
-            chai.expect(core.Test.helpers.wrapDocument({ id: '1', answer: 2 }).toJSON()).to.eql({ id: '1', answer: 2 });
+            chai.expect(core.Test.helpers.wrapDocument({ _id: '1', answer: 2 }).toJSON()).to.eql({ _id: '1', answer: 2 });
         });
 
         it("should override toString()",() => {
-            chai.expect(core.Test.helpers.wrapDocument({ id: '1', answer: 2 }).toString()).to.eql(JSON.stringify({ id: '1', answer: 2 }, null, 2));
+            chai.expect(core.Test.helpers.wrapDocument({ _id: '1', answer: 2 }).toString()).to.eql(JSON.stringify({ _id: '1', answer: 2 }, null, 2));
         });
     });
 
     describe("properties",() => {
         it("should expose document",() => {
-            chai.expect(core.Test.helpers.wrapDocument({ id: '1', answer: 2 }).document).to.eql({ id: '1', answer: 2 });
+            chai.expect(core.Test.helpers.wrapDocument({ _id: '1', answer: 2 }).document).to.eql({ _id: '1', answer: 2 });
         });
     });
 
     it("should expose additional getters and setters",() => {
         let instance = core.Test.helpers.wrapDocument({
-            id: 'aaaaaa',
+            _id: 'aaaaaa',
             answer: 2
         });
 
@@ -124,7 +124,7 @@ describe("Instance",() => {
 
     it("should expose additional methods",() => {
         let instance = core.Test.helpers.wrapDocument({
-            id: 'aaaaaa',
+            _id: 'aaaaaa',
             answer: 2
         });
 
@@ -420,10 +420,10 @@ describe("Instance",() => {
             return chai.expect(core.Test.get().then(instance => instance.select(instance.less, lot => lot > 100))).to.eventually.be.eql({});
         });
     });
-    
+
     describe("modifications", () => {
         beforeEach(() => core.Test.remove().then(() => core.Test.insert({ answer: 1, lots: [1, 2, 3, 4], less: { 'a': 1, 'b': 2 } })));
-        
+
         it("should correctly diff simple property changes", () => {
             return core.Test.get().then(instance => {
                 instance.answer = 2;
@@ -432,7 +432,7 @@ describe("Instance",() => {
                 chai.expect(instance).to.have.property('answer', 2);
             });
         });
-        
+
         it("should correctly diff deep property changes", () => {
             return core.Test.get().then(instance => {
                 instance.less['a'] = 2;
@@ -441,7 +441,7 @@ describe("Instance",() => {
                 chai.expect(instance).to.have.property('less').eql({ a: 2, b: 2 });
             });
         });
-        
+
         it("should correctly diff array operations", () => {
             return core.Test.get().then(instance => {
                 instance.lots.push(5);
@@ -451,19 +451,19 @@ describe("Instance",() => {
             });
         });
     });
-        
+
     describe("after a save", () => {
         var instance: Test;
-        
+
         before(() => core.Test.remove().then(() => core.Test.insert({ answer: 1, lots: [1, 2, 3, 4], less: { 'a': 1, 'b': 2 } })).then(i => {
             i.answer = 3;
             return i.save();
         }).then(i => instance = i));
-        
+
         it("should return the instance", () => {
             chai.expect(instance).to.exist;
         });
-    
+
         it("should correctly diff simple property changes", () => {
             return Bluebird.resolve(instance).then(i => {
                 i.answer = 2;
@@ -473,7 +473,7 @@ describe("Instance",() => {
                 chai.expect(i).to.have.property('answer', 2);
             });
         });
-        
+
         it("should correctly diff deep property changes", () => {
             return Bluebird.resolve(instance).then(i => {
                 i.less['a'] = 2;
@@ -483,7 +483,7 @@ describe("Instance",() => {
                 chai.expect(i).to.have.property('less').eql({ a: 2, b: 2 });
             });
         });
-        
+
         it("should correctly diff array operations", () => {
             return Bluebird.resolve(instance).then(i => {
                 i.lots.push(5);
@@ -493,6 +493,6 @@ describe("Instance",() => {
                 chai.expect(i).to.have.property('lots').eql([1,2,3,4,5]);
             });
         });
-            
+
    });
 });
