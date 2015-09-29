@@ -99,6 +99,12 @@ export interface UpdateOptions {
      * to making changes - and can be very handy for high-throughput systems.
      */
     upsert?: boolean;
+
+    /**
+     * Whether to update multiple documents at once, defaults to false unless run using a method
+     * which explcitly sets it to true.
+     */
+    multi?: boolean;
 }
 
 export interface RemoveOptions {
