@@ -4,6 +4,7 @@ import {Model} from './Model';
 import {ModelCache} from './ModelCache';
 import * as ModelOptions from './ModelOptions';
 
+import Skmatc = require('skmatc');
 import _ = require('lodash');
 import MongoDB = require('mongodb');
 import Bluebird = require('bluebird');
