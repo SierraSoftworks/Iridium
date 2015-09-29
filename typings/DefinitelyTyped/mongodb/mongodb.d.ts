@@ -305,7 +305,7 @@ declare module "mongodb" {
     insertMany(docs: any[], options: { w?: any; wtimeout?: number; j?: boolean; serializeFunctions?: boolean; forceServerObjectId?: boolean }, callback: (err: Error, result: any) => void): void;
 
     remove(selector: Object, callback?: (err: Error, result: any) => void): void;
-    remove(selector: Object, options: { safe?: any; single?: boolean; }, callback?: (err: Error, result: any) => void): void;
+    remove(selector: Object, options: { safe?: any; single?: boolean; w?: string | number; }, callback?: (err: Error, result: any) => void): void;
 
     rename(newName: String, callback?: (err: Error, result: any) => void): void;
 
