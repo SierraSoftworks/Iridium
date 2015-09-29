@@ -34,7 +34,7 @@
     "bluebird": "^2.10.1",
     "lodash": "^3.10.1",
     "mongodb": "^2.0.44",
-    "skmatc": "^1.1.3"
+    "skmatc": "^1.1.4"
   },
   "devDependencies": {
     "chai": "^2.2.0",
