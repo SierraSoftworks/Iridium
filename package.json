@@ -18,8 +18,6 @@
   "licence": "MIT",
   "main": "./dist/index.js",
   "scripts": {
-    "prepublish": "gulp prepublish",
-    "postpublish": "gulp postpublish",
     "test": "gulp build && gulp ci",
     "coverage": "gulp coverage",
     "lint": "jshint lib/",
