@@ -1,6 +1,6 @@
 ﻿import MongoDB = require('mongodb');
 import {Model} from './Model';
-import skmatc = require('skmatc');
+import Skmatc = require('skmatc');
 import {Omnom} from './utils/Omnom';
 import _ = require('lodash');
 import Bluebird = require('bluebird');
@@ -13,7 +13,7 @@ import Bluebird = require('bluebird');
  */
 export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
     constructor(public model: Model<TDocument, TInstance>) {
-        this._validator = new skmatc(model.schema);
+        this._validator = Skmatc.scope(model.schema);
         model.validators.forEach(validator => this._validator.register(validator));
     }
 

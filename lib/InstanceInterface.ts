@@ -1,3 +1,4 @@
+import Skmatc = require('skmatc');
 import {Schema} from './Schema';
 import {Model} from './Model';
 import * as Index from './Index';

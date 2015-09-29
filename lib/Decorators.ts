@@ -1,6 +1,6 @@
 import MongoDB = require('mongodb');
 import _ = require('lodash');
-import skmatc = require('skmatc');
+import Skmatc = require('skmatc');
 import {Instance} from './Instance';
 import {Index, IndexSpecification} from './Index';
 import {Schema} from './Schema';
@@ -49,7 +49,7 @@ export function Index(spec: IndexSpecification, options?: MongoDB.IndexOptions) 
  */
 export function Validate(forType: any, validate: (schema: any, data: any, path: string) => Skmatc.Result) {
 	return function(target: InstanceImplementation<any,any>) {
-		target.validators = (target.validators || []).concat(skmatc.create(schema => schema === forType, validate));
+		target.validators = (target.validators || []).concat(Skmatc.create(schema => schema === forType, validate));
 	}
 }
 

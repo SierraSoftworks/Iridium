@@ -11,7 +11,7 @@ import {Transforms} from './Transforms';
 import _ = require('lodash');
 import MongoDB = require('mongodb');
 import Bluebird = require('bluebird');
-import skmatc = require('skmatc');
+import Skmatc = require('skmatc');
 
 /**
  * The default Iridium Instance implementation which provides methods for saving, refreshing and
@@ -108,7 +108,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
      * Additional which should be made available for use in the schema definition for this instance.
      */
     static validators: Skmatc.Validator[] = [
-        skmatc.create(schema => schema === MongoDB.ObjectID, function(schema, data) {
+        Skmatc.create(schema => schema === MongoDB.ObjectID, function(schema, data) {
             return this.assert(!data || data instanceof MongoDB.ObjectID || (data._bsontype === 'ObjectID' && data.id));
         }, { name: 'ObjectID validation' })
     ];

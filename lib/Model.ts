@@ -2,6 +2,7 @@
 import Bluebird = require('bluebird');
 import util = require('util');
 import _ = require('lodash');
+import Skmatc = require('skmatc');
 
 import {Core} from './Core';
 import {Instance} from './Instance';
