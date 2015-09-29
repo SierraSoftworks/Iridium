@@ -13,7 +13,7 @@ module.exports = {
 	testSupportFiles: ['dist/test/support/chai'],
 
 	docSourceFiles: [
-		"_references.d.ts",
+		"typings/DefinitelyTyped/tsd.d.ts",
 		"lib/Core.ts",
 		"lib/Model.ts",
 		"lib/Instance.ts",
