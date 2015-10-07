@@ -1,6 +1,6 @@
-/// <reference path="../_references.d.ts" />
 import {Core} from './Core';
 import {Model} from './Model';
+import Skmatc = require('skmatc');
 
 export interface Plugin {
     newModel? (model: Model<any, any>);

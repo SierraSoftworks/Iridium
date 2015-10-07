@@ -1,1 +1,1 @@
-{"version":3,"sources":["lib/Plugins.ts"],"names":[],"mappings":"AAQC","file":"lib/Plugins.js","sourcesContent":["/// <reference path=\"../_references.d.ts\" />\r\nimport {Core} from './Core';\r\nimport {Model} from './Model';\r\n\r\nexport interface Plugin {\r\n    newModel? (model: Model<any, any>);\r\n    newInstance? (instance: any, model: Model<any, any>);\r\n    validate?: Skmatc.Validator | Skmatc.Validator[];\r\n}"],"sourceRoot":"/source/"}
+{"version":3,"sources":[],"names":[],"mappings":"","file":"lib/Plugins.js","sourcesContent":[],"sourceRoot":"/source/"}

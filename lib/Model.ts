@@ -1,8 +1,8 @@
-﻿/// <reference path="../_references.d.ts" />
-import MongoDB = require('mongodb');
+﻿import MongoDB = require('mongodb');
 import Bluebird = require('bluebird');
 import util = require('util');
 import _ = require('lodash');
+import Skmatc = require('skmatc');
 
 import {Core} from './Core';
 import {Instance} from './Instance';
@@ -30,10 +30,10 @@ import * as AggregationPipeline from './Aggregate';
  * An Iridium Model which represents a structured MongoDB collection.
  * Models expose the methods you will generally use to query those collections, and ensure that
  * the results of those queries are returned as {TInstance} instances.
- * 
+ *
  * @param TDocument The interface used to determine the schema of documents in the collection.
  * @param TInstance The interface or class used to represent collection documents in the JS world.
- * 
+ *
  * @class
  */
 export class Model<TDocument extends { _id?: any }, TInstance> {

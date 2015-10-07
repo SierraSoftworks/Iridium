@@ -1,4 +1,4 @@
-﻿/// <reference path="../_references.d.ts" />
+﻿/// <reference path="../typings/DefinitelyTyped/tsd.d.ts" />
 import * as Iridium from '../index';
 
 interface Document {
@@ -9,7 +9,7 @@ class Instance extends Iridium.Instance<Document, Instance> {
     static collection = 'test';
     static schema: Iridium.Schema = { _id: false };
     static cache = new Iridium.CacheOnID();
-    
+
     _id: string;
 }
 

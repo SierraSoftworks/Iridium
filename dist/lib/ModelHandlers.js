@@ -62,4 +62,4 @@ var ModelHandlers = (function () {
 })();
 exports.ModelHandlers = ModelHandlers;
 
-//# sourceMappingURL=../lib/ModelHandlers.js.map
+//# sourceMappingURL=ModelHandlers.js.map

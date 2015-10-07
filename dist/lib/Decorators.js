@@ -1,7 +1,6 @@
-/// <reference path="../_references.d.ts" />
 var MongoDB = require('mongodb');
 var _ = require('lodash');
-var skmatc = require('skmatc');
+var Skmatc = require('skmatc');
 /**
  * Specifies the name of the collection to which this instance's documents should be sent.
  * @param name The name of the MongoDB collection to store the documents in.
@@ -44,7 +43,7 @@ exports.Index = Index;
  */
 function Validate(forType, validate) {
     return function (target) {
-        target.validators = (target.validators || []).concat(skmatc.create(function (schema) { return schema === forType; }, validate));
+        target.validators = (target.validators || []).concat(Skmatc.create(function (schema) { return schema === forType; }, validate));
     };
 }
 exports.Validate = Validate;
@@ -57,18 +56,19 @@ function Property() {
     if (args.length > 1 && typeof args[args.length - 1] === 'boolean')
         required = args.pop();
     return function (target, property) {
+        var staticTarget = target;
         if (!property)
             name = args.shift();
         else {
             name = property;
-            target = target.constructor;
+            staticTarget = target.constructor;
         }
         asType = args.pop() || false;
-        target.schema = _.clone(target.schema || {});
+        staticTarget.schema = _.clone(staticTarget.schema || { _id: false });
         if (!required && typeof asType !== 'boolean')
-            target.schema[name] = { $required: required, $type: asType };
+            staticTarget.schema[name] = { $required: required, $type: asType };
         else
-            target.schema[name] = asType;
+            staticTarget.schema[name] = asType;
     };
 }
 exports.Property = Property;
@@ -85,8 +85,9 @@ exports.Property = Property;
  */
 function Transform(fromDB, toDB) {
     return function (target, property) {
-        target.constructor.transforms = _.clone(target.constructor.transforms || {});
-        target.constructor.transforms[property] = {
+        var staticTarget = (target.constructor || target);
+        staticTarget.transforms = _.clone(staticTarget.transforms || {});
+        staticTarget.transforms[property] = {
             fromDB: fromDB,
             toDB: toDB
         };
@@ -106,4 +107,4 @@ function ObjectID(target, name) {
 }
 exports.ObjectID = ObjectID;
 
-//# sourceMappingURL=../lib/Decorators.js.map
+//# sourceMappingURL=Decorators.js.map

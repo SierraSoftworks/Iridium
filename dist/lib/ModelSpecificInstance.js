@@ -44,4 +44,4 @@ function ModelSpecificInstance(model, instanceType) {
 }
 exports.ModelSpecificInstance = ModelSpecificInstance;
 
-//# sourceMappingURL=../lib/ModelSpecificInstance.js.map
+//# sourceMappingURL=ModelSpecificInstance.js.map

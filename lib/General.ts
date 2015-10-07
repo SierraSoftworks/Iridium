@@ -1,5 +1,3 @@
-/// <reference path="../_references.d.ts" />
-
 /**
  * A method which is called once an asynchronous operation has completed, an alternative
  * to using Promises.

@@ -1,5 +1,4 @@
-﻿/// <reference path="../_references.d.ts" />
-import {Core} from './Core';
+﻿import {Core} from './Core';
 import {Model} from './Model';
 import {Plugin} from './Plugins';
 import {CacheDirector} from './CacheDirector';
@@ -12,17 +11,17 @@ import {Transforms} from './Transforms';
 import _ = require('lodash');
 import MongoDB = require('mongodb');
 import Bluebird = require('bluebird');
-import skmatc = require('skmatc');
+import Skmatc = require('skmatc');
 
 /**
  * The default Iridium Instance implementation which provides methods for saving, refreshing and
  * removing the wrapped document from the collection, as well as integrating with Omnom, our
  * built in document diff processor which allows clean, atomic, document updates to be performed
  * without needing to write the update queries yourself.
- * 
+ *
  * @param TDocument The interface representing the structure of the documents in the collection.
  * @param TInstance The type of instance which wraps the documents, generally the subclass of this class.
- * 
+ *
  * This class will be subclassed automatically by Iridium to create a model specific instance
  * which takes advantage of some of v8's optimizations to boost performance significantly.
  * The instance returned by the model, and all of this instance's methods, will be of type
@@ -70,24 +69,24 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
      * @param document The document which will be inserted into the database.
      */
     static onCreating: (document: { _id?: any }) => void;
-    
+
     /**
      * A function which is called whenever a document of this type is received from the database, prior to it being
      * wrapped by an Instance object.
      * @param document The document that was retrieved from the database.
      */
     static onRetrieved: (document: { _id?: any }) => void;
-    
+
     /**
      * A function which is called whenever a new instance has been created to wrap a document.
      * @param instance The instance which has been created.
      */
     static onReady: (instance: Instance<{ _id?: any }, Instance<{ _id?: any }, any>>) => void;
-    
+
     /**
      * A function which is called whenever an instance's save() method is called to allow you to interrogate and/or manipulate
      * the changes which are being made.
-     * 
+     *
      * @param instance The instance to which the changes are being made
      * @param changes The MongoDB change object describing the changes being made to the document.
      */
@@ -109,7 +108,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
      * Additional which should be made available for use in the schema definition for this instance.
      */
     static validators: Skmatc.Validator[] = [
-        skmatc.create(schema => schema === MongoDB.ObjectID, function(schema, data) {
+        Skmatc.create(schema => schema === MongoDB.ObjectID, function(schema, data) {
             return this.assert(!data || data instanceof MongoDB.ObjectID || (data._bsontype === 'ObjectID' && data.id));
         }, { name: 'ObjectID validation' })
     ];
@@ -125,12 +124,12 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
      * The cache director used to derive unique cache keys for documents of this type.
      */
     static cache: CacheDirector;
-    
+
     /**
      * The indexes which should be managed by Iridium for the collection used by this type.
      */
     static indexes: (Index.Index | Index.IndexSpecification)[] = [];
-    
+
     /**
      * Saves any changes to this instance, using the built in diff algorithm to write the update query.
      * @param {function(Error, IInstance)} callback A callback which is triggered when the save operation completes

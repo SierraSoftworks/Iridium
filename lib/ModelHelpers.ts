@@ -1,7 +1,6 @@
-﻿/// <reference path="../_references.d.ts" />
-import MongoDB = require('mongodb');
+﻿import MongoDB = require('mongodb');
 import {Model} from './Model';
-import skmatc = require('skmatc');
+import Skmatc = require('skmatc');
 import {Omnom} from './utils/Omnom';
 import _ = require('lodash');
 import Bluebird = require('bluebird');
@@ -14,7 +13,7 @@ import Bluebird = require('bluebird');
  */
 export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
     constructor(public model: Model<TDocument, TInstance>) {
-        this._validator = new skmatc(model.schema);
+        this._validator = Skmatc.scope(model.schema);
         model.validators.forEach(validator => this._validator.register(validator));
     }
 
@@ -39,7 +38,7 @@ export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
     wrapDocument(document: TDocument, isNew?: boolean, isPartial?: boolean): TInstance {
         return new this.model.Instance(document, isNew, isPartial);
     }
-    
+
     /**
      * Converts the given document to its database form into a form
      * using the transforms defined on the model.
@@ -52,7 +51,7 @@ export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
                 document[property] = this.model.transforms[property].toDB(document[property]);
         return document;
     }
-    
+
     /**
      * Converts the given document to its database form into a form
      * using the transforms defined on the model.

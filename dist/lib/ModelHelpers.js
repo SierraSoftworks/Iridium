@@ -1,4 +1,4 @@
-var skmatc = require('skmatc');
+var Skmatc = require('skmatc');
 var Omnom_1 = require('./utils/Omnom');
 var _ = require('lodash');
 /**
@@ -11,7 +11,7 @@ var ModelHelpers = (function () {
     function ModelHelpers(model) {
         var _this = this;
         this.model = model;
-        this._validator = new skmatc(model.schema);
+        this._validator = Skmatc.scope(model.schema);
         model.validators.forEach(function (validator) { return _this._validator.register(validator); });
     }
     /**
@@ -68,4 +68,4 @@ var ModelHelpers = (function () {
 })();
 exports.ModelHelpers = ModelHelpers;
 
-//# sourceMappingURL=../lib/ModelHelpers.js.map
+//# sourceMappingURL=ModelHelpers.js.map

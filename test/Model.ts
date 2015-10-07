@@ -1,4 +1,4 @@
-﻿/// <reference path="../_references.d.ts" />
+﻿/// <reference path="../typings/DefinitelyTyped/tsd.d.ts" />
 import * as Iridium from '../index';
 import MongoDB = require('mongodb');
 import {Cursor} from '../lib/Cursor';
@@ -16,7 +16,7 @@ class Test extends Iridium.Instance<TestDocument, Test> implements TestDocument 
         _id: MongoDB.ObjectID,
         answer: Number
     };
-    
+
     _id: string;
     answer: number;
 }
@@ -41,7 +41,7 @@ describe("Model",() => {
             _.merge(fn, properties);
             return fn;
         }
-        
+
         it("should throw an error if you don't provide a valid core",() => {
             chai.expect(() => {
                 new Iridium.Model<any, any>(null, createInstanceImplementation({
@@ -210,7 +210,7 @@ describe("Model",() => {
         it("should allow you to provide options to control the creation",() => {
             return chai.expect(model.create({ answer: 14 }, { upsert: true })).to.eventually.exist;
         });
-        
+
         it("should return an error if you don't meet the schema validation requirements",() => {
            return chai.expect(model.create(<any>{ answer: 'wrong' })).to.eventually.be.rejected;
         });
@@ -258,7 +258,7 @@ describe("Model",() => {
         it("should allow you to provide options to control the creation",() => {
             return chai.expect(model.insert({ answer: 14 }, { upsert: true })).to.eventually.exist;
         });
-        
+
         it("should return an error if you don't meet the schema validation requirements",() => {
            return chai.expect(model.insert(<any>{ answer: 'wrong' })).to.eventually.be.rejected;
         });
@@ -380,7 +380,7 @@ describe("Model",() => {
                 sort: { answer: -1 }
             })).to.eventually.exist.and.have.property('answer', 14);
         });
-        
+
         it("should allow you to limit the returned fields",() => {
             return chai.expect(model.findOne({}, {
                 fields: { answer: 0 }
@@ -502,7 +502,7 @@ describe("Model",() => {
                     count++;
                 }).then(() => chai.expect(count).to.not.equal(5)).then(() => Promise.delay(10)).then(() => count)).to.eventually.equal(5);
             });
-            
+
             it("should be capable of functioning correctly with empty result sets",() => {
                 return chai.expect(model.find({ nothing: true }).forEach((instance) => {
                     chai.assert.fail();
@@ -542,7 +542,7 @@ describe("Model",() => {
                     return count++;
                 }).then(() => count)).to.eventually.equal(5);
             });
-            
+
             it("should be capable of functioning correctly with empty result sets",() => {
                 return chai.expect(model.find({ nothing: true }).map((instance) => {
                     chai.assert.fail();
@@ -563,7 +563,7 @@ describe("Model",() => {
             it("should return all documents",() => {
                 return chai.expect(model.find().toArray()).to.eventually.exist.and.have.length(5);
             });
-            
+
             it("should be capable of functioning correctly with empty result sets",() => {
                 return chai.expect(model.find({ nothing: true }).toArray()).to.eventually.eql([]);
             });
@@ -585,7 +585,7 @@ describe("Model",() => {
             it("which should resolve to the next instance in the query",() => {
                 return chai.expect(model.find().next()).to.eventually.be.an.instanceof(model.Instance);
             });
-            
+
             it("should be capable of functioning correctly with empty result sets",() => {
                 return chai.expect(model.find({ nothing: true }).next()).to.eventually.not.exist;
             });
@@ -902,26 +902,26 @@ describe("Model",() => {
             return chai.expect(model.dropIndexes()).to.eventually.be.true;
         });
     });
-    
+
     describe("identifier transforms", () => {
         it("should have a default converter", () => {
             let model = new Iridium.Model<TestDocument, Test>(core, Test);
             chai.expect(model.transforms).to.exist.and.have.property('_id').with.property('fromDB').which.is.a('function');
             chai.expect(model.transforms).to.exist.and.have.property('_id').with.property('toDB').which.is.a('function');
         });
-        
+
         it("should have a default ObjectID to String converter", () => {
             let model = new Iridium.Model<TestDocument, Test>(core, Test);
             chai.expect(model.transforms['_id'].fromDB(MongoDB.ObjectID.createFromHexString('aaaaaaaaaaaaaaaaaaaaaaaa'))).to.eql('aaaaaaaaaaaaaaaaaaaaaaaa');
             chai.expect(model.transforms['_id'].toDB('aaaaaaaaaaaaaaaaaaaaaaaa')).to.eql(MongoDB.ObjectID.createFromHexString('aaaaaaaaaaaaaaaaaaaaaaaa'));
         });
-        
+
         it("should allow you to specify a custom converter by providing a property on the class", () => {
             let model = new Iridium.Model<TestDocument, TestWithCustomID>(core, TestWithCustomID);
-            
+
             chai.expect(model.transforms['_id']).to.exist.and.have.property('fromDB').which.is.a('function');
             chai.expect(model.transforms['_id']).to.exist.and.have.property('toDB').which.is.a('function');
-            
+
             chai.expect(model.transforms['_id'].fromDB(12)).to.eql(120);
             chai.expect(model.transforms['_id'].toDB(120)).to.eql(12);
         });

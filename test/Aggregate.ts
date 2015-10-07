@@ -1,4 +1,4 @@
-/// <reference path="../_references.d.ts" />
+/// <reference path="../typings/DefinitelyTyped/tsd.d.ts" />
 import * as Iridium from '../index';
 import MongoDB = require('mongodb');
 import {Cursor} from '../lib/Cursor';
@@ -28,7 +28,6 @@ describe("Model", () => {
     let core = new Iridium.Core({ database: 'test' });
 
     before(() => core.connect());
-
 
     describe("aggregate()", () => {
        let model = new Iridium.Model<TestDocument, Test>(core, Test);

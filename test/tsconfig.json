@@ -1,0 +1,11 @@
+{
+	"compilerOptions": {
+		"version": true,
+		"target": "ES5",
+		"module": "commonjs",
+		"outDir": "../dist/test/",
+		"sourceMap": true,
+    	"declaration": false,
+		"experimentalDecorators": true
+	}
+}

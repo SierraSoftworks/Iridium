@@ -1,4 +1,4 @@
-﻿/// <reference path="../_references.d.ts" />
+﻿/// <reference path="../typings/DefinitelyTyped/tsd.d.ts" />
 import * as Iridium from '../index';
 import Events = require('events');
 import Promise = require('bluebird');
@@ -16,22 +16,22 @@ class Test extends Iridium.Instance<TestDocument, Test> {
         _id: false,
         answer: Number
     };
-    
+
     id: string;
     answer: number;
-    
+
     static onCreating(document: TestDocument) {
         hookEmitter.emit('creating', document);
     }
-    
+
     static onReady(instance: Test) {
         hookEmitter.emit('ready', instance);
     }
-    
+
     static onRetrieved(document: TestDocument) {
         hookEmitter.emit('retrieved', document);
     }
-    
+
     static onSaving(instance: Test, changes: any) {
         hookEmitter.emit('saving', instance, changes);
     }

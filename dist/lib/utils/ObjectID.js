@@ -1,4 +1,3 @@
-/// <reference path="../../_references.d.ts" />
 var MongoDB = require('mongodb');
 /**
  * Converts a string to an ObjectID instance - a shortcut for require('mongodb').ObjectID.createFromHexString
@@ -18,4 +17,4 @@ function toObjectID(value) {
 }
 exports.toObjectID = toObjectID;
 
-//# sourceMappingURL=../../lib/utils/ObjectID.js.map
+//# sourceMappingURL=ObjectID.js.map

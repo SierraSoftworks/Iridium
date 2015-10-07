@@ -1,3 +1,3 @@
 
 
-//# sourceMappingURL=../lib/InstanceInterface.js.map
+//# sourceMappingURL=InstanceInterface.js.map
