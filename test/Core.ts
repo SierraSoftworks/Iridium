@@ -144,6 +144,27 @@ describe("Core",() => {
 
             chai.expect(core.url).to.equal("mongodb://localhost/test");
         });
+
+        it("should support passing connection level configuration information", () => {
+            let core = new Iridium.Core({
+                database: 'test',
+                options: {
+                    server: {
+                        socketOptions: {
+                            connectTimeoutMS: 1000
+                        }
+                    }
+                }
+            });
+
+            chai.expect(core.settings.options).to.eql({
+                server: {
+                    socketOptions: {
+                        connectTimeoutMS: 1000
+                    }
+                }
+            });
+        });
     });
 
     describe("plugins",() => {
