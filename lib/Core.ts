@@ -167,7 +167,7 @@ export class Core {
         return Bluebird.bind(this).then(() => {
             if (this._connection) return this._connection;
             if (this._connectPromise) return this._connectPromise;
-            return this._connectPromise = this.mongoConnectAsyc(this.url, this._config.options);
+            return this._connectPromise = this.mongoConnectAsyc(this.url, this._config && this._config.options);
         }).then((db: MongoDB.Db) => {
             return this.onConnecting(db);
         }).then(db => {

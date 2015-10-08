@@ -141,7 +141,7 @@ var Core = (function () {
                 return _this._connection;
             if (_this._connectPromise)
                 return _this._connectPromise;
-            return _this._connectPromise = _this.mongoConnectAsyc(_this.url);
+            return _this._connectPromise = _this.mongoConnectAsyc(_this.url, _this._config && _this._config.options);
         }).then(function (db) {
             return _this.onConnecting(db);
         }).then(function (db) {
