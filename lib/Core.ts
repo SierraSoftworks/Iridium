@@ -55,7 +55,7 @@ export class Core {
         this._config = config;
     }
 
-    private mongoConnectAsyc = Bluebird.promisify(MongoDB.MongoClient.connect);
+    private mongoConnectAsyc = Bluebird.promisify<MongoDB.Db, string, any>(MongoDB.MongoClient.connect);
 
     private _plugins: Plugin[] = [];
     private _url: string;
@@ -167,7 +167,7 @@ export class Core {
         return Bluebird.bind(this).then(() => {
             if (this._connection) return this._connection;
             if (this._connectPromise) return this._connectPromise;
-            return this._connectPromise = this.mongoConnectAsyc(this.url);
+            return this._connectPromise = this.mongoConnectAsyc(this.url, this._config.options);
         }).then((db: MongoDB.Db) => {
             return this.onConnecting(db);
         }).then(db => {
