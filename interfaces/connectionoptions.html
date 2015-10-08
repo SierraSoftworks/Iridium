@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Configuration | Iridium</title>
+	<title>ConnectionOptions | Iridium</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -57,10 +57,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="configuration.html">Configuration</a>
+					<a href="connectionoptions.html">ConnectionOptions</a>
 				</li>
 			</ul>
-			<h1>Interface Configuration</h1>
+			<h1>Interface ConnectionOptions</h1>
 		</div>
 	</div>
 </header>
@@ -71,113 +71,65 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">Configuration</span>
+						<span class="target">ConnectionOptions</span>
 					</li>
 				</ul>
-			</section>
-			<section class="tsd-panel tsd-kind-interface">
-				<h3 class="tsd-before-signature">Indexable</h3>
-				<div class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">[</span>key: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">any</span></div>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
-						<section class="tsd-index-section ">
+						<section class="tsd-index-section tsd-is-not-exported">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="configuration.html#database" class="tsd-kind-icon">database</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="configuration.html#host" class="tsd-kind-icon">host</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="configuration.html#hosts" class="tsd-kind-icon">hosts</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="configuration.html#options" class="tsd-kind-icon">options</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="configuration.html#password" class="tsd-kind-icon">password</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="configuration.html#port-1" class="tsd-kind-icon">port</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="configuration.html#username" class="tsd-kind-icon">username</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="connectionoptions.html#db" class="tsd-kind-icon">db</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="connectionoptions.html#mongos" class="tsd-kind-icon">mongos</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="connectionoptions.html#replset" class="tsd-kind-icon">replset</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="connectionoptions.html#server" class="tsd-kind-icon">server</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group ">
+			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="database" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> database</h3>
-					<div class="tsd-signature tsd-kind-icon">database<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+					<a name="db" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> db</h3>
+					<div class="tsd-signature tsd-kind-icon">db<span class="tsd-signature-symbol">:</span> <a href="databaselevelconnectionoptions.html" class="tsd-signature-type">DatabaseLevelConnectionOptions</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Configuration.ts#L7">Configuration.ts:7</a></li>
+							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Configuration.ts#L17">Configuration.ts:17</a></li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="host" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> host</h3>
-					<div class="tsd-signature tsd-kind-icon">host<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+					<a name="mongos" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> mongos</h3>
+					<div class="tsd-signature tsd-kind-icon">mongos<span class="tsd-signature-symbol">:</span> <a href="mongoslevelconnectionoptions.html" class="tsd-signature-type">MongosLevelConnectionOptions</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Configuration.ts#L4">Configuration.ts:4</a></li>
+							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Configuration.ts#L20">Configuration.ts:20</a></li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="hosts" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> hosts</h3>
-					<div class="tsd-signature tsd-kind-icon">hosts<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">[]</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+					<a name="replset" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> replset</h3>
+					<div class="tsd-signature tsd-kind-icon">replset<span class="tsd-signature-symbol">:</span> <a href="replicasetlevelconnectionoptions.html" class="tsd-signature-type">ReplicasetLevelConnectionOptions</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Configuration.ts#L6">Configuration.ts:6</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter">
-								<h5>address<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> port<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5>
-							</li>
-						</ul>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="options" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> options</h3>
-					<div class="tsd-signature tsd-kind-icon">options<span class="tsd-signature-symbol">:</span> <a href="connectionoptions.html" class="tsd-signature-type">ConnectionOptions</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Configuration.ts#L11">Configuration.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Configuration.ts#L19">Configuration.ts:19</a></li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="password" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> password</h3>
-					<div class="tsd-signature tsd-kind-icon">password<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+					<a name="server" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> server</h3>
+					<div class="tsd-signature tsd-kind-icon">server<span class="tsd-signature-symbol">:</span> <a href="serverlevelconnectionoptions.html" class="tsd-signature-type">ServerLevelConnectionOptions</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Configuration.ts#L9">Configuration.ts:9</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="port-1" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> port</h3>
-					<div class="tsd-signature tsd-kind-icon">port<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Configuration.ts#L5">Configuration.ts:5</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="username" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> username</h3>
-					<div class="tsd-signature tsd-kind-icon">username<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Configuration.ts#L8">Configuration.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Configuration.ts#L18">Configuration.ts:18</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -195,29 +147,20 @@
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface">
-						<a href="configuration.html" class="tsd-kind-icon">Configuration</a>
+					<li class="current tsd-kind-interface tsd-is-not-exported">
+						<a href="connectionoptions.html" class="tsd-kind-icon">Connection<wbr>Options</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="configuration.html#database" class="tsd-kind-icon">database</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+								<a href="connectionoptions.html#db" class="tsd-kind-icon">db</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="configuration.html#host" class="tsd-kind-icon">host</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+								<a href="connectionoptions.html#mongos" class="tsd-kind-icon">mongos</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="configuration.html#hosts" class="tsd-kind-icon">hosts</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+								<a href="connectionoptions.html#replset" class="tsd-kind-icon">replset</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="configuration.html#options" class="tsd-kind-icon">options</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="configuration.html#password" class="tsd-kind-icon">password</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="configuration.html#port-1" class="tsd-kind-icon">port</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="configuration.html#username" class="tsd-kind-icon">username</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+								<a href="connectionoptions.html#server" class="tsd-kind-icon">server</a>
 							</li>
 						</ul>
 					</li>
