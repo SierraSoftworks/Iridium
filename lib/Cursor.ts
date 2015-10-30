@@ -145,4 +145,13 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
     skip(skip: number): Cursor<TDocument, TInstance> {
         return new Cursor(this.model, this.conditions, this.cursor.skip(skip));
     }
+
+    /**
+     * Returns a new cursor which will read from the specified node type.
+     * @param {String} type The type of node to read from - see https://docs.mongodb.org/manual/core/read-preference/
+     * @return {Cursor} The new cursor which reads from the specified node type
+     */
+    readFrom(type: string): Cursor<TDocument, TInstance> {
+        return new Cursor(this.model, this.conditions, this.cursor.setReadPreference(type));
+    }
 }
