@@ -110,6 +110,30 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
     }
 
     /**
+     * Retrieves the next item in the result list and then closes the cursor
+     * @param {function(Error, TInstance)} callback A callback which is triggered when the next item becomes available
+     * @return {Promise<TInstance>} A promise which is resolved once the item becomes available and the cursor has been closed.
+     */
+    one(callback?: General.Callback<TInstance>): Bluebird<TInstance> {
+        return new Bluebird<TDocument>((resolve, reject) => {
+            this.cursor.next((err, result: any) => {
+                if (err) return reject(err);
+                return resolve(result);
+            });
+        }).then((document) => {
+            return new Bluebird<TDocument>((resolve, reject) => {
+                this.cursor.close((err) => {
+                    if (err) return reject(err);
+                    return resolve(<any>document);
+                });
+            });
+        }).then((document) => {
+            if (!document) return Bluebird.resolve(<TInstance>null);
+            return this.model.handlers.documentReceived(this.conditions, document,(document, isNew?, isPartial?) => this.model.helpers.wrapDocument(document, isNew, isPartial));
+        }).nodeify(callback);
+    }
+
+    /**
      * Returns a new cursor which behaves the same as this one did before any results were retrieved
      * @return {Cursor} The new cursor which starts at the beginning of the results
      */
@@ -144,5 +168,14 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
      */
     skip(skip: number): Cursor<TDocument, TInstance> {
         return new Cursor(this.model, this.conditions, this.cursor.skip(skip));
+    }
+
+    /**
+     * Returns a new cursor which will read from the specified node type.
+     * @param {String} type The type of node to read from - see https://docs.mongodb.org/manual/core/read-preference/
+     * @return {Cursor} The new cursor which reads from the specified node type
+     */
+    readFrom(type: string): Cursor<TDocument, TInstance> {
+        return new Cursor(this.model, this.conditions, this.cursor.setReadPreference(type));
     }
 }
