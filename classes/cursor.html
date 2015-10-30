@@ -130,6 +130,8 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="cursor.html#limit" class="tsd-kind-icon">limit</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external"><a href="cursor.html#map" class="tsd-kind-icon">map</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="cursor.html#next" class="tsd-kind-icon">next</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="cursor.html#one" class="tsd-kind-icon">one</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="cursor.html#readfrom" class="tsd-kind-icon">read<wbr>From</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="cursor.html#rewind" class="tsd-kind-icon">rewind</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="cursor.html#skip" class="tsd-kind-icon">skip</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="cursor.html#sort" class="tsd-kind-icon">sort</a></li>
@@ -343,7 +345,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Cursor.ts#L135">Cursor.ts:135</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Cursor.ts#L159">Cursor.ts:159</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -463,6 +465,70 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
+					<a name="one" class="tsd-anchor"></a>
+					<h3>one</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">one<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">?: </span><a href="../interfaces/callback.html" class="tsd-signature-type">Callback</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TInstance</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Bluebird</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TInstance</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Cursor.ts#L117">Cursor.ts:117</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Retrieves the next item in the result list and then closes the cursor</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> callback: <a href="../interfaces/callback.html" class="tsd-signature-type">Callback</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TInstance</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>A callback which is triggered when the next item becomes available</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Bluebird</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TInstance</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>A promise which is resolved once the item becomes available and the cursor has been closed.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
+					<a name="readfrom" class="tsd-anchor"></a>
+					<h3>read<wbr>From</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">read<wbr>From<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="cursor.html" class="tsd-signature-type">Cursor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TDocument</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TInstance</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Cursor.ts#L178">Cursor.ts:178</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns a new cursor which will read from the specified node type.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>type: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The type of node to read from - see <a href="https://docs.mongodb.org/manual/core/read-preference/">https://docs.mongodb.org/manual/core/read-preference/</a></p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="cursor.html" class="tsd-signature-type">Cursor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TDocument</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TInstance</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>The new cursor which reads from the specified node type</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
 					<a name="rewind" class="tsd-anchor"></a>
 					<h3>rewind</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
@@ -472,7 +538,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Cursor.ts#L116">Cursor.ts:116</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Cursor.ts#L140">Cursor.ts:140</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -495,7 +561,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Cursor.ts#L145">Cursor.ts:145</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Cursor.ts#L169">Cursor.ts:169</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -528,7 +594,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Cursor.ts#L126">Cursor.ts:126</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/Cursor.ts#L150">Cursor.ts:150</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -625,6 +691,12 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
 								<a href="cursor.html#next" class="tsd-kind-icon">next</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
+								<a href="cursor.html#one" class="tsd-kind-icon">one</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
+								<a href="cursor.html#readfrom" class="tsd-kind-icon">read<wbr>From</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
 								<a href="cursor.html#rewind" class="tsd-kind-icon">rewind</a>
