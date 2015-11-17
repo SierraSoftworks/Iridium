@@ -31,7 +31,6 @@ export class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
             partial: false
         });
 
-        let wrapped: TResult;
         return Bluebird.resolve(result).then((target: any) => {
             return <Bluebird<TResult>>Bluebird
                 // If onRetrieved returns a Bluebird promise then there is no significant performance overhead here
