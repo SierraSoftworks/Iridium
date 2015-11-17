@@ -5,7 +5,7 @@ import {Instance} from './Instance';
 import {Index, IndexSpecification} from './Index';
 import {Schema} from './Schema';
 import {InstanceImplementation} from './InstanceInterface';
-import {Transforms} from './Transforms';
+import {Transforms, DefaultTransforms} from './Transforms';
 
 /**
  * Specifies the name of the collection to which this instance's documents should be sent.
@@ -128,7 +128,23 @@ export function Transform(fromDB: (value: any) => any, toDB: (value: any) => any
 export function ObjectID(target: Instance<any, any>, name: string) {
 	Property(MongoDB.ObjectID)(target, name);
 	Transform(
-		value => value && value._bsontype == 'ObjectID' ? new MongoDB.ObjectID(value.id).toHexString() : value,
-		value => value && typeof value === 'string' ? new MongoDB.ObjectID(value) : value
+		DefaultTransforms.ObjectID.fromDB,
+		DefaultTransforms.ObjectID.toDB
+	)(target, name);
+}
+
+/**
+ * Specifies that this property should be stored using the MongoDB binary type and represented as a Buffer.
+ * 
+ * This decorator applies a Buffer validator to the property, which ensures that values you send to the database
+ * are well formatted Buffer objects represented using the BSON Binary datatype. In addition to this, it will
+ * apply a transform which ensures you only work with Buffer objects and that data is always stored in Binary
+ * format.
+ */
+export function Binary(target: Instance<any, any>, name: string) {
+	Property(Buffer)(target, name);
+	Transform(
+		DefaultTransforms.Binary.fromDB,
+		DefaultTransforms.Binary.toDB
 	)(target, name);
 }

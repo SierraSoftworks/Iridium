@@ -1,6 +1,7 @@
 var MongoDB = require('mongodb');
 var _ = require('lodash');
 var Skmatc = require('skmatc');
+var Transforms_1 = require('./Transforms');
 /**
  * Specifies the name of the collection to which this instance's documents should be sent.
  * @param name The name of the MongoDB collection to store the documents in.
@@ -103,8 +104,21 @@ exports.Transform = Transform;
  */
 function ObjectID(target, name) {
     Property(MongoDB.ObjectID)(target, name);
-    Transform(function (value) { return value && value._bsontype == 'ObjectID' ? new MongoDB.ObjectID(value.id).toHexString() : value; }, function (value) { return value && typeof value === 'string' ? new MongoDB.ObjectID(value) : value; })(target, name);
+    Transform(Transforms_1.DefaultTransforms.ObjectID.fromDB, Transforms_1.DefaultTransforms.ObjectID.toDB)(target, name);
 }
 exports.ObjectID = ObjectID;
+/**
+ * Specifies that this property should be stored using the MongoDB binary type and represented as a Buffer.
+ *
+ * This decorator applies a Buffer validator to the property, which ensures that values you send to the database
+ * are well formatted Buffer objects represented using the BSON Binary datatype. In addition to this, it will
+ * apply a transform which ensures you only work with Buffer objects and that data is always stored in Binary
+ * format.
+ */
+function Binary(target, name) {
+    Property(Buffer)(target, name);
+    Transform(Transforms_1.DefaultTransforms.Binary.fromDB, Transforms_1.DefaultTransforms.Binary.toDB)(target, name);
+}
+exports.Binary = Binary;
 
 //# sourceMappingURL=Decorators.js.map

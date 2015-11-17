@@ -23,7 +23,7 @@ import {ModelHandlers} from './ModelHandlers';
 import * as ModelInterfaces from './ModelInterfaces';
 import {ModelSpecificInstance} from './ModelSpecificInstance';
 import {InstanceImplementation} from './InstanceInterface';
-import {Transforms} from './Transforms';
+import {Transforms, DefaultTransforms} from './Transforms';
 import * as AggregationPipeline from './Aggregate';
 
 /**
@@ -71,10 +71,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
         if(!this._schema._id) this._schema._id = MongoDB.ObjectID;
 
         if(this._schema._id === MongoDB.ObjectID && !this._transforms['_id'])
-            this._transforms['_id'] = {
-                fromDB: value => value._bsontype == 'ObjectID' ? new MongoDB.ObjectID(value.id).toHexString() : value,
-                toDB: value => value && typeof value === 'string' ? new MongoDB.ObjectID(value) : value
-            };
+            this._transforms['_id'] = DefaultTransforms.ObjectID;
 
         if ((<Function>instanceType).prototype instanceof Instance)
             this._Instance = ModelSpecificInstance(this, instanceType);

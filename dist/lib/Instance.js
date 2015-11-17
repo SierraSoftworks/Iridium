@@ -1,7 +1,6 @@
+var Validators_1 = require('./Validators');
 var _ = require('lodash');
-var MongoDB = require('mongodb');
 var Bluebird = require('bluebird');
-var Skmatc = require('skmatc');
 /**
  * The default Iridium Instance implementation which provides methods for saving, refreshing and
  * removing the wrapped document from the collection, as well as integrating with Omnom, our
@@ -263,11 +262,7 @@ var Instance = (function () {
     /**
      * Additional which should be made available for use in the schema definition for this instance.
      */
-    Instance.validators = [
-        Skmatc.create(function (schema) { return schema === MongoDB.ObjectID; }, function (schema, data) {
-            return this.assert(!data || data instanceof MongoDB.ObjectID || (data._bsontype === 'ObjectID' && data.id));
-        }, { name: 'ObjectID validation' })
-    ];
+    Instance.validators = Validators_1.DefaultValidators();
     /**
      * The transformations which should be applied to properties of documents of this type.
      */

@@ -4,6 +4,7 @@ import skmatc = require('skmatc');
 import MongoDB = require('mongodb');
 
 interface Document {
+    _id?: string;
     name: string;
     dateOfBirth: Date;
     siblings: {
@@ -11,10 +12,11 @@ interface Document {
         related: boolean;
         ageDifference: number;
     }[];
+    avatar: Buffer;
 }
 
 @Iridium.Validate('Over18', function(schema, data) {
-    return this.assert(data.getTime && data.getTime() < (new Date().getTime() - 365 * 86400 * 18));
+    return this.assert(data.getTime && data.getTime() < (new Date().getTime() - 365 * 86400 * 18 * 1000));
 })
 class Person extends Iridium.Instance<Document, Person> {
     static collection = 'test';
@@ -26,16 +28,23 @@ class Person extends Iridium.Instance<Document, Person> {
             name: String,
             related: Boolean,
             ageDifference: Number
-        }]
+        }],
+        avatar: Buffer
     };
 
+    @Iridium.ObjectID
+    _id: string;
     name: string;
+    
     dateOfBirth: Date;
     siblings: {
         name: string;
         related: boolean;
         ageDifference: number;
     }[];
+    
+    @Iridium.Binary
+    avatar: Buffer;
 }
 
 describe("Validation", () => {
@@ -57,7 +66,8 @@ describe("Validation", () => {
                     name: 'Jane',
                     related: true,
                     ageDifference: -2
-                }]
+                }],
+                avatar: new Buffer("test", "utf8")
             })).to.eventually.be.ok;
         });
 
@@ -69,8 +79,67 @@ describe("Validation", () => {
                     name: 'Jane',
                     related: true,
                     ageDifference: -2
-                }]
-            })).to.eventually.be.ok;
+                }],
+                avatar: new Buffer("test", "utf8")
+            })).to.eventually.be.rejected;
+        });
+        
+        describe("ObjectID", () => {
+            it("should successfully validate valid documents", () => {
+                return chai.expect(model.insert({
+                    _id: '012345670123456701234567',
+                    name: 'John',
+                    dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
+                    siblings: [{
+                        name: 'Jane',
+                        related: true,
+                        ageDifference: -2
+                    }],
+                    avatar: new Buffer("test", "utf8")
+                })).to.eventually.be.ok;
+            });
+            
+            it("should fail to validate documents which are invalid", () => {
+                return chai.expect(model.insert({
+                    _id: 'this is an invalid id',
+                    name: 'John',
+                    dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
+                    siblings: [{
+                        name: 'Jane',
+                        related: true,
+                        ageDifference: -2
+                    }],
+                    avatar: new Buffer("test", "utf8")
+                })).to.eventually.be.rejected;
+            });
+        });
+        
+        describe("Binary", () => {
+            it("should successfully validate valid documents", () => {
+                return chai.expect(model.insert({
+                    name: 'John',
+                    dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
+                    siblings: [{
+                        name: 'Jane',
+                        related: true,
+                        ageDifference: -2
+                    }],
+                    avatar: new Buffer("test", "utf8")
+                })).to.eventually.be.ok;
+            });
+            
+            it("should fail to validate documents which are invalid", () => {
+                return chai.expect(model.insert({
+                    name: 'John',
+                    dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
+                    siblings: [{
+                        name: 'Jane',
+                        related: true,
+                        ageDifference: -2
+                    }],
+                    avatar: <any>'test'
+                })).to.eventually.be.rejected;
+            });
         });
     });
 
@@ -83,7 +152,8 @@ describe("Validation", () => {
                     name: 'Jane',
                     related: true,
                     ageDifference: -2
-                }]
+                }],
+                avatar: new Buffer("test", "utf8")
             })).to.eventually.be.ok;
         });
 
@@ -95,7 +165,8 @@ describe("Validation", () => {
                     name: 'Jane',
                     related: true,
                     ageDifference: -2
-                }]
+                }],
+                avatar: new Buffer("test", "utf8")
             })).to.eventually.be.rejected;
         });
 
@@ -107,7 +178,8 @@ describe("Validation", () => {
                     name: 'Jane',
                     related: true,
                     ageDifference: -2
-                }]
+                }],
+                avatar: new Buffer("test", "utf8")
             }).catch(() => chai.expect(model.findOne({ dateOfBirth: 0 })).to.eventually.be.null);
         });
 
@@ -119,7 +191,8 @@ describe("Validation", () => {
                     name: 'Francie',
                     related: false,
                     ageDifference: -2
-                }]
+                }],
+                avatar: new Buffer("test", "utf8")
             }, {
                 name: 'Jack',
                 dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
@@ -127,7 +200,8 @@ describe("Validation", () => {
                     name: 'Jill',
                     related: true,
                     ageDifference: 2
-                }]
+                }],
+                avatar: new Buffer("test", "utf8")
             }])).to.eventually.be.ok;
         });
 
@@ -139,7 +213,8 @@ describe("Validation", () => {
                     name: 'Francie',
                     related: <any>'related',
                     ageDifference: -2
-                }]
+                }],
+                avatar: new Buffer("test", "utf8")
             }, {
                 name: <any>5,
                 dateOfBirth: new Date(),
@@ -147,7 +222,8 @@ describe("Validation", () => {
                     name: 'Jill',
                     related: true,
                     ageDifference: 2
-                }]
+                }],
+                avatar: new Buffer("test", "utf8")
             }])).to.eventually.be.rejected;
         });
 
@@ -159,7 +235,8 @@ describe("Validation", () => {
                     name: 'Francie',
                     related: <any>'related',
                     ageDifference: -2
-                }]
+                }],
+                avatar: new Buffer("test", "utf8")
             }, {
                 name: 'Jack',
                 dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
@@ -167,7 +244,8 @@ describe("Validation", () => {
                     name: 'Jill',
                     related: true,
                     ageDifference: 2
-                }]
+                }],
+                avatar: new Buffer("test", "utf8")
             }])).to.eventually.be.rejected;
         });
 
@@ -179,7 +257,8 @@ describe("Validation", () => {
                     name: 'Francie',
                     related: <any>'related',
                     ageDifference: -2
-                }]
+                }],
+                avatar: new Buffer("test", "utf8")
             }, {
                 name: 'Jack',
                 dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
@@ -187,7 +266,8 @@ describe("Validation", () => {
                     name: 'Jill',
                     related: true,
                     ageDifference: 2
-                }]
+                }],
+                avatar: new Buffer("test", "utf8")
             }]).catch(() => chai.expect(model.findOne({ 'siblings.related': 'related' })).to.eventually.be.null);
         });
     });
@@ -196,7 +276,8 @@ describe("Validation", () => {
         beforeEach(() => model.remove().then(() => model.insert({
             name: 'Frank',
             dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
-            siblings: []
+            siblings: [],
+            avatar: new Buffer("test", "utf8")
         })));
 
         it("should validate documents when you attempt to change them", () => {
