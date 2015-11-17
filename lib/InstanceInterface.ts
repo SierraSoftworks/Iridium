@@ -1,4 +1,5 @@
 import Skmatc = require('skmatc');
+import Bluebird = require('bluebird');
 import {Schema} from './Schema';
 import {Model} from './Model';
 import * as Index from './Index';
@@ -52,27 +53,56 @@ export interface InstanceImplementation<TDocument extends { _id ?: any }, TInsta
     /**
      * An optional method which will be called whenever a document is about to be inserted into the database,
      * allowing you to set default values and do any preprocessing you wish prior to the document being inserted.
+     *
+     * @param document The document which will be inserted into the database.
+     *
+     * This method is executed synchronously, however you can perform asynchronous operations by returning a
+     * promise which resolves once your task has completed. Be aware that this method is executed for every
+     * document inserted into the database. As a result, long running tasks will have a significant impact
+     * on the performance of your inserts.
      */
-    onCreating? (document: TDocument): Promise.Thenable<void> | void;
+    onCreating? (document: TDocument): Promise.Thenable<any> | void;
 
     /**
      * An optional method which is called whenever a new document is received from the model's collection and
      * prior to the document being wrapped, can be used to perform preprocessing if necessary - however we recommend
      * you rather make use of transforms for that task.
+     *
+     * @param document The document that was retrieved from the database.
+     *
+     * This method is executed synchronously, however you can perform asynchronous operations by returning a
+     * promise which resolves once your task has completed. Be aware that this method is executed for every
+     * document retrieved from the database. As a result, long running tasks will have a significant impact
+     * on the performance of your queries.
      */
-    onRetrieved? (document: TDocument): Promise.Thenable<void> | void;
+    onRetrieved? (document: TDocument): Promise.Thenable<any> | void;
 
     /**
      * An optional method which is called whenever a new document for this model has been wrapped in an instance.
+     *
+     * @param instance The instance which has been created.
+     *
+     * This method is executed synchronously, however you can perform asynchronous operations by returning a
+     * promise which resolves once your task has completed. Be aware that this method is executed for every
+     * document retrieved from the database. As a result, long running tasks will have a significant impact
+     * on the performance of your queries.
      */
-    onReady? (instance: TInstance): Promise.Thenable<void> | void;
+    onReady? (instance: TInstance): Promise.Thenable<any> | void;
 
     /**
      * An optional method which is called prior to saving an instance, it is provided with the instance itself as
      * well as the proposed changes to the instance. This allows you to make additional changes, such as updating
      * a lastChanged property on the document, or abort changes by throwing an error.
+     *
+     * @param instance The instance to which the changes are being made
+     * @param changes The MongoDB change object describing the changes being made to the document.
+     *
+     * This method is executed synchronously, however you can perform asynchronous operations by returning a
+     * promise which resolves once your task has completed. Be aware that this method is executed for every
+     * call to save. As a result, long running tasks will have a significant impact on how quickly your save
+     * operations are dispatched.
      */
-    onSaving? (instance: TInstance, changes: any): Promise.Thenable<void> | void;
+    onSaving? (instance: TInstance, changes: any): Promise.Thenable<any> | void;
 
     /**
      * The cache controller used to determine whether a document may be cached, as well as deriving a unique cache
