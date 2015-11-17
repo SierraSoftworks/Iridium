@@ -53,26 +53,26 @@ export interface InstanceImplementation<TDocument extends { _id ?: any }, TInsta
      * An optional method which will be called whenever a document is about to be inserted into the database,
      * allowing you to set default values and do any preprocessing you wish prior to the document being inserted.
      */
-    onCreating? (document: TDocument): void;
+    onCreating? (document: TDocument): Promise.Thenable<void> | void;
 
     /**
      * An optional method which is called whenever a new document is received from the model's collection and
      * prior to the document being wrapped, can be used to perform preprocessing if necessary - however we recommend
      * you rather make use of transforms for that task.
      */
-    onRetrieved? (document: TDocument): void;
+    onRetrieved? (document: TDocument): Promise.Thenable<void> | void;
 
     /**
      * An optional method which is called whenever a new document for this model has been wrapped in an instance.
      */
-    onReady? (instance: TInstance): void;
+    onReady? (instance: TInstance): Promise.Thenable<void> | void;
 
     /**
      * An optional method which is called prior to saving an instance, it is provided with the instance itself as
      * well as the proposed changes to the instance. This allows you to make additional changes, such as updating
      * a lastChanged property on the document, or abort changes by throwing an error.
      */
-    onSaving? (instance: TInstance, changes: any): void;
+    onSaving? (instance: TInstance, changes: any): Promise.Thenable<void> | void;
 
     /**
      * The cache controller used to determine whether a document may be cached, as well as deriving a unique cache
