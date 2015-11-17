@@ -5,7 +5,7 @@ import {Instance} from './Instance';
 import {Index, IndexSpecification} from './Index';
 import {Schema} from './Schema';
 import {InstanceImplementation} from './InstanceInterface';
-import {Transforms} from './Transforms';
+import {Transforms, DefaultTransforms} from './Transforms';
 
 /**
  * Specifies the name of the collection to which this instance's documents should be sent.
@@ -128,7 +128,7 @@ export function Transform(fromDB: (value: any) => any, toDB: (value: any) => any
 export function ObjectID(target: Instance<any, any>, name: string) {
 	Property(MongoDB.ObjectID)(target, name);
 	Transform(
-		value => value && value._bsontype == 'ObjectID' ? new MongoDB.ObjectID(value.id).toHexString() : value,
-		value => value && typeof value === 'string' ? new MongoDB.ObjectID(value) : value
+		DefaultTransforms.ObjectID.fromDB,
+		DefaultTransforms.ObjectID.toDB
 	)(target, name);
 }
