@@ -34,6 +34,7 @@ export class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
         let wrapped: TResult;
         return Bluebird.resolve(result).then((target: any) => {
             return <Bluebird<TResult>>Bluebird
+                // If onRetrieved returns a Bluebird promise then there is no significant performance overhead here
                 .resolve(this.model.hooks.onRetrieved && this.model.hooks.onRetrieved(target))
                 .then(() => {
                     // Cache the document if caching is enabled
@@ -57,6 +58,7 @@ export class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
     creatingDocuments(documents: TDocument[]): Bluebird<any[]> {
         return Bluebird.all(documents.map((document: any) => {
             return Bluebird
+                // If onCreating returns a Bluebird promise then there is no significant performance overhead here
                 .resolve(this.model.hooks.onCreating && this.model.hooks.onCreating(document))
                 .then(() => {
                     document = this.model.helpers.convertToDB(document);
@@ -70,6 +72,7 @@ export class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
 
     savingDocument(instance: TInstance, changes: any): Bluebird<TInstance> {
         return Bluebird
+            // If onSaving returns a Bluebird promise then there is no significant performance overhead here
             .resolve(this.model.hooks.onSaving && this.model.hooks.onSaving(instance, changes))
             .then(() => {
                 return instance;
