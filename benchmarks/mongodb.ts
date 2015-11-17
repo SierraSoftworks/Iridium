@@ -17,12 +17,13 @@ class User {
 
     static collection = "user";
     static schema = {
-        _id: true
+        _id: String
     };
 }
 
 @Iridium.Collection("userWrapped")
 class WrappedUser extends Iridium.Instance<UserDocument, WrappedUser> {
+    @Iridium.Property(String, true)
     _id: string;
 }
 
