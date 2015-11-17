@@ -1,5 +1,4 @@
 import Skmatc = require('skmatc');
-import Bluebird = require('bluebird');
 import {Schema} from './Schema';
 import {Model} from './Model';
 import * as Index from './Index';

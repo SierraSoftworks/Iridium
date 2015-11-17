@@ -68,20 +68,20 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
      * A function which is called whenever a new document is in the process of being inserted into the database.
      * @param document The document which will be inserted into the database.
      */
-    static onCreating: (document: { _id?: any }) => Promise.Thenable<void> | void;
+    static onCreating: (document: { _id?: any }) => Promise.Thenable<any> | void;
 
     /**
      * A function which is called whenever a document of this type is received from the database, prior to it being
      * wrapped by an Instance object.
      * @param document The document that was retrieved from the database.
      */
-    static onRetrieved: (document: { _id?: any }) => Promise.Thenable<void> | void;
+    static onRetrieved: (document: { _id?: any }) => Promise.Thenable<any> | void;
 
     /**
      * A function which is called whenever a new instance has been created to wrap a document.
      * @param instance The instance which has been created.
      */
-    static onReady: (instance: Instance<{ _id?: any }, Instance<{ _id?: any }, any>>) => Promise.Thenable<void> | void;
+    static onReady: (instance: Instance<{ _id?: any }, Instance<{ _id?: any }, any>>) => Promise.Thenable<any> | void;
 
     /**
      * A function which is called whenever an instance's save() method is called to allow you to interrogate and/or manipulate
@@ -90,7 +90,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
      * @param instance The instance to which the changes are being made
      * @param changes The MongoDB change object describing the changes being made to the document.
      */
-    static onSaving: (instance: Instance<{ _id?: any }, Instance<{ _id?: any }, any>>, changes: any) => Promise.Thenable<void> | void;
+    static onSaving: (instance: Instance<{ _id?: any }, Instance<{ _id?: any }, any>>, changes: any) => Promise.Thenable<any> | void;
 
     /**
      * The name of the collection into which documents of this type are stored.

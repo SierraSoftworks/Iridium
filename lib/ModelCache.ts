@@ -18,7 +18,7 @@ export class ModelCache {
 
     get<T>(conditions: any): Bluebird<T> {
         if (!this.model.cacheDirector || !this.model.cacheDirector.validQuery(conditions)) return Bluebird.resolve(<T>null);
-        return this.model.core.cache.get<T>(this.model.cacheDirector.buildQueryKey(conditions));
+        return Bluebird.resolve(this.model.core.cache.get<T>(this.model.cacheDirector.buildQueryKey(conditions)));
     }
 
     clear(conditions: any): void {
