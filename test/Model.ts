@@ -709,6 +709,12 @@ describe("Model",() => {
                 return chai.expect(model.find({}, { answer: 0 }).map(i => i.answer)).to.eventually.eql([undefined, undefined, undefined, undefined, undefined]);
             });
         });
+
+        describe("readFrom()", () => {
+            it("should return a new cursor", () => {
+                chai.expect(model.find().readFrom('secondaryPreferred')).to.be.instanceof(Cursor);
+            });
+        });
     });
 
     describe("count()",() => {

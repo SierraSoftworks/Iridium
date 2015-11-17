@@ -171,6 +171,14 @@ var Cursor = (function () {
     Cursor.prototype.skip = function (skip) {
         return new Cursor(this.model, this.conditions, this.cursor.skip(skip));
     };
+    /**
+     * Returns a new cursor which will read from the specified node type.
+     * @param {String} type The type of node to read from - see https://docs.mongodb.org/manual/core/read-preference/
+     * @return {Cursor} The new cursor which reads from the specified node type
+     */
+    Cursor.prototype.readFrom = function (type) {
+        return new Cursor(this.model, this.conditions, this.cursor.setReadPreference(type));
+    };
     return Cursor;
 })();
 exports.Cursor = Cursor;
