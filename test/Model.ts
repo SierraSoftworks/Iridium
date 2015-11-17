@@ -599,6 +599,33 @@ describe("Model",() => {
             });
         });
 
+        describe("one()", () => {
+            it("should return a promise",() => {
+                chai.expect(model.find().one()).to.be.an.instanceof(Promise);
+            });
+
+            it("which should resolve to the next instance in the query",() => {
+                return chai.expect(model.find().one()).to.eventually.be.an.instanceof(model.Instance);
+            });
+
+            it("should be capable of functioning correctly with empty result sets",() => {
+                return chai.expect(model.find({ nothing: true }).one()).to.eventually.not.exist;
+            });
+
+            it("should support using callbacks instead of promises",(done) => {
+                model.find().one((err, instance) => {
+                    if (err) return done(err);
+                    chai.expect(instance).to.be.an.instanceof(model.Instance);
+                    return done();
+                });
+            });
+
+            it("should not allow you to call it more than once", () => {
+                let cursor = model.find();
+                return chai.expect(cursor.one().then(() => cursor.one())).to.eventually.be.rejected;
+            });
+        });
+
         describe("rewind()",() => {
             it("should return a new cursor",() => {
                 chai.expect(model.find().rewind()).to.be.an.instanceof(Cursor);

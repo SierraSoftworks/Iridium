@@ -112,6 +112,33 @@ var Cursor = (function () {
         }).nodeify(callback);
     };
     /**
+     * Retrieves the next item in the result list and then closes the cursor
+     * @param {function(Error, TInstance)} callback A callback which is triggered when the next item becomes available
+     * @return {Promise<TInstance>} A promise which is resolved once the item becomes available and the cursor has been closed.
+     */
+    Cursor.prototype.one = function (callback) {
+        var _this = this;
+        return new Bluebird(function (resolve, reject) {
+            _this.cursor.next(function (err, result) {
+                if (err)
+                    return reject(err);
+                return resolve(result);
+            });
+        }).then(function (document) {
+            return new Bluebird(function (resolve, reject) {
+                _this.cursor.close(function (err) {
+                    if (err)
+                        return reject(err);
+                    return resolve(document);
+                });
+            });
+        }).then(function (document) {
+            if (!document)
+                return Bluebird.resolve(null);
+            return _this.model.handlers.documentReceived(_this.conditions, document, function (document, isNew, isPartial) { return _this.model.helpers.wrapDocument(document, isNew, isPartial); });
+        }).nodeify(callback);
+    };
+    /**
      * Returns a new cursor which behaves the same as this one did before any results were retrieved
      * @return {Cursor} The new cursor which starts at the beginning of the results
      */
