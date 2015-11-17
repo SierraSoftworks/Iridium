@@ -54,6 +54,11 @@ describe("Hooks", function () {
     after(() => core.close());
 
     describe("creating",() => {
+        after(() => {
+            // Not used again
+            Test.onCreating = null;
+        });
+
         it("should be called when a document is being created",(done) => {
             hookEmitter.once('creating',() => done());
             model.insert({ answer: 11 });
@@ -71,13 +76,22 @@ describe("Hooks", function () {
             return model.insert({ answer: 11 }).then(() => chai.expect(result).to.exist).then(() => result);
         });
 
-        it("should accept promises",(done) => {
-            shouldReject = 1;
-            model.insert({ answer: 11 }).then(null, (err) => chai.expect(err).to.equal('test rejection') && done());
+        it("should support blocking async calls", () => {
+            let result: boolean = false;
+            Test.onCreating = (document: TestDocument) => {
+                return Promise.delay(true, 50).then(() => result = true);
+            };
+
+            return model.insert({ answer: 11 }).then(() => chai.expect(result).to.be.true);
         });
     });
 
     describe("ready",() => {
+        after(() => {
+            // Not used again
+            Test.onReady = null;
+        });
+
         it("should be called when an instance is prepared",() => {
             let result: Promise<void>;
 
@@ -100,13 +114,22 @@ describe("Hooks", function () {
             return model.get().then(() => chai.expect(result).to.exist).then(() => result);
         });
 
-        it("should accept promises",(done) => {
-            shouldReject = 2;
-            model.get().then(null, (err) => chai.expect(err).to.equal('test rejection') && done());
+        it("should support blocking async calls", () => {
+            let result: boolean = false;
+            Test.onReady = (instance: Test) => {
+                return Promise.delay(true, 50).then(() => result = true);
+            };
+
+            return model.get().then(() => chai.expect(result).to.be.true);
         });
     });
 
     describe("retreived",() => {
+        after(() => {
+            // Not used again
+            Test.onRetrieved = null;
+        });
+
         it("should be called when a document is being retrieved",() => {
             let result: Promise<void>;
 
@@ -129,13 +152,22 @@ describe("Hooks", function () {
             return model.get().then(() => chai.expect(result).to.exist).then(() => result);
         });
 
-        it("should accept promises",(done) => {
-            shouldReject = 3;
-            model.get().then(null, (err) => chai.expect(err).to.equal('test rejection') && done());
+        it("should support blocking async calls", () => {
+            let result: boolean = false;
+            Test.onRetrieved = (document: TestDocument) => {
+                return Promise.delay(true, 50).then(() => result = true);
+            };
+
+            return model.get().then(() => chai.expect(result).to.be.true);
         });
     });
 
-    describe("saving",() => {
+    describe("saving", () => {
+        after(() => {
+            // Not used again
+            Test.onSaving = null;
+        });
+
         it("should be triggered when save() is called on an instance",() => {
             let result: Promise<void>;
 
@@ -181,12 +213,16 @@ describe("Hooks", function () {
             }).then(() => chai.expect(result).to.exist).then(() => result);
         });
 
-        it("should accept promises",(done) => {
-            shouldReject = 4;
-            model.get().then((instance) => {
+        it("should support blocking async calls", () => {
+            let result: boolean = false;
+            Test.onSaving = (instance: Test, changes: any) => {
+                return Promise.delay(true, 50).then(() => result = true);
+            };
+
+            return model.get().then((instance) => {
                 instance.answer++;
                 return instance.save();
-            }).then(null, (err) => chai.expect(err).to.equal('test rejection') && done());
+            }).then(() => chai.expect(result).to.be.true);
         });
     });
 });

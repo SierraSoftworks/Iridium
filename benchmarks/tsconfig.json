@@ -1,0 +1,10 @@
+{
+	"compilerOptions": {
+		"target": "ES5",
+		"module": "commonjs",
+		"experimentalDecorators": true
+	},
+	"files": [
+		"mongodb.ts"
+	]
+}

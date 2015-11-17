@@ -20,18 +20,20 @@ var ModelHandlers = (function () {
             partial: false
         });
         return Bluebird.resolve(result).then(function (target) {
-            return Bluebird.resolve().then(function () {
+            return Bluebird
+                .resolve(_this.model.hooks.onRetrieved && _this.model.hooks.onRetrieved(target))
+                .then(function () {
                 // Cache the document if caching is enabled
                 if (_this.model.core.cache && options.cache && !options.fields) {
                     _this.model.cache.set(target); // Does not block execution pipeline - fire and forget
                 }
-                // Trigger the received hook
-                if (_this.model.hooks.onRetrieved)
-                    _this.model.hooks.onRetrieved(target);
                 // Wrap the document and trigger the ready hook
                 var wrapped = wrapper(target, false, !!options.fields);
-                if (_this.model.hooks.onReady && wrapped instanceof _this.model.Instance)
-                    _this.model.hooks.onReady(wrapped);
+                // Only incur the additional promise's performance penalty if this hook is being used
+                if (_this.model.hooks.onReady)
+                    return Bluebird
+                        .resolve(_this.model.hooks.onReady(wrapped))
+                        .then(function () { return wrapped; });
                 return wrapped;
             });
         });
@@ -39,9 +41,9 @@ var ModelHandlers = (function () {
     ModelHandlers.prototype.creatingDocuments = function (documents) {
         var _this = this;
         return Bluebird.all(documents.map(function (document) {
-            return Bluebird.resolve().then(function () {
-                if (_this.model.hooks.onCreating)
-                    _this.model.hooks.onCreating(document);
+            return Bluebird
+                .resolve(_this.model.hooks.onCreating && _this.model.hooks.onCreating(document))
+                .then(function () {
                 document = _this.model.helpers.convertToDB(document);
                 var validation = _this.model.helpers.validate(document);
                 if (validation.failed)
@@ -51,10 +53,9 @@ var ModelHandlers = (function () {
         }));
     };
     ModelHandlers.prototype.savingDocument = function (instance, changes) {
-        var _this = this;
-        return Bluebird.resolve().then(function () {
-            if (_this.model.hooks.onSaving)
-                _this.model.hooks.onSaving(instance, changes);
+        return Bluebird
+            .resolve(this.model.hooks.onSaving && this.model.hooks.onSaving(instance, changes))
+            .then(function () {
             return instance;
         });
     };

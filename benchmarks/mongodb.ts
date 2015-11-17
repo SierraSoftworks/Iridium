@@ -1,4 +1,4 @@
-/// <reference path="../_references.d.ts" />
+/// <reference path="../typings/DefinitelyTyped/tsd.d.ts" />
 import Iridium = require('../index');
 import Bluebird = require('bluebird');
 import MongoDB = require('mongodb');
@@ -14,9 +14,16 @@ interface UserDocument {
 
 class User {
     _id: string;
+
+    static collection = "user";
+    static schema = {
+        _id: String
+    };
 }
 
+@Iridium.Collection("userWrapped")
 class WrappedUser extends Iridium.Instance<UserDocument, WrappedUser> {
+    @Iridium.Property(String, true)
     _id: string;
 }
 
@@ -25,13 +32,8 @@ class IridiumDB extends Iridium.Core {
         super({ database: 'test' });
     }
 
-    User = new Iridium.Model<UserDocument, User>(this,(model, doc) => doc, 'iridium', {
-        _id: false
-    });
-
-    UserWrapped = new Iridium.Model<UserDocument, WrappedUser>(this, WrappedUser, 'iridiumWrapped', {
-        _id: false
-    });
+    User = new Iridium.Model<UserDocument, User>(this, User);
+    UserWrapped = new Iridium.Model<UserDocument, WrappedUser>(this, WrappedUser);
 }
 
 console.log("Running benchmark with intensity of %d, %d samples", intensity, samples);
