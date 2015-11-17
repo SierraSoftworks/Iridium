@@ -7,6 +7,7 @@ import * as ModelInterfaces from './ModelInterfaces';
 import * as Index from './Index';
 import {Schema} from './Schema';
 import {Transforms} from './Transforms';
+import {DefaultValidators} from './Validators';
 
 import _ = require('lodash');
 import MongoDB = require('mongodb');
@@ -107,11 +108,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
     /**
      * Additional which should be made available for use in the schema definition for this instance.
      */
-    static validators: Skmatc.Validator[] = [
-        Skmatc.create(schema => schema === MongoDB.ObjectID, function(schema, data) {
-            return this.assert(!data || data instanceof MongoDB.ObjectID || (data._bsontype === 'ObjectID' && data.id));
-        }, { name: 'ObjectID validation' })
-    ];
+    static validators: Skmatc.Validator[] = DefaultValidators();
 
     /**
      * The transformations which should be applied to properties of documents of this type.

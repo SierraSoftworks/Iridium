@@ -2,6 +2,7 @@
 import * as Iridium from '../index';
 import skmatc = require('skmatc');
 import MongoDB = require('mongodb');
+import {DefaultValidators} from '../lib/Validators';
 
 interface TestDocument {
 	_id?: string;
@@ -105,7 +106,7 @@ describe("Decorators", () => {
 		});
 
         it("should not pollute the parent's validators object", () => {
-            chai.expect(Iridium.Instance.validators).to.exist.and.have.length(1);
+            chai.expect(Iridium.Instance.validators).to.exist.and.have.length(DefaultValidators().length);
         });
 	});
 
