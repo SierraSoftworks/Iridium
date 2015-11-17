@@ -8,6 +8,7 @@ var ModelCache_1 = require('./ModelCache');
 var ModelHelpers_1 = require('./ModelHelpers');
 var ModelHandlers_1 = require('./ModelHandlers');
 var ModelSpecificInstance_1 = require('./ModelSpecificInstance');
+var Transforms_1 = require('./Transforms');
 /**
  * An Iridium Model which represents a structured MongoDB collection.
  * Models expose the methods you will generally use to query those collections, and ensure that
@@ -54,10 +55,7 @@ var Model = (function () {
         if (!this._schema._id)
             this._schema._id = MongoDB.ObjectID;
         if (this._schema._id === MongoDB.ObjectID && !this._transforms['_id'])
-            this._transforms['_id'] = {
-                fromDB: function (value) { return value._bsontype == 'ObjectID' ? new MongoDB.ObjectID(value.id).toHexString() : value; },
-                toDB: function (value) { return value && typeof value === 'string' ? new MongoDB.ObjectID(value) : value; }
-            };
+            this._transforms['_id'] = Transforms_1.DefaultTransforms.ObjectID;
         if (instanceType.prototype instanceof Instance_1.Instance)
             this._Instance = ModelSpecificInstance_1.ModelSpecificInstance(this, instanceType);
         else

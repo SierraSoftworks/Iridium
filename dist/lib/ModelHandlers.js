@@ -19,6 +19,7 @@ var ModelHandlers = (function () {
             cache: true,
             partial: false
         });
+        var wrapped;
         return Bluebird.resolve(result).then(function (target) {
             return Bluebird
                 .resolve(_this.model.hooks.onRetrieved && _this.model.hooks.onRetrieved(target))
