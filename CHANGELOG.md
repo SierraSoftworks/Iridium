@@ -1,15 +1,38 @@
 
+## [v6.3.0](https://github.com/sierrasoftworks/iridium/tree/v6.3.0)
+- [50713c7](https://github.com/sierrasoftworks/iridium/commit/50713c7) Version 6.3.0
+- [f09fa1b](https://github.com/sierrasoftworks/iridium/commit/f09fa1b) (origin/master, origin/HEAD) Merge branch 'feat/async-hooks'
+- [fcddc72](https://github.com/sierrasoftworks/iridium/commit/fcddc72) Merge branch 'pr/20'
+- [1fe25e2](https://github.com/sierrasoftworks/iridium/commit/1fe25e2) (origin/feat/async-hooks, feat/async-hooks) refactor: Remove duplicate `wrapped` definition
+- [c697682](https://github.com/sierrasoftworks/iridium/commit/c697682) docs: Added some comments regarding promise performance under async conditions
+- [d24448e](https://github.com/sierrasoftworks/iridium/commit/d24448e) build: Update js maps following support for Promise.Thenable on external APIs
+- [9e56ec9](https://github.com/sierrasoftworks/iridium/commit/9e56ec9) refactor: Support libraries other than Bluebird for external promise sources
+- [8ad539f](https://github.com/sierrasoftworks/iridium/commit/8ad539f) build: Update distributable files with new async hooks changes
+- [004733b](https://github.com/sierrasoftworks/iridium/commit/004733b) test: Add tests for async hooks to ensure execution order is guaranteed
+- [5538f28](https://github.com/sierrasoftworks/iridium/commit/5538f28) feat: Add support for awaiting hooks using promises, as well as performance warnings in documentation
+- [108e471](https://github.com/sierrasoftworks/iridium/commit/108e471) benchmark: Further fixes to benchmark to correct an error using ObjectIDs
+- [e37b56e](https://github.com/sierrasoftworks/iridium/commit/e37b56e) benchmark: Update benchmark file to make use of latest API
+- [2dabf54](https://github.com/sierrasoftworks/iridium/commit/2dabf54) Promises support in hooks
+- [0a8ee18](https://github.com/sierrasoftworks/iridium/commit/0a8ee18) feat: Add ability to specify a cursor's read preference using readFrom()
+- [ea3eb8f](https://github.com/sierrasoftworks/iridium/commit/ea3eb8f) feat: Add ability to use cursor to retrieve a single document
+- [bd0858e](https://github.com/sierrasoftworks/iridium/commit/bd0858e) (pr/20) Test case for promises in hooks
+- [0db5f34](https://github.com/sierrasoftworks/iridium/commit/0db5f34) Promises support in hooks
+- [1354dc0](https://github.com/sierrasoftworks/iridium/commit/1354dc0) (origin/release, release) Merge branch 'master' into release
+- [be5e698](https://github.com/sierrasoftworks/iridium/commit/be5e698) Updated documentation
+
 ## [v6.2.0](https://github.com/sierrasoftworks/iridium/tree/v6.2.0)
 - [88b2d60](https://github.com/sierrasoftworks/iridium/commit/88b2d60) Version 6.2.0
-- [7e0c6b3](https://github.com/sierrasoftworks/iridium/commit/7e0c6b3) (origin/master, origin/HEAD) ci: Have Travis publish npm versions
+- [7e0c6b3](https://github.com/sierrasoftworks/iridium/commit/7e0c6b3) ci: Have Travis publish npm versions
 - [17edecd](https://github.com/sierrasoftworks/iridium/commit/17edecd) feat: Added one() method to cursor to read a single item from the database
 - [fe1ab5f](https://github.com/sierrasoftworks/iridium/commit/fe1ab5f) feat: Added readFrom method to cursor
+- [2fc6604](https://github.com/sierrasoftworks/iridium/commit/2fc6604) Merge branch 'master' into release
 - [a914a64](https://github.com/sierrasoftworks/iridium/commit/a914a64) Updated Changelog
 
 ## [v6.1.1](https://github.com/sierrasoftworks/iridium/tree/v6.1.1)
 - [5eb946f](https://github.com/sierrasoftworks/iridium/commit/5eb946f) Version 6.1.1
 - [410ec6e](https://github.com/sierrasoftworks/iridium/commit/410ec6e) build: Rebuild all JS for coverage checking
 - [f8ebf0e](https://github.com/sierrasoftworks/iridium/commit/f8ebf0e) fix: Handle null config entry correctly
+- [69624f4](https://github.com/sierrasoftworks/iridium/commit/69624f4) Merge branch 'master' into release
 - [297fcdc](https://github.com/sierrasoftworks/iridium/commit/297fcdc) Updated CHANGELOG
 - [30d132c](https://github.com/sierrasoftworks/iridium/commit/30d132c) Updated documentation
 
@@ -17,6 +40,7 @@
 - [78dd581](https://github.com/sierrasoftworks/iridium/commit/78dd581) Version 6.1.0
 - [c809366](https://github.com/sierrasoftworks/iridium/commit/c809366) test: Test to make sure that low level connection info is passed along correctly
 - [14faf60](https://github.com/sierrasoftworks/iridium/commit/14faf60) feat: Add support for low level connection configuration
+- [bc90974](https://github.com/sierrasoftworks/iridium/commit/bc90974) Merge branch 'master' into release
 - [00f135e](https://github.com/sierrasoftworks/iridium/commit/00f135e) Updated Changelog
 
 ## [v6.0.0](https://github.com/sierrasoftworks/iridium/tree/v6.0.0)
@@ -52,6 +76,7 @@
 - [aa34363](https://github.com/sierrasoftworks/iridium/commit/aa34363) build: Switch to tsconfig for all build tasks
 - [351deb3](https://github.com/sierrasoftworks/iridium/commit/351deb3) build: Set experimental decorators flag when building TS files
 - [78f5339](https://github.com/sierrasoftworks/iridium/commit/78f5339) env: Update to VSCode 0.8.0
+- [62a4ee1](https://github.com/sierrasoftworks/iridium/commit/62a4ee1) Merge branch 'master' into release
 - [6d1278d](https://github.com/sierrasoftworks/iridium/commit/6d1278d) Updated documentation
 - [0ea880a](https://github.com/sierrasoftworks/iridium/commit/0ea880a) Updated CHANGELOG
 
@@ -60,6 +85,7 @@
 - [ea2a7c8](https://github.com/sierrasoftworks/iridium/commit/ea2a7c8) Listed docs in README (Closes [#9](https://github.com/sierrasoftworks/iridium/issues/9))
 - [d806e89](https://github.com/sierrasoftworks/iridium/commit/d806e89) Updated documentation
 - [971a2b8](https://github.com/sierrasoftworks/iridium/commit/971a2b8) Added implementation and tests for core level connection hooks
+- [42940bb](https://github.com/sierrasoftworks/iridium/commit/42940bb) Merge branch 'master' into release
 - [4b52136](https://github.com/sierrasoftworks/iridium/commit/4b52136) Updated documentation
 - [016263c](https://github.com/sierrasoftworks/iridium/commit/016263c) Updated CHANGELOG
 
@@ -86,6 +112,7 @@
 - [ea6d099](https://github.com/sierrasoftworks/iridium/commit/ea6d099) Added TypeDoc documentation compilation step
 - [54ad856](https://github.com/sierrasoftworks/iridium/commit/54ad856) Updated a variety of files to better support TypeDoc
 - [c559581](https://github.com/sierrasoftworks/iridium/commit/c559581) Added TypeDoc dependency
+- [b5ccea3](https://github.com/sierrasoftworks/iridium/commit/b5ccea3) Merge branch 'master' into release
 - [99cc6cd](https://github.com/sierrasoftworks/iridium/commit/99cc6cd) Updated CHANGELOG
 
 ## [v5.10.0](https://github.com/sierrasoftworks/iridium/tree/v5.10.0)
@@ -93,6 +120,7 @@
 - [09bfb53](https://github.com/sierrasoftworks/iridium/commit/09bfb53) Make use of arrow functions in Core (Closes #16)
 - [d565312](https://github.com/sierrasoftworks/iridium/commit/d565312) Include compiled fix from 5.9.2
 - [f7f9db1](https://github.com/sierrasoftworks/iridium/commit/f7f9db1) Make core.connect async-safe (Fixes #15)
+- [e7bb6cd](https://github.com/sierrasoftworks/iridium/commit/e7bb6cd) Merge branch 'master' into release
 - [0697117](https://github.com/sierrasoftworks/iridium/commit/0697117) Updated CHANGELOG
 
 ## [v5.9.2](https://github.com/sierrasoftworks/iridium/tree/v5.9.2)
@@ -103,23 +131,27 @@
 - [5261ea0](https://github.com/sierrasoftworks/iridium/commit/5261ea0) Revert "Updated travis config to use MongoDB precise (3.x)"
 - [cefc0f4](https://github.com/sierrasoftworks/iridium/commit/cefc0f4) (infrastructure/travisci-containers) Updated travis config to use MongoDB precise (3.x)
 - [d11c8f3](https://github.com/sierrasoftworks/iridium/commit/d11c8f3) Switch to Travis-CI container infrastucture
+- [3565d59](https://github.com/sierrasoftworks/iridium/commit/3565d59) Merge branch 'master' into release
 - [5a2dc37](https://github.com/sierrasoftworks/iridium/commit/5a2dc37) Updated CHANGELOG
 
 ## [v5.9.1](https://github.com/sierrasoftworks/iridium/tree/v5.9.1)
 - [4efcdf1](https://github.com/sierrasoftworks/iridium/commit/4efcdf1) Version 5.9.1
 - [1e8bb04](https://github.com/sierrasoftworks/iridium/commit/1e8bb04) Added an extra Onmom test
 - [179516c](https://github.com/sierrasoftworks/iridium/commit/179516c) Added additional error information for instance updates
+- [ba70443](https://github.com/sierrasoftworks/iridium/commit/ba70443) Merge branch 'master' into release
 - [465cc85](https://github.com/sierrasoftworks/iridium/commit/465cc85) Updated CHANGELOG
 
 ## [v5.9.0](https://github.com/sierrasoftworks/iridium/tree/v5.9.0)
 - [431bb0b](https://github.com/sierrasoftworks/iridium/commit/431bb0b) Version 5.9.0
 - [5f326fd](https://github.com/sierrasoftworks/iridium/commit/5f326fd) Clean up the references.d.ts file before bumping the version
 - [445ebb6](https://github.com/sierrasoftworks/iridium/commit/445ebb6) Added support and tests for the MongoDB aggregate operation
+- [b4b42a2](https://github.com/sierrasoftworks/iridium/commit/b4b42a2) Merge branch 'master' into release
 - [f5926ce](https://github.com/sierrasoftworks/iridium/commit/f5926ce) Updated CHANGELOG
 
 ## [v5.8.0](https://github.com/sierrasoftworks/iridium/tree/v5.8.0)
 - [ab6904e](https://github.com/sierrasoftworks/iridium/commit/ab6904e) Version 5.8.0
 - [625397d](https://github.com/sierrasoftworks/iridium/commit/625397d) Added support and tests for a toObjectID helper method
+- [20ae56e](https://github.com/sierrasoftworks/iridium/commit/20ae56e) Merge branch 'master' into release
 - [4ebd33d](https://github.com/sierrasoftworks/iridium/commit/4ebd33d) Updated CHANGELOG
 
 ## [v5.7.5](https://github.com/sierrasoftworks/iridium/tree/v5.7.5)
@@ -128,10 +160,13 @@
 - [fe2e60a](https://github.com/sierrasoftworks/iridium/commit/fe2e60a) Fixed behaviour of Omnom when unsetting properties
 - [228f7ce](https://github.com/sierrasoftworks/iridium/commit/228f7ce) Added Omnom tests for $unset
 - [2e27c23](https://github.com/sierrasoftworks/iridium/commit/2e27c23) Added a contribution information file
+- [5e5af67](https://github.com/sierrasoftworks/iridium/commit/5e5af67) Merge branch 'master' into release
 - [e360587](https://github.com/sierrasoftworks/iridium/commit/e360587) Updated CHANGELOG
 
 ## [v5.7.4](https://github.com/sierrasoftworks/iridium/tree/v5.7.4)
 - [29aaba3](https://github.com/sierrasoftworks/iridium/commit/29aaba3) Version 5.7.4
+- [c087fb0](https://github.com/sierrasoftworks/iridium/commit/c087fb0) Merge pull request #14 from pgaubatz/patch-1
+- [b1a69a0](https://github.com/sierrasoftworks/iridium/commit/b1a69a0) Use svg-badges instead of png
 - [374027d](https://github.com/sierrasoftworks/iridium/commit/374027d) Updated CHANGELOG
 
 ## [v5.7.3](https://github.com/sierrasoftworks/iridium/tree/v5.7.3)

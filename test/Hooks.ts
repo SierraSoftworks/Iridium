@@ -10,6 +10,7 @@ interface TestDocument {
 
 let hookEmitter = new Events.EventEmitter();
 
+let shouldReject = 0;
 class Test extends Iridium.Instance<TestDocument, Test> {
     static collection = 'test';
     static schema: Iridium.Schema = {
@@ -21,18 +22,22 @@ class Test extends Iridium.Instance<TestDocument, Test> {
     answer: number;
 
     static onCreating(document: TestDocument) {
+        if (shouldReject === 1) return Promise.reject('test rejection');
         hookEmitter.emit('creating', document);
     }
 
     static onReady(instance: Test) {
+        if (shouldReject === 2) return Promise.reject('test rejection');
         hookEmitter.emit('ready', instance);
     }
 
     static onRetrieved(document: TestDocument) {
+        if (shouldReject === 3) return Promise.reject('test rejection');
         hookEmitter.emit('retrieved', document);
     }
 
     static onSaving(instance: Test, changes: any) {
+        if (shouldReject === 4) return Promise.reject('test rejection');
         hookEmitter.emit('saving', instance, changes);
     }
 }
@@ -43,11 +48,17 @@ describe("Hooks", function () {
     let core = new Iridium.Core({ database: 'test' });
     let model = new Iridium.Model<TestDocument, Test>(core, Test);
 
+    beforeEach(() => shouldReject = 0);
     beforeEach(() => core.connect().then(() => model.remove()).then(() => model.insert({ answer: 10 })));
     afterEach(() => model.remove());
     after(() => core.close());
 
     describe("creating",() => {
+        after(() => {
+            // Not used again
+            Test.onCreating = null;
+        });
+
         it("should be called when a document is being created",(done) => {
             hookEmitter.once('creating',() => done());
             model.insert({ answer: 11 });
@@ -64,9 +75,23 @@ describe("Hooks", function () {
 
             return model.insert({ answer: 11 }).then(() => chai.expect(result).to.exist).then(() => result);
         });
+
+        it("should support blocking async calls", () => {
+            let result: boolean = false;
+            Test.onCreating = (document: TestDocument) => {
+                return Promise.delay(true, 50).then(() => result = true);
+            };
+
+            return model.insert({ answer: 11 }).then(() => chai.expect(result).to.be.true);
+        });
     });
 
     describe("ready",() => {
+        after(() => {
+            // Not used again
+            Test.onReady = null;
+        });
+
         it("should be called when an instance is prepared",() => {
             let result: Promise<void>;
 
@@ -88,9 +113,23 @@ describe("Hooks", function () {
 
             return model.get().then(() => chai.expect(result).to.exist).then(() => result);
         });
+
+        it("should support blocking async calls", () => {
+            let result: boolean = false;
+            Test.onReady = (instance: Test) => {
+                return Promise.delay(true, 50).then(() => result = true);
+            };
+
+            return model.get().then(() => chai.expect(result).to.be.true);
+        });
     });
 
     describe("retreived",() => {
+        after(() => {
+            // Not used again
+            Test.onRetrieved = null;
+        });
+
         it("should be called when a document is being retrieved",() => {
             let result: Promise<void>;
 
@@ -112,9 +151,23 @@ describe("Hooks", function () {
 
             return model.get().then(() => chai.expect(result).to.exist).then(() => result);
         });
+
+        it("should support blocking async calls", () => {
+            let result: boolean = false;
+            Test.onRetrieved = (document: TestDocument) => {
+                return Promise.delay(true, 50).then(() => result = true);
+            };
+
+            return model.get().then(() => chai.expect(result).to.be.true);
+        });
     });
 
-    describe("saving",() => {
+    describe("saving", () => {
+        after(() => {
+            // Not used again
+            Test.onSaving = null;
+        });
+
         it("should be triggered when save() is called on an instance",() => {
             let result: Promise<void>;
 
@@ -158,6 +211,18 @@ describe("Hooks", function () {
                 instance.answer++;
                 return instance.save();
             }).then(() => chai.expect(result).to.exist).then(() => result);
+        });
+
+        it("should support blocking async calls", () => {
+            let result: boolean = false;
+            Test.onSaving = (instance: Test, changes: any) => {
+                return Promise.delay(true, 50).then(() => result = true);
+            };
+
+            return model.get().then((instance) => {
+                instance.answer++;
+                return instance.save();
+            }).then(() => chai.expect(result).to.be.true);
         });
     });
 });
