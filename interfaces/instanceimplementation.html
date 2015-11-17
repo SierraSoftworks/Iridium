@@ -209,7 +209,7 @@
 					<div class="tsd-signature tsd-kind-icon">cache<span class="tsd-signature-symbol">:</span> <a href="cachedirector.html" class="tsd-signature-type">CacheDirector</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/InstanceInterface.ts#L84">InstanceInterface.ts:84</a></li>
+							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/InstanceInterface.ts#L113">InstanceInterface.ts:113</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -280,7 +280,7 @@
 					<div class="tsd-signature tsd-kind-icon">transforms<span class="tsd-signature-symbol">:</span> <a href="transforms.html" class="tsd-signature-type">Transforms</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/InstanceInterface.ts#L98">InstanceInterface.ts:98</a></li>
+							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/InstanceInterface.ts#L127">InstanceInterface.ts:127</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -297,7 +297,7 @@
 					<div class="tsd-signature tsd-kind-icon">validators<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Validator</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/InstanceInterface.ts#L91">InstanceInterface.ts:91</a></li>
+							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/InstanceInterface.ts#L120">InstanceInterface.ts:120</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -315,13 +315,13 @@
 					<a name="oncreating" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> on<wbr>Creating</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">on<wbr>Creating<span class="tsd-signature-symbol">(</span>document<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TDocument</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Creating<span class="tsd-signature-symbol">(</span>document<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TDocument</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Thenable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/InstanceInterface.ts#L56">InstanceInterface.ts:56</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/InstanceInterface.ts#L63">InstanceInterface.ts:63</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -334,9 +334,19 @@
 							<ul class="tsd-parameters">
 								<li>
 									<h5>document: <span class="tsd-signature-type">TDocument</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The document which will be inserted into the database.</p>
+										<p>This method is executed synchronously, however you can perform asynchronous operations by returning a
+											promise which resolves once your task has completed. Be aware that this method is executed for every
+											document inserted into the database. As a result, long running tasks will have a significant impact
+										on the performance of your inserts.</p>
+									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Thenable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">void</span>
+							</h4>
 						</li>
 					</ul>
 				</section>
@@ -344,13 +354,13 @@
 					<a name="onready" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> on<wbr>Ready</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">on<wbr>Ready<span class="tsd-signature-symbol">(</span>instance<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TInstance</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Ready<span class="tsd-signature-symbol">(</span>instance<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TInstance</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Thenable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/InstanceInterface.ts#L68">InstanceInterface.ts:68</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/InstanceInterface.ts#L89">InstanceInterface.ts:89</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -362,9 +372,19 @@
 							<ul class="tsd-parameters">
 								<li>
 									<h5>instance: <span class="tsd-signature-type">TInstance</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The instance which has been created.</p>
+										<p>This method is executed synchronously, however you can perform asynchronous operations by returning a
+											promise which resolves once your task has completed. Be aware that this method is executed for every
+											document retrieved from the database. As a result, long running tasks will have a significant impact
+										on the performance of your queries.</p>
+									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Thenable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">void</span>
+							</h4>
 						</li>
 					</ul>
 				</section>
@@ -372,13 +392,13 @@
 					<a name="onretrieved" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> on<wbr>Retrieved</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">on<wbr>Retrieved<span class="tsd-signature-symbol">(</span>document<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TDocument</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Retrieved<span class="tsd-signature-symbol">(</span>document<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TDocument</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Thenable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/InstanceInterface.ts#L63">InstanceInterface.ts:63</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/InstanceInterface.ts#L77">InstanceInterface.ts:77</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -392,9 +412,19 @@
 							<ul class="tsd-parameters">
 								<li>
 									<h5>document: <span class="tsd-signature-type">TDocument</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The document that was retrieved from the database.</p>
+										<p>This method is executed synchronously, however you can perform asynchronous operations by returning a
+											promise which resolves once your task has completed. Be aware that this method is executed for every
+											document retrieved from the database. As a result, long running tasks will have a significant impact
+										on the performance of your queries.</p>
+									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Thenable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">void</span>
+							</h4>
 						</li>
 					</ul>
 				</section>
@@ -402,13 +432,13 @@
 					<a name="onsaving" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> on<wbr>Saving</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">on<wbr>Saving<span class="tsd-signature-symbol">(</span>instance<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TInstance</span>, changes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Saving<span class="tsd-signature-symbol">(</span>instance<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TInstance</span>, changes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Thenable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/InstanceInterface.ts#L75">InstanceInterface.ts:75</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/InstanceInterface.ts#L104">InstanceInterface.ts:104</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -422,12 +452,25 @@
 							<ul class="tsd-parameters">
 								<li>
 									<h5>instance: <span class="tsd-signature-type">TInstance</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The instance to which the changes are being made</p>
+									</div>
 								</li>
 								<li>
 									<h5>changes: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The MongoDB change object describing the changes being made to the document.</p>
+										<p>This method is executed synchronously, however you can perform asynchronous operations by returning a
+											promise which resolves once your task has completed. Be aware that this method is executed for every
+											call to save. As a result, long running tasks will have a significant impact on how quickly your save
+										operations are dispatched.</p>
+									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Thenable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">void</span>
+							</h4>
 						</li>
 					</ul>
 				</section>
