@@ -132,3 +132,19 @@ export function ObjectID(target: Instance<any, any>, name: string) {
 		DefaultTransforms.ObjectID.toDB
 	)(target, name);
 }
+
+/**
+ * Specifies that this property should be stored using the MongoDB binary type and represented as a Buffer.
+ * 
+ * This decorator applies a Buffer validator to the property, which ensures that values you send to the database
+ * are well formatted Buffer objects represented using the BSON Binary datatype. In addition to this, it will
+ * apply a transform which ensures you only work with Buffer objects and that data is always stored in Binary
+ * format.
+ */
+export function Binary(target: Instance<any, any>, name: string) {
+	Property(Buffer)(target, name);
+	Transform(
+		DefaultTransforms.Binary.fromDB,
+		DefaultTransforms.Binary.toDB
+	)(target, name);
+}
