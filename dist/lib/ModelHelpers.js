@@ -40,8 +40,9 @@ var ModelHelpers = (function () {
      */
     ModelHelpers.prototype.transformToDB = function (document) {
         for (var property in this.model.transforms)
-            if (document.hasOwnProperty(property))
+            if (document.hasOwnProperty(property)) {
                 document[property] = this.model.transforms[property].toDB(document[property]);
+            }
         return document;
     };
     /**
@@ -51,7 +52,7 @@ var ModelHelpers = (function () {
      * @returns {any} A new document cloned from the original and transformed
      */
     ModelHelpers.prototype.convertToDB = function (document) {
-        var doc = _.cloneDeep(document);
+        var doc = this.cloneDocument(document);
         return this.transformToDB(doc);
     };
     /**
@@ -63,6 +64,29 @@ var ModelHelpers = (function () {
         var omnom = new Omnom_1.Omnom();
         omnom.diff(original, modified);
         return omnom.changes;
+    };
+    /**
+     * Clones the given document recursively, taking into account complex types like
+     * Buffers correctly.
+     *
+     * @param {any} The document you wish to clone deeply.
+     */
+    ModelHelpers.prototype.cloneDocument = function (original) {
+        return _.cloneDeep(original, function (value) {
+            if (Buffer.isBuffer(value)) {
+                return value.slice();
+            }
+        });
+    };
+    /**
+     * Clones the given document recursively, taking into account complex types like
+     * Buffers correctly. Optimized for working with query documents instead of true
+     * documents.
+     *
+     * @param {any} The document you wish to clone deeply.
+     */
+    ModelHelpers.prototype.cloneConditions = function (original) {
+        return this.cloneDocument(original);
     };
     return ModelHelpers;
 })();
