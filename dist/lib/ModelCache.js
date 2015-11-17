@@ -16,7 +16,7 @@ var ModelCache = (function () {
     ModelCache.prototype.get = function (conditions) {
         if (!this.model.cacheDirector || !this.model.cacheDirector.validQuery(conditions))
             return Bluebird.resolve(null);
-        return this.model.core.cache.get(this.model.cacheDirector.buildQueryKey(conditions));
+        return Bluebird.resolve(this.model.core.cache.get(this.model.cacheDirector.buildQueryKey(conditions)));
     };
     ModelCache.prototype.clear = function (conditions) {
         if (!this.model.cacheDirector || !this.model.cacheDirector.validQuery(conditions))
