@@ -47,8 +47,9 @@ export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
      */
     transformToDB<T>(document: T): T {
         for (var property in this.model.transforms)
-            if(document.hasOwnProperty(property))
+            if(document.hasOwnProperty(property)) {
                 document[property] = this.model.transforms[property].toDB(document[property]);
+            }
         return document;
     }
 
@@ -59,7 +60,7 @@ export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
      * @returns {any} A new document cloned from the original and transformed
      */
     convertToDB<T>(document: T): T {
-        var doc: T = _.cloneDeep(document);
+        var doc: T = this.cloneDocument(document);
         return this.transformToDB(doc);
     }
 
@@ -72,5 +73,30 @@ export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
         var omnom = new Omnom();
         omnom.diff(original, modified);
         return omnom.changes;
+    }
+    
+    /**
+     * Clones the given document recursively, taking into account complex types like
+     * Buffers correctly.
+     * 
+     * @param {any} The document you wish to clone deeply.
+     */
+    cloneDocument<T>(original: T): T {
+        return _.cloneDeep(original, (value) => {
+           if(Buffer.isBuffer(value)) {
+               return (<Buffer>value).slice();
+           }
+        });
+    }
+    
+    /**
+     * Clones the given document recursively, taking into account complex types like
+     * Buffers correctly. Optimized for working with query documents instead of true
+     * documents.
+     * 
+     * @param {any} The document you wish to clone deeply.
+     */
+    cloneConditions<T>(original: T): T {
+        return this.cloneDocument(original);
     }
 }

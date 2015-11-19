@@ -32,7 +32,7 @@ var Instance = (function () {
         this._isNew = !!isNew;
         this._isPartial = isPartial;
         this._original = document;
-        this._modified = _.cloneDeep(document);
+        this._modified = model.helpers.cloneDocument(document);
         _.each(model.core.plugins, function (plugin) {
             if (plugin.newInstance)
                 plugin.newInstance(_this, model);
@@ -68,14 +68,14 @@ var Instance = (function () {
             }
         });
         return Bluebird.resolve().then(function () {
-            conditions = _.cloneDeep(conditions);
+            conditions = _this._model.helpers.cloneConditions(conditions);
             _.merge(conditions, { _id: _this._modified._id });
             if (!changes) {
                 var validation = _this._model.helpers.validate(_this._modified);
                 if (validation.failed)
                     return Bluebird.reject(validation.error).bind(_this).nodeify(callback);
-                var original = _.cloneDeep(_this._original);
-                var modified = _.cloneDeep(_this._modified);
+                var original = _this._model.helpers.cloneDocument(_this._original);
+                var modified = _this._model.helpers.cloneDocument(_this._modified);
                 changes = _this._model.helpers.diff(original, modified);
             }
             if (!_.keys(changes).length)
@@ -127,14 +127,14 @@ var Instance = (function () {
         }).then(function (latest) {
             if (!latest) {
                 _this._isNew = true;
-                _this._original = _.cloneDeep(_this._modified);
+                _this._original = _this._model.helpers.cloneDocument(_this._modified);
                 return Bluebird.resolve(_this);
             }
             return _this._model.handlers.documentReceived(conditions, latest, function (value) {
                 _this._isPartial = false;
                 _this._isNew = false;
                 _this._modified = value;
-                _this._original = _.cloneDeep(value);
+                _this._original = _this._model.helpers.cloneDocument(value);
                 return _this;
             });
         }).nodeify(callback);
@@ -167,14 +167,14 @@ var Instance = (function () {
             if (!newDocument) {
                 _this._isPartial = true;
                 _this._isNew = true;
-                _this._original = _.cloneDeep(_this._modified);
+                _this._original = _this._model.helpers.cloneDocument(_this._modified);
                 return _this;
             }
             return _this._model.handlers.documentReceived(conditions, newDocument, function (doc) {
                 _this._isNew = false;
                 _this._isPartial = false;
                 _this._original = doc;
-                _this._modified = _.cloneDeep(doc);
+                _this._modified = _this._model.helpers.cloneDocument(doc);
                 return _this;
             });
         }).nodeify(callback);

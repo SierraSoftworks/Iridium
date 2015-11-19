@@ -32,19 +32,15 @@ export const DefaultTransforms = {
 	},
 	Binary: <PropertyTransform>{
 		fromDB: value => {
-			if(!value) return new Buffer(0);
-			if(value._bsontype === "Binary") {
-				let binary = new MongoDB.Binary(value);
-				return binary.read(0, binary.length());
-			}
+			if(!value) return null;
+			if(value._bsontype === "Binary")
+				return value.buffer;
 			
-			return new Buffer(0);
+			return value;
 		},
 		toDB: value => {
-			if(!value) value = new Buffer(0);
-			else if(Array.isArray(value)) value = new Buffer(value);
-			
-			if(value && Buffer.isBuffer(value)) return new MongoDB.Binary(value);
+			if(Buffer.isBuffer(value)) return new MongoDB.Binary(value);
+			if(Array.isArray(value)) return new MongoDB.Binary(new Buffer(value));
 			return null;
 		}
 	}

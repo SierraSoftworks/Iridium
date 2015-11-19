@@ -3,12 +3,15 @@ import * as Iridium from '../index';
 import MongoDB = require('mongodb');
 import Events = require('events');
 
+import {DefaultTransforms} from '../lib/Transforms';
+
 let hookEmitter = new Events.EventEmitter();
 
 interface Document {
 	_id?: string;
     name: string;
 	email: string;
+	avatar: Buffer;
 }
 
 class Person extends Iridium.Instance<Document, Person> {
@@ -16,7 +19,8 @@ class Person extends Iridium.Instance<Document, Person> {
     static schema: Iridium.Schema = {
 		_id: false,
         name: String,
-		email: String
+		email: String,
+		avatar: Buffer
     };
 
 	static transforms: Iridium.Transforms = {
@@ -29,6 +33,8 @@ class Person extends Iridium.Instance<Document, Person> {
 	_id: string;
     name: string;
 	email: string;
+	@Iridium.Binary
+	avatar: Buffer;
 
 	static onCreating(document: Document) {
         hookEmitter.emit('creating', document);
@@ -74,7 +80,8 @@ describe("Transforms", () => {
 		it("should be applied", () => {
 			return db.Person.insert({
 				name: 'Test User',
-				email: 'Test@email.com'
+				email: 'Test@email.com',
+				avatar: new Buffer(0)
 			}).then(user => {
 				chai.expect(user).to.exist.and.have.property('email', 'TEST@EMAIL.COM');
 			});
@@ -89,7 +96,8 @@ describe("Transforms", () => {
 
 			return db.Person.insert({
 				name: 'Test User',
-				email: 'Test@email.com'
+				email: 'Test@email.com',
+				avatar: new Buffer(0)
 			}).then(() => {
 				chai.expect(onCreatingCalled).to.be.true;
 			});
@@ -99,7 +107,8 @@ describe("Transforms", () => {
 			db.Person.schema['email'] = /^test@email.com$/;
 			return db.Person.insert({
 				name: 'Test User',
-				email: 'Test@email.com'
+				email: 'Test@email.com',
+				avatar: new Buffer(0)
 			});
 		});
 	});
@@ -107,7 +116,8 @@ describe("Transforms", () => {
 	describe("with an instance", () => {
 		beforeEach(() => db.Person.insert({
 			name: 'Test User',
-			email: 'test@email.com'
+			email: 'test@email.com',
+			avatar: new Buffer("test", 'utf8')
 		}));
 
 		it("should apply the transform on property reads", () => {
@@ -158,6 +168,43 @@ describe("Transforms", () => {
 					person._id = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 					chai.expect(person._id).to.eql('aaaaaaaaaaaaaaaaaaaaaaaa');
 					chai.expect(person.document._id).to.be.a('object');
+				});
+			});
+		});
+
+		describe("the default Buffer transform", () => {
+			it("should convert a MongoDB BSON Binary object into a buffer", () => {
+				let transform = DefaultTransforms.Binary.fromDB;
+				let result = transform({
+					_bsontype: 'Binary',
+					buffer: new Buffer('test', 'utf8')
+				});
+				
+				chai.expect(result).to.exist;
+				chai.expect(result.toString('utf8')).to.eql('test');
+			});
+			
+			it("should convert the buffer into a MongoDB.Binary object", () => {
+				let transform = DefaultTransforms.Binary.toDB;
+				let buffer = new Buffer('test', 'utf8');
+				let result = transform(buffer);
+				
+				chai.expect(result).to.be.instanceOf(MongoDB.Binary);
+			});
+			
+			it("should return a buffer", () => {
+				return db.Person.get().then(person => {
+					chai.expect(Buffer.isBuffer(person.avatar)).to.be.true;
+					//chai.expect(person.avatar.toString('utf8')).to.eql('test');
+					chai.expect(person.document.avatar).to.be.a('object');
+				});
+			});
+
+			it("should convert a buffer to a MongoDB.Binary", () => {
+				return db.Person.get().then(person => {
+					person.avatar = new Buffer("new", 'utf8');
+					//chai.expect(person.avatar.toString('utf8')).to.eql('new');
+					chai.expect(person.document.avatar).to.be.a('object');
 				});
 			});
 		});
