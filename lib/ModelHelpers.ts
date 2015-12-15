@@ -46,9 +46,11 @@ export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
      * @returns {any} The result of having transformed the document.
      * @remarks This is only really called from insert/create - as 
      */
-    transformToDB<T>(document: T, processProperties: boolean = true): T {
-        if(this.model.transforms.$document)
+    transformToDB<T>(document: T, options: TransformOptions = { properties: true }): T {
+        if(options.document && this.model.transforms.$document)
             document = <any>this.model.transforms.$document.toDB(document, '$document', this.model);
+        
+        if(!options.properties) return document;
         
         for (var property in this.model.transforms)
             if(property === '$document') continue;
@@ -68,9 +70,11 @@ export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
      * document level transforms, as property level transforms are applied in
      * their relevant instance setters.
      */
-    transformFromDB(document: TDocument, processProperties: boolean = true): TDocument {
-        if(this.model.transforms.$document)
+    transformFromDB(document: TDocument, options: TransformOptions = { properties: true }): TDocument {
+        if(options.document && this.model.transforms.$document)
             document = this.model.transforms.$document.fromDB(document, '$document', this.model);
+        
+        if(!options.properties) return document;
         
         for (var property in this.model.transforms)
             if(property === '$document') continue;
@@ -89,9 +93,9 @@ export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
      * document level transforms.
      * @returns {any} A new document cloned from the original and transformed
      */
-    convertToDB<T>(document: T, processProperties: boolean = true): T {
+    convertToDB<T>(document: T, options: TransformOptions = { properties: true }): T {
         var doc: T = this.cloneDocument(document);
-        return this.transformToDB(doc);
+        return this.transformToDB(doc, options);
     }
 
     /**
@@ -129,4 +133,9 @@ export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
     cloneConditions<T>(original: T): T {
         return this.cloneDocument(original);
     }
+}
+
+export interface TransformOptions {
+    properties?: boolean;
+    document?: boolean;
 }

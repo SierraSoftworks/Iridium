@@ -31,10 +31,8 @@ export class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
             partial: false
         });
 
-        this.model.helpers.transformFromDB(result, false);
-
         let wrapped: TResult;
-        return Bluebird.resolve(result).then((target: any) => {
+        return Bluebird.resolve(this.model.helpers.transformFromDB(result, { document: true })).then((target: any) => {
             return <Bluebird<TResult>>Bluebird
                 // If onRetrieved returns a Bluebird promise then there is no significant performance overhead here
                 .resolve(this.model.hooks.onRetrieved && this.model.hooks.onRetrieved(target))
