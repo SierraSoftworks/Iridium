@@ -23,7 +23,7 @@ class Person extends Iridium.Instance<Document, Person> {
 		avatar: Buffer
     };
 
-	static transforms: Iridium.Transforms = {
+	static transforms: Iridium.Transforms<Document> = {
 		email: {
 			fromDB: x => x.toUpperCase(),
 			toDB: x => x.toLowerCase().trim()
@@ -178,7 +178,7 @@ describe("Transforms", () => {
 				let result = transform({
 					_bsontype: 'Binary',
 					buffer: new Buffer('test', 'utf8')
-				});
+				}, '_id', null);
 				
 				chai.expect(result).to.exist;
 				chai.expect(result.toString('utf8')).to.eql('test');
@@ -187,7 +187,7 @@ describe("Transforms", () => {
 			it("should convert the buffer into a MongoDB.Binary object", () => {
 				let transform = DefaultTransforms.Binary.toDB;
 				let buffer = new Buffer('test', 'utf8');
-				let result = transform(buffer);
+				let result = transform(buffer, '_id', null);
 				
 				chai.expect(result).to.be.instanceOf(MongoDB.Binary);
 			});

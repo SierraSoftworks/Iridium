@@ -122,16 +122,16 @@ describe("Decorators", () => {
 
 		describe("the ObjectID transform", () => {
 			it("should convert an ObjectID to a string", () => {
-				chai.expect(Test.transforms['_id'].fromDB({ _bsontype: 'ObjectID', id: 'aaaaaaaaaaaaaaaaaaaaaaaa' })).to.eql('aaaaaaaaaaaaaaaaaaaaaaaa');
+				chai.expect(Test.transforms['_id'].fromDB({ _bsontype: 'ObjectID', id: 'aaaaaaaaaaaaaaaaaaaaaaaa' }, '_id', null)).to.eql('aaaaaaaaaaaaaaaaaaaaaaaa');
 			});
 
 			it("should convert a string to an ObjectID", () => {
-				chai.expect(Test.transforms['_id'].toDB('aaaaaaaaaaaaaaaaaaaaaaaa')).to.be.instanceOf(MongoDB.ObjectID);
+				chai.expect(Test.transforms['_id'].toDB('aaaaaaaaaaaaaaaaaaaaaaaa', '_id', null)).to.be.instanceOf(MongoDB.ObjectID);
 			});
 
 			it("should handle undefined values correctly", () => {
-				chai.expect(Test.transforms['_id'].toDB(undefined)).to.not.exist;
-				chai.expect(Test.transforms['_id'].fromDB(undefined)).to.not.exist;
+				chai.expect(Test.transforms['_id'].toDB(undefined, '_id', null)).to.not.exist;
+				chai.expect(Test.transforms['_id'].fromDB(undefined, '_id', null)).to.not.exist;
 			});
 		});
 	});

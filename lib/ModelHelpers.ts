@@ -48,7 +48,7 @@ export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
     transformToDB<T>(document: T): T {
         for (var property in this.model.transforms)
             if(document.hasOwnProperty(property)) {
-                document[property] = this.model.transforms[property].toDB(document[property]);
+                document[property] = this.model.transforms[property].toDB(document[property], property, this.model);
             }
         return document;
     }
