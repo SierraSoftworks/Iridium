@@ -76,6 +76,7 @@ var Instance = (function () {
                     return Bluebird.reject(validation.error).bind(_this).nodeify(callback);
                 var original = _this._model.helpers.cloneDocument(_this._original);
                 var modified = _this._model.helpers.cloneDocument(_this._modified);
+                modified = _this._model.helpers.transformToDB(modified, { document: true });
                 changes = _this._model.helpers.diff(original, modified);
             }
             if (!_.keys(changes).length)
