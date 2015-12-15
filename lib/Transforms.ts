@@ -1,11 +1,12 @@
 import MongoDB = require('mongodb');
 import {Model} from './Model';
+import * as BSON from './BSON'; 
 
 export interface Transforms<TDocument> {
 	/**
 	 * A transform which is applied to the entire document.
 	 */
-	$document?: PropertyTransform<TDocument>;
+	$document?: PropertyTransform<any>;
 	[property:string]: PropertyTransform<any>;
 }
 
@@ -35,15 +36,15 @@ export interface PropertyTransform<T> {
 }
 
 export const DefaultTransforms = {
- 	ObjectID: <PropertyTransform>{
-		fromDB: value => value && value._bsontype == 'ObjectID' ? new MongoDB.ObjectID(value.id).toHexString() : value,
-		toDB: value => value && typeof value === 'string' ? new MongoDB.ObjectID(value) : value
+ 	ObjectID: <PropertyTransform<MongoDB.ObjectID | BSON.ObjectID>>{
+		fromDB: value => value && (<BSON.ObjectID>value)._bsontype == 'ObjectID' ? new MongoDB.ObjectID((<BSON.ObjectID>value).id).toHexString() : value,
+		toDB: value => typeof value === 'string' ? new MongoDB.ObjectID(value) : value
 	},
-	Binary: <PropertyTransform>{
+	Binary: <PropertyTransform<MongoDB.Binary | BSON.Binary>>{
 		fromDB: value => {
 			if(!value) return null;
-			if(value._bsontype === "Binary")
-				return value.buffer;
+			if((<BSON.Binary>value)._bsontype === "Binary")
+				return (<BSON.Binary>value).buffer;
 			
 			return value;
 		},
