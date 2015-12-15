@@ -61,7 +61,7 @@ export class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
                 // If onCreating returns a Bluebird promise then there is no significant performance overhead here
                 .resolve(this.model.hooks.onCreating && this.model.hooks.onCreating(document))
                 .then(() => {
-                    document = this.model.helpers.convertToDB(document);
+                    document = this.model.helpers.convertToDB(document, { document: true, properties: true });
                     let validation: Skmatc.Result = this.model.helpers.validate(document);
                     if (validation.failed) return Bluebird.reject(validation.error);
 
