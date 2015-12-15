@@ -27,12 +27,12 @@ after_script:
   - coveralls < coverage/lcov.info
   - codeclimate < coverage/lcov.info
 
-# deploy:
-#   skip_cleanup: true
-#   provider: npm
-#   email: admin@sierrasoftworks.com
-#   api_key:
-#     secure: A2tBD6QCdYd814GqbVNmVFzQjbAFF+4CK6JhOJEG3ovXwXuVbIlm+tSu6u+/zIS7ChTJ+RDKsY0/AlMrrhP4Qbm8pd0MsGNWMDPelklDXKHj8tw/s3FdXi8bU2Kn8IGAwMY729MMGdShvMbKx71Wt20jPQ/cMf2Bz25j4Q3WEMQ=
-#   on:
-#     branch: release
-#     repo: SierraSoftworks/Iridium
+deploy:
+  skip_cleanup: true
+  provider: npm
+  email: admin@sierrasoftworks.com
+  api_key:
+    secure: A2tBD6QCdYd814GqbVNmVFzQjbAFF+4CK6JhOJEG3ovXwXuVbIlm+tSu6u+/zIS7ChTJ+RDKsY0/AlMrrhP4Qbm8pd0MsGNWMDPelklDXKHj8tw/s3FdXi8bU2Kn8IGAwMY729MMGdShvMbKx71Wt20jPQ/cMf2Bz25j4Q3WEMQ=
+  on:
+    branch: release
+    repo: SierraSoftworks/Iridium
