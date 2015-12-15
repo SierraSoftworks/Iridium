@@ -86,6 +86,7 @@ exports.Property = Property;
  */
 function Transform(fromDB, toDB) {
     return function (target, property) {
+        if (property === void 0) { property = '$document'; }
         var staticTarget = (target.constructor || target);
         staticTarget.transforms = _.clone(staticTarget.transforms || {});
         staticTarget.transforms[property] = {
