@@ -246,7 +246,8 @@ myDb.connect().then(() =&gt; myDb.Houses.insert({
 				<p>Iridium uses <a href="https://github.com/SierraSoftworks/Skmatc">Skmatc</a> for schema validation, you can read more about it on its project page but
 				we&#39;ll give a quick rundown of the way you make use of it here.</p>
 				<p>The model&#39;s schema is defined using an object in which keys represent their document property counterparts while the values represent a validation
-				rule.</p>
+					rule. You can also make use of the <a href="http://sierrasoftworks.github.io/Iridium/globals.html#property"><code>@Property</code></a> decorator to automatically build
+				up your schema object.</p>
 				<p><strong>TypeScript</strong></p>
 				<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> InstanceType {
     _id: <span class="hljs-built_in">string</span>;
@@ -256,6 +257,14 @@ myDb.connect().then(() =&gt; myDb.Houses.insert({
         _id: <span class="hljs-literal">false</span>,
         email: <span class="hljs-regexp">/^.+@.+$/</span>
     };
+}
+</code></pre>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> InstanceType extends Iridium.Instance&lt;<span class="hljs-built_in">any</span>, InstanceType&gt; {
+    @Iridium.ObjectID
+    _id: <span class="hljs-built_in">string</span>;
+
+    @Iridium.Property(<span class="hljs-built_in">String</span>)
+    email: <span class="hljs-built_in">string</span>;
 }
 </code></pre>
 				<p><strong>JavaScript</strong></p>
@@ -292,8 +301,125 @@ InstanceType.schema = {
 				<code>delete</code>.</p>
 				<p>You&#39;ll also find <code>first()</code> and <code>select()</code> which allow you to select the first, or all, entr(y|ies) in a collection which match a predicate - ensuring that <code>this</code>
 				maps to the instance itself within the predicate - helping to make comparisons somewhat easier within JavaScript ES5.</p>
-				<h3 id="custom-instances">Custom Instances</h3>
-				<p>If you decide to implement your own instance constructor then this is the part you&#39;ll be interested in.</p>
+				<h2 id="best-practices">Best Practices</h2>
+				<p>There are a number of best practices which you should keep in mind when working with Iridium to help get the best possible experience. For starters, Iridium is
+				built up of a number of smaller components - namely the <a href="https://github.com/sierrasoftworks/skmatc">validation</a>, transform and caching layers.</p>
+				<h3 id="validation-layer">Validation Layer</h3>
+				<p>The validation layer allows you to plug in your own custom validators, or simply make use of the built in ones, to quickly validate your documents against a
+					strongly defined schema. It is designed to enable you to quickly generate meaningful and human readable validation messages, minimizing the need for error
+				translation within your application.</p>
+				<p>Custom validators can be added either using the <a href="http://sierrasoftworks.github.io/Iridium/interfaces/instanceimplementation.html#validators"><code>validators</code></a> property
+				or by using the <a href="http://sierrasoftworks.github.io/Iridium/globals.html#validate"><code>@Validate</code></a> decorator on your instance class.</p>
+				<pre><code class="lang-typescript">@Iridium.Validate(<span class="hljs-string">'myValidator'</span>, x =&gt; x === <span class="hljs-number">42</span>)
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> InstanceType extends Iridium.Instance&lt;<span class="hljs-built_in">any</span>, InstanceType&gt; {
+    @Iridium.Property(<span class="hljs-string">'myValidator'</span>)
+    myProperty: <span class="hljs-built_in">number</span>;
+}
+</code></pre>
+				<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> skmatc = <span class="hljs-built_in">require</span>(<span class="hljs-string">'skmatc'</span>);
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">InstanceType</span>(<span class="hljs-params"></span>) </span>{
+    Iridium.Instance.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
+}
+
+<span class="hljs-built_in">require</span>(<span class="hljs-string">'util'</span>).inherits(InstanceType, Iridium.Instance);
+
+InstanceType.validators = [
+    skmatc.create(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">schema</span>) </span>{
+        <span class="hljs-keyword">return</span> schema === <span class="hljs-string">'myValidator'</span>;
+    }, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data, schema, path</span>) </span>{
+        <span class="hljs-keyword">return</span> data === <span class="hljs-number">42</span>;
+    })
+];
+
+InstanceType.schema = {
+    myProperty: <span class="hljs-string">'myValidator'</span>
+};
+</code></pre>
+				<p>Iridium expects validators to operate in a read-only mode, modifying documents within your validators (while possible) is strongly discouraged as it can lead
+					to some strange side effects and isn&#39;t guaranteed to behave the same way between releases. If you need to make changes to documents, take a look at the Transform
+				Layer. </p>
+				<h3 id="transform-layer">Transform Layer</h3>
+				<p>The transform layer is designed to make changes to the documents you store within MongoDB as well as the data presented to your application. A good example is the
+					way in which ObjectIDs are treated, within your application they appear as plain strings - allowing you to quickly and easily perform many different operations with
+				them. However, when you attempt to save an ObjectID field to the database, it is automatically converted into the correct ObjectID object before being persisted.</p>
+				<p>The transform layer allows you to register your own transforms both on a per-model and per-property basis. In the case of a model, the transform is given the whole
+					document and is expected to return the transformed document. Property transforms work the same, except that they are presented with, and expected to return, the value
+				of a single top-level property.</p>
+				<p>The easiest way to add a transform is using the <a href="http://sierrasoftworks.github.io/Iridium/globals.html#transform"><code>@Transform</code></a> decorator, however if you are working
+					in a language which doesn&#39;t yet support decorators then you can easily use the
+				<a href="http://sierrasoftworks.github.io/Iridium/interfaces/instanceimplementation.html#transforms"><code>transforms</code></a> property on your instance class.</p>
+				<pre><code class="lang-typescript">@Iridium.Transform(<span class="hljs-built_in">document</span> =&gt; {
+    <span class="hljs-built_in">document</span>.lastFetched = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>();
+}, <span class="hljs-built_in">document</span> =&gt; {
+    <span class="hljs-built_in">document</span>.lastFetched &amp;&amp; <span class="hljs-keyword">delete</span> <span class="hljs-built_in">document</span>.lastFetched;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">document</span>;
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> InstanceType extends Iridium.Instance&lt;<span class="hljs-built_in">any</span>, InstanceType&gt; {
+    @Iridium.Transform(data =&gt; data.toUpperCase(), data =&gt; data.toLowerCase())
+    email: <span class="hljs-built_in">string</span>;
+}
+</code></pre>
+				<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">InstanceType</span>(<span class="hljs-params"></span>) </span>{
+    Iridium.Instance.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
+}
+
+<span class="hljs-built_in">require</span>(<span class="hljs-string">'util'</span>).inherits(InstanceType, Iridium.Instance);
+
+InstanceType.transforms = {
+    $<span class="hljs-built_in">document</span>: {
+        fromDB: <span class="hljs-built_in">document</span> =&gt; {
+            <span class="hljs-built_in">document</span>.lastFetched = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>();
+        },
+        toDB: <span class="hljs-built_in">document</span> =&gt; {
+            <span class="hljs-built_in">document</span>.lastFetched &amp;&amp; <span class="hljs-keyword">delete</span> <span class="hljs-built_in">document</span>.lastFetched;
+            <span class="hljs-keyword">return</span> <span class="hljs-built_in">document</span>;
+        }
+    },
+    email: {
+        fromDB: value =&gt; value.toUpperCase(),
+        toDB: value =&gt; value.toLowerCase()
+    }
+};
+</code></pre>
+				<h4 id="useful-transform-tricks">Useful Transform Tricks</h4>
+				<p>There are a couple of clever tricks you can do using transforms to enable additional functionality within Iridium. An example would be cleaning your documents of properties
+				not defined within your schemas whenever they are saved to the database.</p>
+				<h5 id="strict-schemas">Strict Schemas</h5>
+				<p>Let&#39;s say you want to only insert values which appear in your schemas - an example would be if you accept documents from a REST API and don&#39;t wish to manually cherry-pick
+					the properties you are going to insert. It could also simply be a way of lazily cleaning up old properties from documents as your schema evolves over time, helping to avoid
+					complications if someone forgets to clean up the database after making changes to the schema.
+				This can be easily achieved using the <code>$document</code> transform.</p>
+				<pre><code class="lang-typescript">@Iridium.Transform(<span class="hljs-built_in">document</span> =&gt; <span class="hljs-built_in">document</span>, (<span class="hljs-built_in">document</span>, property, model) =&gt; {
+    <span class="hljs-built_in">Object</span>.keys(<span class="hljs-built_in">document</span>).forEach(key =&gt; {
+        <span class="hljs-keyword">if</span>(!model.schema.hasOwnProperty(key)) <span class="hljs-keyword">delete</span> <span class="hljs-built_in">document</span>[key];
+    });
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">document</span>;
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> InstanceType extends Iridium.Instance&lt;<span class="hljs-built_in">any</span>, InstanceType&gt; {
+
+}
+</code></pre>
+				<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">InstanceType</span>(<span class="hljs-params"></span>) </span>{
+    Iridium.Instance.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
+}
+
+<span class="hljs-built_in">require</span>(<span class="hljs-string">'util'</span>).inherits(InstanceType, Iridium.Instance);
+
+InstanceType.transforms = {
+    $<span class="hljs-built_in">document</span>: {
+        fromDB: <span class="hljs-built_in">document</span> =&gt; <span class="hljs-built_in">document</span>,
+        toDB: (<span class="hljs-built_in">document</span>, property, model) =&gt; {
+            <span class="hljs-built_in">Object</span>.keys(<span class="hljs-built_in">document</span>).forEach(key =&gt; {
+                <span class="hljs-keyword">if</span>(!model.schema.hasOwnProperty(key)) <span class="hljs-keyword">delete</span> <span class="hljs-built_in">document</span>[key];
+            });
+
+            <span class="hljs-keyword">return</span> <span class="hljs-built_in">document</span>;
+        }
+    }
+};
+</code></pre>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -342,6 +468,9 @@ InstanceType.schema = {
 					<li class=" tsd-kind-interface tsd-is-not-exported">
 						<a href="interfaces/basicconnectionoptions.html" class="tsd-kind-icon">Basic<wbr>Connection<wbr>Options</a>
 					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/binary.html" class="tsd-kind-icon">Binary</a>
+					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/cache.html" class="tsd-kind-icon">Cache</a>
 					</li>
@@ -387,6 +516,9 @@ InstanceType.schema = {
 					<li class=" tsd-kind-interface tsd-is-not-exported">
 						<a href="interfaces/mongoslevelconnectionoptions.html" class="tsd-kind-icon">Mongos<wbr>Level<wbr>Connection<wbr>Options</a>
 					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/objectid.html" class="tsd-kind-icon">ObjectID</a>
+					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/plugin.html" class="tsd-kind-icon">Plugin</a>
 					</li>
@@ -402,7 +534,7 @@ InstanceType.schema = {
 					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="interfaces/propertysetter.html" class="tsd-kind-icon">Property<wbr>Setter</a>
 					</li>
-					<li class=" tsd-kind-interface">
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/propertytransform.html" class="tsd-kind-icon">Property<wbr>Transform</a>
 					</li>
 					<li class=" tsd-kind-interface">
@@ -423,14 +555,17 @@ InstanceType.schema = {
 					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/stage.html" class="tsd-kind-icon">Stage</a>
 					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/transformoptions.html" class="tsd-kind-icon">Transform<wbr>Options</a>
+					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/transforms.html" class="tsd-kind-icon">Transforms</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/updateoptions.html" class="tsd-kind-icon">Update<wbr>Options</a>
 					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#binary" class="tsd-kind-icon">Binary</a>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/value.html" class="tsd-kind-icon">Value</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#collection" class="tsd-kind-icon">Collection</a>
@@ -443,9 +578,6 @@ InstanceType.schema = {
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter tsd-is-external">
 						<a href="globals.html#modelspecificinstance" class="tsd-kind-icon">Model<wbr>Specific<wbr>Instance</a>
-					</li>
-					<li class=" tsd-kind-function">
-						<a href="globals.html#objectid" class="tsd-kind-icon">ObjectID</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#transform" class="tsd-kind-icon">Transform</a>

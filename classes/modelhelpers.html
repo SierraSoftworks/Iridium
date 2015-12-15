@@ -123,6 +123,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external"><a href="modelhelpers.html#clonedocument" class="tsd-kind-icon">clone<wbr>Document</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external"><a href="modelhelpers.html#converttodb" class="tsd-kind-icon">convert<wbr>ToDB</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="modelhelpers.html#diff" class="tsd-kind-icon">diff</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="modelhelpers.html#transformfromdb" class="tsd-kind-icon">transform<wbr>FromDB</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external"><a href="modelhelpers.html#transformtodb" class="tsd-kind-icon">transform<wbr>ToDB</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="modelhelpers.html#validate" class="tsd-kind-icon">validate</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="modelhelpers.html#wrapdocument" class="tsd-kind-icon">wrap<wbr>Document</a></li>
@@ -192,7 +193,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/ModelHelpers.ts#L99">ModelHelpers.ts:99</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/ModelHelpers.ts#L133">ModelHelpers.ts:133</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -228,7 +229,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/ModelHelpers.ts#L84">ModelHelpers.ts:84</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/ModelHelpers.ts#L118">ModelHelpers.ts:118</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -257,13 +258,13 @@
 					<a name="converttodb" class="tsd-anchor"></a>
 					<h3>convert<wbr>ToDB</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">convert<wbr>ToDB&lt;T&gt;<span class="tsd-signature-symbol">(</span>document<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
+						<li class="tsd-signature tsd-kind-icon">convert<wbr>ToDB&lt;T&gt;<span class="tsd-signature-symbol">(</span>document<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/transformoptions.html" class="tsd-signature-type">TransformOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/ModelHelpers.ts#L62">ModelHelpers.ts:62</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/ModelHelpers.ts#L96">ModelHelpers.ts:96</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -286,6 +287,9 @@
 										<p>The document to be converted</p>
 									</div>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> options: <a href="../interfaces/transformoptions.html" class="tsd-signature-type">TransformOptions</a><span class="tsd-signature-symbol"> =&nbsp;{ properties: true }</span></h5>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
 							<p>A new document cloned from the original and transformed</p>
@@ -302,7 +306,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/ModelHelpers.ts#L72">ModelHelpers.ts:72</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/ModelHelpers.ts#L106">ModelHelpers.ts:106</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -329,17 +333,60 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external">
-					<a name="transformtodb" class="tsd-anchor"></a>
-					<h3>transform<wbr>ToDB</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">transform<wbr>ToDB&lt;T&gt;<span class="tsd-signature-symbol">(</span>document<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
+					<a name="transformfromdb" class="tsd-anchor"></a>
+					<h3>transform<wbr>FromDB</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">transform<wbr>FromDB<span class="tsd-signature-symbol">(</span>document<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TDocument</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/transformoptions.html" class="tsd-signature-type">TransformOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TDocument</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/ModelHelpers.ts#L48">ModelHelpers.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/ModelHelpers.ts#L73">ModelHelpers.ts:73</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Converts the given document from its database form using the
+									transforms defined on the model.</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>remarks</dt>
+									<dd><p>Unlike the transformToDB function - this method only applies
+											document level transforms, as property level transforms are applied in
+										their relevant instance setters.</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>document: <span class="tsd-signature-type">TDocument</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The document to be converted.</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> options: <a href="../interfaces/transformoptions.html" class="tsd-signature-type">TransformOptions</a><span class="tsd-signature-symbol"> =&nbsp;{ properties: true }</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TDocument</span></h4>
+							<p>The result of having transformed the document.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external">
+					<a name="transformtodb" class="tsd-anchor"></a>
+					<h3>transform<wbr>ToDB</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">transform<wbr>ToDB&lt;T&gt;<span class="tsd-signature-symbol">(</span>document<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/transformoptions.html" class="tsd-signature-type">TransformOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/master/lib/ModelHelpers.ts#L49">ModelHelpers.ts:49</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -347,6 +394,11 @@
 									<p>Converts the given document to its database form into a form
 									using the transforms defined on the model.</p>
 								</div>
+								<dl class="tsd-comment-tags">
+									<dt>remarks</dt>
+									<dd><p>This is only really called from insert/create - as</p>
+									</dd>
+								</dl>
 							</div>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
@@ -362,9 +414,12 @@
 										<p>The document to be converted</p>
 									</div>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> options: <a href="../interfaces/transformoptions.html" class="tsd-signature-type">TransformOptions</a><span class="tsd-signature-symbol"> =&nbsp;{ properties: true }</span></h5>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
-							<p>A new document cloned from the original and transformed</p>
+							<p>The result of having transformed the document.</p>
 						</li>
 					</ul>
 				</section>
@@ -481,6 +536,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
 								<a href="modelhelpers.html#diff" class="tsd-kind-icon">diff</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
+								<a href="modelhelpers.html#transformfromdb" class="tsd-kind-icon">transform<wbr>FromDB</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external">
 								<a href="modelhelpers.html#transformtodb" class="tsd-kind-icon">transform<wbr>ToDB</a>
