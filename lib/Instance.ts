@@ -171,6 +171,8 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
 
                 var original = this._model.helpers.cloneDocument(this._original);
                 var modified = this._model.helpers.cloneDocument(this._modified);
+                
+                modified = this._model.helpers.transformToDB(modified, { document: true }); 
 
                 changes = this._model.helpers.diff(original, modified);
             }
