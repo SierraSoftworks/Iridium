@@ -22,7 +22,7 @@ class Test extends Iridium.Instance<TestDocument, Test> implements TestDocument 
 }
 
 class TestWithCustomID extends Test {
-    static transforms: Iridium.Transforms<TestDocument> = {
+    static transforms: Iridium.Transforms = {
         _id: {
             fromDB: x => x * 10,
             toDB: x => x / 10

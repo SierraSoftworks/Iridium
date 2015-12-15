@@ -2,7 +2,7 @@ import MongoDB = require('mongodb');
 import {Model} from './Model';
 import * as BSON from './BSON'; 
 
-export interface Transforms<TDocument> {
+export interface Transforms {
 	/**
 	 * A transform which is applied to the entire document.
 	 */

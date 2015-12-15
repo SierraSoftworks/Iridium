@@ -211,7 +211,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
         return this._Instance;
     }
 
-    private _transforms: Transforms<TDocument>;
+    private _transforms: Transforms;
 
     /**
      * Gets the transforms which are applied whenever a document is received from the database, or

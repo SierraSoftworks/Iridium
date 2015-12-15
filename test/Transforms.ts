@@ -23,7 +23,7 @@ class Person extends Iridium.Instance<Document, Person> {
 		avatar: Buffer
     };
 
-	static transforms: Iridium.Transforms<Document> = {
+	static transforms: Iridium.Transforms = {
 		email: {
 			fromDB: x => x.toUpperCase(),
 			toDB: x => x.toLowerCase().trim()

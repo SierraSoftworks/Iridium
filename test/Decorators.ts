@@ -21,7 +21,7 @@ function VersionValidator(schema, data) {
 @Iridium.Property('version', 'version')
 @Iridium.Property('optional2', Boolean, false)
 class Test extends Iridium.Instance<TestDocument, Test> implements TestDocument {
-	static transforms: Iridium.Transforms<TestDocument> = {};
+	static transforms: Iridium.Transforms = {};
 	static indexes = [];
 
 	@Iridium.ObjectID
