@@ -83,6 +83,11 @@ exports.Property = Property;
  * class, however only one transform can be applied to any property at a time.
  * If your transpiler does not support decorators then you are free to make use of the
  * property instead.
+ *
+ * If this decorator is applied to the instance class itself, as opposed to a property, then
+ * it will be treated as a $document transformer - and will receive the full document as opposed
+ * to individual property values. Similarly, it is expected to return a full document when either
+ * fromDB or toDB is called.
  */
 function Transform(fromDB, toDB) {
     return function (target, property) {

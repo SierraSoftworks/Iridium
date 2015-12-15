@@ -105,6 +105,11 @@ export function Property(...args: any[]): (target: Instance<any, any> | Instance
  * class, however only one transform can be applied to any property at a time.
  * If your transpiler does not support decorators then you are free to make use of the
  * property instead.
+ * 
+ * If this decorator is applied to the instance class itself, as opposed to a property, then
+ * it will be treated as a $document transformer - and will receive the full document as opposed
+ * to individual property values. Similarly, it is expected to return a full document when either
+ * fromDB or toDB is called.
  */
 export function Transform(fromDB: (value: any, property: string, model: Model<any,any>) => any, toDB: (value: any, property: string, model: Model<any,any>) => any) {
 	return function(target: Instance<any, any>, property: string = '$document') {
