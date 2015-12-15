@@ -12,6 +12,8 @@ interface Document {
     name: string;
 	email: string;
 	avatar: Buffer;
+	
+	lastModified?: Date;
 }
 
 class Person extends Iridium.Instance<Document, Person> {
@@ -24,6 +26,13 @@ class Person extends Iridium.Instance<Document, Person> {
     };
 
 	static transforms: Iridium.Transforms = {
+		$document: {
+			fromDB: x => x,
+			toDB: x => {
+				x.lastModified = new Date();
+				return x;
+			}
+		},
 		email: {
 			fromDB: x => x.toUpperCase(),
 			toDB: x => x.toLowerCase().trim()
@@ -92,14 +101,18 @@ describe("Transforms", () => {
 			hookEmitter.once('creating', (doc) => {
 				onCreatingCalled = true;
 				chai.expect(doc.email).to.eql('Test@email.com');
+				chai.expect(doc.lastModified).to.not.exist;
 			});
 
 			return db.Person.insert({
 				name: 'Test User',
 				email: 'Test@email.com',
 				avatar: new Buffer(0)
-			}).then(() => {
+			}).then(user => {
 				chai.expect(onCreatingCalled).to.be.true;
+				chai.expect(user).to.exist;
+				chai.expect(user).to.have.property('document').with.property('lastModified');
+				chai.expect(user.document.lastModified.valueOf()).to.be.closeTo(new Date().valueOf(), 1000);
 			});
 		});
 
@@ -134,11 +147,28 @@ describe("Transforms", () => {
 				chai.expect(person.document.email).to.eql('test@email.com');
 			});
 		});
+		
+		it("should apply the $document transform on saves", () => {
+			let onSavingCalled = false;
+			hookEmitter.once('saving', (doc) => {
+				onSavingCalled = true;
+				chai.expect(doc.lastModified).to.not.exist;
+			});
+			
+			return db.Person.get().then(person => {
+				return person.save();
+			}).then(person => {
+				chai.expect(person).to.exist;
+				chai.expect(person).to.have.property('document').with.property('lastModified');
+				chai.expect(person.document.lastModified.valueOf()).to.be.closeTo(new Date().valueOf(), 1000);
+				chai.expect(onSavingCalled).to.be.true;
+			});
+		});
 
 		it("should diff the transformed property", () => {
 			let changesChecked = false;
 			hookEmitter.once('saving', (instance, changes) => {
-				chai.expect(changes).to.eql({ $set: { name: 'Testy User' }});
+				chai.expect(changes).to.have.property('$set').with.property('name', 'Testy User');
 				changesChecked = true;
 			});
 
@@ -150,6 +180,19 @@ describe("Transforms", () => {
 
 				return person.save();
 			}).then(person => {
+				chai.expect(person).to.have.property('email', 'TEST@EMAIL.COM');
+				chai.expect(changesChecked).to.be.true;
+			});
+		});
+
+		it("should diff the transformed document", () => {
+			let changesChecked = false;
+			hookEmitter.once('saving', (instance, changes) => {
+				chai.expect(changes).to.have.property('$set').with.property('lastModified').which.is.instanceof(Date);
+				changesChecked = true;
+			});
+
+			return db.Person.get().then(person => person.save()).then(person => {
 				chai.expect(person).to.have.property('email', 'TEST@EMAIL.COM');
 				chai.expect(changesChecked).to.be.true;
 			});
