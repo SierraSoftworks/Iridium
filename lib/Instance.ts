@@ -113,7 +113,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
     /**
      * The transformations which should be applied to properties of documents of this type.
      */
-    static transforms: Transforms = {
+    static transforms: Transforms<any> = {
 
     };
 

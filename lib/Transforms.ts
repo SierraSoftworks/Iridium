@@ -1,13 +1,18 @@
 import MongoDB = require('mongodb');
+import {Model} from './Model';
 
-export interface Transforms {
-	[property:string]: PropertyTransform;
+export interface Transforms<TDocument> {
+	/**
+	 * A transform which is applied to the entire document.
+	 */
+	$document?: PropertyTransform<TDocument>;
+	[property:string]: PropertyTransform<any>;
 }
 
 /**
  * Converts the value of a property to and from its database representation.
  */
-export interface PropertyTransform {
+export interface PropertyTransform<T> {
 	/**
 	 * Converts a property's value from its database representation into one
 	 * suitable for the application.

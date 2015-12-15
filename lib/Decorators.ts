@@ -110,7 +110,7 @@ export function Transform(fromDB: (value: any, property: string, model: Model<an
 	return function(target: Instance<any, any>, property: string) {
 		let staticTarget: InstanceImplementation<any, any> = <InstanceImplementation<any, any>>(target.constructor || target);
 
-		staticTarget.transforms = _.clone(staticTarget.transforms || <Transforms>{})
+		staticTarget.transforms = _.clone(staticTarget.transforms || <Transforms<any>>{})
 		staticTarget.transforms[property] = {
 			fromDB: fromDB,
 			toDB: toDB

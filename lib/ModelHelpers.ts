@@ -43,23 +43,53 @@ export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
      * Converts the given document to its database form into a form
      * using the transforms defined on the model.
      * @param {any} document The document to be converted
-     * @returns {any} A new document cloned from the original and transformed
+     * @returns {any} The result of having transformed the document.
+     * @remarks This is only really called from insert/create - as 
      */
-    transformToDB<T>(document: T): T {
+    transformToDB<T>(document: T, processProperties: boolean = true): T {
+        if(this.model.transforms.$document)
+            document = <any>this.model.transforms.$document.toDB(document, '$document', this.model);
+        
         for (var property in this.model.transforms)
-            if(document.hasOwnProperty(property)) {
+            if(property === '$document') continue;
+            else if(document.hasOwnProperty(property)) {
                 document[property] = this.model.transforms[property].toDB(document[property], property, this.model);
             }
+            
+        return document;
+    }
+    
+    /**
+     * Converts the given document from its database form using the
+     * transforms defined on the model.
+     * @param document The document to be converted.
+     * @returns The result of having transformed the document.
+     * @remarks Unlike the transformToDB function - this method only applies
+     * document level transforms, as property level transforms are applied in
+     * their relevant instance setters.
+     */
+    transformFromDB(document: TDocument, processProperties: boolean = true): TDocument {
+        if(this.model.transforms.$document)
+            document = this.model.transforms.$document.fromDB(document, '$document', this.model);
+        
+        for (var property in this.model.transforms)
+            if(property === '$document') continue;
+            else if(document.hasOwnProperty(property)) {
+                document[property] = this.model.transforms[property].fromDB(document[property], property, this.model);
+            }
+            
         return document;
     }
 
     /**
      * Converts the given document to its database form into a form
      * using the transforms defined on the model.
-     * @param {any} document The document to be converted
+     * @param document The document to be converted
+     * @param processProperties Whether or not to process properties in addition
+     * document level transforms.
      * @returns {any} A new document cloned from the original and transformed
      */
-    convertToDB<T>(document: T): T {
+    convertToDB<T>(document: T, processProperties: boolean = true): T {
         var doc: T = this.cloneDocument(document);
         return this.transformToDB(doc);
     }

@@ -31,6 +31,8 @@ export class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
             partial: false
         });
 
+        this.model.helpers.transformFromDB(result, false);
+
         let wrapped: TResult;
         return Bluebird.resolve(result).then((target: any) => {
             return <Bluebird<TResult>>Bluebird

@@ -124,5 +124,5 @@ export interface InstanceImplementation<TDocument extends { _id ?: any }, TInsta
      * sent to the database. These may include things such as converting ObjectIDs to strings for the application, and
      * then back to ObjectIDs once they return to the database.
      */
-    transforms?: Transforms;
+    transforms?: Transforms<TDocument>;
 }
