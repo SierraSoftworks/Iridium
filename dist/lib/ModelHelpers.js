@@ -1,3 +1,4 @@
+var MongoDB = require('mongodb');
 var Skmatc = require('skmatc');
 var Omnom_1 = require('./utils/Omnom');
 var _ = require('lodash');
@@ -108,7 +109,13 @@ var ModelHelpers = (function () {
     ModelHelpers.prototype.cloneDocument = function (original) {
         return _.cloneDeep(original, function (value) {
             if (Buffer.isBuffer(value)) {
-                return value.slice();
+                return value;
+            }
+            if (value instanceof MongoDB.Binary) {
+                return value;
+            }
+            if (value instanceof MongoDB.ObjectID) {
+                return value;
             }
         });
     };

@@ -118,7 +118,15 @@ export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
     cloneDocument<T>(original: T): T {
         return _.cloneDeep(original, (value) => {
            if(Buffer.isBuffer(value)) {
-               return (<Buffer>value).slice();
+               return value;
+           }
+           
+           if(value instanceof MongoDB.Binary) {
+               return value;
+           }
+           
+           if(value instanceof MongoDB.ObjectID) {
+               return value;
            }
         });
     }

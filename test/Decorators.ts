@@ -122,7 +122,7 @@ describe("Decorators", () => {
 
 		describe("the ObjectID transform", () => {
 			it("should convert an ObjectID to a string", () => {
-				chai.expect(Test.transforms['_id'].fromDB({ _bsontype: 'ObjectID', id: 'aaaaaaaaaaaaaaaaaaaaaaaa' }, '_id', null)).to.eql('aaaaaaaaaaaaaaaaaaaaaaaa');
+				chai.expect(Test.transforms['_id'].fromDB(Iridium.toObjectID('aaaaaaaaaaaaaaaaaaaaaaaa'), '_id', null)).to.eql('aaaaaaaaaaaaaaaaaaaaaaaa');
 			});
 
 			it("should convert a string to an ObjectID", () => {

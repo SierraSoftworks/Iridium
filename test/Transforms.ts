@@ -218,10 +218,7 @@ describe("Transforms", () => {
 		describe("the default Buffer transform", () => {
 			it("should convert a MongoDB BSON Binary object into a buffer", () => {
 				let transform = DefaultTransforms.Binary.fromDB;
-				let result = transform({
-					_bsontype: 'Binary',
-					buffer: new Buffer('test', 'utf8')
-				}, '_id', null);
+				let result = transform(new MongoDB.Binary(new Buffer('test', 'utf8')), '_id', null);
 				
 				chai.expect(result).to.exist;
 				chai.expect(result.toString('utf8')).to.eql('test');

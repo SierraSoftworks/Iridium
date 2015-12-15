@@ -36,15 +36,14 @@ export interface PropertyTransform<T> {
 }
 
 export const DefaultTransforms = {
- 	ObjectID: <PropertyTransform<MongoDB.ObjectID | BSON.ObjectID>>{
-		fromDB: value => value && (<BSON.ObjectID>value)._bsontype == 'ObjectID' ? new MongoDB.ObjectID((<BSON.ObjectID>value).id).toHexString() : value,
+ 	ObjectID: <PropertyTransform<MongoDB.ObjectID>>{
+		fromDB: value => value instanceof MongoDB.ObjectID ? value.toHexString() : value,
 		toDB: value => typeof value === 'string' ? new MongoDB.ObjectID(value) : value
 	},
-	Binary: <PropertyTransform<MongoDB.Binary | BSON.Binary>>{
+	Binary: <PropertyTransform<MongoDB.Binary>>{
 		fromDB: value => {
 			if(!value) return null;
-			if((<BSON.Binary>value)._bsontype === "Binary")
-				return (<BSON.Binary>value).buffer;
+			if(value instanceof MongoDB.Binary) return (<any>value).buffer;
 			
 			return value;
 		},
