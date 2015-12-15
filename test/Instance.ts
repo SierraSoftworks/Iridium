@@ -163,11 +163,9 @@ describe("Instance",() => {
 
             return core.Test.insert({
                 answer: 1
-            }).then(() => chai.expect(core.Test.get().then((instance) => {
-                return instance.save().then(() => {
-                    core.Test.collection.update = update;
-                });
-            })));
+            }).then(() => core.Test.get()).then(instance => instance.save()).then(() => {
+                core.Test.collection.update = update;
+            });
         });
 
         it("should insert the instance if it is not present in the database",() => {

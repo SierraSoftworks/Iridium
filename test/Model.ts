@@ -945,8 +945,8 @@ describe("Model",() => {
 
         it("should have a default ObjectID to String converter", () => {
             let model = new Iridium.Model<TestDocument, Test>(core, Test);
-            chai.expect(model.transforms['_id'].fromDB(MongoDB.ObjectID.createFromHexString('aaaaaaaaaaaaaaaaaaaaaaaa'))).to.eql('aaaaaaaaaaaaaaaaaaaaaaaa');
-            chai.expect(model.transforms['_id'].toDB('aaaaaaaaaaaaaaaaaaaaaaaa')).to.eql(MongoDB.ObjectID.createFromHexString('aaaaaaaaaaaaaaaaaaaaaaaa'));
+            chai.expect(model.transforms['_id'].fromDB(MongoDB.ObjectID.createFromHexString('aaaaaaaaaaaaaaaaaaaaaaaa'), '_id', model)).to.eql('aaaaaaaaaaaaaaaaaaaaaaaa');
+            chai.expect(model.transforms['_id'].toDB('aaaaaaaaaaaaaaaaaaaaaaaa', '_id', model)).to.eql(MongoDB.ObjectID.createFromHexString('aaaaaaaaaaaaaaaaaaaaaaaa'));
         });
 
         it("should allow you to specify a custom converter by providing a property on the class", () => {
@@ -955,8 +955,8 @@ describe("Model",() => {
             chai.expect(model.transforms['_id']).to.exist.and.have.property('fromDB').which.is.a('function');
             chai.expect(model.transforms['_id']).to.exist.and.have.property('toDB').which.is.a('function');
 
-            chai.expect(model.transforms['_id'].fromDB(12)).to.eql(120);
-            chai.expect(model.transforms['_id'].toDB(120)).to.eql(12);
+            chai.expect(model.transforms['_id'].fromDB(12, '_id', model)).to.eql(120);
+            chai.expect(model.transforms['_id'].toDB(120, '_id', model)).to.eql(12);
         });
     });
 });

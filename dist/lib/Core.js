@@ -136,7 +136,7 @@ var Core = (function () {
      */
     Core.prototype.connect = function (callback) {
         var _this = this;
-        return Bluebird.bind(this).then(function () {
+        return Bluebird.resolve().then(function () {
             if (_this._connection)
                 return _this._connection;
             if (_this._connectPromise)
@@ -164,7 +164,7 @@ var Core = (function () {
      */
     Core.prototype.close = function () {
         var _this = this;
-        return Bluebird.bind(this).then(function () {
+        return Bluebird.resolve().then(function () {
             if (!_this._connection)
                 return _this;
             var conn = _this._connection;

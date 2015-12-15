@@ -20,7 +20,7 @@ var ModelHandlers = (function () {
             partial: false
         });
         var wrapped;
-        return Bluebird.resolve(result).then(function (target) {
+        return Bluebird.resolve(this.model.helpers.transformFromDB(result, { document: true })).then(function (target) {
             return Bluebird
                 .resolve(_this.model.hooks.onRetrieved && _this.model.hooks.onRetrieved(target))
                 .then(function () {
@@ -45,7 +45,7 @@ var ModelHandlers = (function () {
             return Bluebird
                 .resolve(_this.model.hooks.onCreating && _this.model.hooks.onCreating(document))
                 .then(function () {
-                document = _this.model.helpers.convertToDB(document);
+                document = _this.model.helpers.convertToDB(document, { document: true, properties: true });
                 var validation = _this.model.helpers.validate(document);
                 if (validation.failed)
                     return Bluebird.reject(validation.error);

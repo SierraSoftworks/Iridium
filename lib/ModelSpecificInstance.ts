@@ -27,10 +27,10 @@ export function ModelSpecificInstance<TDocument extends { _id?: any }, TInstance
         if (model.transforms.hasOwnProperty(property)) {
             return Object.defineProperty(constructor.prototype, property, {
                 get: function () {
-                    return model.transforms[property].fromDB(this._modified[property]);
+                    return model.transforms[property].fromDB(this._modified[property], property, model);
                 },
                 set: function (value) {
-                    this._modified[property] = model.transforms[property].toDB(value);
+                    this._modified[property] = model.transforms[property].toDB(value, property, model);
                 },
                 enumerable: true,
                 configurable: true

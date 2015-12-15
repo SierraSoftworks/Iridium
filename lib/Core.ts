@@ -164,7 +164,7 @@ export class Core {
      * @returns {Promise}
      */
     connect(callback?: (err: Error, core: Core) => any): Bluebird<Core> {
-        return Bluebird.bind(this).then(() => {
+        return Bluebird.resolve().then(() => {
             if (this._connection) return this._connection;
             if (this._connectPromise) return this._connectPromise;
             return this._connectPromise = this.mongoConnectAsyc(this.url, this._config && this._config.options);
@@ -189,7 +189,7 @@ export class Core {
      * @type {Promise}
      */
     close(): Bluebird<Core> {
-        return Bluebird.bind(this).then(() => {
+        return Bluebird.resolve().then(() => {
             if (!this._connection) return this;
             var conn: MongoDB.Db = this._connection;
             this._connection = null;

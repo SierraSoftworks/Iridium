@@ -206,7 +206,8 @@ Iridium uses [Skmatc](https://github.com/SierraSoftworks/Skmatc) for schema vali
 we'll give a quick rundown of the way you make use of it here.
 
 The model's schema is defined using an object in which keys represent their document property counterparts while the values represent a validation
-rule.
+rule. You can also make use of the [`@Property`](http://sierrasoftworks.github.io/Iridium/globals.html#property) decorator to automatically build
+up your schema object.
 
 **TypeScript**
 ```typescript
@@ -218,6 +219,16 @@ class InstanceType {
         _id: false,
         email: /^.+@.+$/
     };
+}
+```
+
+```typescript
+class InstanceType extends Iridium.Instance<any, InstanceType> {
+    @Iridium.ObjectID
+    _id: string;
+    
+    @Iridium.Property(String)
+    email: string;
 }
 ```
 
@@ -266,5 +277,142 @@ If you've used the `Iridium.Instance` constructor then you'll have a couple of u
 You'll also find `first()` and `select()` which allow you to select the first, or all, entr(y|ies) in a collection which match a predicate - ensuring that `this`
 maps to the instance itself within the predicate - helping to make comparisons somewhat easier within JavaScript ES5.
 
-### Custom Instances
-If you decide to implement your own instance constructor then this is the part you'll be interested in.
+## Best Practices
+There are a number of best practices which you should keep in mind when working with Iridium to help get the best possible experience. For starters, Iridium is
+built up of a number of smaller components - namely the [validation](https://github.com/sierrasoftworks/skmatc), transform and caching layers.
+
+### Validation Layer
+The validation layer allows you to plug in your own custom validators, or simply make use of the built in ones, to quickly validate your documents against a
+strongly defined schema. It is designed to enable you to quickly generate meaningful and human readable validation messages, minimizing the need for error
+translation within your application.
+
+Custom validators can be added either using the [`validators`](http://sierrasoftworks.github.io/Iridium/interfaces/instanceimplementation.html#validators) property
+or by using the [`@Validate`](http://sierrasoftworks.github.io/Iridium/globals.html#validate) decorator on your instance class.
+
+```typescript
+@Iridium.Validate('myValidator', x => x === 42)
+export class InstanceType extends Iridium.Instance<any, InstanceType> {
+    @Iridium.Property('myValidator')
+    myProperty: number;
+}
+```
+
+```javascript
+var skmatc = require('skmatc');
+
+function InstanceType() {
+    Iridium.Instance.apply(this, arguments);
+}
+
+require('util').inherits(InstanceType, Iridium.Instance);
+
+InstanceType.validators = [
+    skmatc.create(function(schema) {
+        return schema === 'myValidator';
+    }, function(data, schema, path) {
+        return data === 42;
+    })
+];
+
+InstanceType.schema = {
+    myProperty: 'myValidator'
+};
+```
+
+Iridium expects validators to operate in a read-only mode, modifying documents within your validators (while possible) is strongly discouraged as it can lead
+to some strange side effects and isn't guaranteed to behave the same way between releases. If you need to make changes to documents, take a look at the Transform
+Layer. 
+
+### Transform Layer
+The transform layer is designed to make changes to the documents you store within MongoDB as well as the data presented to your application. A good example is the
+way in which ObjectIDs are treated, within your application they appear as plain strings - allowing you to quickly and easily perform many different operations with
+them. However, when you attempt to save an ObjectID field to the database, it is automatically converted into the correct ObjectID object before being persisted.
+
+The transform layer allows you to register your own transforms both on a per-model and per-property basis. In the case of a model, the transform is given the whole
+document and is expected to return the transformed document. Property transforms work the same, except that they are presented with, and expected to return, the value
+of a single top-level property.
+
+The easiest way to add a transform is using the [`@Transform`](http://sierrasoftworks.github.io/Iridium/globals.html#transform) decorator, however if you are working
+in a language which doesn't yet support decorators then you can easily use the
+[`transforms`](http://sierrasoftworks.github.io/Iridium/interfaces/instanceimplementation.html#transforms) property on your instance class.
+
+```typescript
+@Iridium.Transform(document => {
+    document.lastFetched = new Date();
+}, document => {
+    document.lastFetched && delete document.lastFetched;
+    return document;
+})
+export class InstanceType extends Iridium.Instance<any, InstanceType> {
+    @Iridium.Transform(data => data.toUpperCase(), data => data.toLowerCase())
+    email: string;
+}
+```
+
+```javascript
+function InstanceType() {
+    Iridium.Instance.apply(this, arguments);
+}
+
+require('util').inherits(InstanceType, Iridium.Instance);
+
+InstanceType.transforms = {
+    $document: {
+        fromDB: document => {
+            document.lastFetched = new Date();
+        },
+        toDB: document => {
+            document.lastFetched && delete document.lastFetched;
+            return document;
+        }
+    },
+    email: {
+        fromDB: value => value.toUpperCase(),
+        toDB: value => value.toLowerCase()
+    }
+};
+```
+
+#### Useful Transform Tricks
+There are a couple of clever tricks you can do using transforms to enable additional functionality within Iridium. An example would be cleaning your documents of properties
+not defined within your schemas whenever they are saved to the database.
+
+##### Strict Schemas
+Let's say you want to only insert values which appear in your schemas - an example would be if you accept documents from a REST API and don't wish to manually cherry-pick
+the properties you are going to insert. It could also simply be a way of lazily cleaning up old properties from documents as your schema evolves over time, helping to avoid
+complications if someone forgets to clean up the database after making changes to the schema.
+This can be easily achieved using the `$document` transform.
+
+```typescript
+@Iridium.Transform(document => document, (document, property, model) => {
+    Object.keys(document).forEach(key => {
+        if(!model.schema.hasOwnProperty(key)) delete document[key];
+    });
+    
+    return document;
+})
+export class InstanceType extends Iridium.Instance<any, InstanceType> {
+    
+}
+```
+
+```javascript
+function InstanceType() {
+    Iridium.Instance.apply(this, arguments);
+}
+
+require('util').inherits(InstanceType, Iridium.Instance);
+
+InstanceType.transforms = {
+    $document: {
+        fromDB: document => document,
+        toDB: (document, property, model) => {
+            Object.keys(document).forEach(key => {
+                if(!model.schema.hasOwnProperty(key)) delete document[key];
+            });
+            
+            return document;
+        }
+    }
+};
+```

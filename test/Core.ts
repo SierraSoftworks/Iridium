@@ -283,7 +283,10 @@ describe("Core",() => {
                     done();
                 });
 
-                chai.expect(core.connect()).to.eventually.equal(core);
+                core.connect((err, core) => {
+                    if(err) return done(err);
+                    chai.expect(core).to.equal(core);
+                });
             });
 
             it("should be passed the underlying connection", (done) => {
@@ -293,7 +296,10 @@ describe("Core",() => {
                     done();
                 });
 
-                chai.expect(core.connect()).to.eventually.equal(core);
+                core.connect((err, core) => {
+                    if(err) return done(err);
+                    chai.expect(core).to.equal(core);
+                });
             });
 
             it("should be triggered before the connection is established", (done) => {
@@ -303,21 +309,24 @@ describe("Core",() => {
                     done();
                 });
 
-                chai.expect(core.connect()).to.eventually.equal(core);
+                core.connect((err, core) => {
+                    if(err) return done(err);
+                    chai.expect(core).to.equal(core);
+                });
             });
 
             it("should abort the connection if it throws an error", () => {
                 let core = new InheritedCoreWithHooks();
                 core.onConnectingResult = (conn) => Bluebird.reject(new Error('Test error'));
 
-                chai.expect(core.connect()).to.eventually.be.rejectedWith('Test error');
+                return chai.expect(core.connect()).to.eventually.be.rejectedWith('Test error');
             });
 
             it("should leave the Iridium core disconnected if it throws an error", () => {
                 let core = new InheritedCoreWithHooks();
                 core.onConnectingResult = (conn) => Bluebird.reject(new Error('Test error'));
 
-                chai.expect(core.connect().then(() => false, (err) => {
+                return chai.expect(core.connect().then(() => false, (err) => {
                     chai.expect(core.connection).to.not.exist;
                     return Bluebird.resolve(true);
                 })).to.eventually.be.true;
@@ -331,7 +340,10 @@ describe("Core",() => {
                     done();
                 });
 
-                chai.expect(core.connect()).to.eventually.equal(core);
+                core.connect((err, core) => {
+                    if(err) return done(err);
+                    chai.expect(core).to.equal(core);
+                });
             });
 
             it("should be triggered after the connection is accepted", (done) => {
@@ -341,21 +353,24 @@ describe("Core",() => {
                     done();
                 });
 
-                chai.expect(core.connect()).to.eventually.equal(core);
+                core.connect((err, core) => {
+                    if(err) return done(err);
+                    chai.expect(core).to.equal(core);
+                });
             });
 
             it("should abort the connection if it throws an error", () => {
                 let core = new InheritedCoreWithHooks();
                 core.onConnectedResult = () => Bluebird.reject(new Error('Test error'));
 
-                chai.expect(core.connect()).to.eventually.be.rejectedWith('Test error');
+                return chai.expect(core.connect()).to.eventually.be.rejectedWith('Test error');
             });
 
             it("should leave the Iridium core disconnected if it throws an error", () => {
                 let core = new InheritedCoreWithHooks();
                 core.onConnectedResult = () => Bluebird.reject(new Error('Test error'));
 
-                chai.expect(core.connect().then(() => false, (err) => {
+                return chai.expect(core.connect().then(() => false, (err) => {
                     chai.expect(core.connection).to.not.exist;
                     return Bluebird.resolve(true);
                 })).to.eventually.be.true;
