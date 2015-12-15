@@ -19,3 +19,4 @@ Gruntfile.js
 .gitignore
 typings/DefinitelyTyped
 doc/
+*.dat
