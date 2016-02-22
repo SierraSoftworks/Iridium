@@ -116,7 +116,7 @@ export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
      * @param {any} The document you wish to clone deeply.
      */
     cloneDocument<T>(original: T): T {
-        return _.cloneDeep(original, (value) => {
+        return _.cloneDeepWith(original, (value) => {
            if(Buffer.isBuffer(value)) {
                return value;
            }

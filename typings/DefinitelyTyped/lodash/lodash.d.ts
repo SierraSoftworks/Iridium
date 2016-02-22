@@ -10791,7 +10791,7 @@ declare module _ {
          * console.log(shallow[0] === objects[0]);
          * // => true
          */
-        clone<T>(
+        cloneWith<T>(
             value: T,
             customizer: (value: any) => any): T;
     }
@@ -10800,7 +10800,7 @@ declare module _ {
         /**
          * @see _.clone
          */
-        clone(customizer: (value: any) => any): T;
+        cloneWith(customizer: (value: any) => any): T;
     }
 
     interface LoDashImplicitArrayWrapper<T> {
@@ -10808,14 +10808,14 @@ declare module _ {
         /**
          * @see _.clone
          */
-        clone(customizer: (value: any) => any): T[];
+        cloneWith(customizer: (value: any) => any): T[];
     }
 
     interface LoDashImplicitObjectWrapper<T> {
         /**
          * @see _.clone
          */
-        clone(customizer: (value: any) => any): T;
+        cloneWith(customizer: (value: any) => any): T;
     }
 
     //_.cloneDeepWith
@@ -10832,7 +10832,7 @@ declare module _ {
          * @param thisArg The this binding of customizer.
          * @return Returns the deep cloned value.
          */
-        cloneDeep<T>(
+        cloneDeepWith<T>(
             value: T,
             customizer: (value: any) => any): T;
     }
@@ -10841,21 +10841,21 @@ declare module _ {
         /**
          * @see _.cloneDeep
          */
-        cloneDeep(customizer: (value: any) => any): T;
+        cloneDeepWith(customizer: (value: any) => any): T;
     }
 
     interface LoDashImplicitArrayWrapper<T> {
         /**
          * @see _.cloneDeep
          */
-        cloneDeep(customizer: (value: any) => any): T[];
+        cloneDeepWith(customizer: (value: any) => any): T[];
     }
 
     interface LoDashImplicitObjectWrapper<T> {
         /**
          * @see _.cloneDeep
          */
-        cloneDeep(customizer: (value: any) => any): T;
+        cloneDeepWith(customizer: (value: any) => any): T;
     }
 
     //_.eq
