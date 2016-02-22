@@ -20,9 +20,6 @@
 		"mocha/mocha.d.ts": {
 			"commit": "cb08e83dd87ace1202d1032a8f275b3efacde5c3"
 		},
-		"chai-fuzzy/chai-fuzzy.d.ts": {
-			"commit": "cb08e83dd87ace1202d1032a8f275b3efacde5c3"
-		},
 		"chai/chai.d.ts": {
 			"commit": "cb08e83dd87ace1202d1032a8f275b3efacde5c3"
 		},
