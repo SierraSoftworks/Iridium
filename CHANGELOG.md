@@ -1,7 +1,17 @@
 
 ## [Working Changes](https://github.com/sierrasoftworks/iridium)
+- [7337fef](https://github.com/sierrasoftworks/iridium/commit/7337fef) Version 6.5.2
+- [20141da](https://github.com/sierrasoftworks/iridium/commit/20141da) fix: Update Lodash library type definition
+- [8d3e311](https://github.com/sierrasoftworks/iridium/commit/8d3e311) fix: Update various libraries to their latest versions
+- [d426f7f](https://github.com/sierrasoftworks/iridium/commit/d426f7f) (origin/master, origin/HEAD, feat/typescript17) fix: Don't include ntvs analysis file in npm package
+- [cfe56e7](https://github.com/sierrasoftworks/iridium/commit/cfe56e7) Revert "ci: Disable automated npm deployments while Travis is broken"
+- [e3b007c](https://github.com/sierrasoftworks/iridium/commit/e3b007c) ci: Disable automated npm deployments while Travis is broken
+- [06d4d88](https://github.com/sierrasoftworks/iridium/commit/06d4d88) Updated documentation
+- [88e3747](https://github.com/sierrasoftworks/iridium/commit/88e3747) Updated CHANGELOG
+
+## [v6.5.1](https://github.com/sierrasoftworks/iridium/tree/v6.5.1)
 - [3ecbcfa](https://github.com/sierrasoftworks/iridium/commit/3ecbcfa) Version 6.5.1
-- [2a6b079](https://github.com/sierrasoftworks/iridium/commit/2a6b079) (origin/master) fix [#25](https://github.com/sierrasoftworks/iridium/issues/25): Address issues when cloning values of type MongoDB.ObjectID and MongoDB.Binary
+- [2a6b079](https://github.com/sierrasoftworks/iridium/commit/2a6b079) fix [#25](https://github.com/sierrasoftworks/iridium/issues/25): Address issues when cloning values of type MongoDB.ObjectID and MongoDB.Binary
 - [95a5dff](https://github.com/sierrasoftworks/iridium/commit/95a5dff) doc: Updated docs
 - [defa9cb](https://github.com/sierrasoftworks/iridium/commit/defa9cb) Updated CHANGELOG
 
@@ -50,7 +60,7 @@
 - [50713c7](https://github.com/sierrasoftworks/iridium/commit/50713c7) Version 6.3.0
 - [f09fa1b](https://github.com/sierrasoftworks/iridium/commit/f09fa1b) Merge branch 'feat/async-hooks'
 - [fcddc72](https://github.com/sierrasoftworks/iridium/commit/fcddc72) Merge branch 'pr/20'
-- [1fe25e2](https://github.com/sierrasoftworks/iridium/commit/1fe25e2) (origin/feat/async-hooks) refactor: Remove duplicate `wrapped` definition
+- [1fe25e2](https://github.com/sierrasoftworks/iridium/commit/1fe25e2) (origin/feat/async-hooks, feat/async-hooks) refactor: Remove duplicate `wrapped` definition
 - [c697682](https://github.com/sierrasoftworks/iridium/commit/c697682) docs: Added some comments regarding promise performance under async conditions
 - [d24448e](https://github.com/sierrasoftworks/iridium/commit/d24448e) build: Update js maps following support for Promise.Thenable on external APIs
 - [9e56ec9](https://github.com/sierrasoftworks/iridium/commit/9e56ec9) refactor: Support libraries other than Bluebird for external promise sources
@@ -62,7 +72,7 @@
 - [2dabf54](https://github.com/sierrasoftworks/iridium/commit/2dabf54) Promises support in hooks
 - [0a8ee18](https://github.com/sierrasoftworks/iridium/commit/0a8ee18) feat: Add ability to specify a cursor's read preference using readFrom()
 - [ea3eb8f](https://github.com/sierrasoftworks/iridium/commit/ea3eb8f) feat: Add ability to use cursor to retrieve a single document
-- [bd0858e](https://github.com/sierrasoftworks/iridium/commit/bd0858e) Test case for promises in hooks
+- [bd0858e](https://github.com/sierrasoftworks/iridium/commit/bd0858e) (pr/20) Test case for promises in hooks
 - [0db5f34](https://github.com/sierrasoftworks/iridium/commit/0db5f34) Promises support in hooks
 - [1354dc0](https://github.com/sierrasoftworks/iridium/commit/1354dc0) Merge branch 'master' into release
 - [be5e698](https://github.com/sierrasoftworks/iridium/commit/be5e698) Updated documentation
@@ -139,7 +149,7 @@
 ## [v5.10.1](https://github.com/sierrasoftworks/iridium/tree/v5.10.1)
 - [ad98906](https://github.com/sierrasoftworks/iridium/commit/ad98906) Version 5.10.1
 - [b18beb5](https://github.com/sierrasoftworks/iridium/commit/b18beb5) Merge pull request #17 from SierraSoftworks/feature/nicedocs
-- [9ece18a](https://github.com/sierrasoftworks/iridium/commit/9ece18a) (feature/nicedocs) Updated docs
+- [9ece18a](https://github.com/sierrasoftworks/iridium/commit/9ece18a) Updated docs
 - [39524f7](https://github.com/sierrasoftworks/iridium/commit/39524f7) Fixed a number of broken test fixtures
 - [89725a4](https://github.com/sierrasoftworks/iridium/commit/89725a4) Fix a little issue with CI tests
 - [7b29f33](https://github.com/sierrasoftworks/iridium/commit/7b29f33) Changed the submodule URL for docs
@@ -176,7 +186,7 @@
 - [b9c13fb](https://github.com/sierrasoftworks/iridium/commit/b9c13fb) Updated changelog generation
 - [f656174](https://github.com/sierrasoftworks/iridium/commit/f656174) Revert "Switch to Travis-CI container infrastucture"
 - [5261ea0](https://github.com/sierrasoftworks/iridium/commit/5261ea0) Revert "Updated travis config to use MongoDB precise (3.x)"
-- [cefc0f4](https://github.com/sierrasoftworks/iridium/commit/cefc0f4) Updated travis config to use MongoDB precise (3.x)
+- [cefc0f4](https://github.com/sierrasoftworks/iridium/commit/cefc0f4) (infrastructure/travisci-containers) Updated travis config to use MongoDB precise (3.x)
 - [d11c8f3](https://github.com/sierrasoftworks/iridium/commit/d11c8f3) Switch to Travis-CI container infrastucture
 - [3565d59](https://github.com/sierrasoftworks/iridium/commit/3565d59) Merge branch 'master' into release
 - [5a2dc37](https://github.com/sierrasoftworks/iridium/commit/5a2dc37) Updated CHANGELOG
@@ -488,7 +498,7 @@
 - [40fab25](https://github.com/sierrasoftworks/iridium/commit/40fab25) Log all the things for Travis
 - [50523ce](https://github.com/sierrasoftworks/iridium/commit/50523ce) Come on Travis, we believe in you
 - [858b766](https://github.com/sierrasoftworks/iridium/commit/858b766) Return nModified from update() on MongoDB 2.4
-- [caf864a](https://github.com/sierrasoftworks/iridium/commit/caf864a) Make some test failures output more useful informatio
+- [caf864a](https://github.com/sierrasoftworks/iridium/commit/caf864a) (sierrasoftworks/master) Make some test failures output more useful informatio
 - [86b494f](https://github.com/sierrasoftworks/iridium/commit/86b494f) Travis is still broken, more logging and possible fixes
 - [2448a4f](https://github.com/sierrasoftworks/iridium/commit/2448a4f) Support MongoDB 2.4 responses in update()
 - [81144a2](https://github.com/sierrasoftworks/iridium/commit/81144a2) Added some logging to find out why Travis is failing tes
@@ -508,7 +518,7 @@
 - [0147aea](https://github.com/sierrasoftworks/iridium/commit/0147aea) Updated project file
 - [f9e57cb](https://github.com/sierrasoftworks/iridium/commit/f9e57cb) Show badges for the master branch
 - [fdb0746](https://github.com/sierrasoftworks/iridium/commit/fdb0746) Merge pull request #7 from SierraSoftworks/typescript
-- [cab9a81](https://github.com/sierrasoftworks/iridium/commit/cab9a81) (sierrasoftworks/typescript) Renamed Promise to Bluebird to avoid confusion and possible conflicts
+- [cab9a81](https://github.com/sierrasoftworks/iridium/commit/cab9a81) Renamed Promise to Bluebird to avoid confusion and possible conflicts
 - [a029c1e](https://github.com/sierrasoftworks/iridium/commit/a029c1e) Removed unused variable in Omnom
 - [b4fb151](https://github.com/sierrasoftworks/iridium/commit/b4fb151) Removed unnecessary semicolons in module index
 - [45ec39d](https://github.com/sierrasoftworks/iridium/commit/45ec39d) Updated .jshintrc file
@@ -518,7 +528,7 @@
 - [aad75e8](https://github.com/sierrasoftworks/iridium/commit/aad75e8) Separated Model into a number of smaller files to make it more manageable
 - [fb6f69a](https://github.com/sierrasoftworks/iridium/commit/fb6f69a) Added some fringe case tests for Omnom
 - [2e48949](https://github.com/sierrasoftworks/iridium/commit/2e48949) Fixed Travis code climate configuration
-- [c91116d](https://github.com/sierrasoftworks/iridium/commit/c91116d) Added more badges to the README
+- [c91116d](https://github.com/sierrasoftworks/iridium/commit/c91116d) (sierrasoftworks/typescript) Added more badges to the README
 - [65ffea9](https://github.com/sierrasoftworks/iridium/commit/65ffea9) Updated code coverage submissions for CodeClimate
 - [8949641](https://github.com/sierrasoftworks/iridium/commit/8949641) Added coveralls coverage badge to README
 - [5e229b9](https://github.com/sierrasoftworks/iridium/commit/5e229b9) Updated the project file

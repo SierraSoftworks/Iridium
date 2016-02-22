@@ -21,6 +21,7 @@ var Omnom = (function () {
         return new Omnom(options).diff(original, modified).changes;
     };
     Omnom.prototype.onObject = function (original, modified, changePath) {
+        var _this = this;
         if (original === undefined || original === null)
             return (original !== modified) && this.set(changePath, modified);
         if (typeof original == 'number' && typeof modified == 'number' && original !== modified) {
@@ -37,14 +38,14 @@ var Omnom = (function () {
         _.each(modified, function (value, key) {
             // Handle array diffs in their own special way
             if (Array.isArray(value) && Array.isArray(original[key]))
-                this.onArray(original[key], value, this.resolve(changePath, key));
+                _this.onArray(original[key], value, _this.resolve(changePath, key));
             else
-                this.onObject(original[key], value, this.resolve(changePath, key));
+                _this.onObject(original[key], value, _this.resolve(changePath, key));
         }, this);
         // Unset removed properties
         _.each(original, function (value, key) {
             if (modified[key] === undefined)
-                return this.unset(this.resolve(changePath, key));
+                return _this.unset(_this.resolve(changePath, key));
         }, this);
     };
     Omnom.prototype.onArray = function (original, modified, changePath) {
