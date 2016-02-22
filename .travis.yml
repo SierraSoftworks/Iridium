@@ -25,7 +25,7 @@ script:
 after_script:
   - gulp coverage
   - coveralls < coverage/lcov.info
-  - codeclimate < coverage/lcov.info
+  - codeclimate-test-reporter < coverage/lcov.info
 
 deploy:
   skip_cleanup: true
