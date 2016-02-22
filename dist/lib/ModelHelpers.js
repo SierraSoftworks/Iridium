@@ -107,7 +107,7 @@ var ModelHelpers = (function () {
      * @param {any} The document you wish to clone deeply.
      */
     ModelHelpers.prototype.cloneDocument = function (original) {
-        return _.cloneDeep(original, function (value) {
+        return _.cloneDeepWith(original, function (value) {
             if (Buffer.isBuffer(value)) {
                 return value;
             }
