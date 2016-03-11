@@ -62,7 +62,7 @@ export class Omnom {
         if (original === undefined || original === null)
             return (original !== modified) && this.set(changePath, modified);
 
-        if (typeof original === "number' && typeof modified === 'number" && original !== modified) {
+        if (typeof original === "number" && typeof modified === "number" && original !== modified) {
             if (this.options.atomicNumbers) return this.inc(changePath, modified - original);
             return this.set(changePath, modified);
         }
