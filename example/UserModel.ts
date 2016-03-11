@@ -1,10 +1,10 @@
 /// <reference path="../iridium.d.ts" />
 /// <reference path="../_references.d.ts" />
 
-import _ = require('lodash');
-import Promise = require('bluebird');
-import * as Iridium from 'iridium';
-import {Index, Property} from 'iridium';
+import _ = require("lodash");
+import Promise = require("bluebird");
+import * as Iridium from "iridium";
+import {Index, Property} from "iridium";
 
 var settings: any = {};
 
@@ -43,10 +43,10 @@ export interface UserDocument {
     last_seen: Date;
 }
 
-@Iridium.Collection('user')
+@Iridium.Collection("user")
 @Index({ email: 1 }, { unique: true })
 @Index({ sessions: 1 }, { sparse: true })
-@Index({ 'skill.xp': -1 }, { background: true }) 
+@Index({ "skill.xp": -1 }, { background: true }) 
 export class User extends Iridium.Instance<UserDocument, User> implements UserDocument {
     @Iridium.Property(/^[a-z][a-z0-9_]{7,}$/) _id: string;
     get username() {
@@ -119,9 +119,9 @@ export class User extends Iridium.Instance<UserDocument, User> implements UserDo
     static onCreating(user: UserDocument) {
         var passwordTest = /(?=^.{8,}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*/;
 
-        if (!passwordTest.test(user.password || '')) return Promise.reject(new Error('Password didn\'t meet the minimum safe password requirements. Passwords should be at least 8 characters long, and contain at least 3 of the following categories: lowercase letters, uppercase letters, numbers, characters'));
+        if (!passwordTest.test(user.password || "')) return Promise.reject(new Error("Password didn\"t meet the minimum safe password requirements. Passwords should be at least 8 characters long, and contain at least 3 of the following categories: lowercase letters, uppercase letters, numbers, characters"));
 
-        user.password = require('crypto').createHash('sha512').update(settings.security.salt).update(user.password).digest('hex');
+        user.password = require("crypto").createHash("sha512").update(settings.security.salt).update(user.password).digest("hex");
 
         _.defaults(user, {
             type: "Player",
@@ -173,9 +173,9 @@ export class User extends Iridium.Instance<UserDocument, User> implements UserDo
         /// <param name="callback" type="Function">A function to be called once the user's password has been updated</param>
 
         var passwordTest = /(?=^.{8,}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*/;
-        if (!passwordTest.test(newPassword || '')) return callback(new Error('Password didn\'t meet the minimum safe password requirements. Passwords should be at least 8 characters long, and contain at least 3 of the following categories: lowercase letters, uppercase letters, numbers, characters'));
+        if (!passwordTest.test(newPassword || "")) return callback(new Error("Password didn\"t meet the minimum safe password requirements. Passwords should be at least 8 characters long, and contain at least 3 of the following categories: lowercase letters, uppercase letters, numbers, characters"));
 
-        var hashed = require('crypto').createHash('sha512').update(settings.security.salt).update(newPassword).digest('hex');
+        var hashed = require("crypto").createHash("sha512").update(settings.security.salt).update(newPassword).digest("hex");
         this.password = hashed;
         this.save(callback);
     }
@@ -184,14 +184,14 @@ export class User extends Iridium.Instance<UserDocument, User> implements UserDo
         /// <param name="password" type="String">The password to validate against the user's password hash.</param>
         /// <returns type="Boolean"/>
 
-        var hashed = require('crypto').createHash('sha512').update(settings.security.salt).update(password).digest('hex');
+        var hashed = require("crypto").createHash("sha512").update(settings.security.salt).update(password).digest("hex");
         return hashed == this.password;
     }
     addFriend(friend: string, callback: (err?: Error, user?: User) => void) {
         this.save({ $push: { friends: friend } }, callback);
     }
     updateLevel() {
-        /// <summary>Update's the user's current level based on the amount of XP they have. Doesn't save the user instance.</summary>
+        /// <summary>Update"s the user"s current level based on the amount of XP they have. Doesn't save the user instance.</summary>
 				
         // Amount of XP required per level starts at 1200, doubles for each consecutive level
         // tf. XP_n = XP_nm1 + 1200 * 2^n

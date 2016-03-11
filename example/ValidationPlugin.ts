@@ -1,6 +1,6 @@
 /// <reference path="../typings/skmatc/skmatc.d.ts"/>
-import Iridium = require('../index');
-import Skmatc = require('skmatc');
+import Iridium = require("../index");
+import Skmatc = require("skmatc");
 
 export = StringCaseValidationPlugin;
 

@@ -1,6 +1,6 @@
 ﻿
 /// <reference path="../iridium.d.ts" />
-import Iridium = require('iridium');
+import Iridium = require("iridium");
 
 interface UserDoc {
     _id?: string;
@@ -63,19 +63,19 @@ class MyDB extends Iridium.Core {
 var db = new MyDB("mongodb://localhost/test");
 
 db.connect().then(function () {
-    db.Users.insert({ fullname: 'test', username: 'test', passwordHash: 'test', email: 'test@test.com', dateOfBirth: new Date() }).then(function (user) {
+    db.Users.insert({ fullname: "test", username: "test", passwordHash: "test", email: "test@test.com", dateOfBirth: new Date() }).then(function (user) {
         user.fullname;
         user.dateOfBirth.getTime();
     });
 
-    db.Users.insert([{ fullname: 'test', username: 'test', passwordHash: 'test', email: 'test@test.com', dateOfBirth: new Date() }]).then(function (users) {
+    db.Users.insert([{ fullname: "test", username: "test", passwordHash: "test", email: "test@test.com", dateOfBirth: new Date() }]).then(function (users) {
         users[0].fullname;
     });
     
     db.Users.findOne().then(function (instance) {
         instance.save().then(function (i) {
             i.remove().then(function (i) {
-                i.username = 'test';
+                i.username = "test";
                 return i.save();
             });
         });
