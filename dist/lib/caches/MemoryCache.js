@@ -1,3 +1,4 @@
+"use strict";
 var Bluebird = require('bluebird');
 /**
  * A cache implementation which stores documents in an in-memory cache.
@@ -23,7 +24,7 @@ var MemoryCache = (function () {
         return Bluebird.resolve(has);
     };
     return MemoryCache;
-})();
+}());
 exports.MemoryCache = MemoryCache;
 
 //# sourceMappingURL=MemoryCache.js.map

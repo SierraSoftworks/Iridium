@@ -1,3 +1,4 @@
+"use strict";
 var _ = require('lodash');
 var MongoDB = require('mongodb');
 var Omnom = (function () {
@@ -24,7 +25,7 @@ var Omnom = (function () {
         var _this = this;
         if (original === undefined || original === null)
             return (original !== modified) && this.set(changePath, modified);
-        if (typeof original == 'number' && typeof modified == 'number' && original !== modified) {
+        if (typeof original === 'number' && typeof modified === 'number' && original !== modified) {
             if (this.options.atomicNumbers)
                 return this.inc(changePath, modified - original);
             return this.set(changePath, modified);
@@ -49,48 +50,59 @@ var Omnom = (function () {
         }, this);
     };
     Omnom.prototype.onArray = function (original, modified, changePath) {
-        var _this = this;
-        var i, j;
         // Check if we can get from original => modified using just pulls
         if (original.length > modified.length) {
-            var pulls = [];
-            for (i = 0, j = 0; i < original.length && j < modified.length; i++) {
-                if (this.almostEqual(original[i], modified[j]))
-                    j++;
-                else
-                    pulls.push(original[i]);
-            }
-            for (; i < original.length; i++)
-                pulls.push(original[i]);
-            if (j === modified.length) {
-                if (pulls.length === 1)
-                    return this.pull(changePath, pulls[0]);
-                // We can complete using just pulls
-                return pulls.forEach(function (pull) { return _this.pull(changePath, pull); });
-            }
-            else
-                return this.set(changePath, modified);
+            return this.onSmallerArray(original, modified, changePath);
         }
         // Check if we can get from original => modified using just pushes
         if (original.length < modified.length) {
-            var canPush = true;
-            for (i = 0; i < original.length; i++)
-                if (this.almostEqual(original[i], modified[i]) < 1) {
-                    canPush = false;
-                    break;
-                }
-            if (canPush) {
-                for (i = original.length; i < modified.length; i++)
-                    this.push(changePath, modified[i]);
-                return;
-            }
+            return this.onLargerArray(original, modified, changePath);
         }
         // Otherwise, we need to use $set to generate the new array
+        return this.onSimilarArray(original, modified, changePath);
+    };
+    Omnom.prototype.onSmallerArray = function (original, modified, changePath) {
+        var _this = this;
+        var pulls = [];
+        var i = 0;
+        var j = 0;
+        for (; i < original.length && j < modified.length; i++) {
+            if (this.almostEqual(original[i], modified[j]))
+                j++;
+            else
+                pulls.push(original[i]);
+        }
+        for (; i < original.length; i++)
+            pulls.push(original[i]);
+        if (j === modified.length) {
+            if (pulls.length === 1)
+                return this.pull(changePath, pulls[0]);
+            // We can complete using just pulls
+            return pulls.forEach(function (pull) { return _this.pull(changePath, pull); });
+        }
+        else
+            return this.set(changePath, modified);
+    };
+    Omnom.prototype.onLargerArray = function (original, modified, changePath) {
+        var canPush = true;
+        for (var i = 0; i < original.length; i++)
+            if (this.almostEqual(original[i], modified[i]) < 1) {
+                canPush = false;
+                break;
+            }
+        if (canPush) {
+            for (var i = original.length; i < modified.length; i++)
+                this.push(changePath, modified[i]);
+            return;
+        }
+        return this.onSimilarArray(original, modified, changePath);
+    };
+    Omnom.prototype.onSimilarArray = function (original, modified, changePath) {
         // Check how many manipulations would need to be performed, if it's more than half the array size
         // then rather re-create the array
         var sets = [];
         var partials = [];
-        for (i = 0; i < modified.length; i++) {
+        for (var i = 0; i < modified.length; i++) {
             var equality = this.almostEqual(original[i], modified[i]);
             if (equality === 0)
                 sets.push(i);
@@ -99,9 +111,9 @@ var Omnom = (function () {
         }
         if (sets.length > modified.length / 2)
             return this.set(changePath, modified);
-        for (i = 0; i < sets.length; i++)
+        for (var i = 0; i < sets.length; i++)
             this.set(this.resolve(changePath, sets[i].toString()), modified[sets[i]]);
-        for (i = 0; i < partials.length; i++)
+        for (var i = 0; i < partials.length; i++)
             this.onObject(original[partials[i]], modified[partials[i]], this.resolve(changePath, partials[i].toString()));
     };
     Omnom.prototype.set = function (path, value) {
@@ -166,13 +178,13 @@ var Omnom = (function () {
     Omnom.prototype.almostEqual = function (o1, o2) {
         if (!_.isPlainObject(o1) || !_.isPlainObject(o2))
             return o1 == o2 ? 1 : 0;
-        var o1i, o1k = Object.keys(o1);
-        var o2k = Object.keys(o2);
+        var object1KeyIndex, object1Keys = Object.keys(o1);
+        var object2Keys = Object.keys(o2);
         var commonKeys = [];
-        for (o1i = 0; o1i < o1k.length; o1i++)
-            if (~o2k.indexOf(o1k[o1i]))
-                commonKeys.push(o1k[o1i]);
-        var totalKeys = o1k.length + o2k.length - commonKeys.length;
+        for (object1KeyIndex = 0; object1KeyIndex < object1Keys.length; object1KeyIndex++)
+            if (~object2Keys.indexOf(object1Keys[object1KeyIndex]))
+                commonKeys.push(object1Keys[object1KeyIndex]);
+        var totalKeys = object1Keys.length + object2Keys.length - commonKeys.length;
         var keysDifference = totalKeys - commonKeys.length;
         var requiredChanges = 0;
         for (var i = 0; i < commonKeys.length; i++)
@@ -181,7 +193,7 @@ var Omnom = (function () {
         return 1 - (keysDifference / totalKeys) - (requiredChanges / commonKeys.length);
     };
     return Omnom;
-})();
+}());
 exports.Omnom = Omnom;
 
 //# sourceMappingURL=Omnom.js.map

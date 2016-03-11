@@ -1,3 +1,4 @@
+"use strict";
 var Bluebird = require('bluebird');
 /**
  * A cache implementation which does not cache any received documents
@@ -19,7 +20,7 @@ var NoOpCache = (function () {
         return Bluebird.resolve(false);
     };
     return NoOpCache;
-})();
+}());
 exports.NoOpCache = NoOpCache;
 
 //# sourceMappingURL=NoOpCache.js.map

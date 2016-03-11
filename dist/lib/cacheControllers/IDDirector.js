@@ -1,3 +1,4 @@
+"use strict";
 var MongoDB = require('mongodb');
 /**
  * Caches documents using their _id field as the unique cache key. This
@@ -25,7 +26,7 @@ var CacheOnID = (function () {
         return conditions._id;
     };
     return CacheOnID;
-})();
+}());
 exports.CacheOnID = CacheOnID;
 
 //# sourceMappingURL=IDDirector.js.map

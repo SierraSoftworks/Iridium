@@ -1,3 +1,4 @@
+"use strict";
 var MongoDB = require('mongodb');
 var Bluebird = require('bluebird');
 var _ = require('lodash');
@@ -532,7 +533,7 @@ var Model = (function () {
         }).nodeify(callback);
     };
     return Model;
-})();
+}());
 exports.Model = Model;
 
 //# sourceMappingURL=Model.js.map

@@ -1,3 +1,4 @@
+"use strict";
 var MongoDB = require('mongodb');
 var Skmatc = require('skmatc');
 function DefaultValidators() {

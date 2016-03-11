@@ -1,3 +1,4 @@
+"use strict";
 var MongoDB = require('mongodb');
 var Skmatc = require('skmatc');
 var Omnom_1 = require('./utils/Omnom');
@@ -130,7 +131,7 @@ var ModelHelpers = (function () {
         return this.cloneDocument(original);
     };
     return ModelHelpers;
-})();
+}());
 exports.ModelHelpers = ModelHelpers;
 
 //# sourceMappingURL=ModelHelpers.js.map

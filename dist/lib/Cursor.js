@@ -1,3 +1,4 @@
+"use strict";
 var Bluebird = require('bluebird');
 /**
  * An Iridium collection cursor which allows the itteration through documents
@@ -180,7 +181,7 @@ var Cursor = (function () {
         return new Cursor(this.model, this.conditions, this.cursor.setReadPreference(type));
     };
     return Cursor;
-})();
+}());
 exports.Cursor = Cursor;
 
 //# sourceMappingURL=Cursor.js.map

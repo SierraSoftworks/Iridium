@@ -1,3 +1,4 @@
+"use strict";
 var MongoDB = require('mongodb');
 exports.DefaultTransforms = {
     ObjectID: {

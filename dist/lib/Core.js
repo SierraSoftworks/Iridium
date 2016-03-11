@@ -1,3 +1,4 @@
+"use strict";
 var Bluebird = require('bluebird');
 var MongoDB = require('mongodb');
 var _ = require('lodash');
@@ -206,7 +207,7 @@ var Core = (function () {
         return Bluebird.resolve();
     };
     return Core;
-})();
+}());
 exports.Core = Core;
 
 //# sourceMappingURL=Core.js.map

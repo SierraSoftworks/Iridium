@@ -1,3 +1,4 @@
+"use strict";
 var MongoDB = require('mongodb');
 /**
  * Converts a string to an ObjectID instance - a shortcut for require('mongodb').ObjectID.createFromHexString

@@ -1,3 +1,4 @@
+"use strict";
 var Bluebird = require('bluebird');
 /**
  * A centralized class which ties the cache and cache directors together in a cohesive way
@@ -24,7 +25,7 @@ var ModelCache = (function () {
         this.model.core.cache.clear(this.model.cacheDirector.buildQueryKey(conditions));
     };
     return ModelCache;
-})();
+}());
 exports.ModelCache = ModelCache;
 
 //# sourceMappingURL=ModelCache.js.map

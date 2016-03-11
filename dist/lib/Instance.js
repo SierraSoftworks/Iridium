@@ -1,3 +1,4 @@
+"use strict";
 var Validators_1 = require('./Validators');
 var _ = require('lodash');
 var Bluebird = require('bluebird');
@@ -273,7 +274,7 @@ var Instance = (function () {
      */
     Instance.indexes = [];
     return Instance;
-})();
+}());
 exports.Instance = Instance;
 
 //# sourceMappingURL=Instance.js.map
