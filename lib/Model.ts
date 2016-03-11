@@ -357,7 +357,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
         let callback: General.Callback<TInstance> = null;
 
         for (let argI = 0; argI < args.length; argI++) {
-            if (typeof args[argI] == 'function') callback = callback || args[argI];
+            if (typeof args[argI] === 'function') callback = callback || args[argI];
             else if (_.isPlainObject(args[argI])) {
                 if (conditions) options = args[argI];
                 else conditions = args[argI];
@@ -384,14 +384,14 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
                     skip: options.skip,
                     sort: options.sort,
                     limit: options.limit
-                },(err, result) => {
+                }, (err, result) => {
                         if (err) return reject(err);
                         return resolve(result);
                     });
             });
         }).then((document: TDocument) => {
             if (!document) return null;
-            return this._handlers.documentReceived(conditions, document,(document, isNew?, isPartial?) => this._helpers.wrapDocument(document, isNew, isPartial), options);
+            return this._handlers.documentReceived(conditions, document, (document, isNew?, isPartial?) => this._helpers.wrapDocument(document, isNew, isPartial), options);
         }).nodeify(callback);
     }
 
@@ -463,7 +463,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
         let objects: TDocument[];
         let options: ModelOptions.CreateOptions = {};
         let callback: General.Callback<any> = null;
-        if (typeof args[0] == 'function') callback = args[0];
+        if (typeof args[0] === 'function') callback = args[0];
         else {
             options = args[0];
             callback = args[1];
@@ -487,7 +487,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
                 let docs = this._handlers.creatingDocuments(objects);
                 return docs.map((object: { _id: any; }) => {
                     return new Bluebird<any[]>((resolve, reject) => {
-                        this.collection.findAndModify({ _id: object._id }, ["_id"], object, queryOptions,(err, result) => {
+                        this.collection.findAndModify({ _id: object._id }, ["_id"], object, queryOptions, (err, result) => {
                             if (err) return reject(err);
                             return resolve(result);
                         });
@@ -497,14 +497,14 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
             else
                 return this._handlers.creatingDocuments(objects).then(objects => _.chunk(objects, 1000)).map((objects: any[]) => {
                     return new Bluebird<any[]>((resolve, reject) => {
-                        this.collection.insertMany(objects, queryOptions,(err, result) => {
+                        this.collection.insertMany(objects, queryOptions, (err, result) => {
                             if (err) return reject(err);
                             return resolve(result.ops);
                         });
                     });
                 }).then(results => _.flatten(results));
         }).map((inserted: any) => {
-            return this._handlers.documentReceived(null, inserted,(document, isNew?, isPartial?) => this._helpers.wrapDocument(document, isNew, isPartial), { cache: options.cache });
+            return this._handlers.documentReceived(null, inserted, (document, isNew?, isPartial?) => this._helpers.wrapDocument(document, isNew, isPartial), { cache: options.cache });
         }).then((results: TInstance[]) => {
             if (Array.isArray(objs)) return results;
             return results[0];
@@ -527,7 +527,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      */
     update(conditions: { _id?: any, [key: string]: any } | any, changes: any, options: ModelOptions.UpdateOptions, callback?: General.Callback<number>): Bluebird<number>;
     update(conditions: { _id?: any, [key: string]: any } | any, changes: any, options?: ModelOptions.UpdateOptions, callback?: General.Callback<number>): Bluebird<number> {
-        if (typeof options == 'function') {
+        if (typeof options === 'function') {
             callback = <General.Callback<number>>options;
             options = {};
         }
@@ -547,7 +547,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
             conditions = this._helpers.convertToDB(conditions);
 
             return new Bluebird<number>((resolve, reject) => {
-                this.collection.updateMany(conditions, changes, options,(err, response) => {
+                this.collection.updateMany(conditions, changes, options, (err, response) => {
                     if (err) return reject(err);
 
                     // New MongoDB 2.6+ response type
@@ -575,7 +575,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
     count(conditions: { _id?: any, [key: string]: any } | any, callback?: General.Callback<number>): Bluebird<number>;
     count(conds?: any, callback?: General.Callback<number>): Bluebird<number> {
         let conditions: { _id?: any, [key: string]: any } = <{ _id?: any, [key: string]: any }>conds;
-        if (typeof conds == 'function') {
+        if (typeof conds === 'function') {
             callback = <General.Callback<number>>conds;
             conditions = {};
         }
@@ -590,7 +590,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
             conditions = this._helpers.convertToDB(conditions);
 
             return new Bluebird<number>((resolve, reject) => {
-                this.collection.count(conditions,(err, results) => {
+                this.collection.count(conditions, (err, results) => {
                     if (err) return reject(err);
                     return resolve(results);
                 });
@@ -627,7 +627,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
             options = {};
         }
 
-        if (typeof conds == 'function') {
+        if (typeof conds === 'function') {
             callback = <General.Callback<number>>conds;
             options = {};
             conditions = {};
@@ -648,7 +648,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
             conditions = this._helpers.convertToDB(conditions);
 
             return new Bluebird<number>((resolve, reject) => {
-                this.collection.remove(conditions, options,(err, response) => {
+                this.collection.remove(conditions, options, (err, response) => {
                     if (err) return reject(err);
                     return resolve(response.result.n);
                 });
@@ -684,13 +684,13 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      */
     ensureIndex(specification: Index.IndexSpecification, options: MongoDB.IndexOptions, callback?: General.Callback<string>): Bluebird<string>;
     ensureIndex(specification: Index.IndexSpecification, options?: MongoDB.IndexOptions, callback?: General.Callback<string>): Bluebird<string> {
-        if (typeof options == 'function') {
+        if (typeof options === 'function') {
             callback = <General.Callback<any>>options;
             options = {};
         }
 
         return new Bluebird<string>((resolve, reject) => {
-            this.collection.ensureIndex(specification, options,(err, name: any) => {
+            this.collection.ensureIndex(specification, options, (err, name: any) => {
                 if (err) return reject(err);
                 return resolve(name);
             });
@@ -704,7 +704,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      */
     ensureIndexes(callback?: General.Callback<string[]>): Bluebird<string[]> {
         return Bluebird.resolve(this._indexes).map((index: Index.Index | Index.IndexSpecification) => {
-            return this.ensureIndex((<Index.Index>index).spec || <Index.IndexSpecification>index,(<Index.Index>index).options || {});
+            return this.ensureIndex((<Index.Index>index).spec || <Index.IndexSpecification>index, (<Index.Index>index).options || {});
         }).nodeify(callback);
     }
 
@@ -731,7 +731,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
         }
 
         return new Bluebird<boolean>((resolve, reject) => {
-            this.collection.dropIndex(index,(err, result: { ok: number }) => {
+            this.collection.dropIndex(index, (err, result: { ok: number }) => {
                 if (err) return reject(err);
                 return resolve(<any>!!result.ok);
             });

@@ -45,7 +45,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
         this._original = document;
         this._modified = model.helpers.cloneDocument(document);
 
-        _.each(model.core.plugins,(plugin: Plugin) => {
+        _.each(model.core.plugins, (plugin: Plugin) => {
             if (plugin.newInstance) plugin.newInstance(this, model);
         });
     }
@@ -256,7 +256,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
 
         return Bluebird.resolve().then(() => {
             return new Bluebird<TDocument>((resolve, reject) => {
-                this._model.collection.findOne(conditions,(err: Error, doc: any) => {
+                this._model.collection.findOne(conditions, (err: Error, doc: any) => {
                     if (err) return reject(err);
                     return resolve(doc);
                 });
@@ -300,7 +300,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
         return Bluebird.resolve().then(() => {
             if (this._isNew) return 0;
             return new Bluebird<number>((resolve, reject) => {
-                this._model.collection.remove(conditions, { w: 'majority' },(err: Error, removed?: any) => {
+                this._model.collection.remove(conditions, { w: 'majority' }, (err: Error, removed?: any) => {
                     if (err) return reject(err);
                     return resolve(removed);
                 });
@@ -331,7 +331,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
     first<T>(collection: T[]| { [key: string]: T }, predicate: General.Predicate<T>): T {
         let result = null;
 
-        _.each(collection,(value: T, key) => {
+        _.each(collection, (value: T, key) => {
             if (predicate.call(this, value, key)) {
                 result = value;
                 return false;
@@ -359,7 +359,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
         let isArray = Array.isArray(collection);
         let results: any = isArray ? [] : {};
 
-        _.each(collection,(value: T, key) => {
+        _.each(collection, (value: T, key) => {
             if (predicate.call(this, value, key)) {
                 if (isArray) results.push(value);
                 else results[key] = value;

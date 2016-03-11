@@ -30,7 +30,7 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
      */
     count(callback?: General.Callback<number>): Bluebird<number> {
         return new Bluebird<number>((resolve, reject) => {
-            this.cursor.count(true,(err, count) => {
+            this.cursor.count(true, (err, count) => {
                 if (err) return reject(err);
                 return resolve(<any>count);
             });
@@ -48,7 +48,7 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
         return new Bluebird<void>((resolve, reject) => {
             this.cursor.forEach((item: TDocument) => {
                 this.model.handlers.documentReceived(this.conditions, item, function () { return helpers.wrapDocument.apply(helpers, arguments); }).then(handler);
-            },(err) => {
+            }, (err) => {
                 if (err) return reject(err);
                 return resolve(null);
             });
@@ -68,7 +68,7 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
             this.cursor.forEach((item: TDocument) => {
                 promises.push(this.model.handlers.documentReceived(this.conditions, item, function () { return helpers.wrapDocument.apply(helpers, arguments); })
                     .then(<(instance) => TResult>transform));
-            },(err) => {
+            }, (err) => {
                 if (err) return reject(err);
                 return resolve(Bluebird.all(promises));
             });
@@ -105,7 +105,7 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
             });
         }).then((document) => {
             if (!document) return Bluebird.resolve(<TInstance>null);
-            return this.model.handlers.documentReceived(this.conditions, document,(document, isNew?, isPartial?) => this.model.helpers.wrapDocument(document, isNew, isPartial));
+            return this.model.handlers.documentReceived(this.conditions, document, (document, isNew?, isPartial?) => this.model.helpers.wrapDocument(document, isNew, isPartial));
         }).nodeify(callback);
     }
 
@@ -129,7 +129,7 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
             });
         }).then((document) => {
             if (!document) return Bluebird.resolve(<TInstance>null);
-            return this.model.handlers.documentReceived(this.conditions, document,(document, isNew?, isPartial?) => this.model.helpers.wrapDocument(document, isNew, isPartial));
+            return this.model.handlers.documentReceived(this.conditions, document, (document, isNew?, isPartial?) => this.model.helpers.wrapDocument(document, isNew, isPartial));
         }).nodeify(callback);
     }
 
