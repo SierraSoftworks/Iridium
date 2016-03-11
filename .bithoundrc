@@ -1,6 +1,7 @@
 {
   "ignore": [
-    "typings/**/*.d.ts"
+    "typings/**/*.d.ts",
+    "dist/**"
   ],
   "test": [
     "test/**"
