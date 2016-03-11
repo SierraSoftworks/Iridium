@@ -1,5 +1,5 @@
 "use strict";
-var MongoDB = require('mongodb');
+var MongoDB = require("mongodb");
 /**
  * Caches documents using their _id field as the unique cache key. This
  * is useful if you primarily query your documents using their _id field,
@@ -13,7 +13,7 @@ var CacheOnID = (function () {
         return !!object._id;
     };
     CacheOnID.prototype.buildKey = function (object) {
-        if (object._id._bsontype == 'ObjectID')
+        if (object._id._bsontype === "ObjectID")
             return new MongoDB.ObjectID(object._id.id).toHexString();
         return object._id;
     };
@@ -21,7 +21,7 @@ var CacheOnID = (function () {
         return !!conditions._id;
     };
     CacheOnID.prototype.buildQueryKey = function (conditions) {
-        if (conditions._id._bsontype == 'ObjectID')
+        if (conditions._id._bsontype === "ObjectID")
             return new MongoDB.ObjectID(conditions._id.id).toHexString();
         return conditions._id;
     };

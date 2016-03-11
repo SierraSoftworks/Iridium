@@ -1,8 +1,8 @@
-﻿import MongoDB = require('mongodb');
-import * as Index from './Index';
-import {Hooks} from './Hooks';
-import {CacheDirector} from './CacheDirector';
-import * as General from './General';
+﻿import MongoDB = require("mongodb");
+import * as Index from "./Index";
+import {Hooks} from "./Hooks";
+import {CacheDirector} from "./CacheDirector";
+import * as General from "./General";
 
 /**
  * Options which can be used to control the way in which a query is executed
@@ -23,10 +23,10 @@ export interface QueryOptions {
 export interface CreateOptions {
     /**
      * The write concern, can either be a number from 0 to the number of nodes within
-     * the cluster, or 'majority' if you would like to wait for the majority of nodes
+     * the cluster, or "majority" if you would like to wait for the majority of nodes
      * within the cluster to confirm the write before returning.
      *
-     * It is recommended that you set this to 'majority', however in all situations
+     * It is recommended that you set this to "majority", however in all situations
      * where you mind if data is lost, you should set it to at least 1.
      */
     w?: string | number;
@@ -39,7 +39,7 @@ export interface CreateOptions {
 
     /**
      * Whether to wait for the write to be commited to the server's journal (flushed to disk)
-     * or not. By specifying 1 here, you imply w:1 - howver this can be combined with w:'majority'
+     * or not. By specifying 1 here, you imply w:1 - howver this can be combined with w:"majority"
      * to give excellent write reliability within a cluster, even across failures.
      */
     j?: number;
@@ -72,10 +72,10 @@ export interface CreateOptions {
 export interface UpdateOptions {
     /**
      * The write concern, can either be a number from 0 to the number of nodes within
-     * the cluster, or 'majority' if you would like to wait for the majority of nodes
+     * the cluster, or "majority" if you would like to wait for the majority of nodes
      * within the cluster to confirm the write before returning.
      *
-     * It is recommended that you set this to 'majority', however in all situations
+     * It is recommended that you set this to "majority", however in all situations
      * where you mind if data is lost, you should set it to at least 1.
      */
     w?: string | number;
@@ -88,7 +88,7 @@ export interface UpdateOptions {
 
     /**
      * Whether to wait for the write to be commited to the server's journal (flushed to disk)
-     * or not. By specifying 1 here, you imply w:1 - howver this can be combined with w:'majority'
+     * or not. By specifying 1 here, you imply w:1 - howver this can be combined with w:"majority"
      * to give excellent write reliability within a cluster, even across failures.
      */
     j?: boolean;
@@ -110,10 +110,10 @@ export interface UpdateOptions {
 export interface RemoveOptions {
     /**
      * The write concern, can either be a number from 0 to the number of nodes within
-     * the cluster, or 'majority' if you would like to wait for the majority of nodes
+     * the cluster, or "majority" if you would like to wait for the majority of nodes
      * within the cluster to confirm the write before returning.
      *
-     * It is recommended that you set this to 'majority', however in all situations
+     * It is recommended that you set this to "majority", however in all situations
      * where you mind if data is lost, you should set it to at least 1.
      */
     w?: string | number;
@@ -126,7 +126,7 @@ export interface RemoveOptions {
 
     /**
      * Whether to wait for the write to be commited to the server's journal (flushed to disk)
-     * or not. By specifying 1 here, you imply w:1 - howver this can be combined with w:'majority'
+     * or not. By specifying 1 here, you imply w:1 - howver this can be combined with w:"majority"
      * to give excellent write reliability within a cluster, even across failures.
      */
     j?: number;

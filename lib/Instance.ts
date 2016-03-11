@@ -1,18 +1,18 @@
-﻿import {Core} from './Core';
-import {Model} from './Model';
-import {Plugin} from './Plugins';
-import {CacheDirector} from './CacheDirector';
-import * as General from './General';
-import * as ModelInterfaces from './ModelInterfaces';
-import * as Index from './Index';
-import {Schema} from './Schema';
-import {Transforms} from './Transforms';
-import {DefaultValidators} from './Validators';
+﻿import {Core} from "./Core";
+import {Model} from "./Model";
+import {Plugin} from "./Plugins";
+import {CacheDirector} from "./CacheDirector";
+import * as General from "./General";
+import * as ModelInterfaces from "./ModelInterfaces";
+import * as Index from "./Index";
+import {Schema} from "./Schema";
+import {Transforms} from "./Transforms";
+import {DefaultValidators} from "./Validators";
 
-import _ = require('lodash');
-import MongoDB = require('mongodb');
-import Bluebird = require('bluebird');
-import Skmatc = require('skmatc');
+import _ = require("lodash");
+import MongoDB = require("mongodb");
+import Bluebird = require("bluebird");
+import Skmatc = require("skmatc");
 
 /**
  * The default Iridium Instance implementation which provides methods for saving, refreshing and
@@ -154,8 +154,8 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
         let conditions: any = {};
 
         Array.prototype.slice.call(args, 0).reverse().forEach((arg) => {
-            if (typeof arg == 'function') callback = arg;
-            else if (typeof arg == 'object') {
+            if (typeof arg == "function") callback = arg;
+            else if (typeof arg == "object") {
                 if (!changes) changes = arg;
                 else conditions = arg;
             }
@@ -188,17 +188,17 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
 
             if (this._isNew) {
                 return new Bluebird<boolean>((resolve, reject) => {
-                    this._model.collection.insertOne(this._modified, { w: 'majority' }, (err, doc) => {
+                    this._model.collection.insertOne(this._modified, { w: "majority" }, (err, doc) => {
                         if (err) return reject(err);
                         return resolve(<any>!!doc);
                     });
                 });
             } else {
                 return new Bluebird<boolean>((resolve: (changed: boolean) => void, reject) => {
-                    this._model.collection.updateOne(conditions, changes, { w: 'majority' }, (err: Error, changed: boolean) => {
+                    this._model.collection.updateOne(conditions, changes, { w: "majority" }, (err: Error, changed: boolean) => {
                         if(err) {
-                            err['conditions'] = conditions;
-                            err['changes'] = changes;
+                            err["conditions"] = conditions;
+                            err["changes"] = changes;
                             return reject(err);
                         }
 
@@ -207,8 +207,8 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
                 });
             }
         }).catch(err => {
-            err['original'] = this._original;
-            err['modified'] = this._modified;
+            err["original"] = this._original;
+            err["modified"] = this._modified;
             return Bluebird.reject(err);
         }).then((changed: boolean) => {
             conditions = { _id: this._modified._id };
@@ -300,7 +300,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
         return Bluebird.resolve().then(() => {
             if (this._isNew) return 0;
             return new Bluebird<number>((resolve, reject) => {
-                this._model.collection.remove(conditions, { w: 'majority' }, (err: Error, removed?: any) => {
+                this._model.collection.remove(conditions, { w: "majority" }, (err: Error, removed?: any) => {
                     if (err) return reject(err);
                     return resolve(removed);
                 });

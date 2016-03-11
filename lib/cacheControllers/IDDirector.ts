@@ -1,5 +1,5 @@
-import {CacheDirector} from '../CacheDirector';
-import MongoDB = require('mongodb');
+import {CacheDirector} from "../CacheDirector";
+import MongoDB = require("mongodb");
 
 /**
  * Caches documents using their _id field as the unique cache key. This
@@ -13,7 +13,7 @@ export class CacheOnID implements CacheDirector{
     }
 
     buildKey(object: { _id: any }) {
-        if (object._id._bsontype == 'ObjectID')
+        if (object._id._bsontype === "ObjectID")
             return new MongoDB.ObjectID(object._id.id).toHexString();
         return object._id;
     }
@@ -23,7 +23,7 @@ export class CacheOnID implements CacheDirector{
     }
 
     buildQueryKey(conditions) {
-        if (conditions._id._bsontype == 'ObjectID')
+        if (conditions._id._bsontype === "ObjectID")
             return new MongoDB.ObjectID(conditions._id.id).toHexString();
         return conditions._id;
     }

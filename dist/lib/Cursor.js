@@ -1,5 +1,5 @@
 "use strict";
-var Bluebird = require('bluebird');
+var Bluebird = require("bluebird");
 /**
  * An Iridium collection cursor which allows the itteration through documents
  * in the collection, automatically wrapping them in the correct instance type.

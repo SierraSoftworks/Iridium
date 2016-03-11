@@ -1,5 +1,5 @@
 "use strict";
-var Bluebird = require('bluebird');
+var Bluebird = require("bluebird");
 /**
  * A cache implementation which does not cache any received documents
  * and returns nothing when requested - mimicking an empty cache.

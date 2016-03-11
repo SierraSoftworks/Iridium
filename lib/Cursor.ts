@@ -1,8 +1,8 @@
-﻿import {Model} from './Model';
-import General = require('./General');
-import MongoDB = require('mongodb');
-import Bluebird = require('bluebird');
-import * as Index from './Index';
+﻿import {Model} from "./Model";
+import General = require("./General");
+import MongoDB = require("mongodb");
+import Bluebird = require("bluebird");
+import * as Index from "./Index";
 
 /**
  * An Iridium collection cursor which allows the itteration through documents

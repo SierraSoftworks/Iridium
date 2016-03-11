@@ -1,6 +1,6 @@
-import MongoDB = require('mongodb');
-import {Model} from './Model';
-import * as BSON from './BSON'; 
+import MongoDB = require("mongodb");
+import {Model} from "./Model";
+import * as BSON from "./BSON"; 
 
 export interface Transforms {
 	/**
@@ -38,7 +38,7 @@ export interface PropertyTransform<T> {
 export const DefaultTransforms = {
  	ObjectID: <PropertyTransform<MongoDB.ObjectID>>{
 		fromDB: value => value instanceof MongoDB.ObjectID ? value.toHexString() : value,
-		toDB: value => typeof value === 'string' ? new MongoDB.ObjectID(value) : value
+		toDB: value => typeof value === "string" ? new MongoDB.ObjectID(value) : value
 	},
 	Binary: <PropertyTransform<MongoDB.Binary>>{
 		fromDB: value => {

@@ -1,5 +1,5 @@
 "use strict";
-var Bluebird = require('bluebird');
+var Bluebird = require("bluebird");
 /**
  * A centralized class which ties the cache and cache directors together in a cohesive way
  * for use by Iridium.

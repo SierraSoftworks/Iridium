@@ -1,9 +1,9 @@
 "use strict";
-var MongoDB = require('mongodb');
+var MongoDB = require("mongodb");
 exports.DefaultTransforms = {
     ObjectID: {
         fromDB: function (value) { return value instanceof MongoDB.ObjectID ? value.toHexString() : value; },
-        toDB: function (value) { return typeof value === 'string' ? new MongoDB.ObjectID(value) : value; }
+        toDB: function (value) { return typeof value === "string" ? new MongoDB.ObjectID(value) : value; }
     },
     Binary: {
         fromDB: function (value) {

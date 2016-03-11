@@ -1,8 +1,8 @@
 "use strict";
-var MongoDB = require('mongodb');
-var _ = require('lodash');
-var Skmatc = require('skmatc');
-var Transforms_1 = require('./Transforms');
+var MongoDB = require("mongodb");
+var _ = require("lodash");
+var Skmatc = require("skmatc");
+var Transforms_1 = require("./Transforms");
 /**
  * Specifies the name of the collection to which this instance's documents should be sent.
  * @param name The name of the MongoDB collection to store the documents in.
@@ -55,7 +55,7 @@ function Property() {
         args[_i - 0] = arguments[_i];
     }
     var name = null, asType = false, required = true;
-    if (args.length > 1 && typeof args[args.length - 1] === 'boolean')
+    if (args.length > 1 && typeof args[args.length - 1] === "boolean")
         required = args.pop();
     return function (target, property) {
         var staticTarget = target;
@@ -67,7 +67,7 @@ function Property() {
         }
         asType = args.pop() || false;
         staticTarget.schema = _.clone(staticTarget.schema || { _id: false });
-        if (!required && typeof asType !== 'boolean')
+        if (!required && typeof asType !== "boolean")
             staticTarget.schema[name] = { $required: required, $type: asType };
         else
             staticTarget.schema[name] = asType;
@@ -92,7 +92,7 @@ exports.Property = Property;
  */
 function Transform(fromDB, toDB) {
     return function (target, property) {
-        if (property === void 0) { property = '$document'; }
+        if (property === void 0) { property = "$document"; }
         var staticTarget = (target.constructor || target);
         staticTarget.transforms = _.clone(staticTarget.transforms || {});
         staticTarget.transforms[property] = {

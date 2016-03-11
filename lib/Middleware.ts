@@ -1,4 +1,4 @@
-import {Core} from './Core';
+import {Core} from "./Core";
 
 /**
  * Middlewares provided by Iridium, such as the Express one, derive from this interface.

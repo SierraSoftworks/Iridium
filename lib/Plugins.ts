@@ -1,6 +1,6 @@
-import {Core} from './Core';
-import {Model} from './Model';
-import Skmatc = require('skmatc');
+import {Core} from "./Core";
+import {Model} from "./Model";
+import Skmatc = require("skmatc");
 
 export interface Plugin {
     newModel? (model: Model<any, any>);

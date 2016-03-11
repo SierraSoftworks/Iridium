@@ -1,9 +1,9 @@
 "use strict";
-var Bluebird = require('bluebird');
-var MongoDB = require('mongodb');
-var _ = require('lodash');
-var Express_1 = require('./middleware/Express');
-var NoOpCache_1 = require('./caches/NoOpCache');
+var Bluebird = require("bluebird");
+var MongoDB = require("mongodb");
+var _ = require("lodash");
+var Express_1 = require("./middleware/Express");
+var NoOpCache_1 = require("./caches/NoOpCache");
 /**
  * The Iridium Core, responsible for managing the connection to the database as well
  * as any plugins you are making use of.
@@ -19,9 +19,9 @@ var Core = (function () {
         var args = Array.prototype.slice.call(arguments, 0);
         uri = config = null;
         for (var i = 0; i < args.length; i++) {
-            if (typeof args[i] == 'string')
+            if (typeof args[i] == "string")
                 uri = args[i];
-            else if (typeof args[i] == 'object')
+            else if (typeof args[i] == "object")
                 config = args[i];
         }
         if (!uri && !config)
@@ -73,35 +73,35 @@ var Core = (function () {
             var _this = this;
             if (this._url)
                 return this._url;
-            var url = 'mongodb://';
+            var url = "mongodb://";
             if (this._config.username) {
                 url += this._config.username;
                 if (this._config.password)
-                    url += ':' + this._config.password;
-                url += '@';
+                    url += ":" + this._config.password;
+                url += "@";
             }
             var hosts = [];
             if (this._config.host) {
                 if (this._config.port)
-                    hosts.push(this._config.host + ':' + this._config.port);
+                    hosts.push(this._config.host + ":" + this._config.port);
                 else
                     hosts.push(this._config.host);
             }
             if (this._config.hosts) {
                 _.each(this._config.hosts, function (host) {
                     if (host.port)
-                        hosts.push(host.address + ':' + host.port);
+                        hosts.push(host.address + ":" + host.port);
                     else if (_this._config.port)
-                        hosts.push(host.address + ':' + _this._config.port);
+                        hosts.push(host.address + ":" + _this._config.port);
                     else
                         hosts.push(host.address);
                 });
             }
             if (hosts.length)
-                url += _.uniq(hosts).join(',');
+                url += _.uniq(hosts).join(",");
             else
-                url += 'localhost';
-            url += '/' + this._config.database;
+                url += "localhost";
+            url += "/" + this._config.database;
             return url;
         },
         enumerable: true,

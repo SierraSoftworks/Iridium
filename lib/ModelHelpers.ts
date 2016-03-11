@@ -1,9 +1,9 @@
-﻿import MongoDB = require('mongodb');
-import {Model} from './Model';
-import Skmatc = require('skmatc');
-import {Omnom} from './utils/Omnom';
-import _ = require('lodash');
-import Bluebird = require('bluebird');
+﻿import MongoDB = require("mongodb");
+import {Model} from "./Model";
+import Skmatc = require("skmatc");
+import {Omnom} from "./utils/Omnom";
+import _ = require("lodash");
+import Bluebird = require("bluebird");
 
 /**
  * A number of helper methods used commonly within Iridium, they provide a means to transform,
@@ -48,12 +48,12 @@ export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
      */
     transformToDB<T>(document: T, options: TransformOptions = { properties: true }): T {
         if(options.document && this.model.transforms.$document)
-            document = <any>this.model.transforms.$document.toDB(document, '$document', this.model);
+            document = <any>this.model.transforms.$document.toDB(document, "$document", this.model);
         
         if(!options.properties) return document;
         
         for (let property in this.model.transforms)
-            if(property === '$document') continue;
+            if(property === "$document") continue;
             else if(document.hasOwnProperty(property)) {
                 document[property] = this.model.transforms[property].toDB(document[property], property, this.model);
             }
@@ -72,12 +72,12 @@ export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
      */
     transformFromDB(document: TDocument, options: TransformOptions = { properties: true }): TDocument {
         if(options.document && this.model.transforms.$document)
-            document = this.model.transforms.$document.fromDB(document, '$document', this.model);
+            document = this.model.transforms.$document.fromDB(document, "$document", this.model);
         
         if(!options.properties) return document;
         
         for (let property in this.model.transforms)
-            if(property === '$document') continue;
+            if(property === "$document") continue;
             else if(document.hasOwnProperty(property)) {
                 document[property] = this.model.transforms[property].fromDB(document[property], property, this.model);
             }

@@ -1,6 +1,6 @@
 "use strict";
-var util = require('util');
-var _ = require('lodash');
+var util = require("util");
+var _ = require("lodash");
 /**
  * Creates a new subclass of the given instanceType which correctly performs property transforms
  * and associates the instance with the correct model when instantiated.

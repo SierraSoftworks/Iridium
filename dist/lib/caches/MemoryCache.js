@@ -1,5 +1,5 @@
 "use strict";
-var Bluebird = require('bluebird');
+var Bluebird = require("bluebird");
 /**
  * A cache implementation which stores documents in an in-memory cache.
  *

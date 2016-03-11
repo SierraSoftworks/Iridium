@@ -1,8 +1,8 @@
-﻿import {Model} from './Model';
-import {InstanceImplementation} from './InstanceInterface';
-import {ModelSpecificInstanceConstructor} from './ModelInterfaces';
-import util = require('util');
-import _ = require('lodash');
+﻿import {Model} from "./Model";
+import {InstanceImplementation} from "./InstanceInterface";
+import {ModelSpecificInstanceConstructor} from "./ModelInterfaces";
+import util = require("util");
+import _ = require("lodash");
 
 /**
  * Creates a new subclass of the given instanceType which correctly performs property transforms

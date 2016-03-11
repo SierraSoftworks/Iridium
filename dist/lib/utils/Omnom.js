@@ -1,6 +1,6 @@
 "use strict";
-var _ = require('lodash');
-var MongoDB = require('mongodb');
+var _ = require("lodash");
+var MongoDB = require("mongodb");
 var Omnom = (function () {
     function Omnom(options) {
         if (options === void 0) { options = {}; }
@@ -25,7 +25,7 @@ var Omnom = (function () {
         var _this = this;
         if (original === undefined || original === null)
             return (original !== modified) && this.set(changePath, modified);
-        if (typeof original === 'number' && typeof modified === 'number' && original !== modified) {
+        if (typeof original === "number' && typeof modified === 'number" && original !== modified) {
             if (this.options.atomicNumbers)
                 return this.inc(changePath, modified - original);
             return this.set(changePath, modified);
@@ -173,7 +173,7 @@ var Omnom = (function () {
             if (arg)
                 validArguments.push(arg);
         });
-        return validArguments.join('.');
+        return validArguments.join(".");
     };
     Omnom.prototype.almostEqual = function (o1, o2) {
         if (!_.isPlainObject(o1) || !_.isPlainObject(o2))

@@ -1,6 +1,6 @@
 "use strict";
-var _ = require('lodash');
-var Bluebird = require('bluebird');
+var _ = require("lodash");
+var Bluebird = require("bluebird");
 /**
  * Provides a number of methods which are used to handle events that occur within
  * the Iridium workflow - such as what happens when a document is received from

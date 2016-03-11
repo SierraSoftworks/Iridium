@@ -1,13 +1,13 @@
-﻿import {Core} from './Core';
-import {Schema} from './Schema';
-import {Model} from './Model';
-import {ModelCache} from './ModelCache';
-import * as ModelOptions from './ModelOptions';
+﻿import {Core} from "./Core";
+import {Schema} from "./Schema";
+import {Model} from "./Model";
+import {ModelCache} from "./ModelCache";
+import * as ModelOptions from "./ModelOptions";
 
-import Skmatc = require('skmatc');
-import _ = require('lodash');
-import MongoDB = require('mongodb');
-import Bluebird = require('bluebird');
+import Skmatc = require("skmatc");
+import _ = require("lodash");
+import MongoDB = require("mongodb");
+import Bluebird = require("bluebird");
 
 /**
  * Provides a number of methods which are used to handle events that occur within

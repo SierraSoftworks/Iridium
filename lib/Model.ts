@@ -1,30 +1,30 @@
-﻿import MongoDB = require('mongodb');
-import Bluebird = require('bluebird');
-import util = require('util');
-import _ = require('lodash');
-import Skmatc = require('skmatc');
+﻿import MongoDB = require("mongodb");
+import Bluebird = require("bluebird");
+import util = require("util");
+import _ = require("lodash");
+import Skmatc = require("skmatc");
 
-import {Core} from './Core';
-import {Instance} from './Instance';
-import {Schema} from './Schema';
-import {Hooks} from './Hooks';
-import {Plugin} from './Plugins';
-import {Cache} from './Cache';
-import {CacheDirector} from './CacheDirector';
-import * as General from './General';
-import {Cursor} from './Cursor';
-import * as Index from './Index';
-import * as ModelOptions from './ModelOptions';
+import {Core} from "./Core";
+import {Instance} from "./Instance";
+import {Schema} from "./Schema";
+import {Hooks} from "./Hooks";
+import {Plugin} from "./Plugins";
+import {Cache} from "./Cache";
+import {CacheDirector} from "./CacheDirector";
+import * as General from "./General";
+import {Cursor} from "./Cursor";
+import * as Index from "./Index";
+import * as ModelOptions from "./ModelOptions";
 
-import {Omnom} from './utils/Omnom';
-import {ModelCache} from './ModelCache';
-import {ModelHelpers} from './ModelHelpers';
-import {ModelHandlers} from './ModelHandlers';
-import * as ModelInterfaces from './ModelInterfaces';
-import {ModelSpecificInstance} from './ModelSpecificInstance';
-import {InstanceImplementation} from './InstanceInterface';
-import {Transforms, DefaultTransforms} from './Transforms';
-import * as AggregationPipeline from './Aggregate';
+import {Omnom} from "./utils/Omnom";
+import {ModelCache} from "./ModelCache";
+import {ModelHelpers} from "./ModelHelpers";
+import {ModelHandlers} from "./ModelHandlers";
+import * as ModelInterfaces from "./ModelInterfaces";
+import {ModelSpecificInstance} from "./ModelSpecificInstance";
+import {InstanceImplementation} from "./InstanceInterface";
+import {Transforms, DefaultTransforms} from "./Transforms";
+import * as AggregationPipeline from "./Aggregate";
 
 /**
  * An Iridium Model which represents a structured MongoDB collection.
@@ -45,8 +45,8 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      */
     constructor(core: Core, instanceType: InstanceImplementation<TDocument, TInstance>) {
         if (!(core instanceof Core)) throw new Error("You failed to provide a valid Iridium core for this model");
-        if (typeof instanceType != 'function') throw new Error("You failed to provide a valid instance constructor for this model");
-        if (typeof instanceType.collection != 'string' || !instanceType.collection) throw new Error("You failed to provide a valid collection name for this model");
+        if (typeof instanceType !== "function") throw new Error("You failed to provide a valid instance constructor for this model");
+        if (typeof instanceType.collection !== "string" || !instanceType.collection) throw new Error("You failed to provide a valid collection name for this model");
         if (!_.isPlainObject(instanceType.schema) || instanceType.schema._id === undefined) throw new Error("You failed to provide a valid schema for this model");
 
         this._core = core;
@@ -70,8 +70,8 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
 
         if(!this._schema._id) this._schema._id = MongoDB.ObjectID;
 
-        if(this._schema._id === MongoDB.ObjectID && !this._transforms['_id'])
-            this._transforms['_id'] = DefaultTransforms.ObjectID;
+        if(this._schema._id === MongoDB.ObjectID && !this._transforms._id)
+            this._transforms._id = DefaultTransforms.ObjectID;
 
         if ((<Function>instanceType).prototype instanceof Instance)
             this._Instance = ModelSpecificInstance(this, instanceType);
@@ -357,7 +357,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
         let callback: General.Callback<TInstance> = null;
 
         for (let argI = 0; argI < args.length; argI++) {
-            if (typeof args[argI] === 'function') callback = callback || args[argI];
+            if (typeof args[argI] === "function") callback = callback || args[argI];
             else if (_.isPlainObject(args[argI])) {
                 if (conditions) options = args[argI];
                 else conditions = args[argI];
@@ -463,7 +463,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
         let objects: TDocument[];
         let options: ModelOptions.CreateOptions = {};
         let callback: General.Callback<any> = null;
-        if (typeof args[0] === 'function') callback = args[0];
+        if (typeof args[0] === "function") callback = args[0];
         else {
             options = args[0];
             callback = args[1];
@@ -476,7 +476,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
 
         options = options || {};
         _.defaults(options, <ModelOptions.CreateOptions>{
-            w: 'majority',
+            w: "majority",
             forceServerObjectId: true
         });
 
@@ -527,7 +527,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      */
     update(conditions: { _id?: any, [key: string]: any } | any, changes: any, options: ModelOptions.UpdateOptions, callback?: General.Callback<number>): Bluebird<number>;
     update(conditions: { _id?: any, [key: string]: any } | any, changes: any, options?: ModelOptions.UpdateOptions, callback?: General.Callback<number>): Bluebird<number> {
-        if (typeof options === 'function') {
+        if (typeof options === "function") {
             callback = <General.Callback<number>>options;
             options = {};
         }
@@ -539,7 +539,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
         };
 
         _.defaults(options, {
-            w: 'majority',
+            w: "majority",
             multi: true
         });
 
@@ -575,7 +575,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
     count(conditions: { _id?: any, [key: string]: any } | any, callback?: General.Callback<number>): Bluebird<number>;
     count(conds?: any, callback?: General.Callback<number>): Bluebird<number> {
         let conditions: { _id?: any, [key: string]: any } = <{ _id?: any, [key: string]: any }>conds;
-        if (typeof conds === 'function') {
+        if (typeof conds === "function") {
             callback = <General.Callback<number>>conds;
             conditions = {};
         }
@@ -622,12 +622,12 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
     remove(conds?: any, options?: ModelOptions.RemoveOptions, callback?: General.Callback<number>): Bluebird<number> {
         let conditions: { _id?: any, [key: string]: any } = <{ _id?: any, [key: string]: any }>conds;
 
-        if (typeof options === 'function') {
+        if (typeof options === "function") {
             callback = <General.Callback<number>>options;
             options = {};
         }
 
-        if (typeof conds === 'function') {
+        if (typeof conds === "function") {
             callback = <General.Callback<number>>conds;
             options = {};
             conditions = {};
@@ -637,7 +637,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
         options = options || {};
 
         _.defaults(options, {
-            w: 'majority'
+            w: "majority"
         });
 
         if (!_.isPlainObject(conditions)) conditions = {
@@ -684,7 +684,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      */
     ensureIndex(specification: Index.IndexSpecification, options: MongoDB.IndexOptions, callback?: General.Callback<string>): Bluebird<string>;
     ensureIndex(specification: Index.IndexSpecification, options?: MongoDB.IndexOptions, callback?: General.Callback<string>): Bluebird<string> {
-        if (typeof options === 'function') {
+        if (typeof options === "function") {
             callback = <General.Callback<any>>options;
             options = {};
         }
@@ -725,9 +725,9 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
     dropIndex(specification: string | Index.IndexSpecification, callback?: General.Callback<boolean>): Bluebird<boolean> {
         let index: string;
 
-        if (typeof (specification) === 'string') index = <string>specification;
+        if (typeof (specification) === "string") index = <string>specification;
         else {
-            index = _(<Index.IndexSpecification>specification).map((direction, key) => key + '_' + direction).reduce<string>((x, y) => x + '_' + y);
+            index = _(<Index.IndexSpecification>specification).map((direction, key) => `${key}_${direction}`).reduce<string>((x, y) => `${x}_${y}`);
         }
 
         return new Bluebird<boolean>((resolve, reject) => {

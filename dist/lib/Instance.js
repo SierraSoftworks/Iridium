@@ -1,7 +1,7 @@
 "use strict";
-var Validators_1 = require('./Validators');
-var _ = require('lodash');
-var Bluebird = require('bluebird');
+var Validators_1 = require("./Validators");
+var _ = require("lodash");
+var Bluebird = require("bluebird");
 /**
  * The default Iridium Instance implementation which provides methods for saving, refreshing and
  * removing the wrapped document from the collection, as well as integrating with Omnom, our
@@ -59,9 +59,9 @@ var Instance = (function () {
         var changes = null;
         var conditions = {};
         Array.prototype.slice.call(args, 0).reverse().forEach(function (arg) {
-            if (typeof arg == 'function')
+            if (typeof arg == "function")
                 callback = arg;
-            else if (typeof arg == 'object') {
+            else if (typeof arg == "object") {
                 if (!changes)
                     changes = arg;
                 else
@@ -92,7 +92,7 @@ var Instance = (function () {
                 return false;
             if (_this._isNew) {
                 return new Bluebird(function (resolve, reject) {
-                    _this._model.collection.insertOne(_this._modified, { w: 'majority' }, function (err, doc) {
+                    _this._model.collection.insertOne(_this._modified, { w: "majority" }, function (err, doc) {
                         if (err)
                             return reject(err);
                         return resolve(!!doc);
@@ -101,10 +101,10 @@ var Instance = (function () {
             }
             else {
                 return new Bluebird(function (resolve, reject) {
-                    _this._model.collection.updateOne(conditions, changes, { w: 'majority' }, function (err, changed) {
+                    _this._model.collection.updateOne(conditions, changes, { w: "majority" }, function (err, changed) {
                         if (err) {
-                            err['conditions'] = conditions;
-                            err['changes'] = changes;
+                            err["conditions"] = conditions;
+                            err["changes"] = changes;
                             return reject(err);
                         }
                         return resolve(changed);
@@ -112,8 +112,8 @@ var Instance = (function () {
                 });
             }
         }).catch(function (err) {
-            err['original'] = _this._original;
-            err['modified'] = _this._modified;
+            err["original"] = _this._original;
+            err["modified"] = _this._modified;
             return Bluebird.reject(err);
         }).then(function (changed) {
             conditions = { _id: _this._modified._id };
@@ -201,7 +201,7 @@ var Instance = (function () {
             if (_this._isNew)
                 return 0;
             return new Bluebird(function (resolve, reject) {
-                _this._model.collection.remove(conditions, { w: 'majority' }, function (err, removed) {
+                _this._model.collection.remove(conditions, { w: "majority" }, function (err, removed) {
                     if (err)
                         return reject(err);
                     return resolve(removed);

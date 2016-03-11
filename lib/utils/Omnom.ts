@@ -1,5 +1,5 @@
-import _ = require('lodash');
-import MongoDB = require('mongodb');
+import _ = require("lodash");
+import MongoDB = require("mongodb");
 
 export class Omnom {
     constructor(public options: {
@@ -62,7 +62,7 @@ export class Omnom {
         if (original === undefined || original === null)
             return (original !== modified) && this.set(changePath, modified);
 
-        if (typeof original === 'number' && typeof modified === 'number' && original !== modified) {
+        if (typeof original === "number' && typeof modified === 'number" && original !== modified) {
             if (this.options.atomicNumbers) return this.inc(changePath, modified - original);
             return this.set(changePath, modified);
         }
@@ -231,7 +231,7 @@ export class Omnom {
         args.forEach(function (arg) {
             if (arg) validArguments.push(arg);
         });
-        return validArguments.join('.');
+        return validArguments.join(".");
     }
 
     private almostEqual(o1: Object, o2: Object);

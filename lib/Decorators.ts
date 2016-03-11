@@ -1,12 +1,12 @@
-import MongoDB = require('mongodb');
-import _ = require('lodash');
-import Skmatc = require('skmatc');
-import {Instance} from './Instance';
-import {Model} from './Model';
-import {Index, IndexSpecification} from './Index';
-import {Schema} from './Schema';
-import {InstanceImplementation} from './InstanceInterface';
-import {Transforms, DefaultTransforms} from './Transforms';
+import MongoDB = require("mongodb");
+import _ = require("lodash");
+import Skmatc = require("skmatc");
+import {Instance} from "./Instance";
+import {Model} from "./Model";
+import {Index, IndexSpecification} from "./Index";
+import {Schema} from "./Schema";
+import {InstanceImplementation} from "./InstanceInterface";
+import {Transforms, DefaultTransforms} from "./Transforms";
 
 /**
  * Specifies the name of the collection to which this instance's documents should be sent.
@@ -77,7 +77,7 @@ export function Property(...args: any[]): (target: Instance<any, any> | Instance
 		asType = false,
 		required = true;
 
-	if (args.length > 1 && typeof args[args.length - 1] === 'boolean')
+	if (args.length > 1 && typeof args[args.length - 1] === "boolean")
 		required = args.pop();
 
 	return function(target: InstanceImplementation<any, any>, property?: string) {
@@ -90,7 +90,7 @@ export function Property(...args: any[]): (target: Instance<any, any> | Instance
 		asType = args.pop() || false;
 
 		staticTarget.schema = _.clone(staticTarget.schema || { _id: false });
-		if(!required && typeof asType !== 'boolean') staticTarget.schema[name] = { $required: required, $type: asType };
+		if(!required && typeof asType !== "boolean") staticTarget.schema[name] = { $required: required, $type: asType };
 		else staticTarget.schema[name] = asType;
 	}
 }
@@ -112,7 +112,7 @@ export function Property(...args: any[]): (target: Instance<any, any> | Instance
  * fromDB or toDB is called.
  */
 export function Transform(fromDB: (value: any, property: string, model: Model<any,any>) => any, toDB: (value: any, property: string, model: Model<any,any>) => any) {
-	return function(target: Instance<any, any>, property: string = '$document') {
+	return function(target: Instance<any, any>, property: string = "$document") {
 		let staticTarget: InstanceImplementation<any, any> = <InstanceImplementation<any, any>>(target.constructor || target);
 
 		staticTarget.transforms = _.clone(staticTarget.transforms || <Transforms>{})

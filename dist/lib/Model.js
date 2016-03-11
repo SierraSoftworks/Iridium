@@ -1,15 +1,15 @@
 "use strict";
-var MongoDB = require('mongodb');
-var Bluebird = require('bluebird');
-var _ = require('lodash');
-var Core_1 = require('./Core');
-var Instance_1 = require('./Instance');
-var Cursor_1 = require('./Cursor');
-var ModelCache_1 = require('./ModelCache');
-var ModelHelpers_1 = require('./ModelHelpers');
-var ModelHandlers_1 = require('./ModelHandlers');
-var ModelSpecificInstance_1 = require('./ModelSpecificInstance');
-var Transforms_1 = require('./Transforms');
+var MongoDB = require("mongodb");
+var Bluebird = require("bluebird");
+var _ = require("lodash");
+var Core_1 = require("./Core");
+var Instance_1 = require("./Instance");
+var Cursor_1 = require("./Cursor");
+var ModelCache_1 = require("./ModelCache");
+var ModelHelpers_1 = require("./ModelHelpers");
+var ModelHandlers_1 = require("./ModelHandlers");
+var ModelSpecificInstance_1 = require("./ModelSpecificInstance");
+var Transforms_1 = require("./Transforms");
 /**
  * An Iridium Model which represents a structured MongoDB collection.
  * Models expose the methods you will generally use to query those collections, and ensure that
@@ -31,9 +31,9 @@ var Model = (function () {
         this._hooks = {};
         if (!(core instanceof Core_1.Core))
             throw new Error("You failed to provide a valid Iridium core for this model");
-        if (typeof instanceType != 'function')
+        if (typeof instanceType !== "function")
             throw new Error("You failed to provide a valid instance constructor for this model");
-        if (typeof instanceType.collection != 'string' || !instanceType.collection)
+        if (typeof instanceType.collection !== "string" || !instanceType.collection)
             throw new Error("You failed to provide a valid collection name for this model");
         if (!_.isPlainObject(instanceType.schema) || instanceType.schema._id === undefined)
             throw new Error("You failed to provide a valid schema for this model");
@@ -55,8 +55,8 @@ var Model = (function () {
         this._indexes = instanceType.indexes || [];
         if (!this._schema._id)
             this._schema._id = MongoDB.ObjectID;
-        if (this._schema._id === MongoDB.ObjectID && !this._transforms['_id'])
-            this._transforms['_id'] = Transforms_1.DefaultTransforms.ObjectID;
+        if (this._schema._id === MongoDB.ObjectID && !this._transforms._id)
+            this._transforms._id = Transforms_1.DefaultTransforms.ObjectID;
         if (instanceType.prototype instanceof Instance_1.Instance)
             this._Instance = ModelSpecificInstance_1.ModelSpecificInstance(this, instanceType);
         else
@@ -274,7 +274,7 @@ var Model = (function () {
         var options = null;
         var callback = null;
         for (var argI = 0; argI < args.length; argI++) {
-            if (typeof args[argI] == 'function')
+            if (typeof args[argI] === "function")
                 callback = callback || args[argI];
             else if (_.isPlainObject(args[argI])) {
                 if (conditions)
@@ -330,7 +330,7 @@ var Model = (function () {
         var objects;
         var options = {};
         var callback = null;
-        if (typeof args[0] == 'function')
+        if (typeof args[0] === "function")
             callback = args[0];
         else {
             options = args[0];
@@ -342,7 +342,7 @@ var Model = (function () {
             objects = [objs];
         options = options || {};
         _.defaults(options, {
-            w: 'majority',
+            w: "majority",
             forceServerObjectId: true
         });
         return Bluebird.resolve().then(function () {
@@ -379,7 +379,7 @@ var Model = (function () {
     };
     Model.prototype.update = function (conditions, changes, options, callback) {
         var _this = this;
-        if (typeof options == 'function') {
+        if (typeof options === "function") {
             callback = options;
             options = {};
         }
@@ -389,7 +389,7 @@ var Model = (function () {
                 _id: conditions
             };
         _.defaults(options, {
-            w: 'majority',
+            w: "majority",
             multi: true
         });
         return Bluebird.resolve().then(function () {
@@ -410,7 +410,7 @@ var Model = (function () {
     Model.prototype.count = function (conds, callback) {
         var _this = this;
         var conditions = conds;
-        if (typeof conds == 'function') {
+        if (typeof conds === "function") {
             callback = conds;
             conditions = {};
         }
@@ -433,11 +433,11 @@ var Model = (function () {
     Model.prototype.remove = function (conds, options, callback) {
         var _this = this;
         var conditions = conds;
-        if (typeof options === 'function') {
+        if (typeof options === "function") {
             callback = options;
             options = {};
         }
-        if (typeof conds == 'function') {
+        if (typeof conds === "function") {
             callback = conds;
             options = {};
             conditions = {};
@@ -445,7 +445,7 @@ var Model = (function () {
         conditions = conditions || {};
         options = options || {};
         _.defaults(options, {
-            w: 'majority'
+            w: "majority"
         });
         if (!_.isPlainObject(conditions))
             conditions = {
@@ -478,7 +478,7 @@ var Model = (function () {
     };
     Model.prototype.ensureIndex = function (specification, options, callback) {
         var _this = this;
-        if (typeof options == 'function') {
+        if (typeof options === "function") {
             callback = options;
             options = {};
         }
@@ -504,10 +504,10 @@ var Model = (function () {
     Model.prototype.dropIndex = function (specification, callback) {
         var _this = this;
         var index;
-        if (typeof (specification) === 'string')
+        if (typeof (specification) === "string")
             index = specification;
         else {
-            index = _(specification).map(function (direction, key) { return key + '_' + direction; }).reduce(function (x, y) { return x + '_' + y; });
+            index = _(specification).map(function (direction, key) { return (key + "_" + direction); }).reduce(function (x, y) { return (x + "_" + y); });
         }
         return new Bluebird(function (resolve, reject) {
             _this.collection.dropIndex(index, function (err, result) {

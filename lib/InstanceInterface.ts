@@ -1,9 +1,9 @@
-import Skmatc = require('skmatc');
-import {Schema} from './Schema';
-import {Model} from './Model';
-import * as Index from './Index';
-import {CacheDirector} from './CacheDirector';
-import {Transforms} from './Transforms';
+import Skmatc = require("skmatc");
+import {Schema} from "./Schema";
+import {Model} from "./Model";
+import * as Index from "./Index";
+import {CacheDirector} from "./CacheDirector";
+import {Transforms} from "./Transforms";
 
 /**
  * This interface dictates the format of an instance class which wraps documents received

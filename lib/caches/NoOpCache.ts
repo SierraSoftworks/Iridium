@@ -1,5 +1,5 @@
-import {Cache} from '../Cache';
-import Bluebird = require('bluebird');
+import {Cache} from "../Cache";
+import Bluebird = require("bluebird");
 
 /**
  * A cache implementation which does not cache any received documents

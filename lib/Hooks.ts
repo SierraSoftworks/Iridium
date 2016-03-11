@@ -1,4 +1,4 @@
-import instance = require('./Instance');
+import instance = require("./Instance");
 
 export interface Hooks<TDocument, TInstance> {
     onCreating? (document: TDocument): Promise.Thenable<any> | void;
