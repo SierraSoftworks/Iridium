@@ -54,11 +54,11 @@ export class Omnom {
         return new Omnom(options).diff(original, modified).changes;
     }
 
-    private onObject(original: number, modified: number, changePath?: string);
-    private onObject(original: [any], modified: any[], changePath?: string);
-    private onObject(original: MongoDB.ObjectID, modified: MongoDB.ObjectID, changePath?: string);
-    private onObject(original: Object, modified: Object, changePath?: string);
-    private onObject(original: any, modified: any, changePath?: string) {
+    private onObject(original: number, modified: number, changePath?: string): void;
+    private onObject(original: [any], modified: any[], changePath?: string): void;
+    private onObject(original: MongoDB.ObjectID, modified: MongoDB.ObjectID, changePath?: string): void;
+    private onObject(original: Object, modified: Object, changePath?: string): void;
+    private onObject(original: any, modified: any, changePath?: string): void {
         if (original === undefined || original === null)
             return (original !== modified) && this.set(changePath, modified);
 
@@ -90,7 +90,7 @@ export class Omnom {
         }, this);
     }
 
-    private onArray(original: any[], modified: any[], changePath: string) {
+    private onArray(original: any[], modified: any[], changePath: string): void {
         // Check if we can get from original => modified using just pulls
         if (original.length > modified.length) {
             return this.onSmallerArray(original, modified, changePath);
@@ -105,7 +105,7 @@ export class Omnom {
         return this.onSimilarArray(original, modified, changePath);
     }
 
-    private onSmallerArray(original: any[], modified: any[], changePath: string) {
+    private onSmallerArray(original: any[], modified: any[], changePath: string): void {
       let  pulls = [];
       let i = 0;
       let j = 0;
@@ -129,7 +129,7 @@ export class Omnom {
       else return this.set(changePath, modified);
     }
     
-    private onLargerArray(original: any[], modified: any[], changePath: string) {
+    private onLargerArray(original: any[], modified: any[], changePath: string): void {
       let canPush = true;
       for (let i = 0; i < original.length; i++)
           if (this.almostEqual(original[i], modified[i]) < 1) {
@@ -142,9 +142,11 @@ export class Omnom {
               this.push(changePath, modified[i]);
           return;
       }
+      
+      return this.onSimilarArray(original, modified, changePath);
     }
     
-    private onSimilarArray(original: any[], modified: any[], changePath: string) {
+    private onSimilarArray(original: any[], modified: any[], changePath: string): void {
       // Check how many manipulations would need to be performed, if it's more than half the array size
       // then rather re-create the array
       let sets = [];
