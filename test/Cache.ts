@@ -77,7 +77,7 @@ describe("Cache",() => {
             });
 
             it("should generate a key based on the object's ID",() => {
-                chai.expect(director.buildKey({ _id: "test' })).to.be.equal('test");
+                chai.expect(director.buildKey({ _id: "test" })).to.be.equal("test");
             });
 
             it("should only report that queries which specify the _id field are usable",() => {
@@ -86,7 +86,7 @@ describe("Cache",() => {
             });
 
             it("should generate a key based on the query ID",() => {
-                chai.expect(director.buildQueryKey({ _id: "test' })).to.be.equal('test");
+                chai.expect(director.buildQueryKey({ _id: "test" })).to.be.equal("test");
             });
         });
 

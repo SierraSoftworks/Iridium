@@ -49,7 +49,7 @@ describe("Core",() => {
         });
 
         it("should throw an error if no URI or configuration object was provided",() => {
-            chai.expect(() => new Iridium.Core('')).to.throw("Expected either a URI or config object to be supplied when initializing Iridium");
+            chai.expect(() => new Iridium.Core("")).to.throw("Expected either a URI or config object to be supplied when initializing Iridium");
         });
 
         describe("should correctly convert the configuration object into a URI string", () => {
