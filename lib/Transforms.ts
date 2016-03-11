@@ -7,6 +7,7 @@ export interface Transforms {
 	 * A transform which is applied to the entire document.
 	 */
 	$document?: PropertyTransform<any>;
+	_id?: PropertyTransform<any>;
 	[property:string]: PropertyTransform<any>;
 }
 
