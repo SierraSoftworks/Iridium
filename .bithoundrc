@@ -1,0 +1,27 @@
+{
+  "ignore": [
+    "typings/**/*.d.ts"
+  ],
+  "test": [
+    "test/**"
+  ],
+  "critics": {
+    "lint": {
+      "engine": "tslint"
+    }
+  },
+  "dependencies": {
+    "mute": [
+      "tsdoc",
+      "gulp-tsdoc",
+      "istanbul",
+      "semver",
+      "gulp",
+      "coveralls",
+      "codeclimate-test-reporter",
+      "del",
+      "gulp-bump",
+      "gulp-istanbul"
+    ]
+  }
+}
