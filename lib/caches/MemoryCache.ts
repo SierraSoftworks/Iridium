@@ -20,7 +20,7 @@ export class MemoryCache implements Cache {
     }
 
     clear(key: string) : Bluebird<boolean> {
-        var has = this.cache.hasOwnProperty(key);
+        let has = this.cache.hasOwnProperty(key);
         if(has) delete this.cache[key];
         return Bluebird.resolve(has);
     }

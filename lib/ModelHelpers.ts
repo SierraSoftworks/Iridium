@@ -52,7 +52,7 @@ export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
         
         if(!options.properties) return document;
         
-        for (var property in this.model.transforms)
+        for (let property in this.model.transforms)
             if(property === '$document') continue;
             else if(document.hasOwnProperty(property)) {
                 document[property] = this.model.transforms[property].toDB(document[property], property, this.model);
@@ -76,7 +76,7 @@ export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
         
         if(!options.properties) return document;
         
-        for (var property in this.model.transforms)
+        for (let property in this.model.transforms)
             if(property === '$document') continue;
             else if(document.hasOwnProperty(property)) {
                 document[property] = this.model.transforms[property].fromDB(document[property], property, this.model);
@@ -94,7 +94,7 @@ export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
      * @returns {any} A new document cloned from the original and transformed
      */
     convertToDB<T>(document: T, options: TransformOptions = { properties: true }): T {
-        var doc: T = this.cloneDocument(document);
+        let doc: T = this.cloneDocument(document);
         return this.transformToDB(doc, options);
     }
 
@@ -104,7 +104,7 @@ export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
      * @param {any} modified The document after changes were made
      */
     diff(original: TDocument, modified: TDocument): any {
-        var omnom = new Omnom();
+        let omnom = new Omnom();
         omnom.diff(original, modified);
         return omnom.changes;
     }

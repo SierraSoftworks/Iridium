@@ -17,7 +17,7 @@ import _ = require('lodash');
  * @internal
  */
 export function ModelSpecificInstance<TDocument extends { _id?: any }, TInstance>(model: Model<TDocument, TInstance>, instanceType: InstanceImplementation<TDocument, TInstance>): ModelSpecificInstanceConstructor<TDocument, TInstance> {
-    var constructor = function (doc: TDocument, isNew?: boolean, isPartial?: boolean) {
+    let constructor = function (doc: TDocument, isNew?: boolean, isPartial?: boolean) {
         instanceType.call(this, model, doc, isNew, isPartial);
     };
 

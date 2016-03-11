@@ -149,9 +149,9 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
      */
     save(conditions: Object, changes: Object, callback?: General.Callback<TInstance>): Bluebird<TInstance>;
     save(...args: any[]): Bluebird<TInstance> {
-        var callback: General.Callback<any> = null;
-        var changes: any = null;
-        var conditions: any = {};
+        let callback: General.Callback<any> = null;
+        let changes: any = null;
+        let conditions: any = {};
 
         Array.prototype.slice.call(args, 0).reverse().forEach((arg) => {
             if (typeof arg == 'function') callback = arg;
@@ -166,11 +166,11 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
             _.merge(conditions, { _id: this._modified._id });
 
             if (!changes) {
-                var validation = this._model.helpers.validate(this._modified);
+                let validation = this._model.helpers.validate(this._modified);
                 if (validation.failed) return Bluebird.reject(validation.error).bind(this).nodeify(callback);
 
-                var original = this._model.helpers.cloneDocument(this._original);
-                var modified = this._model.helpers.cloneDocument(this._modified);
+                let original = this._model.helpers.cloneDocument(this._original);
+                let modified = this._model.helpers.cloneDocument(this._modified);
                 
                 modified = this._model.helpers.transformToDB(modified, { document: true }); 
 
@@ -252,7 +252,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
      * @returns {Promise<TInstance>}
      */
     refresh(callback?: General.Callback<TInstance>): Bluebird<TInstance> {
-        var conditions = { _id: this._original._id };
+        let conditions = { _id: this._original._id };
 
         return Bluebird.resolve().then(() => {
             return new Bluebird<TDocument>((resolve, reject) => {
@@ -295,7 +295,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
      * @returns {Promise<TInstance>}
      */
     remove(callback?: General.Callback<TInstance>): Bluebird<TInstance> {
-        var conditions = { _id: this._original._id };
+        let conditions = { _id: this._original._id };
 
         return Bluebird.resolve().then(() => {
             if (this._isNew) return 0;
@@ -329,7 +329,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
      */
     first<T>(collection: { [key: string]: T }, predicate: General.Predicate<T>): T;
     first<T>(collection: T[]| { [key: string]: T }, predicate: General.Predicate<T>): T {
-        var result = null;
+        let result = null;
 
         _.each(collection,(value: T, key) => {
             if (predicate.call(this, value, key)) {
@@ -356,8 +356,8 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
      */
     select<T>(collection: { [key: string]: T }, predicate: General.Predicate<T>): { [key: string]: T };
     select<T>(collection: T[]| { [key: string]: T }, predicate: General.Predicate<T>): any {
-        var isArray = Array.isArray(collection);
-        var results: any = isArray ? [] : {};
+        let isArray = Array.isArray(collection);
+        let results: any = isArray ? [] : {};
 
         _.each(collection,(value: T, key) => {
             if (predicate.call(this, value, key)) {

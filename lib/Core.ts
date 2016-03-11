@@ -40,9 +40,9 @@ export class Core {
     constructor(uri: string, config?: Configuration);
     constructor(uri: string | Configuration, config?: Configuration) {
 
-        var args = Array.prototype.slice.call(arguments, 0);
+        let args = Array.prototype.slice.call(arguments, 0);
         uri = config = null;
-        for (var i = 0; i < args.length; i++) {
+        for (let i = 0; i < args.length; i++) {
             if (typeof args[i] == 'string')
                 uri = args[i];
             else if (typeof args[i] == 'object')
@@ -97,7 +97,7 @@ export class Core {
      */
     get url(): string {
         if (this._url) return this._url;
-        var url: string = 'mongodb://';
+        let url: string = 'mongodb://';
 
         if (this._config.username) {
             url += this._config.username;
@@ -106,7 +106,7 @@ export class Core {
             url += '@';
         }
 
-        var hosts = [];
+        let hosts = [];
 
         if (this._config.host) {
             if (this._config.port)
@@ -191,7 +191,7 @@ export class Core {
     close(): Bluebird<Core> {
         return Bluebird.resolve().then(() => {
             if (!this._connection) return this;
-            var conn: MongoDB.Db = this._connection;
+            let conn: MongoDB.Db = this._connection;
             this._connection = null;
             conn.close();
             return this;

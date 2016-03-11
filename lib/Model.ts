@@ -268,7 +268,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
         if (!_.isPlainObject(conditions)) conditions = { _id: conditions };
         conditions = this._helpers.convertToDB(conditions);
 
-        var cursor = this.collection.find(conditions, {
+        let cursor = this.collection.find(conditions, {
             fields: fields
         });
 
@@ -352,11 +352,11 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      */
     findOne(conditions: { _id?: any, [key: string]: any }, options: ModelOptions.QueryOptions, callback?: General.Callback<TInstance>): Bluebird<TInstance>;
     findOne(...args: any[]): Bluebird<TInstance> {
-        var conditions: { _id?: any, [key: string]: any } = null;
-        var options: ModelOptions.QueryOptions = null;
-        var callback: General.Callback<TInstance> = null;
+        let conditions: { _id?: any, [key: string]: any } = null;
+        let options: ModelOptions.QueryOptions = null;
+        let callback: General.Callback<TInstance> = null;
 
-        for (var argI = 0; argI < args.length; argI++) {
+        for (let argI = 0; argI < args.length; argI++) {
             if (typeof args[argI] == 'function') callback = callback || args[argI];
             else if (_.isPlainObject(args[argI])) {
                 if (conditions) options = args[argI];
@@ -460,9 +460,9 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      */
     insert(objects: TDocument[], options: ModelOptions.CreateOptions, callback?: General.Callback<TInstance[]>): Bluebird<TInstance[]>;
     insert(objs: TDocument | TDocument[], ...args: any[]): Bluebird<any> {
-        var objects: TDocument[];
-        var options: ModelOptions.CreateOptions = {};
-        var callback: General.Callback<any> = null;
+        let objects: TDocument[];
+        let options: ModelOptions.CreateOptions = {};
+        let callback: General.Callback<any> = null;
         if (typeof args[0] == 'function') callback = args[0];
         else {
             options = args[0];
@@ -481,10 +481,10 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
         });
 
         return Bluebird.resolve().then(() => {
-            var queryOptions = { w: options.w, upsert: options.upsert, new: true };
+            let queryOptions = { w: options.w, upsert: options.upsert, new: true };
 
             if (options.upsert) {
-                var docs = this._handlers.creatingDocuments(objects);
+                let docs = this._handlers.creatingDocuments(objects);
                 return docs.map((object: { _id: any; }) => {
                     return new Bluebird<any[]>((resolve, reject) => {
                         this.collection.findAndModify({ _id: object._id }, ["_id"], object, queryOptions,(err, result) => {
@@ -574,7 +574,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      */
     count(conditions: { _id?: any, [key: string]: any } | any, callback?: General.Callback<number>): Bluebird<number>;
     count(conds?: any, callback?: General.Callback<number>): Bluebird<number> {
-        var conditions: { _id?: any, [key: string]: any } = <{ _id?: any, [key: string]: any }>conds;
+        let conditions: { _id?: any, [key: string]: any } = <{ _id?: any, [key: string]: any }>conds;
         if (typeof conds == 'function') {
             callback = <General.Callback<number>>conds;
             conditions = {};
@@ -620,7 +620,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      */
     remove(conditions: { _id?: any, [key: string]: any }, options: ModelOptions.RemoveOptions, callback?: General.Callback<number>): Bluebird<number>;
     remove(conds?: any, options?: ModelOptions.RemoveOptions, callback?: General.Callback<number>): Bluebird<number> {
-        var conditions: { _id?: any, [key: string]: any } = <{ _id?: any, [key: string]: any }>conds;
+        let conditions: { _id?: any, [key: string]: any } = <{ _id?: any, [key: string]: any }>conds;
 
         if (typeof options === 'function') {
             callback = <General.Callback<number>>options;
@@ -723,7 +723,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      */
     dropIndex(index: Index.IndexSpecification, callback?: General.Callback<boolean>): Bluebird<boolean>;
     dropIndex(specification: string | Index.IndexSpecification, callback?: General.Callback<boolean>): Bluebird<boolean> {
-        var index: string;
+        let index: string;
 
         if (typeof (specification) === 'string') index = <string>specification;
         else {

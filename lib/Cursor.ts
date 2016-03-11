@@ -44,7 +44,7 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
      * @return {Promise} A promise which is resolved when all operations have been dispatched
      */
     forEach(handler: (instance: TInstance) => void, callback?: General.Callback<void>): Bluebird<void> {
-        var helpers = this.model.helpers;
+        let helpers = this.model.helpers;
         return new Bluebird<void>((resolve, reject) => {
             this.cursor.forEach((item: TDocument) => {
                 this.model.handlers.documentReceived(this.conditions, item, function () { return helpers.wrapDocument.apply(helpers, arguments); }).then(handler);
@@ -62,9 +62,9 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
      * @return {Promise<TResult[]>} A promise which is fulfilled with the results of the transformations
      */
     map<TResult>(transform: (instance: TInstance) => TResult | Bluebird<TResult>, callback?: General.Callback<TResult[]>): Bluebird<TResult[]> {
-        var helpers = this.model.helpers;
+        let helpers = this.model.helpers;
         return new Bluebird<TResult[]>((resolve, reject) => {
-            var promises: Bluebird<TResult>[] = [];
+            let promises: Bluebird<TResult>[] = [];
             this.cursor.forEach((item: TDocument) => {
                 promises.push(this.model.handlers.documentReceived(this.conditions, item, function () { return helpers.wrapDocument.apply(helpers, arguments); })
                     .then(<(instance) => TResult>transform));
@@ -81,7 +81,7 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
      * @return {Promise<TInstance[]>} A promise which resolves with the instances returned by the query
      */
     toArray(callback?: General.Callback<TInstance[]>): Bluebird<TInstance[]> {
-        var helpers = this.model.helpers;
+        let helpers = this.model.helpers;
         return new Bluebird<TDocument[]>((resolve, reject) => {
             this.cursor.toArray((err, results: any[]) => {
                 if (err) return reject(err);
