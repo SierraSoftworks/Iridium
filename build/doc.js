@@ -1,7 +1,6 @@
 var gulp = require('gulp'),
 	git = require('gulp-git'),
 	typedoc = require('gulp-typedoc'),
-	path = require('path'),
 	runSequence = require('run-sequence'),
 	fs = require('fs');
 
@@ -29,7 +28,7 @@ gulp.task('doc-attributes', function(cb) {
 
 gulp.task('doc-publish', function (cb) {
 	setTimeout(function () {
-		git.exec({ args: 'diff-files --quiet', quiet: true, cwd: 'doc' }, function(err, stdout) {
+		git.exec({ args: 'diff-files --quiet', quiet: true, cwd: 'doc' }, function(err) {
 			if(err && err.code === 1) runSequence('doc-commit', 'doc-update-ref', 'doc-push', cb);
 			else cb();
 		});

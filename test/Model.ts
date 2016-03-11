@@ -66,7 +66,7 @@ describe("Model",() => {
 
             chai.expect(() => {
                 new Iridium.Model<any, any>(core, createInstanceImplementation({
-                    collection: '',
+                    collection: "",
                     schema: { _id: false }
                 }))
             }).to.throw("You failed to provide a valid collection name for this model");

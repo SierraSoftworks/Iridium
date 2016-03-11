@@ -1,8 +1,6 @@
 var gulp = require('gulp'),
-	util = require('gulp-util'),
 	git = require('gulp-git'),
-	replace = require('gulp-replace'),
-	path = require('path');
+	replace = require('gulp-replace');
 
 var repo = require('../package.json').repository.url;
 
