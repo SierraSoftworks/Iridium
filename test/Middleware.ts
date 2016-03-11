@@ -1,20 +1,20 @@
 ﻿/// <reference path="../typings/DefinitelyTyped/tsd.d.ts" />
-import * as Iridium from '../index';
+import * as Iridium from "../index";
 
 describe("Middleware",() => {
     let core = new Iridium.Core({
-        database: 'test'
+        database: "test"
     });
 
     describe("Express",() => {
         beforeEach(() => core.close());
 
         it("should be available through Core.express()",() => {
-            chai.expect(core.express).to.exist.and.be.a('function');
+            chai.expect(core.express).to.exist.and.be.a("function");
         });
 
         it("should return a function",() => {
-            chai.expect(core.express()).to.exist.and.be.a('function');
+            chai.expect(core.express()).to.exist.and.be.a("function");
         });
 
         it("which sets req.db to the core instance",(done) => {

@@ -1,8 +1,8 @@
 /// <reference path="../typings/DefinitelyTyped/tsd.d.ts" />
-import * as Iridium from '../index';
-import skmatc = require('skmatc');
-import MongoDB = require('mongodb');
-import {DefaultValidators} from '../lib/Validators';
+import * as Iridium from "../index";
+import skmatc = require("skmatc");
+import MongoDB = require("mongodb");
+import {DefaultValidators} from "../lib/Validators";
 
 interface TestDocument {
 	_id?: string;
@@ -14,12 +14,12 @@ function VersionValidator(schema, data) {
     return this.assert(/^\d+\.\d+\.\d+(?:-.+)?$/.test(data));
 }
 
-@Iridium.Collection('test')
+@Iridium.Collection("test")
 @Iridium.Index({ name: 1 })
 @Iridium.Index({ email: 1 }, { background: true })
-@Iridium.Validate('version', VersionValidator)
-@Iridium.Property('version', 'version')
-@Iridium.Property('optional2', Boolean, false)
+@Iridium.Validate("version", VersionValidator)
+@Iridium.Property("version", "version")
+@Iridium.Property("optional2", Boolean, false)
 class Test extends Iridium.Instance<TestDocument, Test> implements TestDocument {
 	static transforms: Iridium.Transforms = {};
 	static indexes = [];
@@ -44,7 +44,7 @@ class Test extends Iridium.Instance<TestDocument, Test> implements TestDocument 
 describe("Decorators", () => {
     describe("Collection", () => {
         it("should populate the collection static field", () => {
-            chai.expect(Test.collection).to.equal('test');
+            chai.expect(Test.collection).to.equal("test");
         });
 
         it("should not pollute the parent's collection property", () => {
@@ -79,30 +79,30 @@ describe("Decorators", () => {
             let s = skmatc.scope(Test.schema);
 
             for (let i = 0; i < Test.validators.length; i++) {
-                chai.expect(Test.validators[i]).to.be.a('function');
+                chai.expect(Test.validators[i]).to.be.a("function");
                 s.register(Test.validators[i]);
             }
 
             chai.expect(s.validate({
-				name: 'Test',
-				email: 'test@test.com',
-                version: '1.0.0'
-           	})).to.exist.and.have.property('failures').eql([]);
+				name: "Test",
+				email: "test@test.com",
+                version: "1.0.0"
+           	})).to.exist.and.have.property("failures").eql([]);
         });
 
 		it("should correctly include the validations", () => {
             let s = skmatc.scope(Test.schema);
 
             for (let i = 0; i < Test.validators.length; i++) {
-                chai.expect(Test.validators[i]).to.be.a('function');
+                chai.expect(Test.validators[i]).to.be.a("function");
                 s.register(Test.validators[i]);
             }
 
             chai.expect(s.validate({
-				name: 'Test',
-				email: 'test@test.com',
-                version: 'a1.0.0'
-           	})).to.exist.and.have.property('failures').not.eql([]);
+				name: "Test",
+				email: "test@test.com",
+                version: "a1.0.0"
+           	})).to.exist.and.have.property("failures").not.eql([]);
 		});
 
         it("should not pollute the parent's validators object", () => {
@@ -112,70 +112,70 @@ describe("Decorators", () => {
 
 	describe("ObjectID", () => {
 		it("should populate the constructor's schema object", () => {
-			chai.expect(Test.schema).to.exist.and.have.property('_id').and.eql(MongoDB.ObjectID);
+			chai.expect(Test.schema).to.exist.and.have.property("_id").and.eql(MongoDB.ObjectID);
 		});
 
 		it("should populate the constructor's transforms object", () => {
-			chai.expect(Test.transforms).to.exist.and.have.property('_id').with.property('fromDB').which.is.a('function');
-			chai.expect(Test.transforms).to.exist.and.have.property('_id').with.property('toDB').which.is.a('function');
+			chai.expect(Test.transforms).to.exist.and.have.property("_id").with.property("fromDB").which.is.a("function");
+			chai.expect(Test.transforms).to.exist.and.have.property("_id").with.property("toDB").which.is.a("function");
 		});
 
 		describe("the ObjectID transform", () => {
 			it("should convert an ObjectID to a string", () => {
-				chai.expect(Test.transforms['_id'].fromDB(Iridium.toObjectID('aaaaaaaaaaaaaaaaaaaaaaaa'), '_id', null)).to.eql('aaaaaaaaaaaaaaaaaaaaaaaa');
+				chai.expect(Test.transforms["_id"].fromDB(Iridium.toObjectID("aaaaaaaaaaaaaaaaaaaaaaaa"), "_id", null)).to.eql("aaaaaaaaaaaaaaaaaaaaaaaa");
 			});
 
 			it("should convert a string to an ObjectID", () => {
-				chai.expect(Test.transforms['_id'].toDB('aaaaaaaaaaaaaaaaaaaaaaaa', '_id', null)).to.be.instanceOf(MongoDB.ObjectID);
+				chai.expect(Test.transforms["_id"].toDB("aaaaaaaaaaaaaaaaaaaaaaaa", "_id", null)).to.be.instanceOf(MongoDB.ObjectID);
 			});
 
 			it("should handle undefined values correctly", () => {
-				chai.expect(Test.transforms['_id'].toDB(undefined, '_id', null)).to.not.exist;
-				chai.expect(Test.transforms['_id'].fromDB(undefined, '_id', null)).to.not.exist;
+				chai.expect(Test.transforms["_id"].toDB(undefined, "_id", null)).to.not.exist;
+				chai.expect(Test.transforms["_id"].fromDB(undefined, "_id", null)).to.not.exist;
 			});
 		});
 	});
 
 	describe("Property", () => {
 		it("should populate the constructor's schema object when applied to properties", () => {
-			chai.expect(Test.schema).to.exist.and.have.property('name', String);
-			chai.expect(Test.schema).to.exist.and.have.property('email').and.eql(/^.+@.+$/);
+			chai.expect(Test.schema).to.exist.and.have.property("name", String);
+			chai.expect(Test.schema).to.exist.and.have.property("email").and.eql(/^.+@.+$/);
         });
 
 		it("should populate the constructor's schema object when to the constructor", () => {
-			chai.expect(Test.schema).to.exist.and.have.property('version', 'version');
+			chai.expect(Test.schema).to.exist.and.have.property("version", "version");
 		});
 
 		it("should correctly handle optional properties defined on instance fields", () => {
-			chai.expect(Test.schema).to.exist.and.have.property('optional1').eql({ $required: false, $type: Boolean });
+			chai.expect(Test.schema).to.exist.and.have.property("optional1").eql({ $required: false, $type: Boolean });
 		});
 
 		it("should correctly handle optional properties defined on the constructor", () => {
-			chai.expect(Test.schema).to.exist.and.have.property('optional2').eql({ $required: false, $type: Boolean });
+			chai.expect(Test.schema).to.exist.and.have.property("optional2").eql({ $required: false, $type: Boolean });
 		});
 
         it("should not pollute the parent's schema object", () => {
-            chai.expect(Iridium.Instance.schema).to.exist.and.not.have.property('name');
-			chai.expect(Iridium.Instance.schema).to.exist.and.not.have.property('email');
-			chai.expect(Iridium.Instance.schema).to.exist.and.not.have.property('version');
-			chai.expect(Iridium.Instance.schema).to.exist.and.not.have.property('optional1');
-			chai.expect(Iridium.Instance.schema).to.exist.and.not.have.property('optional2');
+            chai.expect(Iridium.Instance.schema).to.exist.and.not.have.property("name");
+			chai.expect(Iridium.Instance.schema).to.exist.and.not.have.property("email");
+			chai.expect(Iridium.Instance.schema).to.exist.and.not.have.property("version");
+			chai.expect(Iridium.Instance.schema).to.exist.and.not.have.property("optional1");
+			chai.expect(Iridium.Instance.schema).to.exist.and.not.have.property("optional2");
         });
     });
 
     describe("Transform", () => {
         it("should not remove existing entries in the transforms object", () => {
-            chai.expect(Test.transforms).to.exist.and.have.property('_id').with.property('fromDB').which.is.a('function');
-			chai.expect(Test.transforms).to.exist.and.have.property('_id').with.property('toDB').which.is.a('function');
+            chai.expect(Test.transforms).to.exist.and.have.property("_id").with.property("fromDB").which.is.a("function");
+			chai.expect(Test.transforms).to.exist.and.have.property("_id").with.property("toDB").which.is.a("function");
         });
 
         it("should populate the constructor's transforms object", () => {
-            chai.expect(Test.transforms).to.exist.and.have.property('email').with.property('fromDB').which.is.a('function');
-			chai.expect(Test.transforms).to.exist.and.have.property('email').with.property('toDB').which.is.a('function');
+            chai.expect(Test.transforms).to.exist.and.have.property("email").with.property("fromDB").which.is.a("function");
+			chai.expect(Test.transforms).to.exist.and.have.property("email").with.property("toDB").which.is.a("function");
         });
 
         it("should not pollute the parent's transforms object", () => {
-            chai.expect(Iridium.Instance.transforms).to.exist.and.not.have.property('email');
+            chai.expect(Iridium.Instance.transforms).to.exist.and.not.have.property("email");
         });
     });
 });

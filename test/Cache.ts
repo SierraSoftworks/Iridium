@@ -1,12 +1,12 @@
 ﻿/// <reference path="../typings/DefinitelyTyped/tsd.d.ts" />
-import * as Iridium from '../index';
+import * as Iridium from "../index";
 
 interface Document {
     _id?: string;
 }
 
 class Instance extends Iridium.Instance<Document, Instance> {
-    static collection = 'test';
+    static collection = "test";
     static schema: Iridium.Schema = { _id: false };
     static cache = new Iridium.CacheOnID();
 
@@ -72,21 +72,21 @@ describe("Cache",() => {
             let director = new Iridium.CacheOnID();
 
             it("should only report that objects with an _id field are cacheable",() => {
-                chai.expect(director.valid({ _id: 'test' })).to.be.true;
-                chai.expect(director.valid(<any>{ noID: 'test' })).to.be.false;
+                chai.expect(director.valid({ _id: "test" })).to.be.true;
+                chai.expect(director.valid(<any>{ noID: "test" })).to.be.false;
             });
 
             it("should generate a key based on the object's ID",() => {
-                chai.expect(director.buildKey({ _id: 'test' })).to.be.equal('test');
+                chai.expect(director.buildKey({ _id: "test' })).to.be.equal('test");
             });
 
             it("should only report that queries which specify the _id field are usable",() => {
-                chai.expect(director.validQuery({ _id: 'test' })).to.be.true;
-                chai.expect(director.validQuery({ notID: 'test' })).to.be.false;
+                chai.expect(director.validQuery({ _id: "test" })).to.be.true;
+                chai.expect(director.validQuery({ notID: "test" })).to.be.false;
             });
 
             it("should generate a key based on the query ID",() => {
-                chai.expect(director.buildQueryKey({ _id: 'test' })).to.be.equal('test');
+                chai.expect(director.buildQueryKey({ _id: "test' })).to.be.equal('test");
             });
         });
 
@@ -94,7 +94,7 @@ describe("Cache",() => {
 
     describe("integration",() => {
         let core = new Iridium.Core({
-            database: 'test'
+            database: "test"
         });
 
         let model = new Iridium.Model<Document, Instance>(core, Instance);

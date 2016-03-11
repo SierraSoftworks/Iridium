@@ -1,7 +1,7 @@
 /// <reference path="../typings/DefinitelyTyped/tsd.d.ts" />
-import * as Iridium from '../index';
-import skmatc = require('skmatc');
-import MongoDB = require('mongodb');
+import * as Iridium from "../index";
+import skmatc = require("skmatc");
+import MongoDB = require("mongodb");
 
 interface Document {
     _id?: string;
@@ -15,15 +15,15 @@ interface Document {
     avatar: Buffer;
 }
 
-@Iridium.Validate('Over18', function(schema, data) {
+@Iridium.Validate("Over18", function(schema, data) {
     return this.assert(data.getTime && data.getTime() < (new Date().getTime() - 365 * 86400 * 18 * 1000));
 })
 class Person extends Iridium.Instance<Document, Person> {
-    static collection = 'test';
+    static collection = "test";
     static schema: Iridium.Schema = {
         _id: MongoDB.ObjectID,
         name: String,
-        dateOfBirth: 'Over18',
+        dateOfBirth: "Over18",
         siblings: [{
             name: String,
             related: Boolean,
@@ -48,7 +48,7 @@ class Person extends Iridium.Instance<Document, Person> {
 }
 
 describe("Validation", () => {
-    let core = new Iridium.Core({ database: 'test' });
+    let core = new Iridium.Core({ database: "test" });
     let model = new Iridium.Model<Document, Person>(core, Person);
 
     before(() => core.connect());
@@ -60,10 +60,10 @@ describe("Validation", () => {
     describe("custom validators", () => {
         it("should successfully validate documents which are valid", () => {
             return chai.expect(model.insert({
-                name: 'John',
-                dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
+                name: "John",
+                dateOfBirth: new Date("1993-02-14T00:00:00.000Z"),
                 siblings: [{
-                    name: 'Jane',
+                    name: "Jane",
                     related: true,
                     ageDifference: -2
                 }],
@@ -73,10 +73,10 @@ describe("Validation", () => {
 
         it("should fail to validate documents which are invalid", () => {
             return chai.expect(model.insert({
-                name: 'John',
-                dateOfBirth: new Date('2013-02-14T00:00:00.000Z'),
+                name: "John",
+                dateOfBirth: new Date("2013-02-14T00:00:00.000Z"),
                 siblings: [{
-                    name: 'Jane',
+                    name: "Jane",
                     related: true,
                     ageDifference: -2
                 }],
@@ -87,11 +87,11 @@ describe("Validation", () => {
         describe("ObjectID", () => {
             it("should successfully validate valid documents", () => {
                 return chai.expect(model.insert({
-                    _id: '012345670123456701234567',
-                    name: 'John',
-                    dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
+                    _id: "012345670123456701234567",
+                    name: "John",
+                    dateOfBirth: new Date("1993-02-14T00:00:00.000Z"),
                     siblings: [{
-                        name: 'Jane',
+                        name: "Jane",
                         related: true,
                         ageDifference: -2
                     }],
@@ -101,11 +101,11 @@ describe("Validation", () => {
             
             it("should fail to validate documents which are invalid", () => {
                 return chai.expect(model.insert({
-                    _id: 'this is an invalid id',
-                    name: 'John',
-                    dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
+                    _id: "this is an invalid id",
+                    name: "John",
+                    dateOfBirth: new Date("1993-02-14T00:00:00.000Z"),
                     siblings: [{
-                        name: 'Jane',
+                        name: "Jane",
                         related: true,
                         ageDifference: -2
                     }],
@@ -117,10 +117,10 @@ describe("Validation", () => {
         describe("Binary", () => {
             it("should successfully validate valid documents", () => {
                 return chai.expect(model.insert({
-                    name: 'John',
-                    dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
+                    name: "John",
+                    dateOfBirth: new Date("1993-02-14T00:00:00.000Z"),
                     siblings: [{
-                        name: 'Jane',
+                        name: "Jane",
                         related: true,
                         ageDifference: -2
                     }],
@@ -130,14 +130,14 @@ describe("Validation", () => {
             
             it("should fail to validate documents which are invalid", () => {
                 return chai.expect(model.insert({
-                    name: 'John',
-                    dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
+                    name: "John",
+                    dateOfBirth: new Date("1993-02-14T00:00:00.000Z"),
                     siblings: [{
-                        name: 'Jane',
+                        name: "Jane",
                         related: true,
                         ageDifference: -2
                     }],
-                    avatar: <any>'test'
+                    avatar: <any>"test"
                 })).to.eventually.be.rejected;
             });
         });
@@ -146,10 +146,10 @@ describe("Validation", () => {
     describe("inserting", () => {
         it("should successfully validate single documents which match the schema", () => {
             return chai.expect(model.insert({
-                name: 'John',
-                dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
+                name: "John",
+                dateOfBirth: new Date("1993-02-14T00:00:00.000Z"),
                 siblings: [{
-                    name: 'Jane',
+                    name: "Jane",
                     related: true,
                     ageDifference: -2
                 }],
@@ -159,10 +159,10 @@ describe("Validation", () => {
 
         it("should fail to validate single documents which do not match the schema", () => {
             return chai.expect(model.insert({
-                name: 'John',
+                name: "John",
                 dateOfBirth: <any>0,
                 siblings: [{
-                    name: 'Jane',
+                    name: "Jane",
                     related: true,
                     ageDifference: -2
                 }],
@@ -172,10 +172,10 @@ describe("Validation", () => {
 
         it("should not insert a document into the database if it fails validation", () => {
             return model.insert({
-                name: 'John',
+                name: "John",
                 dateOfBirth: <any>0,
                 siblings: [{
-                    name: 'Jane',
+                    name: "Jane",
                     related: true,
                     ageDifference: -2
                 }],
@@ -185,19 +185,19 @@ describe("Validation", () => {
 
         it("should successfully validate multiple documents which match the schema", () => {
             return chai.expect(model.insert([{
-                name: 'Frank',
-                dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
+                name: "Frank",
+                dateOfBirth: new Date("1993-02-14T00:00:00.000Z"),
                 siblings: [{
-                    name: 'Francie',
+                    name: "Francie",
                     related: false,
                     ageDifference: -2
                 }],
                 avatar: new Buffer("test", "utf8")
             }, {
-                name: 'Jack',
-                dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
+                name: "Jack",
+                dateOfBirth: new Date("1993-02-14T00:00:00.000Z"),
                 siblings: [{
-                    name: 'Jill',
+                    name: "Jill",
                     related: true,
                     ageDifference: 2
                 }],
@@ -207,11 +207,11 @@ describe("Validation", () => {
 
         it("should fail to validate multiple documents which do not match the schema", () => {
             return chai.expect(model.insert([{
-                name: 'Frank',
-                dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
+                name: "Frank",
+                dateOfBirth: new Date("1993-02-14T00:00:00.000Z"),
                 siblings: [{
-                    name: 'Francie',
-                    related: <any>'related',
+                    name: "Francie",
+                    related: <any>"related",
                     ageDifference: -2
                 }],
                 avatar: new Buffer("test", "utf8")
@@ -219,7 +219,7 @@ describe("Validation", () => {
                 name: <any>5,
                 dateOfBirth: new Date(),
                 siblings: [{
-                    name: 'Jill',
+                    name: "Jill",
                     related: true,
                     ageDifference: 2
                 }],
@@ -229,19 +229,19 @@ describe("Validation", () => {
 
         it("should fail to validate multiple documents where some do not match the schema", () => {
             return chai.expect(model.insert([{
-                name: 'Frank',
+                name: "Frank",
                 dateOfBirth: new Date(),
                 siblings: [{
-                    name: 'Francie',
-                    related: <any>'related',
+                    name: "Francie",
+                    related: <any>"related",
                     ageDifference: -2
                 }],
                 avatar: new Buffer("test", "utf8")
             }, {
-                name: 'Jack',
-                dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
+                name: "Jack",
+                dateOfBirth: new Date("1993-02-14T00:00:00.000Z"),
                 siblings: [{
-                    name: 'Jill',
+                    name: "Jill",
                     related: true,
                     ageDifference: 2
                 }],
@@ -251,63 +251,63 @@ describe("Validation", () => {
 
         it("should fail to validate multiple documents where some do not match the schema", () => {
             return model.insert([{
-                name: 'Frank',
+                name: "Frank",
                 dateOfBirth: new Date(),
                 siblings: [{
-                    name: 'Francie',
-                    related: <any>'related',
+                    name: "Francie",
+                    related: <any>"related",
                     ageDifference: -2
                 }],
                 avatar: new Buffer("test", "utf8")
             }, {
-                name: 'Jack',
-                dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
+                name: "Jack",
+                dateOfBirth: new Date("1993-02-14T00:00:00.000Z"),
                 siblings: [{
-                    name: 'Jill',
+                    name: "Jill",
                     related: true,
                     ageDifference: 2
                 }],
                 avatar: new Buffer("test", "utf8")
-            }]).catch(() => chai.expect(model.findOne({ 'siblings.related': 'related' })).to.eventually.be.null);
+            }]).catch(() => chai.expect(model.findOne({ "siblings.related": "related" })).to.eventually.be.null);
         });
     });
 
     describe("instances", () => {
         beforeEach(() => model.remove().then(() => model.insert({
-            name: 'Frank',
-            dateOfBirth: new Date('1993-02-14T00:00:00.000Z'),
+            name: "Frank",
+            dateOfBirth: new Date("1993-02-14T00:00:00.000Z"),
             siblings: [],
             avatar: new Buffer("test", "utf8")
         })));
 
         it("should validate documents when you attempt to change them", () => {
-            return chai.expect(model.get({ name: 'Frank' }).then((frank) => {
-                frank.siblings.push({ name: 'Francette', related: true, ageDifference: 0 });
+            return chai.expect(model.get({ name: "Frank" }).then((frank) => {
+                frank.siblings.push({ name: "Francette", related: true, ageDifference: 0 });
                 return frank.save();
             })).to.eventually.be.ok;
         });
 
         it("should fail validation if the document does not match the schema", () => {
-            return chai.expect(model.get({ name: 'Frank' }).then((frank) => {
-                frank.siblings.push({ name: 'Francette', related: <any>'related', ageDifference: 0 });
+            return chai.expect(model.get({ name: "Frank" }).then((frank) => {
+                frank.siblings.push({ name: "Francette", related: <any>"related", ageDifference: 0 });
                 return frank.save();
             })).to.eventually.be.rejected;
         });
 
         it("should not change the document in the database if validation fails", () => {
-            return chai.expect(model.get({ name: 'Frank' }).then((frank) => {
-                frank.siblings.push({ name: 'Francette', related: <any>'related', ageDifference: 0 });
+            return chai.expect(model.get({ name: "Frank" }).then((frank) => {
+                frank.siblings.push({ name: "Francette", related: <any>"related", ageDifference: 0 });
                 return frank.save();
-            }).catch(() => model.get({ name: 'Frank', 'siblings.related': 'related' }))).to.eventually.be.null;
+            }).catch(() => model.get({ name: "Frank", "siblings.related": "related" }))).to.eventually.be.null;
         });
 
         it("should not reverse the changes made to the instance if validation fails", () => {
             let staticFrank: Person;
-            return chai.expect(model.get({ name: 'Frank' }).then((frank) => {
+            return chai.expect(model.get({ name: "Frank" }).then((frank) => {
                 staticFrank = frank;
-                frank.siblings.push({ name: 'Francette', related: <any>'related', ageDifference: 0 });
+                frank.siblings.push({ name: "Francette", related: <any>"related", ageDifference: 0 });
                 return frank.save();
-            }).catch(() => chai.expect(staticFrank).to.have.property('siblings').with.length(1))).to.eventually.be.ok;
+            }).catch(() => chai.expect(staticFrank).to.have.property("siblings").with.length(1))).to.eventually.be.ok;
         });
     });
 });

@@ -1,7 +1,7 @@
 ﻿/// <reference path="../typings/DefinitelyTyped/tsd.d.ts" />
-import * as Iridium from '../index';
-import MongoDB = require('mongodb');
-import Bluebird = require('bluebird');
+import * as Iridium from "../index";
+import MongoDB = require("mongodb");
+import Bluebird = require("bluebird");
 
 interface TestDocument {
     _id?: string;
@@ -11,7 +11,7 @@ interface TestDocument {
 }
 
 class Test extends Iridium.Instance<TestDocument, Test> implements TestDocument {
-    static collection = 'test';
+    static collection = "test";
     static schema: Iridium.Schema = {
         _id: false,
         answer: Number,
@@ -67,54 +67,54 @@ describe("Instance",() => {
 
     it("should expose the latest document values",() => {
         let instance = core.Test.helpers.wrapDocument({
-            _id: 'aaaaaa',
+            _id: "aaaaaa",
             answer: 2
         });
 
         chai.expect(instance).to.exist;
         chai.expect(instance.answer).to.be.equal(2);
-        chai.expect(instance._id).to.be.equal('aaaaaa');
+        chai.expect(instance._id).to.be.equal("aaaaaa");
     });
 
     describe("methods",() => {
         it("should expose save()",() => {
-            chai.expect(core.Test.helpers.wrapDocument({ _id: '1', answer: 2 }).save).to.exist.and.be.a('function');
+            chai.expect(core.Test.helpers.wrapDocument({ _id: "1", answer: 2 }).save).to.exist.and.be.a("function");
         });
 
         it("should expose update()",() => {
-            chai.expect(core.Test.helpers.wrapDocument({ _id: '1', answer: 2 }).update).to.exist.and.be.a('function');
+            chai.expect(core.Test.helpers.wrapDocument({ _id: "1", answer: 2 }).update).to.exist.and.be.a("function");
         });
 
         it("should expose refresh()",() => {
-            chai.expect(core.Test.helpers.wrapDocument({ _id: '1', answer: 2 }).refresh).to.exist.and.be.a('function');
+            chai.expect(core.Test.helpers.wrapDocument({ _id: "1", answer: 2 }).refresh).to.exist.and.be.a("function");
         });
 
         it("should expose delete()",() => {
-            chai.expect(core.Test.helpers.wrapDocument({ _id: '1', answer: 2 }).delete).to.exist.and.be.a('function');
+            chai.expect(core.Test.helpers.wrapDocument({ _id: "1", answer: 2 }).delete).to.exist.and.be.a("function");
         });
 
         it("should expose remove()",() => {
-            chai.expect(core.Test.helpers.wrapDocument({ _id: '1', answer: 2 }).remove).to.exist.and.be.a('function');
+            chai.expect(core.Test.helpers.wrapDocument({ _id: "1", answer: 2 }).remove).to.exist.and.be.a("function");
         });
 
         it("should override toJSON()",() => {
-            chai.expect(core.Test.helpers.wrapDocument({ _id: '1', answer: 2 }).toJSON()).to.eql({ _id: '1', answer: 2 });
+            chai.expect(core.Test.helpers.wrapDocument({ _id: "1", answer: 2 }).toJSON()).to.eql({ _id: "1", answer: 2 });
         });
 
         it("should override toString()",() => {
-            chai.expect(core.Test.helpers.wrapDocument({ _id: '1', answer: 2 }).toString()).to.eql(JSON.stringify({ _id: '1', answer: 2 }, null, 2));
+            chai.expect(core.Test.helpers.wrapDocument({ _id: "1", answer: 2 }).toString()).to.eql(JSON.stringify({ _id: "1", answer: 2 }, null, 2));
         });
     });
 
     describe("properties",() => {
         it("should expose document",() => {
-            chai.expect(core.Test.helpers.wrapDocument({ _id: '1', answer: 2 }).document).to.eql({ _id: '1', answer: 2 });
+            chai.expect(core.Test.helpers.wrapDocument({ _id: "1", answer: 2 }).document).to.eql({ _id: "1", answer: 2 });
         });
     });
 
     it("should expose additional getters and setters",() => {
         let instance = core.Test.helpers.wrapDocument({
-            _id: 'aaaaaa',
+            _id: "aaaaaa",
             answer: 2
         });
 
@@ -124,12 +124,12 @@ describe("Instance",() => {
 
     it("should expose additional methods",() => {
         let instance = core.Test.helpers.wrapDocument({
-            _id: 'aaaaaa',
+            _id: "aaaaaa",
             answer: 2
         });
 
         chai.expect(instance).to.exist;
-        chai.expect(instance.test).to.exist.and.be.a('function');
+        chai.expect(instance.test).to.exist.and.be.a("function");
     });
 
     describe("should handle _id in a special manner",() => {
@@ -138,15 +138,15 @@ describe("Instance",() => {
 
         it("get should transform ObjectIDs into hex strings",() => {
             return core.Test.get().then(instance => {
-                chai.expect((<any>instance.document._id)._bsontype).to.equal('ObjectID');
-                chai.expect(instance._id).to.be.a('string').with.length(24);
+                chai.expect((<any>instance.document._id)._bsontype).to.equal("ObjectID");
+                chai.expect(instance._id).to.be.a("string").with.length(24);
             });
         });
 
         it("set should transform hex strings into ObjectIDs by default",() => {
             return core.Test.get().then(instance => {
                 instance._id = "aaaaaaaaaaaaaaaaaaaaaaaa";
-                chai.expect(new MongoDB.ObjectID(instance.document._id).toHexString()).to.equal('aaaaaaaaaaaaaaaaaaaaaaaa');
+                chai.expect(new MongoDB.ObjectID(instance.document._id).toHexString()).to.equal("aaaaaaaaaaaaaaaaaaaaaaaa");
             });
         });
     });
@@ -174,7 +174,7 @@ describe("Instance",() => {
             });
 
             chai.expect((<any>instance)._isNew).to.be.true;
-            return chai.expect(instance.save().then(() => chai.expect(core.Test.get(instance._id)).to.eventually.have.property('answer', instance.answer))).to.eventually.be.ok;
+            return chai.expect(instance.save().then(() => chai.expect(core.Test.get(instance._id)).to.eventually.have.property("answer", instance.answer))).to.eventually.be.ok;
         });
 
         it("should automatically generate the update query if one was not provided",() => {
@@ -183,7 +183,7 @@ describe("Instance",() => {
             }).then(() => chai.expect(core.Test.get().then((instance) => {
                 instance.answer = 42;
                 return instance.save().then(() => core.Test.get(instance._id));
-            })).to.eventually.have.property('answer', 42));
+            })).to.eventually.have.property("answer", 42));
         });
 
         it("should allow you to specify a custom update query",() => {
@@ -191,7 +191,7 @@ describe("Instance",() => {
                 answer: 1
             })
                 .then(() => core.Test.get())
-                .then((instance) => chai.expect(instance.save({ $set: { answer: 10 } })).to.eventually.have.property('answer', 10));
+                .then((instance) => chai.expect(instance.save({ $set: { answer: 10 } })).to.eventually.have.property("answer", 10));
         });
 
         it("should allow you tp specify a custom update query and conditions for the update",() => {
@@ -199,7 +199,7 @@ describe("Instance",() => {
                 answer: 1
             })
                 .then(() => core.Test.get())
-                .then((instance) => chai.expect(instance.save({ answer: { $lt: 5 } }, { $set: { answer: 10 } })).to.eventually.have.property('answer', 10));
+                .then((instance) => chai.expect(instance.save({ answer: { $lt: 5 } }, { $set: { answer: 10 } })).to.eventually.have.property("answer", 10));
         });
 
         it("should return a promise for the instance",() => {
@@ -237,7 +237,7 @@ describe("Instance",() => {
                 return core.Test.update({ _id: instance._id }, {
                     $set: { answer: 10 }
                 }).then(() => instance.update());
-            })).to.eventually.have.property('answer', 10);
+            })).to.eventually.have.property("answer", 10);
         });
 
         it("should set _isNew to true if the instance was removed from the database",() => {
@@ -277,7 +277,7 @@ describe("Instance",() => {
                 return core.Test.update({ _id: instance._id }, {
                     $set: { answer: 10 }
                 }).then(() => instance.refresh());
-            })).to.eventually.have.property('answer', 10);
+            })).to.eventually.have.property("answer", 10);
         });
 
         it("should set _isNew to true if the instance was removed from the database",() => {
@@ -313,7 +313,7 @@ describe("Instance",() => {
         });
 
         it("should set the instance's isNew property to true",() => {
-            return chai.expect(core.Test.get().then((instance) => instance.remove())).to.eventually.have.property('_isNew', true);
+            return chai.expect(core.Test.get().then((instance) => instance.remove())).to.eventually.have.property("_isNew", true);
         });
 
         it("should return a promise for the instance",() => {
@@ -352,7 +352,7 @@ describe("Instance",() => {
         });
 
         it("should set the instance's isNew property to true",() => {
-            return chai.expect(core.Test.get().then((instance) => instance.delete())).to.eventually.have.property('_isNew', true);
+            return chai.expect(core.Test.get().then((instance) => instance.delete())).to.eventually.have.property("_isNew", true);
         });
 
         it("should return a promise for the instance",() => {
@@ -384,14 +384,14 @@ describe("Instance",() => {
     });
 
     describe("first()",() => {
-        beforeEach(() => core.Test.remove().then(() => core.Test.insert({ answer: 1, lots: [1, 2, 3, 4], less: { 'a': 1, 'b': 2 } })));
+        beforeEach(() => core.Test.remove().then(() => core.Test.insert({ answer: 1, lots: [1, 2, 3, 4], less: { "a": 1, "b": 2 } })));
 
         it("should return the first object which matches the predicate over an array",() => {
             return chai.expect(core.Test.get().then(instance => instance.first(instance.lots, lot => lot == 2))).to.eventually.equal(2);
         });
 
         it("should return the first object which matches the predicate over an object",() => {
-            return chai.expect(core.Test.get().then(instance => instance.first(instance.less, (value, key) => key == 'a'))).to.eventually.equal(1);
+            return chai.expect(core.Test.get().then(instance => instance.first(instance.less, (value, key) => key == "a"))).to.eventually.equal(1);
         });
 
         it("should return null if no item was found",() => {
@@ -400,14 +400,14 @@ describe("Instance",() => {
     });
 
     describe("select()",() => {
-        beforeEach(() => core.Test.remove().then(() => core.Test.insert({ answer: 1, lots: [1, 2, 3, 4], less: { 'a': 1, 'b': 2 } })));
+        beforeEach(() => core.Test.remove().then(() => core.Test.insert({ answer: 1, lots: [1, 2, 3, 4], less: { "a": 1, "b": 2 } })));
 
         it("should return the objects which match the predicate over an array",() => {
             return chai.expect(core.Test.get().then(instance => instance.select(instance.lots, lot => lot > 2))).to.eventually.eql([3, 4]);
         });
 
         it("should return the properties which match the predicate over an object",() => {
-            return chai.expect(core.Test.get().then(instance => instance.select(instance.less,(value, key) => key == 'a'))).to.eventually.eql({ 'a': 1 });
+            return chai.expect(core.Test.get().then(instance => instance.select(instance.less,(value, key) => key == "a"))).to.eventually.eql({ "a": 1 });
         });
 
         it("should return an empty array if no items matched over an array",() => {
@@ -420,23 +420,23 @@ describe("Instance",() => {
     });
 
     describe("modifications", () => {
-        beforeEach(() => core.Test.remove().then(() => core.Test.insert({ answer: 1, lots: [1, 2, 3, 4], less: { 'a': 1, 'b': 2 } })));
+        beforeEach(() => core.Test.remove().then(() => core.Test.insert({ answer: 1, lots: [1, 2, 3, 4], less: { "a": 1, "b": 2 } })));
 
         it("should correctly diff simple property changes", () => {
             return core.Test.get().then(instance => {
                 instance.answer = 2;
                 return instance.save();
             }).then(instance => {
-                chai.expect(instance).to.have.property('answer', 2);
+                chai.expect(instance).to.have.property("answer", 2);
             });
         });
 
         it("should correctly diff deep property changes", () => {
             return core.Test.get().then(instance => {
-                instance.less['a'] = 2;
+                instance.less["a"] = 2;
                 return instance.save();
             }).then(instance => {
-                chai.expect(instance).to.have.property('less').eql({ a: 2, b: 2 });
+                chai.expect(instance).to.have.property("less").eql({ a: 2, b: 2 });
             });
         });
 
@@ -445,7 +445,7 @@ describe("Instance",() => {
                 instance.lots.push(5);
                 return instance.save();
             }).then(instance => {
-                chai.expect(instance).to.have.property('lots').eql([1,2,3,4,5]);
+                chai.expect(instance).to.have.property("lots").eql([1,2,3,4,5]);
             });
         });
     });
@@ -453,7 +453,7 @@ describe("Instance",() => {
     describe("after a save", () => {
         var instance: Test;
 
-        before(() => core.Test.remove().then(() => core.Test.insert({ answer: 1, lots: [1, 2, 3, 4], less: { 'a': 1, 'b': 2 } })).then(i => {
+        before(() => core.Test.remove().then(() => core.Test.insert({ answer: 1, lots: [1, 2, 3, 4], less: { "a": 1, "b": 2 } })).then(i => {
             i.answer = 3;
             return i.save();
         }).then(i => instance = i));
@@ -468,17 +468,17 @@ describe("Instance",() => {
                 return i.save();
             }).then(i => {
                 chai.expect(i).to.exist;
-                chai.expect(i).to.have.property('answer', 2);
+                chai.expect(i).to.have.property("answer", 2);
             });
         });
 
         it("should correctly diff deep property changes", () => {
             return Bluebird.resolve(instance).then(i => {
-                i.less['a'] = 2;
+                i.less["a"] = 2;
                 return i.save();
             }).then(i => {
                 chai.expect(i).to.exist;
-                chai.expect(i).to.have.property('less').eql({ a: 2, b: 2 });
+                chai.expect(i).to.have.property("less").eql({ a: 2, b: 2 });
             });
         });
 
@@ -488,7 +488,7 @@ describe("Instance",() => {
                 return i.save();
             }).then(i => {
                 chai.expect(i).to.exist;
-                chai.expect(i).to.have.property('lots').eql([1,2,3,4,5]);
+                chai.expect(i).to.have.property("lots").eql([1,2,3,4,5]);
             });
         });
 

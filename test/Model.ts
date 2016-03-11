@@ -1,9 +1,9 @@
 ﻿/// <reference path="../typings/DefinitelyTyped/tsd.d.ts" />
-import * as Iridium from '../index';
-import MongoDB = require('mongodb');
-import {Cursor} from '../lib/Cursor';
-import Promise = require('bluebird');
-import _ = require('lodash');
+import * as Iridium from "../index";
+import MongoDB = require("mongodb");
+import {Cursor} from "../lib/Cursor";
+import Promise = require("bluebird");
+import _ = require("lodash");
 
 interface TestDocument {
     _id?: string;
@@ -11,7 +11,7 @@ interface TestDocument {
 }
 
 class Test extends Iridium.Instance<TestDocument, Test> implements TestDocument {
-    static collection = 'test';
+    static collection = "test";
     static schema: Iridium.Schema = {
         _id: MongoDB.ObjectID,
         answer: Number
@@ -31,7 +31,7 @@ class TestWithCustomID extends Test {
 }
 
 describe("Model",() => {
-    let core = new Iridium.Core({ database: 'test' });
+    let core = new Iridium.Core({ database: "test" });
 
     before(() => core.connect());
 
@@ -45,7 +45,7 @@ describe("Model",() => {
         it("should throw an error if you don't provide a valid core",() => {
             chai.expect(() => {
                 new Iridium.Model<any, any>(null, createInstanceImplementation({
-                    collection: 'test',
+                    collection: "test",
                     schema: { _id: false }
                 }))
             }).to.throw("You failed to provide a valid Iridium core for this model");
@@ -82,13 +82,13 @@ describe("Model",() => {
         it("should throw an error if you don't provide a valid schema",() => {
             chai.expect(() => {
                 new Iridium.Model<any, any>(core, createInstanceImplementation({
-                    collection: 'test'
+                    collection: "test"
                 }))
             }).to.throw("You failed to provide a valid schema for this model");
 
             chai.expect(() => {
                 new Iridium.Model<any, any>(core,createInstanceImplementation({
-                    collection: 'test',
+                    collection: "test",
                     schema: { id: false }
                 }))
             }).to.throw("You failed to provide a valid schema for this model");
@@ -96,28 +96,28 @@ describe("Model",() => {
 
         it("should correctly set the core",() => {
             chai.expect(new Iridium.Model(core, createInstanceImplementation({
-                    collection: 'test',
+                    collection: "test",
                     schema: { _id: false }
                 })).core).to.equal(core);
         });
 
         it("should correctly set the collectionName",() => {
             chai.expect(new Iridium.Model(core, createInstanceImplementation({
-                    collection: 'test',
+                    collection: "test",
                     schema: { _id: false }
-                })).collectionName).to.equal('test');
+                })).collectionName).to.equal("test");
         });
 
         it("should correctly set the schema",() => {
             chai.expect(new Iridium.Model(core, createInstanceImplementation({
-                    collection: 'test',
+                    collection: "test",
                     schema: { _id: true }
                 })).schema).to.eql({ _id: true });
         });
 
         it("should correctly default to ObjectID if no _id schema type is specified",() => {
             chai.expect(new Iridium.Model(core, createInstanceImplementation({
-                    collection: 'test',
+                    collection: "test",
                     schema: { _id: false }
                 })).schema).to.eql({ _id: MongoDB.ObjectID });
         });
@@ -126,48 +126,48 @@ describe("Model",() => {
     describe("methods",() => {
         let test = new Iridium.Model(core, Test);
 
-        it("should expose create()",() => chai.expect(test.create).to.exist.and.be.a('function'));
-        it("should expose insert()",() => chai.expect(test.insert).to.exist.and.be.a('function'));
-        it("should expose remove()",() => chai.expect(test.remove).to.exist.and.be.a('function'));
-        it("should expose findOne()",() => chai.expect(test.findOne).to.exist.and.be.a('function'));
-        it("should expose get()",() => chai.expect(test.get).to.exist.and.be.a('function'));
-        it("should expose find()",() => chai.expect(test.find).to.exist.and.be.a('function'));
-        it("should expose count()",() => chai.expect(test.count).to.exist.and.be.a('function'));
-        it("should expose ensureIndex()",() => chai.expect(test.ensureIndex).to.exist.and.be.a('function'));
-        it("should expose ensureIndexes()",() => chai.expect(test.ensureIndexes).to.exist.and.be.a('function'));
-        it("should expose dropIndex()",() => chai.expect(test.dropIndex).to.exist.and.be.a('function'));
-        it("should expose dropIndexes()",() => chai.expect(test.dropIndexes).to.exist.and.be.a('function'));
+        it("should expose create()",() => chai.expect(test.create).to.exist.and.be.a("function"));
+        it("should expose insert()",() => chai.expect(test.insert).to.exist.and.be.a("function"));
+        it("should expose remove()",() => chai.expect(test.remove).to.exist.and.be.a("function"));
+        it("should expose findOne()",() => chai.expect(test.findOne).to.exist.and.be.a("function"));
+        it("should expose get()",() => chai.expect(test.get).to.exist.and.be.a("function"));
+        it("should expose find()",() => chai.expect(test.find).to.exist.and.be.a("function"));
+        it("should expose count()",() => chai.expect(test.count).to.exist.and.be.a("function"));
+        it("should expose ensureIndex()",() => chai.expect(test.ensureIndex).to.exist.and.be.a("function"));
+        it("should expose ensureIndexes()",() => chai.expect(test.ensureIndexes).to.exist.and.be.a("function"));
+        it("should expose dropIndex()",() => chai.expect(test.dropIndex).to.exist.and.be.a("function"));
+        it("should expose dropIndexes()",() => chai.expect(test.dropIndexes).to.exist.and.be.a("function"));
     });
 
     describe("properties",() => {
         let test = new Iridium.Model(core, Test);
 
         it("should expose core",() => {
-            chai.expect(test).to.have.property('core');
+            chai.expect(test).to.have.property("core");
             chai.expect(test.core).to.equal(core);
         });
         it("should expose collection",() => {
-            chai.expect(test).to.have.property('collection');
+            chai.expect(test).to.have.property("collection");
         });
         it("should expose collectionName",() => {
-            chai.expect(test).to.have.property('collectionName');
-            chai.expect(test.collectionName).to.equal('test');
-            test.collectionName = 'changed';
-            chai.expect(test.collectionName).to.equal('changed');
+            chai.expect(test).to.have.property("collectionName");
+            chai.expect(test.collectionName).to.equal("test");
+            test.collectionName = "changed";
+            chai.expect(test.collectionName).to.equal("changed");
         });
-        it("should expose schema",() => chai.expect(test).to.have.property('schema'));
-        it("should expose helpers",() => chai.expect(test).to.have.property('helpers'));
-        it("should expose handlers",() => chai.expect(test).to.have.property('handlers'));
-        it("should expose cache",() => chai.expect(test).to.have.property('cache'));
-        it("should expose cacheDirector",() => chai.expect(test).to.have.property('cacheDirector'));
-        it("should expose transforms",() => chai.expect(test).to.have.property('transforms'));
-        it("should expose indexes",() => chai.expect(test).to.have.property('indexes'));
-        it("should expose Instance",() => chai.expect(test.Instance).to.exist.and.be.a('function'));
+        it("should expose schema",() => chai.expect(test).to.have.property("schema"));
+        it("should expose helpers",() => chai.expect(test).to.have.property("helpers"));
+        it("should expose handlers",() => chai.expect(test).to.have.property("handlers"));
+        it("should expose cache",() => chai.expect(test).to.have.property("cache"));
+        it("should expose cacheDirector",() => chai.expect(test).to.have.property("cacheDirector"));
+        it("should expose transforms",() => chai.expect(test).to.have.property("transforms"));
+        it("should expose indexes",() => chai.expect(test).to.have.property("indexes"));
+        it("should expose Instance",() => chai.expect(test.Instance).to.exist.and.be.a("function"));
     });
 
     describe("collection",() => {
         it("should throw an error if you attempt to access it before connecting to the database",() => {
-            let model = new Iridium.Model(new Iridium.Core('mongodb://localhost/test'), Test);
+            let model = new Iridium.Model(new Iridium.Core("mongodb://localhost/test"), Test);
             chai.expect(() => model.collection).to.throw("Iridium Core not connected to a database.");
         });
 
@@ -188,7 +188,7 @@ describe("Model",() => {
         });
 
         it("should exist",() => {
-            chai.expect(model.create).to.exist.and.be.a('function');
+            chai.expect(model.create).to.exist.and.be.a("function");
         });
 
         it("should allow the insertion of a single document",() => {
@@ -196,7 +196,7 @@ describe("Model",() => {
         });
 
         it("should return a document if a single document is inserted",() => {
-            return chai.expect(model.create({ answer: 10 })).to.eventually.have.property('answer', 10);
+            return chai.expect(model.create({ answer: 10 })).to.eventually.have.property("answer", 10);
         });
 
         it("should allow the insertion of multiple documents",() => {
@@ -212,13 +212,13 @@ describe("Model",() => {
         });
 
         it("should return an error if you don't meet the schema validation requirements",() => {
-           return chai.expect(model.create(<any>{ answer: 'wrong' })).to.eventually.be.rejected;
+           return chai.expect(model.create(<any>{ answer: "wrong" })).to.eventually.be.rejected;
         });
 
         it("should support a callback style instead of promises",(done) => {
             model.create({ answer: 15 },(err, inserted) => {
                 if (err) return done(err);
-                chai.expect(inserted).to.exist.and.have.property('answer', 15);
+                chai.expect(inserted).to.exist.and.have.property("answer", 15);
                 return done();
             });
         });
@@ -236,7 +236,7 @@ describe("Model",() => {
         });
 
         it("should exist",() => {
-            chai.expect(model.insert).to.exist.and.be.a('function');
+            chai.expect(model.insert).to.exist.and.be.a("function");
         });
 
         it("should allow the insertion of a single document",() => {
@@ -244,7 +244,7 @@ describe("Model",() => {
         });
 
         it("should return a document if a single document is inserted",() => {
-            return chai.expect(model.insert({ answer: 10 })).to.eventually.have.property('answer', 10);
+            return chai.expect(model.insert({ answer: 10 })).to.eventually.have.property("answer", 10);
         });
 
         it("should allow the insertion of multiple documents",() => {
@@ -260,13 +260,13 @@ describe("Model",() => {
         });
 
         it("should return an error if you don't meet the schema validation requirements",() => {
-           return chai.expect(model.insert(<any>{ answer: 'wrong' })).to.eventually.be.rejected;
+           return chai.expect(model.insert(<any>{ answer: "wrong" })).to.eventually.be.rejected;
         });
 
         it("should support a callback style instead of promises",(done) => {
             model.insert({ answer: 15 },(err, inserted) => {
                 if (err) return done(err);
-                chai.expect(inserted).to.exist.and.have.property('answer', 15);
+                chai.expect(inserted).to.exist.and.have.property("answer", 15);
                 return done();
             });
         });
@@ -290,7 +290,7 @@ describe("Model",() => {
         });
 
         it("should exist",() => {
-            chai.expect(model.remove).to.exist.and.be.a('function');
+            chai.expect(model.remove).to.exist.and.be.a("function");
         });
 
         it("should allow the removal of documents matching a query",() => {
@@ -350,11 +350,11 @@ describe("Model",() => {
         });
 
         it("should exist",() => {
-            chai.expect(model.findOne).to.exist.and.be.a('function');
+            chai.expect(model.findOne).to.exist.and.be.a("function");
         });
 
         it("should support retrieving an random document",() => {
-            return chai.expect(model.findOne()).to.eventually.exist.and.have.property('answer').is.a('number');
+            return chai.expect(model.findOne()).to.eventually.exist.and.have.property("answer").is.a("number");
         });
 
         it("should support a query which returns nothing",() => {
@@ -362,23 +362,23 @@ describe("Model",() => {
         });
 
         it("should support retrieving a document using its ID",() => {
-            return chai.expect(model.findOne().then((doc) => model.findOne(doc._id))).to.eventually.exist.and.have.property('answer').is.a('number');
+            return chai.expect(model.findOne().then((doc) => model.findOne(doc._id))).to.eventually.exist.and.have.property("answer").is.a("number");
         });
 
         it("should retrieve the correct document by its ID",() => {
             return model.findOne().then((doc) => {
-                return chai.expect(model.findOne(doc._id)).to.eventually.exist.and.have.property('_id', doc._id);
+                return chai.expect(model.findOne(doc._id)).to.eventually.exist.and.have.property("_id", doc._id);
             });
         });
 
         it("should support retrieving a document using a selector query",() => {
-            return chai.expect(model.findOne({ answer: 10 })).to.eventually.exist.and.have.property('answer', 10);
+            return chai.expect(model.findOne({ answer: 10 })).to.eventually.exist.and.have.property("answer", 10);
         });
 
         it("should support passing options to control the query",() => {
             return chai.expect(model.findOne({}, {
                 sort: { answer: -1 }
-            })).to.eventually.exist.and.have.property('answer', 14);
+            })).to.eventually.exist.and.have.property("answer", 14);
         });
 
         it("should allow you to limit the returned fields",() => {
@@ -390,7 +390,7 @@ describe("Model",() => {
         it("should support a callback style instead of promises",(done) => {
             model.findOne((err, doc) => {
                 if (err) return done(err);
-                chai.expect(doc).to.exist.and.have.property('answer');
+                chai.expect(doc).to.exist.and.have.property("answer");
                 return done();
             });
         });
@@ -414,11 +414,11 @@ describe("Model",() => {
         });
 
         it("should exist",() => {
-            chai.expect(model.get).to.exist.and.be.a('function');
+            chai.expect(model.get).to.exist.and.be.a("function");
         });
 
         it("should support retrieving an random document",() => {
-            return chai.expect(model.get()).to.eventually.exist.and.have.property('answer').is.a('number');
+            return chai.expect(model.get()).to.eventually.exist.and.have.property("answer").is.a("number");
         });
 
         it("should support a query which returns nothing",() => {
@@ -426,23 +426,23 @@ describe("Model",() => {
         });
 
         it("should support retrieving a document using its ID",() => {
-            return chai.expect(model.get().then((doc) => model.get(doc._id))).to.eventually.exist.and.have.property('answer').is.a('number');
+            return chai.expect(model.get().then((doc) => model.get(doc._id))).to.eventually.exist.and.have.property("answer").is.a("number");
         });
 
         it("should retrieve the correct document by its ID",() => {
             return model.get().then((doc) => {
-                return chai.expect(model.get(doc._id)).to.eventually.exist.and.have.property('_id', doc._id);
+                return chai.expect(model.get(doc._id)).to.eventually.exist.and.have.property("_id", doc._id);
             });
         });
 
         it("should support retrieving a document using a selector query",() => {
-            return chai.expect(model.get({ answer: 10 })).to.eventually.exist.and.have.property('answer', 10);
+            return chai.expect(model.get({ answer: 10 })).to.eventually.exist.and.have.property("answer", 10);
         });
 
         it("should support passing options to control the query",() => {
             return chai.expect(model.get({}, {
                 sort: { answer: -1 }
-            })).to.eventually.exist.and.have.property('answer', 14);
+            })).to.eventually.exist.and.have.property("answer", 14);
         });
 
         it("should allow you to limit the returned fields",() => {
@@ -454,7 +454,7 @@ describe("Model",() => {
         it("should support a callback style instead of promises",(done) => {
             model.get((err, doc) => {
                 if (err) return done(err);
-                chai.expect(doc).to.exist.and.have.property('answer');
+                chai.expect(doc).to.exist.and.have.property("answer");
                 return done();
             });
         });
@@ -478,7 +478,7 @@ describe("Model",() => {
         });
 
         it("should exist",() => {
-            chai.expect(model.find).to.exist.and.be.a('function');
+            chai.expect(model.find).to.exist.and.be.a("function");
         });
 
         it("should return a cursor object",() => {
@@ -712,7 +712,7 @@ describe("Model",() => {
 
         describe("readFrom()", () => {
             it("should return a new cursor", () => {
-                chai.expect(model.find().readFrom('secondaryPreferred')).to.be.instanceof(Cursor);
+                chai.expect(model.find().readFrom("secondaryPreferred")).to.be.instanceof(Cursor);
             });
         });
     });
@@ -735,7 +735,7 @@ describe("Model",() => {
         });
 
         it("should exist",() => {
-            chai.expect(model.count).to.exist.and.be.a('function');
+            chai.expect(model.count).to.exist.and.be.a("function");
         });
 
         it("should select all documents by default",() => {
@@ -779,7 +779,7 @@ describe("Model",() => {
         });
 
         it("should exist",() => {
-            chai.expect(model.update).to.exist.and.be.a('function');
+            chai.expect(model.update).to.exist.and.be.a("function");
         });
 
         it("should use multi update by default",() => {
@@ -823,7 +823,7 @@ describe("Model",() => {
         });
 
         it("should exist",() => {
-            chai.expect(model.ensureIndex).to.exist.and.be.a('function');
+            chai.expect(model.ensureIndex).to.exist.and.be.a("function");
         });
 
         it("should allow the creation of indexes",() => {
@@ -860,7 +860,7 @@ describe("Model",() => {
         });
 
         it("should exist",() => {
-            chai.expect(model.ensureIndexes).to.exist.and.be.a('function');
+            chai.expect(model.ensureIndexes).to.exist.and.be.a("function");
         });
 
         it("should configure all indexes defined in the model's options", () => {
@@ -886,11 +886,11 @@ describe("Model",() => {
         });
 
         it("should exist",() => {
-            chai.expect(model.dropIndex).to.exist.and.be.a('function');
+            chai.expect(model.dropIndex).to.exist.and.be.a("function");
         });
 
         it("should remove the specified index",() => {
-            return chai.expect(model.dropIndex('answer_1')).to.eventually.be.true;
+            return chai.expect(model.dropIndex("answer_1")).to.eventually.be.true;
         });
 
         it("should remove the specified index using its definition",() => {
@@ -928,7 +928,7 @@ describe("Model",() => {
         });
 
         it("should exist",() => {
-            chai.expect(model.dropIndexes).to.exist.and.be.a('function');
+            chai.expect(model.dropIndexes).to.exist.and.be.a("function");
         });
 
         it("should remove all non-_id indexes on the collection",() => {
@@ -939,24 +939,24 @@ describe("Model",() => {
     describe("identifier transforms", () => {
         it("should have a default converter", () => {
             let model = new Iridium.Model<TestDocument, Test>(core, Test);
-            chai.expect(model.transforms).to.exist.and.have.property('_id').with.property('fromDB').which.is.a('function');
-            chai.expect(model.transforms).to.exist.and.have.property('_id').with.property('toDB').which.is.a('function');
+            chai.expect(model.transforms).to.exist.and.have.property("_id").with.property("fromDB").which.is.a("function");
+            chai.expect(model.transforms).to.exist.and.have.property("_id").with.property("toDB").which.is.a("function");
         });
 
         it("should have a default ObjectID to String converter", () => {
             let model = new Iridium.Model<TestDocument, Test>(core, Test);
-            chai.expect(model.transforms['_id'].fromDB(MongoDB.ObjectID.createFromHexString('aaaaaaaaaaaaaaaaaaaaaaaa'), '_id', model)).to.eql('aaaaaaaaaaaaaaaaaaaaaaaa');
-            chai.expect(model.transforms['_id'].toDB('aaaaaaaaaaaaaaaaaaaaaaaa', '_id', model)).to.eql(MongoDB.ObjectID.createFromHexString('aaaaaaaaaaaaaaaaaaaaaaaa'));
+            chai.expect(model.transforms["_id"].fromDB(MongoDB.ObjectID.createFromHexString("aaaaaaaaaaaaaaaaaaaaaaaa"), "_id", model)).to.eql("aaaaaaaaaaaaaaaaaaaaaaaa");
+            chai.expect(model.transforms["_id"].toDB("aaaaaaaaaaaaaaaaaaaaaaaa", "_id", model)).to.eql(MongoDB.ObjectID.createFromHexString("aaaaaaaaaaaaaaaaaaaaaaaa"));
         });
 
         it("should allow you to specify a custom converter by providing a property on the class", () => {
             let model = new Iridium.Model<TestDocument, TestWithCustomID>(core, TestWithCustomID);
 
-            chai.expect(model.transforms['_id']).to.exist.and.have.property('fromDB').which.is.a('function');
-            chai.expect(model.transforms['_id']).to.exist.and.have.property('toDB').which.is.a('function');
+            chai.expect(model.transforms["_id"]).to.exist.and.have.property("fromDB").which.is.a("function");
+            chai.expect(model.transforms["_id"]).to.exist.and.have.property("toDB").which.is.a("function");
 
-            chai.expect(model.transforms['_id'].fromDB(12, '_id', model)).to.eql(120);
-            chai.expect(model.transforms['_id'].toDB(120, '_id', model)).to.eql(12);
+            chai.expect(model.transforms["_id"].fromDB(12, "_id", model)).to.eql(120);
+            chai.expect(model.transforms["_id"].toDB(120, "_id", model)).to.eql(12);
         });
     });
 });

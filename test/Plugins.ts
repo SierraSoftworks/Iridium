@@ -1,9 +1,9 @@
 /// <reference path="../typings/DefinitelyTyped/tsd.d.ts" />
-import * as Iridium from '../index';
-import Skmatc = require('skmatc');
+import * as Iridium from "../index";
+import Skmatc = require("skmatc");
 
 class Test extends Iridium.Instance<any, Test> {
-    static collection = 'test';
+    static collection = "test";
     static schema: Iridium.Schema = {
         _id: false
     };
@@ -14,7 +14,7 @@ class Test extends Iridium.Instance<any, Test> {
 describe("Plugins",() => {
     let core: Iridium.Core;
     beforeEach(() => {
-        core = new Iridium.Core({ database: 'test' });
+        core = new Iridium.Core({ database: "test" });
     });
 
     describe("newModel",() => {
@@ -47,12 +47,12 @@ describe("Plugins",() => {
         it("should be able to make modifications to the model",() => {
             core.register({
                 newModel: (model) => {
-                    model.collectionName = 'changed';
+                    model.collectionName = "changed";
                 }
             });
 
             let model = new Iridium.Model<any, Test>(core, Test);
-            chai.expect(model.collectionName).to.exist.and.be.equal('changed');
+            chai.expect(model.collectionName).to.exist.and.be.equal("changed");
         });
     });
 
@@ -98,7 +98,7 @@ describe("Plugins",() => {
             });
 
             let instanceImplementation: any = function() { return {}; };
-            instanceImplementation.collection = 'test';
+            instanceImplementation.collection = "test";
             instanceImplementation.schema = {
                 _id: false
             };
@@ -120,14 +120,14 @@ describe("Plugins",() => {
         it("should allow a plugin to define a single validator",() => {
             core.register({
                 newInstance: (instance, model) => { },
-                validate: Skmatc.create((schema) => schema == 'Test', (schema, data) => this.assert(data == 'test'))
+                validate: Skmatc.create((schema) => schema == "Test", (schema, data) => this.assert(data == "test"))
             });
         });
 
         it("should allow a plugin to define multiple validators",() => {
             core.register({
                 newInstance: (instance, model) => { },
-                validate: [Skmatc.create((schema) => schema == 'Test',(schema, data) => this.assert(data == 'test'))]
+                validate: [Skmatc.create((schema) => schema == "Test",(schema, data) => this.assert(data == "test"))]
             });
         });
     });
