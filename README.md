@@ -4,9 +4,9 @@
 [![NPM Module](https://badge.fury.io/js/iridium.svg)](https://npmjs.org/package/iridium)
 [![Build Status](https://travis-ci.org/SierraSoftworks/Iridium.svg?branch=release)](https://travis-ci.org/SierraSoftworks/Iridium)
 [![Coverage Status](https://coveralls.io/repos/SierraSoftworks/Iridium/badge.svg?branch=release)](https://coveralls.io/r/SierraSoftworks/Iridium?branch=release)
-[![Code Climate](https://codeclimate.com/github/SierraSoftworks/Iridium/badges/gpa.svg)](https://codeclimate.com/github/SierraSoftworks/Iridium)
-[![Test Coverage](https://codeclimate.com/github/SierraSoftworks/Iridium/badges/coverage.svg)](https://codeclimate.com/github/SierraSoftworks/Iridium)
-
+[![bitHound Overall Score](https://www.bithound.io/github/SierraSoftworks/Iridium/badges/score.svg)](https://www.bithound.io/github/SierraSoftworks/Iridium)
+[![bitHound Code](https://www.bithound.io/github/SierraSoftworks/Iridium/badges/code.svg)](https://www.bithound.io/github/SierraSoftworks/Iridium)
+[![bitHound Dependencies](https://www.bithound.io/github/SierraSoftworks/Iridium/badges/dependencies.svg)](https://www.bithound.io/github/SierraSoftworks/Iridium/master/dependencies/npm)
 
 Iridium is designed to offer a high performance, easy to use and above all, editor friendly ODM for MongoDB on Node.js.
 Rather than adopting the "re-implement everything" approach often favoured by ODMs like Mongoose and friends, requiring
