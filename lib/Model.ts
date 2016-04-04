@@ -1,8 +1,8 @@
-﻿import MongoDB = require("mongodb");
-import Bluebird = require("bluebird");
-import util = require("util");
-import _ = require("lodash");
-import Skmatc = require("skmatc");
+﻿import * as  MongoDB from "mongodb";
+import * as Bluebird from "bluebird";
+import * as util from "util";
+import * as  _ from "lodash";
+import * as Skmatc from "skmatc";
 
 import {Core} from "./Core";
 import {Instance} from "./Instance";
@@ -263,14 +263,14 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
     find(conditions: { _id?: any, [key: string]: any }  | any, fields: { [name: string]: number }): Cursor<TDocument, TInstance>;
     find(conditions?: { _id?: any, [key: string]: any } | any, fields?: any): Cursor<TDocument, TInstance> {
         conditions = conditions || {};
-        fields = fields || {};
 
         if (!_.isPlainObject(conditions)) conditions = { _id: conditions };
         conditions = this._helpers.convertToDB(conditions);
 
-        let cursor = this.collection.find(conditions, {
-            fields: fields
-        });
+        let cursor = this.collection.find(conditions);
+        
+        if(fields)
+            cursor = cursor.project(fields);
 
         return new Cursor<TDocument, TInstance>(this, conditions, cursor);
     }
@@ -379,15 +379,23 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
         }).then((cachedDocument: TDocument) => {
             if (cachedDocument) return cachedDocument;
             return new Bluebird<any>((resolve, reject) => {
-                this.collection.findOne(conditions, <MongoDB.CollectionFindOptions>{
-                    fields: options.fields,
-                    skip: options.skip,
-                    sort: options.sort,
-                    limit: options.limit
-                }, (err, result) => {
-                        if (err) return reject(err);
-                        return resolve(result);
-                    });
+                let cursor = this.collection.find(conditions);
+                    
+                if(options.sort)
+                    cursor = cursor.sort(options.sort);
+                
+                if(typeof options.skip === "number")
+                    cursor = cursor.skip(options.skip);
+                
+                cursor = cursor.limit(1);
+                    
+                if(options.fields)
+                    cursor = cursor.project(options.fields);
+                
+                return cursor.next((err, result) => {
+                    if (err) return reject(err);
+                    return resolve(result);
+                });
             });
         }).then((document: TDocument) => {
             if (!document) return null;
@@ -487,9 +495,12 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
                 let docs = this._handlers.creatingDocuments(objects);
                 return docs.map((object: { _id: any; }) => {
                     return new Bluebird<any[]>((resolve, reject) => {
-                        this.collection.findAndModify({ _id: object._id }, ["_id"], object, queryOptions, (err, result) => {
+                        this.collection.findOneAndUpdate({ _id: object._id }, object, {
+                            upsert: options.upsert,
+                            returnOriginal: false
+                        }, (err, result) => {
                             if (err) return reject(err);
-                            return resolve(result);
+                            return resolve(result.value);
                         });
                     });
                 });
@@ -648,7 +659,12 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
             conditions = this._helpers.convertToDB(conditions);
 
             return new Bluebird<number>((resolve, reject) => {
-                this.collection.remove(conditions, options, (err, response) => {
+                if(options.single) return this.collection.deleteOne(conditions, options, (err, response) => {
+                    if (err) return reject(err);
+                    return resolve(response.result.n);
+                });
+                
+                this.collection.deleteMany(conditions, options, (err, response) => {
                     if (err) return reject(err);
                     return resolve(response.result.n);
                 });
@@ -690,7 +706,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
         }
 
         return new Bluebird<string>((resolve, reject) => {
-            this.collection.ensureIndex(specification, options, (err, name: any) => {
+            this.collection.createIndex(specification, options, (err, name: any) => {
                 if (err) return reject(err);
                 return resolve(name);
             });
@@ -745,7 +761,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      */
     dropIndexes(callback?: General.Callback<boolean>): Bluebird<boolean> {
         return new Bluebird<any>((resolve, reject) => {
-            this.collection.dropAllIndexes((err, count) => {
+            this.collection.dropIndexes((err, count) => {
                 if (err) return reject(err);
                 return resolve(count);
             });

@@ -1,6 +1,6 @@
-﻿/// <reference path="../typings/DefinitelyTyped/tsd.d.ts" />
+﻿/// <reference path="../typings/tsd.d.ts" />
 import {Omnom} from "../lib/utils/Omnom";
-import MongoDB = require("mongodb");
+import * as MongoDB from "mongodb";
 
 describe("Omnom",() => {
     it("should correctly diff basic objects",() => {

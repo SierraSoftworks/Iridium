@@ -1,4 +1,4 @@
-import http = require("http");
+import * as http from "http";
 import {MiddlewareFactory} from "../Middleware";
 import {Core} from "../Core";
 

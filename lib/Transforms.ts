@@ -1,4 +1,4 @@
-import MongoDB = require("mongodb");
+import * as MongoDB from "mongodb";
 import {Model} from "./Model";
 import * as BSON from "./BSON"; 
 

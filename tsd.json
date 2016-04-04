@@ -2,29 +2,35 @@
 	"version": "v4",
 	"repo": "borisyankov/DefinitelyTyped",
 	"ref": "master",
-	"path": "typings/DefinitelyTyped",
-	"bundle": "typings/DefinitelyTyped/tsd.d.ts",
+	"path": "typings",
+	"bundle": "typings/tsd.d.ts",
 	"installed": {
-		"mongodb/mongodb.d.ts": {
-			"commit": "95d860879fb90c405aeb13eea7b8564f9c0df2bf"
-		},
-		"bluebird/bluebird.d.ts": {
-			"commit": "95d860879fb90c405aeb13eea7b8564f9c0df2bf"
-		},
-		"lodash/lodash.d.ts": {
-			"commit": "95d860879fb90c405aeb13eea7b8564f9c0df2bf"
-		},
-		"node/node.d.ts": {
-			"commit": "95d860879fb90c405aeb13eea7b8564f9c0df2bf"
-		},
-		"mocha/mocha.d.ts": {
-			"commit": "cb08e83dd87ace1202d1032a8f275b3efacde5c3"
+		"promises-a-plus/promises-a-plus.d.ts": {
+			"commit": "d969b903d1fce89a5e43828ec68458b4f852db4d"
 		},
 		"chai/chai.d.ts": {
-			"commit": "cb08e83dd87ace1202d1032a8f275b3efacde5c3"
+			"commit": "d969b903d1fce89a5e43828ec68458b4f852db4d"
+		},
+		"mocha/mocha.d.ts": {
+			"commit": "d969b903d1fce89a5e43828ec68458b4f852db4d"
+		},
+		"bluebird/bluebird.d.ts": {
+			"commit": "d969b903d1fce89a5e43828ec68458b4f852db4d"
+		},
+		"assertion-error/assertion-error.d.ts": {
+			"commit": "d969b903d1fce89a5e43828ec68458b4f852db4d"
 		},
 		"chai-as-promised/chai-as-promised.d.ts": {
-			"commit": "cb08e83dd87ace1202d1032a8f275b3efacde5c3"
+			"commit": "d969b903d1fce89a5e43828ec68458b4f852db4d"
+		},
+		"node/node.d.ts": {
+			"commit": "d969b903d1fce89a5e43828ec68458b4f852db4d"
+		},
+		"lodash/lodash.d.ts": {
+			"commit": "d969b903d1fce89a5e43828ec68458b4f852db4d"
+		},
+		"mongodb/mongodb.d.ts": {
+			"commit": "d969b903d1fce89a5e43828ec68458b4f852db4d"
 		}
 	}
 }

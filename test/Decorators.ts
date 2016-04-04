@@ -1,7 +1,7 @@
-/// <reference path="../typings/DefinitelyTyped/tsd.d.ts" />
+/// <reference path="../typings/tsd.d.ts" />
 import * as Iridium from "../index";
-import skmatc = require("skmatc");
-import MongoDB = require("mongodb");
+import * as skmatc from "skmatc";
+import * as MongoDB from "mongodb";
 import {DefaultValidators} from "../lib/Validators";
 
 interface TestDocument {

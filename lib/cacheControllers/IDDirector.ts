@@ -1,5 +1,5 @@
 import {CacheDirector} from "../CacheDirector";
-import MongoDB = require("mongodb");
+import * as MongoDB from "mongodb";
 
 /**
  * Caches documents using their _id field as the unique cache key. This

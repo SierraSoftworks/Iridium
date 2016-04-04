@@ -1,5 +1,4 @@
-﻿/// <reference path="../typings/DefinitelyTyped/tsd.d.ts" />
-import * as Iridium from "../index";
+﻿import * as Iridium from "../index";
 
 describe("Iridium",() => {
     it("should expose the Core",() => {

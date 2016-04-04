@@ -1,4 +1,4 @@
-import Skmatc = require("skmatc");
+import * as Skmatc from "skmatc";
 import {Schema} from "./Schema";
 import {Model} from "./Model";
 import * as Index from "./Index";
@@ -60,7 +60,7 @@ export interface InstanceImplementation<TDocument extends { _id ?: any }, TInsta
      * document inserted into the database. As a result, long running tasks will have a significant impact
      * on the performance of your inserts.
      */
-    onCreating? (document: TDocument): Promise.Thenable<any> | void;
+    onCreating? (document: TDocument): Promise<any> | void;
 
     /**
      * An optional method which is called whenever a new document is received from the model's collection and
@@ -74,7 +74,7 @@ export interface InstanceImplementation<TDocument extends { _id ?: any }, TInsta
      * document retrieved from the database. As a result, long running tasks will have a significant impact
      * on the performance of your queries.
      */
-    onRetrieved? (document: TDocument): Promise.Thenable<any> | void;
+    onRetrieved? (document: TDocument): Promise<any> | void;
 
     /**
      * An optional method which is called whenever a new document for this model has been wrapped in an instance.
@@ -86,7 +86,7 @@ export interface InstanceImplementation<TDocument extends { _id ?: any }, TInsta
      * document retrieved from the database. As a result, long running tasks will have a significant impact
      * on the performance of your queries.
      */
-    onReady? (instance: TInstance): Promise.Thenable<any> | void;
+    onReady? (instance: TInstance): Promise<any> | void;
 
     /**
      * An optional method which is called prior to saving an instance, it is provided with the instance itself as
@@ -101,7 +101,7 @@ export interface InstanceImplementation<TDocument extends { _id ?: any }, TInsta
      * call to save. As a result, long running tasks will have a significant impact on how quickly your save
      * operations are dispatched.
      */
-    onSaving? (instance: TInstance, changes: any): Promise.Thenable<any> | void;
+    onSaving? (instance: TInstance, changes: any): Promise<any> | void;
 
     /**
      * The cache controller used to determine whether a document may be cached, as well as deriving a unique cache

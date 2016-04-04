@@ -1,5 +1,5 @@
-import MongoDB = require("mongodb");
-import _ = require("lodash");
+import * as MongoDB from "mongodb";
+import * as _ from "lodash";
 import Skmatc = require("skmatc");
 import {Instance} from "./Instance";
 import {Model} from "./Model";

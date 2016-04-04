@@ -1,9 +1,9 @@
-﻿import MongoDB = require("mongodb");
+﻿import * as MongoDB from "mongodb";
 import {Model} from "./Model";
-import Skmatc = require("skmatc");
+import * as Skmatc from "skmatc";
 import {Omnom} from "./utils/Omnom";
-import _ = require("lodash");
-import Bluebird = require("bluebird");
+import * as _ from "lodash";
+import * as Bluebird from "bluebird";
 
 /**
  * A number of helper methods used commonly within Iridium, they provide a means to transform,

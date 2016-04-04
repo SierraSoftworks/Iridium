@@ -107,7 +107,7 @@ var Instance = (function () {
                             err["changes"] = changes;
                             return reject(err);
                         }
-                        return resolve(changed);
+                        return resolve(!!changed.modifiedCount);
                     });
                 });
             }
@@ -120,7 +120,7 @@ var Instance = (function () {
             if (!changed)
                 return _this._modified;
             return new Bluebird(function (resolve, reject) {
-                _this._model.collection.findOne(conditions, function (err, latest) {
+                _this._model.collection.find(conditions).limit(1).next(function (err, latest) {
                     if (err)
                         return reject(err);
                     return resolve(latest);
@@ -159,7 +159,7 @@ var Instance = (function () {
         var conditions = { _id: this._original._id };
         return Bluebird.resolve().then(function () {
             return new Bluebird(function (resolve, reject) {
-                _this._model.collection.findOne(conditions, function (err, doc) {
+                _this._model.collection.find(conditions).limit(1).next(function (err, doc) {
                     if (err)
                         return reject(err);
                     return resolve(doc);
@@ -201,7 +201,7 @@ var Instance = (function () {
             if (_this._isNew)
                 return 0;
             return new Bluebird(function (resolve, reject) {
-                _this._model.collection.remove(conditions, { w: "majority" }, function (err, removed) {
+                _this._model.collection.deleteOne(conditions, { w: "majority" }, function (err, removed) {
                     if (err)
                         return reject(err);
                     return resolve(removed);

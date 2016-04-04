@@ -9,10 +9,10 @@ import {Schema} from "./Schema";
 import {Transforms} from "./Transforms";
 import {DefaultValidators} from "./Validators";
 
-import _ = require("lodash");
-import MongoDB = require("mongodb");
-import Bluebird = require("bluebird");
-import Skmatc = require("skmatc");
+import * as _ from "lodash";
+import * as MongoDB from "mongodb";
+import * as Bluebird from "bluebird";
+import * as Skmatc from "skmatc";
 
 /**
  * The default Iridium Instance implementation which provides methods for saving, refreshing and
@@ -69,20 +69,20 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
      * A function which is called whenever a new document is in the process of being inserted into the database.
      * @param document The document which will be inserted into the database.
      */
-    static onCreating: (document: { _id?: any }) => Promise.Thenable<any> | void;
+    static onCreating: (document: { _id?: any }) => Promise<any> | void;
 
     /**
      * A function which is called whenever a document of this type is received from the database, prior to it being
      * wrapped by an Instance object.
      * @param document The document that was retrieved from the database.
      */
-    static onRetrieved: (document: { _id?: any }) => Promise.Thenable<any> | void;
+    static onRetrieved: (document: { _id?: any }) => Promise<any> | void;
 
     /**
      * A function which is called whenever a new instance has been created to wrap a document.
      * @param instance The instance which has been created.
      */
-    static onReady: (instance: Instance<{ _id?: any }, Instance<{ _id?: any }, any>>) => Promise.Thenable<any> | void;
+    static onReady: (instance: Instance<{ _id?: any }, Instance<{ _id?: any }, any>>) => Promise<any> | void;
 
     /**
      * A function which is called whenever an instance's save() method is called to allow you to interrogate and/or manipulate
@@ -91,7 +91,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
      * @param instance The instance to which the changes are being made
      * @param changes The MongoDB change object describing the changes being made to the document.
      */
-    static onSaving: (instance: Instance<{ _id?: any }, Instance<{ _id?: any }, any>>, changes: any) => Promise.Thenable<any> | void;
+    static onSaving: (instance: Instance<{ _id?: any }, Instance<{ _id?: any }, any>>, changes: any) => Promise<any> | void;
 
     /**
      * The name of the collection into which documents of this type are stored.
@@ -195,14 +195,14 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
                 });
             } else {
                 return new Bluebird<boolean>((resolve: (changed: boolean) => void, reject) => {
-                    this._model.collection.updateOne(conditions, changes, { w: "majority" }, (err: Error, changed: boolean) => {
+                    this._model.collection.updateOne(conditions, changes, { w: "majority" }, (err, changed) => {
                         if(err) {
                             err["conditions"] = conditions;
                             err["changes"] = changes;
                             return reject(err);
                         }
 
-                        return resolve(changed);
+                        return resolve(!!changed.modifiedCount);
                     });
                 });
             }
@@ -215,7 +215,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
             if (!changed) return this._modified;
 
             return new Bluebird<TDocument>((resolve, reject) => {
-                this._model.collection.findOne(conditions, (err: Error, latest) => {
+                this._model.collection.find(conditions).limit(1).next((err: Error, latest) => {
                     if (err) return reject(err);
                     return resolve(latest);
                 });
@@ -256,7 +256,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
 
         return Bluebird.resolve().then(() => {
             return new Bluebird<TDocument>((resolve, reject) => {
-                this._model.collection.findOne(conditions, (err: Error, doc: any) => {
+                this._model.collection.find(conditions).limit(1).next((err: Error, doc: any) => {
                     if (err) return reject(err);
                     return resolve(doc);
                 });
@@ -300,7 +300,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
         return Bluebird.resolve().then(() => {
             if (this._isNew) return 0;
             return new Bluebird<number>((resolve, reject) => {
-                this._model.collection.remove(conditions, { w: "majority" }, (err: Error, removed?: any) => {
+                this._model.collection.deleteOne(conditions, { w: "majority" }, (err: Error, removed?: any) => {
                     if (err) return reject(err);
                     return resolve(removed);
                 });

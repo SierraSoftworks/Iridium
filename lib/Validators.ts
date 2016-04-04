@@ -1,5 +1,5 @@
-import MongoDB = require("mongodb");
-import Skmatc = require("skmatc");
+import * as MongoDB from "mongodb";
+import * as Skmatc from "skmatc";
 
 export function DefaultValidators() {
 	return [

@@ -248,13 +248,12 @@ var Model = (function () {
     });
     Model.prototype.find = function (conditions, fields) {
         conditions = conditions || {};
-        fields = fields || {};
         if (!_.isPlainObject(conditions))
             conditions = { _id: conditions };
         conditions = this._helpers.convertToDB(conditions);
-        var cursor = this.collection.find(conditions, {
-            fields: fields
-        });
+        var cursor = this.collection.find(conditions);
+        if (fields)
+            cursor = cursor.project(fields);
         return new Cursor_1.Cursor(this, conditions, cursor);
     };
     Model.prototype.get = function () {
@@ -297,12 +296,15 @@ var Model = (function () {
             if (cachedDocument)
                 return cachedDocument;
             return new Bluebird(function (resolve, reject) {
-                _this.collection.findOne(conditions, {
-                    fields: options.fields,
-                    skip: options.skip,
-                    sort: options.sort,
-                    limit: options.limit
-                }, function (err, result) {
+                var cursor = _this.collection.find(conditions);
+                if (options.sort)
+                    cursor = cursor.sort(options.sort);
+                if (typeof options.skip === "number")
+                    cursor = cursor.skip(options.skip);
+                cursor = cursor.limit(1);
+                if (options.fields)
+                    cursor = cursor.project(options.fields);
+                return cursor.next(function (err, result) {
                     if (err)
                         return reject(err);
                     return resolve(result);
@@ -351,10 +353,13 @@ var Model = (function () {
                 var docs = _this._handlers.creatingDocuments(objects);
                 return docs.map(function (object) {
                     return new Bluebird(function (resolve, reject) {
-                        _this.collection.findAndModify({ _id: object._id }, ["_id"], object, queryOptions, function (err, result) {
+                        _this.collection.findOneAndUpdate({ _id: object._id }, object, {
+                            upsert: options.upsert,
+                            returnOriginal: false
+                        }, function (err, result) {
                             if (err)
                                 return reject(err);
-                            return resolve(result);
+                            return resolve(result.value);
                         });
                     });
                 });
@@ -454,7 +459,13 @@ var Model = (function () {
         return Bluebird.resolve().then(function () {
             conditions = _this._helpers.convertToDB(conditions);
             return new Bluebird(function (resolve, reject) {
-                _this.collection.remove(conditions, options, function (err, response) {
+                if (options.single)
+                    return _this.collection.deleteOne(conditions, options, function (err, response) {
+                        if (err)
+                            return reject(err);
+                        return resolve(response.result.n);
+                    });
+                _this.collection.deleteMany(conditions, options, function (err, response) {
                     if (err)
                         return reject(err);
                     return resolve(response.result.n);
@@ -483,7 +494,7 @@ var Model = (function () {
             options = {};
         }
         return new Bluebird(function (resolve, reject) {
-            _this.collection.ensureIndex(specification, options, function (err, name) {
+            _this.collection.createIndex(specification, options, function (err, name) {
                 if (err)
                     return reject(err);
                 return resolve(name);
@@ -525,7 +536,7 @@ var Model = (function () {
     Model.prototype.dropIndexes = function (callback) {
         var _this = this;
         return new Bluebird(function (resolve, reject) {
-            _this.collection.dropAllIndexes(function (err, count) {
+            _this.collection.dropIndexes(function (err, count) {
                 if (err)
                     return reject(err);
                 return resolve(count);

@@ -1,7 +1,6 @@
-﻿/// <reference path="../typings/DefinitelyTyped/tsd.d.ts" />
-import * as Iridium from "../index";
-import MongoDB = require("mongodb");
-import Bluebird = require("bluebird");
+﻿import * as Iridium from "../index";
+import * as MongoDB from "mongodb";
+import * as Bluebird from "bluebird";
 
 interface TestDocument {
     _id?: string;
@@ -156,15 +155,16 @@ describe("Instance",() => {
         beforeEach(() => core.Test.remove());
 
         it("should avoid making calls to the database if no changes were made to the instance",() => {
-            let update = core.Test.collection.update;
-            core.Test.collection.update = () => {
+            let update = core.Test.collection.updateOne;
+            core.Test.collection.updateOne = (...args) => {
                 chai.assert.fail();
+                return update.apply(core.Test.collection, args);
             };
 
             return core.Test.insert({
                 answer: 1
             }).then(() => core.Test.get()).then(instance => instance.save()).then(() => {
-                core.Test.collection.update = update;
+                core.Test.collection.updateOne = update;
             });
         });
 

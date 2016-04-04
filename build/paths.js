@@ -4,8 +4,8 @@ module.exports = {
 	projectRoot: path.dirname(__dirname),
 	coverageFolder: path.resolve(__dirname, '../coverage'),
 
-	buildFiles: ["typings/DefinitelyTyped/tsd.d.ts", "lib/**/*.ts", "index.ts"],
-	testFiles: ["typings/DefinitelyTyped/tsd.d.ts", "test/**/*.ts"],
+	buildFiles: ["typings/tsd.d.ts", "lib/**/*.ts", "index.ts"],
+	testFiles: ["typings/tsd.d.ts", "test/**/*.ts"],
 	cleanFiles: ["coverage", "dist"],
 
 	builtTestFiles: 'dist/test/*.js',
@@ -13,7 +13,7 @@ module.exports = {
 	testSupportFiles: ['dist/test/support/chai'],
 
 	docSourceFiles: [
-		"typings/DefinitelyTyped/tsd.d.ts",
+		"typings/tsd.d.ts",
 		"lib/Core.ts",
 		"lib/Model.ts",
 		"lib/Instance.ts",

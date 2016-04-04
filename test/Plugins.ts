@@ -1,6 +1,6 @@
-/// <reference path="../typings/DefinitelyTyped/tsd.d.ts" />
+/// <reference path="../typings/tsd.d.ts" />
 import * as Iridium from "../index";
-import Skmatc = require("skmatc");
+import * as Skmatc from "skmatc";
 
 class Test extends Iridium.Instance<any, Test> {
     static collection = "test";

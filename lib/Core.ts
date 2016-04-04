@@ -1,6 +1,6 @@
-import Bluebird = require("bluebird");
-import MongoDB = require("mongodb");
-import _ = require("lodash");
+import * as Bluebird from "bluebird";
+import * as MongoDB from "mongodb";
+import * as _ from "lodash";
 import http = require("http");
 import events = require("events");
 

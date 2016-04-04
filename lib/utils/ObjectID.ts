@@ -1,4 +1,4 @@
-import MongoDB = require("mongodb");
+import * as MongoDB from "mongodb";
 
 /**
  * Converts a string to an ObjectID instance - a shortcut for require("mongodb").ObjectID.createFromHexString

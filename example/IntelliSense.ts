@@ -1,6 +1,7 @@
 ﻿
-/// <reference path="../iridium.d.ts" />
-import Iridium = require("iridium");
+/// <reference path="../typings/DefinitelyTyped/tsd.d.ts"/>
+import * as Iridium from "../index";
+import Bluebird = require('bluebird');
 
 interface UserDoc {
     _id?: string;
@@ -12,13 +13,22 @@ interface UserDoc {
     joined?: Date;
 }
 
+@Iridium.Collection("users")
+@Iridium.Index({ email: 1 }, { unique: true })
 class User extends Iridium.Instance<UserDoc, User> implements UserDoc, Iridium.Hooks<UserDoc, User> {
+    @Iridium.ObjectID
     _id: string;
+    @Iridium.Property(String)
     username: string;
+    @Iridium.Property(String)
     fullname: string;
+    @Iridium.Property(String)
     email: string;
+    @Iridium.Property(Date)
     dateOfBirth: Date;
+    @Iridium.Property(String)
     passwordHash: string;
+    @Iridium.Property(Date)
     joined: Date;
 
     changePassword(newPassword: string) {
@@ -31,61 +41,42 @@ class User extends Iridium.Instance<UserDoc, User> implements UserDoc, Iridium.H
 }
 
 class MyDB extends Iridium.Core {
-    Users = new Iridium.Model<UserDoc, User>(this, User, "users", {
-        _id: false,
-        username: /^[a-z][a-z0-9_]{7,}$/,
-        fullname: String,
-        email: String,
-        dateOfBirth: Date,
-        passwordHash: String,
-        joined: Date
-    }, {
-        indexes: [
-            { email: 1 }
-        ]
-    });
-
-    PlainUsers = new Iridium.Model<UserDoc, UserDoc>(this,(model, doc) => doc, "users", {
-        _id: false,
-        username: /^[a-z][a-z0-9_]{7,}$/,
-        fullname: String,
-        email: String,
-        dateOfBirth: Date,
-        passwordHash: String,
-        joined: Date
-    }, {
-        indexes: [
-            { email: 1 }
-        ]
-    });
+    Users = new Iridium.Model<UserDoc, User>(this, User);
 }
 
 var db = new MyDB("mongodb://localhost/test");
 
 db.connect().then(function () {
-    db.Users.insert({ fullname: "test", username: "test", passwordHash: "test", email: "test@test.com", dateOfBirth: new Date() }).then(function (user) {
-        user.fullname;
+    db.Users.insert({
+        fullname: "test",
+        username: "test",
+        passwordHash: "test",
+        email: "test@test.com",
+        dateOfBirth: new Date()
+    }).then(user => {
         user.dateOfBirth.getTime();
     });
 
-    db.Users.insert([{ fullname: "test", username: "test", passwordHash: "test", email: "test@test.com", dateOfBirth: new Date() }]).then(function (users) {
+    db.Users.insert([{
+        fullname: "test",
+        username: "test",
+        passwordHash: "test",
+        email: "test@test.com",
+        dateOfBirth: new Date() 
+    }]).then(users => {
         users[0].fullname;
     });
     
-    db.Users.findOne().then(function (instance) {
-        instance.save().then(function (i) {
-            i.remove().then(function (i) {
-                i.username = "test";
-                return i.save();
+    db.Users.findOne().then(user => {
+        user.save().then(() => {
+            user.remove().then(() => {
+                user.username = "test";
+                return user.save();
             });
         });
     });
     
-    db.Users.count().then(function (count) {
+    db.Users.count().then(count => {
         count.toPrecision(2);
-    });
-
-    db.PlainUsers.get().then(function (plainUser) {
-        plainUser.username;
     });
 });

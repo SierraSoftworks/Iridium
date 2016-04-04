@@ -1,9 +1,9 @@
-/// <reference path="../typings/DefinitelyTyped/tsd.d.ts" />
+/// <reference path="../typings/tsd.d.ts" />
 import * as Iridium from "../index";
-import MongoDB = require("mongodb");
+import * as MongoDB from "mongodb";
 import {Cursor} from "../lib/Cursor";
-import Promise = require("bluebird");
-import _ = require("lodash");
+import * as Promise from "bluebird";
+import * as _ from "lodash";
 
 interface TestDocument {
     _id?: string;

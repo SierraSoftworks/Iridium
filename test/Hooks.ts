@@ -1,7 +1,7 @@
-﻿/// <reference path="../typings/DefinitelyTyped/tsd.d.ts" />
+﻿/// <reference path="../typings/tsd.d.ts" />
 import * as Iridium from "../index";
-import Events = require("events");
-import Promise = require("bluebird");
+import * as Events from "events";
+import * as Promise from "bluebird";
 
 interface TestDocument {
     id?: string;
@@ -79,7 +79,7 @@ describe("Hooks", function () {
         it("should support blocking async calls", () => {
             let result: boolean = false;
             Test.onCreating = (document: TestDocument) => {
-                return Promise.delay(true, 50).then(() => result = true);
+                return Promise.delay(50, true).then(() => result = true);
             };
 
             return model.insert({ answer: 11 }).then(() => chai.expect(result).to.be.true);
@@ -117,7 +117,7 @@ describe("Hooks", function () {
         it("should support blocking async calls", () => {
             let result: boolean = false;
             Test.onReady = (instance: Test) => {
-                return Promise.delay(true, 50).then(() => result = true);
+                return Promise.delay(50, true).then(() => result = true);
             };
 
             return model.get().then(() => chai.expect(result).to.be.true);
@@ -155,7 +155,7 @@ describe("Hooks", function () {
         it("should support blocking async calls", () => {
             let result: boolean = false;
             Test.onRetrieved = (document: TestDocument) => {
-                return Promise.delay(true, 50).then(() => result = true);
+                return Promise.delay(50, true).then(() => result = true);
             };
 
             return model.get().then(() => chai.expect(result).to.be.true);
@@ -216,7 +216,7 @@ describe("Hooks", function () {
         it("should support blocking async calls", () => {
             let result: boolean = false;
             Test.onSaving = (instance: Test, changes: any) => {
-                return Promise.delay(true, 50).then(() => result = true);
+                return Promise.delay(50, true).then(() => result = true);
             };
 
             return model.get().then((instance) => {

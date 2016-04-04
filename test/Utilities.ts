@@ -1,6 +1,6 @@
-/// <reference path="../typings/DefinitelyTyped/tsd.d.ts" />
+/// <reference path="../typings/tsd.d.ts" />
 import * as Iridium from "../index";
-import MongoDB = require("mongodb");
+import * as MongoDB from "mongodb";
 
 describe("Utilities", () => {
 	describe("toObjectID", () => {

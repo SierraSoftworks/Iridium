@@ -1,5 +1,5 @@
 ﻿import {Model} from "./Model";
-import Bluebird = require("bluebird");
+import * as Bluebird from "bluebird";
 
 /**
  * A centralized class which ties the cache and cache directors together in a cohesive way

@@ -1,7 +1,7 @@
-/// <reference path="../typings/DefinitelyTyped/tsd.d.ts" />
+/// <reference path="../typings/tsd.d.ts" />
 import * as Iridium from "../index";
-import MongoDB = require("mongodb");
-import Events = require("events");
+import * as MongoDB from "mongodb";
+import * as Events from "events";
 
 import {DefaultTransforms} from "../lib/Transforms";
 

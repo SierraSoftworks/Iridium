@@ -1,7 +1,7 @@
 ﻿import {Model} from "./Model";
-import General = require("./General");
-import MongoDB = require("mongodb");
-import Bluebird = require("bluebird");
+import * as General from "./General";
+import * as MongoDB from "mongodb";
+import * as Bluebird from "bluebird";
 import * as Index from "./Index";
 
 /**

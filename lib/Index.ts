@@ -1,4 +1,4 @@
-﻿import MongoDB = require("mongodb");
+﻿import * as MongoDB from "mongodb";
 
 export interface Index {
     spec: IndexSpecification;

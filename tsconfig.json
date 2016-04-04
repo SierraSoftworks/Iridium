@@ -9,7 +9,7 @@
 		"outDir": "./dist/"
 	},
 	"files": [
-		"typings/DefinitelyTyped/tsd.d.ts",
+		"typings/tsd.d.ts",
 		"index.ts"
 	]
 }

@@ -8,7 +8,7 @@ var tsProjectLib = typescript.createProject('tsconfig.json', {
 	typescript: require('typescript')
 });
 
-var tsProjectTest = typescript.createProject('test/tsconfig.json', {
+var tsProjectTest = typescript.createProject('tsconfig.json', {
 	typescript: require('typescript')
 });
 

@@ -1,7 +1,7 @@
-﻿/// <reference path="../typings/DefinitelyTyped/tsd.d.ts" />
+﻿/// <reference path="../typings/tsd.d.ts" />
 import * as Iridium from "../index";
-import events = require("events");
-import Bluebird = require("bluebird");
+import * as events from "events";
+import * as Bluebird from "bluebird";
 
 class InheritedCore extends Iridium.Core {
     theAnswer = 42;

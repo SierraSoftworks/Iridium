@@ -5,9 +5,9 @@ import {ModelCache} from "./ModelCache";
 import * as ModelOptions from "./ModelOptions";
 
 import Skmatc = require("skmatc");
-import _ = require("lodash");
-import MongoDB = require("mongodb");
-import Bluebird = require("bluebird");
+import * as _ from "lodash";
+import * as MongoDB from "mongodb";
+import * as Bluebird from "bluebird";
 
 /**
  * Provides a number of methods which are used to handle events that occur within

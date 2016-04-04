@@ -1,4 +1,4 @@
-﻿import MongoDB = require("mongodb");
+﻿import * as MongoDB from "mongodb";
 import * as Index from "./Index";
 import {Hooks} from "./Hooks";
 import {CacheDirector} from "./CacheDirector";
@@ -129,7 +129,7 @@ export interface RemoveOptions {
      * or not. By specifying 1 here, you imply w:1 - howver this can be combined with w:"majority"
      * to give excellent write reliability within a cluster, even across failures.
      */
-    j?: number;
+    j?: boolean;
 
     /**
      * Whether to only remove the first document in the collection or not, by default this is false

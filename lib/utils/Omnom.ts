@@ -1,5 +1,5 @@
-import _ = require("lodash");
-import MongoDB = require("mongodb");
+import * as _ from "lodash";
+import * as MongoDB from "mongodb";
 
 export class Omnom {
     constructor(public options: {
