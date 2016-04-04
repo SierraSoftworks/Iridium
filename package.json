@@ -30,9 +30,9 @@
   },
   "dependencies": {
     "bluebird": "^3.3.4",
-    "lodash": "^4.6.1",
-    "mongodb": "~2.1.7",
-    "skmatc": "^1.2.0"
+    "lodash": "^4.8.1",
+    "mongodb": "~2.1.14",
+    "skmatc": "~1.2.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
