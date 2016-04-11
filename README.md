@@ -32,8 +32,8 @@ methods returning promises for their results and sensible, type annotated result
    can be found at [sierrasoftworks.github.io/Iridium](http://sierrasoftworks.github.io/Iridium).
 
 ## Requirements
-Iridium is built on top of a number of very modern technologies, including TypeScript 1.5, JavaScript ES6 (though we do compile
-to ES5 for compatibility with existing Node.js implementations) and the latest MongoDB Node.js Driver (version 2.0).
+Iridium is built on top of a number of very modern technologies, including TypeScript 1.8, JavaScript ES6 (though we do compile
+to ES5 for compatibility with existing Node.js implementations) and the latest MongoDB Node.js Driver (version 2.1).
 
 For starters, you will need to be running MongoDB 2.6 or later in order to use Iridium - however we recommend you use MongoDB 3.0
 due to the various performance improvements they've made. If you're working with TypeScript, you will also need to use the 1.5
