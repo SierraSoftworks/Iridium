@@ -2,6 +2,7 @@
 function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
+/// <reference path="./typings/main.d.ts" />
 __export(require("./lib/Core"));
 __export(require("./lib/Model"));
 __export(require("./lib/Instance"));
