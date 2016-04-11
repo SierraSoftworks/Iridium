@@ -10,7 +10,5 @@ node_modules/
 .idea
 *.tmp
 coverage/
-typings/DefinitelyTyped/**/*.d.ts
 .tscache
-dist/test/
 doc
