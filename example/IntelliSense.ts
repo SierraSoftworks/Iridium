@@ -1,6 +1,4 @@
-﻿
-/// <reference path="../typings/DefinitelyTyped/tsd.d.ts"/>
-import * as Iridium from "../index";
+﻿import * as Iridium from "../index";
 import Bluebird = require('bluebird');
 
 interface UserDoc {

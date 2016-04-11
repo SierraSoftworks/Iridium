@@ -8,8 +8,9 @@
 		"experimentalDecorators": true,
 		"outDir": "./dist/"
 	},
-	"files": [
-		"typings/tsd.d.ts",
-		"index.ts"
+	"exclude": [
+		"node_modules",
+        "typings/browser",
+        "typings/browser.d.ts"
 	]
 }

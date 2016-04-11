@@ -1,5 +1,4 @@
-﻿/// <reference path="../typings/tsd.d.ts" />
-import {Omnom} from "../lib/utils/Omnom";
+﻿import {Omnom} from "../lib/utils/Omnom";
 import * as MongoDB from "mongodb";
 
 describe("Omnom",() => {

@@ -1,4 +1,3 @@
-/// <reference path="../typings/tsd.d.ts" />
 import * as Iridium from "../index";
 import * as Skmatc from "skmatc";
 

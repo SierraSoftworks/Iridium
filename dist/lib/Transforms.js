@@ -22,5 +22,3 @@ exports.DefaultTransforms = {
         }
     }
 };
-
-//# sourceMappingURL=Transforms.js.map

@@ -1,10 +1,7 @@
-/// <reference path="../iridium.d.ts" />
-/// <reference path="../_references.d.ts" />
-
 import _ = require("lodash");
 import Promise = require("bluebird");
-import * as Iridium from "iridium";
-import {Index, Property} from "iridium";
+import * as Iridium from "../iridium";
+import {Index, Property} from "../iridium";
 
 var settings: any = {};
 
@@ -119,7 +116,7 @@ export class User extends Iridium.Instance<UserDocument, User> implements UserDo
     static onCreating(user: UserDocument) {
         var passwordTest = /(?=^.{8,}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*/;
 
-        if (!passwordTest.test(user.password || "')) return Promise.reject(new Error("Password didn\"t meet the minimum safe password requirements. Passwords should be at least 8 characters long, and contain at least 3 of the following categories: lowercase letters, uppercase letters, numbers, characters"));
+        if (!passwordTest.test(user.password || "")) return Promise.reject(new Error("Password didn\"t meet the minimum safe password requirements. Passwords should be at least 8 characters long, and contain at least 3 of the following categories: lowercase letters, uppercase letters, numbers, characters"));
 
         user.password = require("crypto").createHash("sha512").update(settings.security.salt).update(user.password).digest("hex");
 

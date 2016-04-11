@@ -127,5 +127,3 @@ function Binary(target, name) {
     Transform(Transforms_1.DefaultTransforms.Binary.fromDB, Transforms_1.DefaultTransforms.Binary.toDB)(target, name);
 }
 exports.Binary = Binary;
-
-//# sourceMappingURL=Decorators.js.map

@@ -1,5 +1,4 @@
-﻿/// <reference path="../typings/tsd.d.ts" />
-import * as Iridium from "../index";
+﻿import * as Iridium from "../index";
 import * as Events from "events";
 import * as Promise from "bluebird";
 
