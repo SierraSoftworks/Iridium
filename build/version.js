@@ -45,7 +45,6 @@ gulp.task('version-push-tags', function (cb) {
 
 gulp.task('version', function (callback) {
     runSequence(
-        'doc',
         'version-bump',
         'version-commit',
         'version-tag',
