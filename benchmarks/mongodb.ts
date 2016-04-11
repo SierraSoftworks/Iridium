@@ -1,4 +1,3 @@
-/// <reference path="../typings/DefinitelyTyped/tsd.d.ts" />
 import Iridium = require("../index");
 import Bluebird = require("bluebird");
 import MongoDB = require("mongodb");
@@ -52,11 +51,11 @@ function benchmark(name: string, prepare: (objects: UserDocument[]) => Bluebird<
                 return time;
             });
         })
-    }, { concurency: 1 }).then(times => {
+    }, { concurrency: 1 }).then(times => {
         results[name] = _.reduce(<number[]><any>times,(x, y) => x + y, 0) / times.length;
         console.log("%s: %dms", name, results[name]);
         if (compareTo) {
-            if (Math.abs(results[name] - results[compareTo]) / results[compareTo] < 0.1);
+            if (Math.abs(results[name] - results[compareTo]) / results[compareTo] < 0.1) { }
             else if (results[name] > results[compareTo]) console.log(" - %dx slower than %s",(results[name] / results[compareTo]).toPrecision(2), compareTo);
             else if (results[name] < results[compareTo]) console.log(" - %dx faster than %s",(results[name] / results[compareTo]).toPrecision(2), compareTo);
         }
@@ -71,7 +70,7 @@ iDB.connect()
     .then(() => iDB.UserWrapped.remove())
     .then(() => {
     return new Bluebird<any>((resolve, reject) => {
-        iDB.connection.collection("mongodb").remove((err) => {
+        iDB.connection.collection("mongodb").deleteMany((err) => {
             if (err) return reject(err);
             return resolve(null);
         });
@@ -79,14 +78,14 @@ iDB.connect()
 })
     .then(() => benchmark("MongoDB insert()",() => {
     return new Bluebird((resolve, reject) => {
-        iDB.connection.collection("mongodb").remove({},(err) => {
+        iDB.connection.collection("mongodb").deleteMany({},(err) => {
             if (err) return reject(err);
             return resolve(null);
         });
     });
 },(objects) => {
         return new Bluebird<any>((resolve, reject) => {
-            iDB.connection.collection("mongodb").insert(objects,(err, objects) => {
+            iDB.connection.collection("mongodb").insertMany(objects,(err, objects) => {
                 if (err) return reject(err);
                 return resolve(objects);
             });
@@ -97,7 +96,7 @@ iDB.connect()
 
     .then(() => benchmark("MongoDB find()",() => null,() => {
     return new Bluebird<any>((resolve, reject) => {
-        iDB.connection.collection("mongodb").find().toArray((err, objects: any) => {
+        iDB.connection.collection("mongodb").find({}).toArray((err, objects: any) => {
             if (err) return reject(err);
             return resolve(objects);
         });
@@ -108,7 +107,7 @@ iDB.connect()
 
     .then(() => {
     return new Bluebird<any>((resolve, reject) => {
-        iDB.connection.collection("mongodb").remove((err, objects: any) => {
+        iDB.connection.collection("mongodb").deleteMany((err, objects: any) => {
             if (err) return reject(err);
             return resolve(objects);
         });
@@ -116,14 +115,14 @@ iDB.connect()
 })
     .then(() => benchmark("MongoDB remove()",(objects) => {
     return new Bluebird<any>((resolve, reject) => {
-        iDB.connection.collection("mongodb").insert(objects,(err, objects) => {
+        iDB.connection.collection("mongodb").deleteMany(objects,(err, objects) => {
             if (err) return reject(err);
             return resolve(objects);
         });
     });
 },() => {
         return new Bluebird<any>((resolve, reject) => {
-            iDB.connection.collection("mongodb").remove((err, objects: any) => {
+            iDB.connection.collection("mongodb").deleteMany((err, objects: any) => {
                 if (err) return reject(err);
                 return resolve(objects);
             });
