@@ -6,3 +6,4 @@
 /// <reference path="main/definitions/chai/index.d.ts" />
 /// <reference path="main/definitions/lodash/index.d.ts" />
 /// <reference path="main/definitions/mongodb/index.d.ts" />
+/// <reference path="main/definitions/skmatc/index.d.ts" />

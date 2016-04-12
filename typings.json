@@ -5,7 +5,8 @@
   "dependencies": {
     "bluebird": "registry:npm/bluebird#3.3.4+20160411163813",
     "lodash": "registry:npm/lodash#4.0.0+20160305082308",
-    "mongodb": "registry:npm/mongodb#2.1.0+20160329101818"
+    "mongodb": "registry:npm/mongodb#2.1.0+20160329101818",
+    "skmatc": "github:sierrasoftworks/skmatc#master"
   },
   "ambientDependencies": {
     "es6-promise": "registry:dt/es6-promise#0.0.0+20160317120654",
