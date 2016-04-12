@@ -1,6 +1,5 @@
-import * as MongoDB from "mongodb";
+import {ObjectID, Binary} from "./BSON";
 import {Model} from "./Model";
-import * as BSON from "./BSON"; 
 
 export interface Transforms {
 	/**
@@ -37,20 +36,20 @@ export interface PropertyTransform<T> {
 }
 
 export const DefaultTransforms = {
- 	ObjectID: <PropertyTransform<MongoDB.ObjectID>>{
-		fromDB: value => value instanceof MongoDB.ObjectID ? value.toHexString() : value,
-		toDB: value => typeof value === "string" ? new MongoDB.ObjectID(value) : value
+ 	ObjectID: <PropertyTransform<ObjectID>>{
+		fromDB: value => value instanceof ObjectID ? value.toHexString() : value,
+		toDB: value => typeof value === "string" ? new ObjectID(value) : value
 	},
-	Binary: <PropertyTransform<MongoDB.Binary>>{
+	Binary: <PropertyTransform<Binary>>{
 		fromDB: value => {
 			if(!value) return null;
-			if(value instanceof MongoDB.Binary) return (<any>value).buffer;
+			if(value instanceof Binary) return (<any>value).buffer;
 			
 			return value;
 		},
 		toDB: value => {
-			if(Buffer.isBuffer(value)) return new MongoDB.Binary(value);
-			if(Array.isArray(value)) return new MongoDB.Binary(new Buffer(value));
+			if(Buffer.isBuffer(value)) return new Binary(value);
+			if(Array.isArray(value)) return new Binary(new Buffer(value));
 			return null;
 		}
 	}
