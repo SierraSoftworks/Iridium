@@ -1,4 +1,4 @@
-import * as Iridium from "../index";
+import * as Iridium from "../iridium";
 import * as Skmatc from "skmatc";
 import * as chai from "chai";
 

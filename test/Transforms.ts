@@ -1,4 +1,4 @@
-import * as Iridium from "../index";
+import * as Iridium from "../iridium";
 import * as MongoDB from "mongodb";
 import * as Events from "events";
 import * as chai from "chai";

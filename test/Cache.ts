@@ -1,4 +1,4 @@
-﻿import * as Iridium from "../index";
+﻿import * as Iridium from "../iridium";
 import * as chai from "chai";
 
 interface Document {

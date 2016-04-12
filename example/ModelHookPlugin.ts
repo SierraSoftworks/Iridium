@@ -1,4 +1,4 @@
-import Iridium = require("../index");
+import Iridium = require("../iridium");
 
 export = LowercaseCollectionsPlugin;
 

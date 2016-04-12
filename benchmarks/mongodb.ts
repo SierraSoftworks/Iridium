@@ -1,4 +1,4 @@
-import Iridium = require("../index");
+import Iridium = require("../iridium");
 import Bluebird = require("bluebird");
 import MongoDB = require("mongodb");
 import _ = require("lodash");

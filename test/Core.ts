@@ -1,4 +1,4 @@
-﻿import * as Iridium from "../index";
+﻿import * as Iridium from "../iridium";
 import * as events from "events";
 import * as Bluebird from "bluebird";
 import * as chai from "chai";
