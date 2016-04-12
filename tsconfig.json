@@ -5,13 +5,15 @@
 		"target": "es5",
 		"sourceMap": true,
     "declaration": true,
+    "sourceRoot": "./lib",
 		"experimentalDecorators": true,
-		"outDir": "./dist/"
+		"outDir": "./dist/",
+    "moduleResolution": "node"
 	},
 	"exclude": [
     "dist",
 		"node_modules",
-        "typings/browser",
-        "typings/browser.d.ts"
+    "typings/browser",
+    "typings/browser.d.ts"
 	]
 }

@@ -1,1 +1,1 @@
-{"version":3,"file":"BSON.js","sourceRoot":"","sources":["../../lib/BSON.ts"],"names":[],"mappings":"AAAA;;GAEG"}
+{"version":3,"file":"BSON.js","sourceRoot":"lib/","sources":["lib/BSON.ts"],"names":[],"mappings":";AAAA,wBAAiC,SAAS,CAAC;AAAlC,sCAAQ;AAAE,kCAAwB"}

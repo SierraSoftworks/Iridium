@@ -13,14 +13,14 @@ export interface Configuration {
     [key:string]: any;
 }
 
-interface ConnectionOptions {
+export interface ConnectionOptions {
     db?: DatabaseLevelConnectionOptions;
     server?: ServerLevelConnectionOptions;
     replset?: ReplicasetLevelConnectionOptions;
     mongos?: MongosLevelConnectionOptions;
 }
 
-interface DatabaseLevelConnectionOptions {
+export interface DatabaseLevelConnectionOptions {
     /**
      * The write concern for the operation where < 1 is no acknowledgment of write and w >= 1 or w = ‘majority’ acknowledges the write
      */
@@ -92,22 +92,22 @@ interface DatabaseLevelConnectionOptions {
     bufferMaxEntries?: number;
 }
 
-interface ServerLevelConnectionOptions extends BasicConnectionOptions {
+export interface ServerLevelConnectionOptions extends BasicConnectionOptions {
     autoReconnect?: boolean;
 }
 
-interface ReplicasetLevelConnectionOptions extends MongosLevelConnectionOptions {
+export interface ReplicasetLevelConnectionOptions extends MongosLevelConnectionOptions {
     replicaSet?: string;
     connectWithNoPrimary?: boolean;
 }
 
-interface MongosLevelConnectionOptions extends BasicConnectionOptions {
+export interface MongosLevelConnectionOptions extends BasicConnectionOptions {
     ha?: boolean;
     haInterval?: number;
     secondaryAcceptableLatencyMS?: number;
 }
 
-interface BasicConnectionOptions {
+export interface BasicConnectionOptions {
     poolSize?: number;
     ssl?: boolean;
     sslValidate?: boolean;
