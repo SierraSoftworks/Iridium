@@ -16,7 +16,7 @@
     }
   ],
   "licence": "MIT",
-  "main": "./dist/index.js",
+  "main": "./dist/iridium.js",
   "scripts": {
     "test": "gulp ci",
     "coverage": "gulp coverage",
@@ -24,7 +24,7 @@
     "benchmark": "node ./benchmarks/mongodb.js",
     "build": "gulp build"
   },
-  "typings": "index.d.ts",
+  "typings": "dist/iridium.d.ts",
   "engines": {
     "node": ">= 0.10"
   },
