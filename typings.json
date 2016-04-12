@@ -2,15 +2,20 @@
   "name": "iridium",
   "version": false,
   "main": "index.ts",
+  "dependencies": {
+    "bluebird": "registry:npm/bluebird#3.3.4+20160411163813",
+    "lodash": "registry:npm/lodash#4.0.0+20160305082308",
+    "mongodb": "registry:npm/mongodb#2.1.0+20160329101818"
+  },
   "ambientDependencies": {
-    "assertion-error": "github:DefinitelyTyped/DefinitelyTyped/assertion-error/assertion-error.d.ts#d969b903d1fce89a5e43828ec68458b4f852db4d",
-    "bluebird": "registry:dt/bluebird#2.0.0+20160319051630",
-    "chai": "github:DefinitelyTyped/DefinitelyTyped/chai/chai.d.ts#d969b903d1fce89a5e43828ec68458b4f852db4d",
-    "chai-as-promised": "github:DefinitelyTyped/DefinitelyTyped/chai-as-promised/chai-as-promised.d.ts#d969b903d1fce89a5e43828ec68458b4f852db4d",
-    "lodash": "github:DefinitelyTyped/DefinitelyTyped/lodash/lodash.d.ts#d969b903d1fce89a5e43828ec68458b4f852db4d",
-    "mocha": "registry:dt/mocha#2.2.5+20160317120654",
-    "mongodb": "github:DefinitelyTyped/DefinitelyTyped/mongodb/mongodb.d.ts#d969b903d1fce89a5e43828ec68458b4f852db4d",
-    "node": "registry:dt/node#4.0.0+20160330064709",
-    "promises-a-plus": "github:DefinitelyTyped/DefinitelyTyped/promises-a-plus/promises-a-plus.d.ts#d969b903d1fce89a5e43828ec68458b4f852db4d"
+    "es6-promise": "registry:dt/es6-promise#0.0.0+20160317120654",
+    "node": "registry:dt/node#4.0.0+20160330064709"
+  },
+  "devDependencies": {
+    "chai": "registry:npm/chai#3.5.0+20160402210230",
+    "chai-as-promised": "registry:npm/chai-as-promised#5.1.0+20160310030142"
+  },
+  "ambientDevDependencies": {
+    "mocha": "registry:dt/mocha#2.2.5+20160317120654"
   }
 }

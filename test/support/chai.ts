@@ -5,6 +5,3 @@ import * as Bluebird from "bluebird";
 Bluebird.longStackTraces();
 
 chai.use(chaiAsPromised);
-
-global["chai"] = chai;
-global["expect"] = chai.expect;

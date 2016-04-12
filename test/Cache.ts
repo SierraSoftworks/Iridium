@@ -1,4 +1,5 @@
 ﻿import * as Iridium from "../index";
+import * as chai from "chai";
 
 interface Document {
     _id?: string;

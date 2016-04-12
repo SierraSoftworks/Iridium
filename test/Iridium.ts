@@ -1,4 +1,5 @@
 ﻿import * as Iridium from "../index";
+import * as chai from "chai";
 
 describe("Iridium",() => {
     it("should expose the Core",() => {

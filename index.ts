@@ -1,4 +1,3 @@
-/// <reference path="./typings/main.d.ts" />
 export * from "./lib/Core";
 export * from "./lib/Model";
 export * from "./lib/Instance";

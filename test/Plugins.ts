@@ -1,5 +1,6 @@
 import * as Iridium from "../index";
 import * as Skmatc from "skmatc";
+import * as chai from "chai";
 
 class Test extends Iridium.Instance<any, Test> {
     static collection = "test";

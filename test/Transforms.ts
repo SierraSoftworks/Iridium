@@ -1,6 +1,7 @@
 import * as Iridium from "../index";
 import * as MongoDB from "mongodb";
 import * as Events from "events";
+import * as chai from "chai";
 
 import {DefaultTransforms} from "../lib/Transforms";
 

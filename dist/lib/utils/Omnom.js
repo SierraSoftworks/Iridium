@@ -195,3 +195,4 @@ var Omnom = (function () {
     return Omnom;
 }());
 exports.Omnom = Omnom;
+//# sourceMappingURL=Omnom.js.map

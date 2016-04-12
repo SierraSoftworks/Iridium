@@ -1,5 +1,6 @@
 ﻿import {Omnom} from "../lib/utils/Omnom";
 import * as MongoDB from "mongodb";
+import * as chai from "chai";
 
 describe("Omnom",() => {
     it("should correctly diff basic objects",() => {

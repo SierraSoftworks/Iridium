@@ -1,6 +1,7 @@
 import * as Iridium from "../index";
 import * as skmatc from "skmatc";
 import * as MongoDB from "mongodb";
+import * as chai from "chai";
 
 interface Document {
     _id?: string;

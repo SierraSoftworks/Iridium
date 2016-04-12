@@ -3,6 +3,7 @@ import * as MongoDB from "mongodb";
 import {Cursor} from "../lib/Cursor";
 import * as Promise from "bluebird";
 import * as _ from "lodash";
+import * as chai from "chai";
 
 interface TestDocument {
     _id?: string;

@@ -1,6 +1,7 @@
 ﻿import * as Iridium from "../index";
 import * as Events from "events";
 import * as Promise from "bluebird";
+import * as chai from "chai";
 
 interface TestDocument {
     id?: string;

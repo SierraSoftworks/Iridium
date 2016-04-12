@@ -1,5 +1,6 @@
 import * as Iridium from "../index";
 import * as MongoDB from "mongodb";
+import * as chai from "chai";
 
 describe("Utilities", () => {
 	describe("toObjectID", () => {

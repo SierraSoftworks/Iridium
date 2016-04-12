@@ -2,6 +2,7 @@ import * as Iridium from "../index";
 import * as skmatc from "skmatc";
 import * as MongoDB from "mongodb";
 import {DefaultValidators} from "../lib/Validators";
+import * as chai from "chai";
 
 interface TestDocument {
 	_id?: string;

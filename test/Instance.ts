@@ -1,6 +1,7 @@
 ﻿import * as Iridium from "../index";
 import * as MongoDB from "mongodb";
 import * as Bluebird from "bluebird";
+import * as chai from "chai";
 
 interface TestDocument {
     _id?: string;
