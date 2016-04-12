@@ -15,6 +15,10 @@ function getPackageJsonVersion() {
 gulp.task('version-bump', function () {
     var args = minimist(process.argv);
 
+    if (!args.version)
+        return gulp.src(['./package.json'])
+            .pipe(gulp.dest('./'));
+
     var options = {};
     if (semver.valid(args.version)) options.version = args.version;
     else options.type = args.version;
