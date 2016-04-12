@@ -1,3 +1,5 @@
 benchmarks
 example
 test
+*.d.ts
+*.map
