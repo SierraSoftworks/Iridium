@@ -1,1 +1,1 @@
-{"version":3,"file":"BSON.js","sourceRoot":"lib/","sources":["lib/BSON.ts"],"names":[],"mappings":";AAAA,wBAAiC,SAAS,CAAC;AAAlC,sCAAQ;AAAE,kCAAwB"}
+{"version":3,"sources":["lib/BSON.ts"],"names":[],"mappings":";AAAA,wBAAiC,SAAS,CAAC;AAAlC,sCAAQ;AAAE,kCAAwB","file":"lib/BSON.js","sourcesContent":["export { ObjectID, Binary } from \"mongodb\";"],"sourceRoot":"/source/"}

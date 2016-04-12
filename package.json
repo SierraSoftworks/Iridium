@@ -19,6 +19,8 @@
   "main": "./dist/iridium.js",
   "scripts": {
     "test": "gulp ci",
+    "prepublish": "gulp bundle",
+    "postversion": "gulp version",
     "coverage": "gulp coverage",
     "lint": "jshint lib/",
     "benchmark": "node ./benchmarks/mongodb.js",
