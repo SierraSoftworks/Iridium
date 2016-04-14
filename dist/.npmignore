@@ -2,6 +2,5 @@ benchmarks
 example
 lib/*.d.ts
 lib/*/**.d.ts
-iridium.d.ts
 browser.d.ts
 test
