@@ -1,6 +1,6 @@
 import * as MongoDB from "mongodb";
 import * as _ from "lodash";
-import Skmatc = require("skmatc");
+import * as Skmatc from "skmatc";
 import {Instance} from "./Instance";
 import {Model} from "./Model";
 import {Index, IndexSpecification} from "./Index";

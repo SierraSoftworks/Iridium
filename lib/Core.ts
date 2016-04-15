@@ -1,8 +1,8 @@
 import * as Bluebird from "bluebird";
 import * as MongoDB from "mongodb";
 import * as _ from "lodash";
-import http = require("http");
-import events = require("events");
+import * as http from "http";
+import * as events from "events";
 
 import {Configuration} from "./Configuration";
 import {Plugin} from "./Plugins";
