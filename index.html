@@ -80,6 +80,19 @@
 				anything more complex.</p>
 				<p>It also means that, if you&#39;re familiar with the MongoDB CLI you should find working with Iridium very natural, with all database
 				methods returning promises for their results and sensible, type annotated results being provided if you wish to make use of them.</p>
+				<h2 id="installation">Installation</h2>
+				<p>Iridium is a relatively complex library, as a result its installation requires a little more than just <code>npm install</code> to get right.
+					This is, unfortunately, a result of the way TypeScript handles modules at the moment - but they&#39;re working on making the workflow
+				better and we&#39;ll always try to stay as up to date as possible.</p>
+				<pre><code class="lang-bash">npm install iridium --save
+
+typings install -S <span class="hljs-string">'npm!bluebird'</span> <span class="hljs-string">'npm!mongodb'</span> <span class="hljs-string">'npm!lodash'</span>
+typings install -SA node es6-promise <span class="hljs-comment"># don't install es6-promise if you're targetting ES6</span>
+</code></pre>
+				<ul>
+					<li><strong>ES6 Users</strong> - If you&#39;re targetting ES6, then you&#39;ll want to ensure that you don&#39;t install es6-promise above. It will conflict with
+					the ES6 promise library and cause problems. </li>
+				</ul>
 				<h2 id="features">Features</h2>
 				<ul>
 					<li><strong>Built with TypeScript</strong> and designed for ease of use, you&#39;ll be hard pressed to find another Node.js ORM as easy to pick
@@ -96,8 +109,8 @@
 					can be found at <a href="http://sierrasoftworks.github.io/Iridium">sierrasoftworks.github.io/Iridium</a>.</li>
 				</ul>
 				<h2 id="requirements">Requirements</h2>
-				<p>Iridium is built on top of a number of very modern technologies, including TypeScript 1.5, JavaScript ES6 (though we do compile
-				to ES5 for compatibility with existing Node.js implementations) and the latest MongoDB Node.js Driver (version 2.0).</p>
+				<p>Iridium is built on top of a number of very modern technologies, including TypeScript 1.8, JavaScript ES6 (though we do compile
+				to ES5 for compatibility with existing Node.js implementations) and the latest MongoDB Node.js Driver (version 2.1).</p>
 				<p>For starters, you will need to be running MongoDB 2.6 or later in order to use Iridium - however we recommend you use MongoDB 3.0
 					due to the various performance improvements they&#39;ve made. If you&#39;re working with TypeScript, you will also need to use the 1.5
 				compiler or risk having the Iridium type definitions break your project.</p>
@@ -108,8 +121,7 @@
 				<p>You&#39;ll notice that the <code>House</code> class extends Iridium&#39;s <code>Instance</code> class, which gives it methods like <code>save()</code> as well
 					as change tracking when calling <code>save()</code> on the instance. If you&#39;d prefer a lighter approach or to use your own home-grown
 				implementation then you can do so by taking a look at the <a href="#custom-instances">Custom Instances</a> section.</p>
-				<pre><code class="lang-typescript"><span class="hljs-comment">/// &lt;reference path="node_modules/iridium/index.d.ts" /&gt;</span>
-<span class="hljs-keyword">import</span> {Core, Model, Instance, Collection, Index, Property, ObjectID} Iridium from <span class="hljs-string">'iridium'</span>;
+				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> {Core, Model, Instance, Collection, Index, Property, ObjectID} Iridium from <span class="hljs-string">'iridium'</span>;
 
 <span class="hljs-interface"><span class="hljs-keyword">interface</span> Colour </span>{
     r: <span class="hljs-built_in">number</span>;
@@ -466,11 +478,8 @@ InstanceType.transforms = {
 					<li class=" tsd-kind-class tsd-is-external">
 						<a href="classes/omnom.html" class="tsd-kind-icon">Omnom</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-not-exported">
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/basicconnectionoptions.html" class="tsd-kind-icon">Basic<wbr>Connection<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
-						<a href="interfaces/binary.html" class="tsd-kind-icon">Binary</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/cache.html" class="tsd-kind-icon">Cache</a>
@@ -484,13 +493,13 @@ InstanceType.transforms = {
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/configuration.html" class="tsd-kind-icon">Configuration</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-not-exported">
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/connectionoptions.html" class="tsd-kind-icon">Connection<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/createoptions.html" class="tsd-kind-icon">Create<wbr>Options</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-not-exported">
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/databaselevelconnectionoptions.html" class="tsd-kind-icon">Database<wbr>Level<wbr>Connection<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-is-external">
@@ -514,11 +523,8 @@ InstanceType.transforms = {
 					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="interfaces/modelspecificinstanceconstructor.html" class="tsd-kind-icon">Model<wbr>Specific<wbr>Instance<wbr>Constructor</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-not-exported">
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/mongoslevelconnectionoptions.html" class="tsd-kind-icon">Mongos<wbr>Level<wbr>Connection<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
-						<a href="interfaces/objectid.html" class="tsd-kind-icon">ObjectID</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/plugin.html" class="tsd-kind-icon">Plugin</a>
@@ -544,13 +550,13 @@ InstanceType.transforms = {
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/removeoptions.html" class="tsd-kind-icon">Remove<wbr>Options</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-not-exported">
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/replicasetlevelconnectionoptions.html" class="tsd-kind-icon">Replicaset<wbr>Level<wbr>Connection<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/schema.html" class="tsd-kind-icon">Schema</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-not-exported">
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/serverlevelconnectionoptions.html" class="tsd-kind-icon">Server<wbr>Level<wbr>Connection<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-is-external">
@@ -565,8 +571,8 @@ InstanceType.transforms = {
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/updateoptions.html" class="tsd-kind-icon">Update<wbr>Options</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
-						<a href="interfaces/value.html" class="tsd-kind-icon">Value</a>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#binary" class="tsd-kind-icon">Binary</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#collection" class="tsd-kind-icon">Collection</a>
@@ -579,6 +585,9 @@ InstanceType.transforms = {
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter tsd-is-external">
 						<a href="globals.html#modelspecificinstance" class="tsd-kind-icon">Model<wbr>Specific<wbr>Instance</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#objectid" class="tsd-kind-icon">ObjectID</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#transform" class="tsd-kind-icon">Transform</a>
