@@ -50,7 +50,7 @@
     "gulp-plumber": "~1.1.0",
     "gulp-replace": "~0.5.4",
     "gulp-sourcemaps": "~1.6.0",
-    "gulp-typedoc": "^1.2.1",
+    "gulp-typedoc": "sierrasoftworks/gulp-typedoc#v1.8.10",
     "gulp-typescript": "^2.12.1",
     "gulp-util": "~3.0.7",
     "istanbul": "~0.4.2",
@@ -63,7 +63,7 @@
     "semver": "^5.1.0",
     "tick": "~0.1.1",
     "tslint": "^3.5.0",
-    "typedoc": "sierrasoftworks/typedoc",
+    "typedoc": "sierrasoftworks/typedoc#v1.8.10",
     "typescript": "~1.8.7",
     "typings-core": "^0.2.16",
     "underscore": "~1.8.3"
