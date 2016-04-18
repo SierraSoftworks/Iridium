@@ -59,7 +59,6 @@ gulp.task('doc-compile', function() {
 		out: './doc',
 
 		name: "Iridium",
-		plugin: ['decorator'],
-		ignoreCompilerErrors: true
+		plugin: ['decorator']
 	}));
 });
