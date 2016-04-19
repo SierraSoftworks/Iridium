@@ -54,11 +54,9 @@ gulp.task('doc-compile', function() {
 		module: 'commonjs',
 		target: 'es5',
 		mode: 'file',
-		entryPoint: 'iridium',
 
 		out: './doc',
 
-		name: "Iridium",
-		plugin: ['decorator']
+		name: "Iridium"
 	}));
 });
