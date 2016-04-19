@@ -123,19 +123,19 @@ typings install -SA node es6-promise <span class="hljs-comment"># don't install 
 				implementation then you can do so by taking a look at the <a href="#custom-instances">Custom Instances</a> section.</p>
 				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> {Core, Model, Instance, Collection, Index, Property, ObjectID} Iridium from <span class="hljs-string">'iridium'</span>;
 
-<span class="hljs-interface"><span class="hljs-keyword">interface</span> Colour </span>{
+<span class="hljs-keyword">interface</span> Colour {
     r: <span class="hljs-built_in">number</span>;
     g: <span class="hljs-built_in">number</span>;
     b: <span class="hljs-built_in">number</span>;
 }
 
-<span class="hljs-interface"><span class="hljs-keyword">interface</span> Car </span>{
+<span class="hljs-keyword">interface</span> Car {
     make: <span class="hljs-built_in">string</span>;
     model: <span class="hljs-built_in">string</span>;
     colour: Colour;
 }
 
-<span class="hljs-interface"><span class="hljs-keyword">interface</span> HouseDocument </span>{
+<span class="hljs-keyword">interface</span> HouseDocument {
     _id?: <span class="hljs-built_in">string</span>;
     name: <span class="hljs-built_in">string</span>;
 
@@ -223,12 +223,12 @@ myDb.connect().then(() =&gt; myDb.Houses.insert({
 					which offers helper methods like <code>save()</code> and <code>remove()</code>, which comes in very handy for writing concise descriptive code, while the other approach
 				is to simply return the document received from the database - great for performance or security purposes.</p>
 				<p><strong>TypeScript</strong></p>
-				<pre><code class="lang-typescript"><span class="hljs-interface"><span class="hljs-keyword">interface</span> Document </span>{
+				<pre><code class="lang-typescript"><span class="hljs-keyword">interface</span> Document {
     _id?: <span class="hljs-built_in">string</span>;
 }
 
 <span class="hljs-keyword">class</span> InstanceType {
-    <span class="hljs-constructor"><span class="hljs-keyword">constructor</span>(model: Model&lt;Document, Instance&gt;, document: Document, isNew: boolean = true, isPartial: boolean = false) </span>{
+    <span class="hljs-keyword">constructor</span>(model: Model&lt;Document, Instance&gt;, document: Document, isNew: boolean = true, isPartial: boolean = false) {
 
     }
 
@@ -445,22 +445,22 @@ InstanceType.transforms = {
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class">
+					<li class=" tsd-kind-class tsd-is-external">
 						<a href="classes/cacheonid.html" class="tsd-kind-icon">Cache<wbr>OnID</a>
 					</li>
-					<li class=" tsd-kind-class">
+					<li class=" tsd-kind-class tsd-is-external">
 						<a href="classes/core.html" class="tsd-kind-icon">Core</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
 						<a href="classes/cursor.html" class="tsd-kind-icon">Cursor</a>
 					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter">
+					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
 						<a href="classes/instance.html" class="tsd-kind-icon">Instance</a>
 					</li>
-					<li class=" tsd-kind-class">
+					<li class=" tsd-kind-class tsd-is-external">
 						<a href="classes/memorycache.html" class="tsd-kind-icon">Memory<wbr>Cache</a>
 					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter">
+					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
 						<a href="classes/model.html" class="tsd-kind-icon">Model</a>
 					</li>
 					<li class=" tsd-kind-class tsd-is-external">
@@ -472,40 +472,40 @@ InstanceType.transforms = {
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
 						<a href="classes/modelhelpers.html" class="tsd-kind-icon">Model<wbr>Helpers</a>
 					</li>
-					<li class=" tsd-kind-class">
+					<li class=" tsd-kind-class tsd-is-external">
 						<a href="classes/noopcache.html" class="tsd-kind-icon">No<wbr>OpCache</a>
 					</li>
 					<li class=" tsd-kind-class tsd-is-external">
 						<a href="classes/omnom.html" class="tsd-kind-icon">Omnom</a>
 					</li>
-					<li class=" tsd-kind-interface">
+					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/basicconnectionoptions.html" class="tsd-kind-icon">Basic<wbr>Connection<wbr>Options</a>
 					</li>
-					<li class=" tsd-kind-interface">
+					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/cache.html" class="tsd-kind-icon">Cache</a>
 					</li>
-					<li class=" tsd-kind-interface">
+					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/cachedirector.html" class="tsd-kind-icon">Cache<wbr>Director</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="interfaces/callback.html" class="tsd-kind-icon">Callback</a>
 					</li>
-					<li class=" tsd-kind-interface">
+					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/configuration.html" class="tsd-kind-icon">Configuration</a>
 					</li>
-					<li class=" tsd-kind-interface">
+					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/connectionoptions.html" class="tsd-kind-icon">Connection<wbr>Options</a>
 					</li>
-					<li class=" tsd-kind-interface">
+					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/createoptions.html" class="tsd-kind-icon">Create<wbr>Options</a>
 					</li>
-					<li class=" tsd-kind-interface">
+					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/databaselevelconnectionoptions.html" class="tsd-kind-icon">Database<wbr>Level<wbr>Connection<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/expressmiddleware.html" class="tsd-kind-icon">Express<wbr>Middleware</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter">
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="interfaces/hooks.html" class="tsd-kind-icon">Hooks</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-is-external">
@@ -523,10 +523,10 @@ InstanceType.transforms = {
 					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="interfaces/modelspecificinstanceconstructor.html" class="tsd-kind-icon">Model<wbr>Specific<wbr>Instance<wbr>Constructor</a>
 					</li>
-					<li class=" tsd-kind-interface">
+					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/mongoslevelconnectionoptions.html" class="tsd-kind-icon">Mongos<wbr>Level<wbr>Connection<wbr>Options</a>
 					</li>
-					<li class=" tsd-kind-interface">
+					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/plugin.html" class="tsd-kind-icon">Plugin</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
@@ -541,22 +541,22 @@ InstanceType.transforms = {
 					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="interfaces/propertysetter.html" class="tsd-kind-icon">Property<wbr>Setter</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter">
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="interfaces/propertytransform.html" class="tsd-kind-icon">Property<wbr>Transform</a>
 					</li>
-					<li class=" tsd-kind-interface">
+					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/queryoptions.html" class="tsd-kind-icon">Query<wbr>Options</a>
 					</li>
-					<li class=" tsd-kind-interface">
+					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/removeoptions.html" class="tsd-kind-icon">Remove<wbr>Options</a>
 					</li>
-					<li class=" tsd-kind-interface">
+					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/replicasetlevelconnectionoptions.html" class="tsd-kind-icon">Replicaset<wbr>Level<wbr>Connection<wbr>Options</a>
 					</li>
-					<li class=" tsd-kind-interface">
+					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/schema.html" class="tsd-kind-icon">Schema</a>
 					</li>
-					<li class=" tsd-kind-interface">
+					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/serverlevelconnectionoptions.html" class="tsd-kind-icon">Server<wbr>Level<wbr>Connection<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-is-external">
@@ -565,16 +565,16 @@ InstanceType.transforms = {
 					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/transformoptions.html" class="tsd-kind-icon">Transform<wbr>Options</a>
 					</li>
-					<li class=" tsd-kind-interface">
+					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/transforms.html" class="tsd-kind-icon">Transforms</a>
 					</li>
-					<li class=" tsd-kind-interface">
+					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/updateoptions.html" class="tsd-kind-icon">Update<wbr>Options</a>
 					</li>
-					<li class=" tsd-kind-function">
+					<li class=" tsd-kind-function tsd-is-external">
 						<a href="globals.html#binary" class="tsd-kind-icon">Binary</a>
 					</li>
-					<li class=" tsd-kind-function">
+					<li class=" tsd-kind-function tsd-is-external">
 						<a href="globals.html#collection" class="tsd-kind-icon">Collection</a>
 					</li>
 					<li class=" tsd-kind-function tsd-is-external">
@@ -586,19 +586,19 @@ InstanceType.transforms = {
 					<li class=" tsd-kind-function tsd-has-type-parameter tsd-is-external">
 						<a href="globals.html#modelspecificinstance" class="tsd-kind-icon">Model<wbr>Specific<wbr>Instance</a>
 					</li>
-					<li class=" tsd-kind-function">
+					<li class=" tsd-kind-function tsd-is-external">
 						<a href="globals.html#objectid" class="tsd-kind-icon">ObjectID</a>
 					</li>
-					<li class=" tsd-kind-function">
+					<li class=" tsd-kind-function tsd-is-external">
 						<a href="globals.html#transform" class="tsd-kind-icon">Transform</a>
 					</li>
-					<li class=" tsd-kind-function">
+					<li class=" tsd-kind-function tsd-is-external">
 						<a href="globals.html#validate" class="tsd-kind-icon">Validate</a>
 					</li>
-					<li class=" tsd-kind-function">
+					<li class=" tsd-kind-function tsd-is-external">
 						<a href="globals.html#toobjectid" class="tsd-kind-icon">to<wbr>ObjectID</a>
 					</li>
-					<li class=" tsd-kind-object-literal">
+					<li class=" tsd-kind-object-literal tsd-is-external">
 						<a href="globals.html#defaulttransforms" class="tsd-kind-icon">Default<wbr>Transforms</a>
 					</li>
 				</ul>
