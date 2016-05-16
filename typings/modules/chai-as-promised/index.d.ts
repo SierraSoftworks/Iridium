@@ -632,10 +632,10 @@ namespace chaiAsPromised {}
 export = chaiAsPromised;
 }
 declare module 'chai-as-promised/index' {
-import main = require('~chai-as-promised/index');
-export = main;
+import alias = require('~chai-as-promised/index');
+export = alias;
 }
 declare module 'chai-as-promised' {
-import main = require('~chai-as-promised/index');
-export = main;
+import alias = require('~chai-as-promised/index');
+export = alias;
 }

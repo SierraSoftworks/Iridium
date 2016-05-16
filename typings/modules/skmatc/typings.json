@@ -1,0 +1,12 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/sierrasoftworks/skmatc/master/typings.json",
+    "raw": "github:sierrasoftworks/skmatc#master",
+    "main": "index.d.ts",
+    "version": false,
+    "global": false,
+    "name": "skmatc",
+    "type": "typings"
+  }
+}

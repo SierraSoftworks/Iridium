@@ -1,0 +1,21 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/Think7/typings-mongodb/d4269a9c672ab28a7865b38c8614673e8aecc8e5/typings.json",
+    "raw": "registry:npm/mongodb#2.1.0+20160422172506",
+    "main": "mongodb.d.ts",
+    "global": false,
+    "dependencies": {
+      "es6-promise": {
+        "src": "https://raw.githubusercontent.com/typed-typings/npm-es6-promise/fb04188767acfec1defd054fc8024fafa5cd4de7/typings.json",
+        "raw": "registry:npm/es6-promise#3.0.0+20160211003958",
+        "main": "dist/es6-promise.d.ts",
+        "global": false,
+        "name": "es6-promise",
+        "type": "typings"
+      }
+    },
+    "name": "mongodb",
+    "type": "typings"
+  }
+}
