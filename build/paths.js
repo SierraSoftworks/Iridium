@@ -11,7 +11,7 @@ module.exports = {
 	builtFiles: ["dist/lib/**/*.js", "dist/index.js"],
 
 	docSourceFiles: [
-		"typings/main.d.ts",
+		"typings/index.d.ts",
 		"iridium.ts"
 	],
 	testSupportFiles: ['dist/test/support/chai']
