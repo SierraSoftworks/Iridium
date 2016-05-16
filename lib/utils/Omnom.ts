@@ -76,7 +76,7 @@ export class Omnom {
         if (!_.isPlainObject(original) || !_.isPlainObject(modified))
             return !_.isEqual(original, modified) && this.set(changePath, modified);
 
-        _.each(modified, (value, key) => {
+        _.forOwn(modified, (value, key) => {
             // Handle array diffs in their own special way
             if (Array.isArray(value) && Array.isArray(original[key])) this.onArray(original[key], value, this.resolve(changePath, key));
 
@@ -85,7 +85,7 @@ export class Omnom {
         }, this);
 
         // Unset removed properties
-        _.each(original, (value, key) => {
+        _.forOwn(original, (value, key) => {
             if (modified[key] === undefined) return this.unset(this.resolve(changePath, key));
         }, this);
     }

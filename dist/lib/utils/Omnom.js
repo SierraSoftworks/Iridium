@@ -36,7 +36,7 @@ var Omnom = (function () {
             return !original.equals(modified) && this.set(changePath, modified);
         if (!_.isPlainObject(original) || !_.isPlainObject(modified))
             return !_.isEqual(original, modified) && this.set(changePath, modified);
-        _.each(modified, function (value, key) {
+        _.forOwn(modified, function (value, key) {
             // Handle array diffs in their own special way
             if (Array.isArray(value) && Array.isArray(original[key]))
                 _this.onArray(original[key], value, _this.resolve(changePath, key));
@@ -44,7 +44,7 @@ var Omnom = (function () {
                 _this.onObject(original[key], value, _this.resolve(changePath, key));
         }, this);
         // Unset removed properties
-        _.each(original, function (value, key) {
+        _.forOwn(original, function (value, key) {
             if (modified[key] === undefined)
                 return _this.unset(_this.resolve(changePath, key));
         }, this);
