@@ -17,15 +17,17 @@ import * as _ from "lodash";
  * @internal
  */
 export function ModelSpecificInstance<TDocument extends { _id?: any }, TInstance>(model: Model<TDocument, TInstance>, instanceType: InstanceImplementation<TDocument, TInstance>): ModelSpecificInstanceConstructor<TDocument, TInstance> {
-    let constructor = function (doc: TDocument, isNew?: boolean, isPartial?: boolean) {
-        instanceType.call(this, model, doc, isNew, isPartial);
-    };
-
-    util.inherits(constructor, instanceType);
+    const instanceTypeConstructor = <InstanceConstructor><any>instanceType;
+    
+    let virtualClass = class extends instanceTypeConstructor {
+        constructor(...args) {
+            super(model, ...args);
+        }
+    }
 
     _.each(Object.keys(model.schema),(property) => {
         if (model.transforms.hasOwnProperty(property)) {
-            return Object.defineProperty(constructor.prototype, property, {
+            return Object.defineProperty(virtualClass.prototype, property, {
                 get: function () {
                     return model.transforms[property].fromDB(this._modified[property], property, model);
                 },
@@ -37,7 +39,7 @@ export function ModelSpecificInstance<TDocument extends { _id?: any }, TInstance
             });
         }
 
-        Object.defineProperty(constructor.prototype, property, {
+        Object.defineProperty(virtualClass.prototype, property, {
             get: function () {
                 return this._modified[property];
             },
@@ -48,5 +50,10 @@ export function ModelSpecificInstance<TDocument extends { _id?: any }, TInstance
         });
     });
 
-    return <any>constructor;
+    return <any>virtualClass;
+}
+
+interface InstanceConstructor {
+    new(...args: any[]): this;
+    prototype: any;
 }
