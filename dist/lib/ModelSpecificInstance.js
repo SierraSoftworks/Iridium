@@ -1,5 +1,9 @@
 "use strict";
-var util = require("util");
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var _ = require("lodash");
 /**
  * Creates a new subclass of the given instanceType which correctly performs property transforms
@@ -14,13 +18,21 @@ var _ = require("lodash");
  * @internal
  */
 function ModelSpecificInstance(model, instanceType) {
-    var constructor = function (doc, isNew, isPartial) {
-        instanceType.call(this, model, doc, isNew, isPartial);
-    };
-    util.inherits(constructor, instanceType);
+    var instanceTypeConstructor = instanceType;
+    var virtualClass = (function (_super) {
+        __extends(class_1, _super);
+        function class_1() {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i - 0] = arguments[_i];
+            }
+            _super.apply(this, [model].concat(args));
+        }
+        return class_1;
+    }(instanceTypeConstructor));
     _.each(Object.keys(model.schema), function (property) {
         if (model.transforms.hasOwnProperty(property)) {
-            return Object.defineProperty(constructor.prototype, property, {
+            return Object.defineProperty(virtualClass.prototype, property, {
                 get: function () {
                     return model.transforms[property].fromDB(this._modified[property], property, model);
                 },
@@ -31,7 +43,7 @@ function ModelSpecificInstance(model, instanceType) {
                 configurable: true
             });
         }
-        Object.defineProperty(constructor.prototype, property, {
+        Object.defineProperty(virtualClass.prototype, property, {
             get: function () {
                 return this._modified[property];
             },
@@ -41,7 +53,7 @@ function ModelSpecificInstance(model, instanceType) {
             enumerable: true
         });
     });
-    return constructor;
+    return virtualClass;
 }
 exports.ModelSpecificInstance = ModelSpecificInstance;
 
