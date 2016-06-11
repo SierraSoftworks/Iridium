@@ -41,7 +41,7 @@
 
     "doc:stage": "cd ./doc && git add -A",
     "doc:commit": "cd ./doc && git diff --cached --exit-code && git commit -m \"doc: Update documentation\" || true",
-    "doc:push": "cd ./doc",
+    "doc:push": "cd ./doc && git push",
     "doc:publish": "npm run doc:stage && npm run doc:commit && npm run doc:push",
 
     "doc:submodule": "npm run doc:submodule:commit",
