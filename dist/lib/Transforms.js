@@ -1,19 +1,19 @@
 "use strict";
-var BSON_1 = require("./BSON");
+const BSON_1 = require("./BSON");
 exports.DefaultTransforms = {
     ObjectID: {
-        fromDB: function (value) { return value instanceof BSON_1.ObjectID ? value.toHexString() : value; },
-        toDB: function (value) { return typeof value === "string" ? new BSON_1.ObjectID(value) : value; }
+        fromDB: value => value instanceof BSON_1.ObjectID ? value.toHexString() : value,
+        toDB: value => typeof value === "string" ? new BSON_1.ObjectID(value) : value
     },
     Binary: {
-        fromDB: function (value) {
+        fromDB: value => {
             if (!value)
                 return null;
             if (value instanceof BSON_1.Binary)
                 return value.buffer;
             return value;
         },
-        toDB: function (value) {
+        toDB: value => {
             if (Buffer.isBuffer(value))
                 return new BSON_1.Binary(value);
             if (Array.isArray(value))

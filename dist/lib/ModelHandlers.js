@@ -1,6 +1,6 @@
 "use strict";
-var _ = require("lodash");
-var Bluebird = require("bluebird");
+const _ = require("lodash");
+const Bluebird = require("bluebird");
 /**
  * Provides a number of methods which are used to handle events that occur within
  * the Iridium workflow - such as what happens when a document is received from
@@ -9,60 +9,56 @@ var Bluebird = require("bluebird");
  * Mostly this is for cache support, wrapping and hook triggering.
  * @internal
  */
-var ModelHandlers = (function () {
-    function ModelHandlers(model) {
+class ModelHandlers {
+    constructor(model) {
         this.model = model;
     }
-    ModelHandlers.prototype.documentReceived = function (conditions, result, wrapper, options) {
-        var _this = this;
-        if (options === void 0) { options = {}; }
+    documentReceived(conditions, result, wrapper, options = {}) {
         _.defaults(options, {
             cache: true,
             partial: false
         });
-        var wrapped;
-        return Bluebird.resolve(this.model.helpers.transformFromDB(result, { document: true })).then(function (target) {
+        let wrapped;
+        return Bluebird.resolve(this.model.helpers.transformFromDB(result, { document: true })).then((target) => {
             return Bluebird
-                .resolve(_this.model.hooks.onRetrieved && _this.model.hooks.onRetrieved(target))
-                .then(function () {
+                .resolve(this.model.hooks.onRetrieved && this.model.hooks.onRetrieved(target))
+                .then(() => {
                 // Cache the document if caching is enabled
-                if (_this.model.core.cache && options.cache && !options.fields) {
-                    _this.model.cache.set(target); // Does not block execution pipeline - fire and forget
+                if (this.model.core.cache && options.cache && !options.fields) {
+                    this.model.cache.set(target); // Does not block execution pipeline - fire and forget
                 }
                 // Wrap the document and trigger the ready hook
-                var wrapped = wrapper(target, false, !!options.fields);
+                let wrapped = wrapper(target, false, !!options.fields);
                 // Only incur the additional promise's performance penalty if this hook is being used
-                if (_this.model.hooks.onReady)
+                if (this.model.hooks.onReady)
                     return Bluebird
-                        .resolve(_this.model.hooks.onReady(wrapped))
-                        .then(function () { return wrapped; });
+                        .resolve(this.model.hooks.onReady(wrapped))
+                        .then(() => wrapped);
                 return wrapped;
             });
         });
-    };
-    ModelHandlers.prototype.creatingDocuments = function (documents) {
-        var _this = this;
-        return Bluebird.all(documents.map(function (document) {
+    }
+    creatingDocuments(documents) {
+        return Bluebird.all(documents.map((document) => {
             return Bluebird
-                .resolve(_this.model.hooks.onCreating && _this.model.hooks.onCreating(document))
-                .then(function () {
-                document = _this.model.helpers.convertToDB(document, { document: true, properties: true });
-                var validation = _this.model.helpers.validate(document);
+                .resolve(this.model.hooks.onCreating && this.model.hooks.onCreating(document))
+                .then(() => {
+                document = this.model.helpers.convertToDB(document, { document: true, properties: true });
+                let validation = this.model.helpers.validate(document);
                 if (validation.failed)
                     return Bluebird.reject(validation.error);
                 return document;
             });
         }));
-    };
-    ModelHandlers.prototype.savingDocument = function (instance, changes) {
+    }
+    savingDocument(instance, changes) {
         return Bluebird
             .resolve(this.model.hooks.onSaving && this.model.hooks.onSaving(instance, changes))
-            .then(function () {
+            .then(() => {
             return instance;
         });
-    };
-    return ModelHandlers;
-}());
+    }
+}
 exports.ModelHandlers = ModelHandlers;
 
 //# sourceMappingURL=ModelHandlers.js.map

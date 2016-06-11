@@ -1,15 +1,15 @@
 "use strict";
-var MongoDB = require("mongodb");
-var Bluebird = require("bluebird");
-var _ = require("lodash");
-var Core_1 = require("./Core");
-var Instance_1 = require("./Instance");
-var Cursor_1 = require("./Cursor");
-var ModelCache_1 = require("./ModelCache");
-var ModelHelpers_1 = require("./ModelHelpers");
-var ModelHandlers_1 = require("./ModelHandlers");
-var ModelSpecificInstance_1 = require("./ModelSpecificInstance");
-var Transforms_1 = require("./Transforms");
+const MongoDB = require("mongodb");
+const Bluebird = require("bluebird");
+const _ = require("lodash");
+const Core_1 = require("./Core");
+const Instance_1 = require("./Instance");
+const Cursor_1 = require("./Cursor");
+const ModelCache_1 = require("./ModelCache");
+const ModelHelpers_1 = require("./ModelHelpers");
+const ModelHandlers_1 = require("./ModelHandlers");
+const ModelSpecificInstance_1 = require("./ModelSpecificInstance");
+const Transforms_1 = require("./Transforms");
 /**
  * An Iridium Model which represents a structured MongoDB collection.
  * Models expose the methods you will generally use to query those collections, and ensure that
@@ -20,14 +20,14 @@ var Transforms_1 = require("./Transforms");
  *
  * @class
  */
-var Model = (function () {
+class Model {
     /**
      * Creates a new Iridium model representing a given ISchema and backed by a collection whose name is specified
      * @param core The Iridium core that this model should use for database access
      * @param instanceType The class which will be instantiated for each document retrieved from the database
      * @constructor
      */
-    function Model(core, instanceType) {
+    constructor(core, instanceType) {
         this._hooks = {};
         if (!(core instanceof Core_1.Core))
             throw new Error("You failed to provide a valid Iridium core for this model");
@@ -45,7 +45,7 @@ var Model = (function () {
     /**
      * Loads any externally available properties (generally accessed using public getters/setters).
      */
-    Model.prototype.loadExternal = function (instanceType) {
+    loadExternal(instanceType) {
         this._collection = instanceType.collection;
         this._schema = instanceType.schema;
         this._hooks = instanceType;
@@ -61,218 +61,156 @@ var Model = (function () {
             this._Instance = ModelSpecificInstance_1.ModelSpecificInstance(this, instanceType);
         else
             this._Instance = instanceType.bind(undefined, this);
-    };
+    }
     /**
      * Loads any internally (protected/private) properties and helpers only used within Iridium itself.
      */
-    Model.prototype.loadInternal = function () {
+    loadInternal() {
         this._cache = new ModelCache_1.ModelCache(this);
         this._helpers = new ModelHelpers_1.ModelHelpers(this);
         this._handlers = new ModelHandlers_1.ModelHandlers(this);
-    };
+    }
     /**
      * Process any callbacks and plugin delegation for the creation of this model.
      * It will generally be called whenever a new Iridium Core is created, however is
      * more specifically tied to the lifespan of the models themselves.
      */
-    Model.prototype.onNewModel = function () {
-        var _this = this;
-        this._core.plugins.forEach(function (plugin) { return plugin.newModel && plugin.newModel(_this); });
-    };
-    Object.defineProperty(Model.prototype, "helpers", {
-        /**
-         * Provides helper methods used by Iridium for common tasks
-         * @returns A set of helper methods which are used within Iridium for common tasks
-         */
-        get: function () {
-            return this._helpers;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Model.prototype, "handlers", {
-        /**
-         * Provides helper methods used by Iridium for hook delegation and common processes
-         * @returns A set of helper methods which perform common event and response handling tasks within Iridium.
-         */
-        get: function () {
-            return this._handlers;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Model.prototype, "hooks", {
-        /**
-         * Gets the even hooks subscribed on this model for a number of different state changes.
-         * These hooks are primarily intended to allow lifecycle manipulation logic to be added
-         * in the user's model definition, allowing tasks such as the setting of default values
-         * or automatic client-side joins to take place.
-         */
-        get: function () {
-            return this._hooks;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Model.prototype, "schema", {
-        /**
-         * Gets the schema dictating the data structure represented by this model.
-         * The schema is used by skmatc to validate documents before saving to the database, however
-         * until MongoDB 3.1 becomes widely available (with server side validation support) we are
-         * limited in our ability to validate certain types of updates. As such, these validations
-         * act more as a data-integrity check than anything else, unless you purely make use of Omnom
-         * updates within instances.
-         * @public
-         * @returns The defined validation schema for this model
-         */
-        get: function () {
-            return this._schema;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Model.prototype, "core", {
-        /**
-         * Gets the Iridium core that this model is associated with.
-         * @public
-         * @returns The Iridium core that this model is bound to
-         */
-        get: function () {
-            return this._core;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Model.prototype, "collection", {
-        /**
-         * Gets the underlying MongoDB collection from which this model's documents are retrieved.
-         * You can make use of this object if you require any low level access to the MongoDB collection,
-         * however we recommend you make use of the Iridium methods whereever possible, as we cannot
-         * guarantee the accuracy of the type definitions for the underlying MongoDB driver.
-         * @public
-         * @returns {Collection}
-         */
-        get: function () {
-            if (!this.core.connection)
-                throw new Error("Iridium Core not connected to a database.");
-            return this.core.connection.collection(this._collection);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Model.prototype, "collectionName", {
-        /**
-         * Gets the name of the underlying MongoDB collection from which this model's documents are retrieved
-         * @public
-         */
-        get: function () {
-            return this._collection;
-        },
-        /**
-         * Sets the name of the underlying MongoDB collection from which this model's documents are retrieved
-         * @public
-         */
-        set: function (value) {
-            this._collection = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Model.prototype, "cacheDirector", {
-        /**
-         * Gets the cache controller which dictates which queries will be cached, and under which key
-         * @public
-         * @returns {CacheDirector}
-         */
-        get: function () {
-            return this._cacheDirector;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Model.prototype, "cache", {
-        /**
-         * Gets the cache responsible for storing objects for quick retrieval under certain conditions
-         * @public
-         * @returns {ModelCache}
-         */
-        get: function () {
-            return this._cache;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Model.prototype, "Instance", {
-        /**
-         * Gets the constructor responsible for creating instances for this model
-         */
-        get: function () {
-            return this._Instance;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Model.prototype, "transforms", {
-        /**
-         * Gets the transforms which are applied whenever a document is received from the database, or
-         * prior to storing a document in the database. Tasks such as converting an ObjectID to a string
-         * and vice versa are all listed in this object.
-         */
-        get: function () {
-            return this._transforms;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Model.prototype, "validators", {
-        /**
-         * Gets the custom validation types available for this model. These validators are added to the
-         * default skmatc validators, as well as those available through plugins, for use when checking
-         * your instances.
-         */
-        get: function () {
-            return this._validators;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Model.prototype, "indexes", {
-        /**
-         * Gets the indexes which Iridium will manage on this model's database collection.
-         */
-        get: function () {
-            return this._indexes;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Model.prototype.find = function (conditions, fields) {
+    onNewModel() {
+        this._core.plugins.forEach(plugin => plugin.newModel && plugin.newModel(this));
+    }
+    /**
+     * Provides helper methods used by Iridium for common tasks
+     * @returns A set of helper methods which are used within Iridium for common tasks
+     */
+    get helpers() {
+        return this._helpers;
+    }
+    /**
+     * Provides helper methods used by Iridium for hook delegation and common processes
+     * @returns A set of helper methods which perform common event and response handling tasks within Iridium.
+     */
+    get handlers() {
+        return this._handlers;
+    }
+    /**
+     * Gets the even hooks subscribed on this model for a number of different state changes.
+     * These hooks are primarily intended to allow lifecycle manipulation logic to be added
+     * in the user's model definition, allowing tasks such as the setting of default values
+     * or automatic client-side joins to take place.
+     */
+    get hooks() {
+        return this._hooks;
+    }
+    /**
+     * Gets the schema dictating the data structure represented by this model.
+     * The schema is used by skmatc to validate documents before saving to the database, however
+     * until MongoDB 3.1 becomes widely available (with server side validation support) we are
+     * limited in our ability to validate certain types of updates. As such, these validations
+     * act more as a data-integrity check than anything else, unless you purely make use of Omnom
+     * updates within instances.
+     * @public
+     * @returns The defined validation schema for this model
+     */
+    get schema() {
+        return this._schema;
+    }
+    /**
+     * Gets the Iridium core that this model is associated with.
+     * @public
+     * @returns The Iridium core that this model is bound to
+     */
+    get core() {
+        return this._core;
+    }
+    /**
+     * Gets the underlying MongoDB collection from which this model's documents are retrieved.
+     * You can make use of this object if you require any low level access to the MongoDB collection,
+     * however we recommend you make use of the Iridium methods whereever possible, as we cannot
+     * guarantee the accuracy of the type definitions for the underlying MongoDB driver.
+     * @public
+     * @returns {Collection}
+     */
+    get collection() {
+        if (!this.core.connection)
+            throw new Error("Iridium Core not connected to a database.");
+        return this.core.connection.collection(this._collection);
+    }
+    /**
+     * Gets the name of the underlying MongoDB collection from which this model's documents are retrieved
+     * @public
+     */
+    get collectionName() {
+        return this._collection;
+    }
+    /**
+     * Sets the name of the underlying MongoDB collection from which this model's documents are retrieved
+     * @public
+     */
+    set collectionName(value) {
+        this._collection = value;
+    }
+    /**
+     * Gets the cache controller which dictates which queries will be cached, and under which key
+     * @public
+     * @returns {CacheDirector}
+     */
+    get cacheDirector() {
+        return this._cacheDirector;
+    }
+    /**
+     * Gets the cache responsible for storing objects for quick retrieval under certain conditions
+     * @public
+     * @returns {ModelCache}
+     */
+    get cache() {
+        return this._cache;
+    }
+    /**
+     * Gets the constructor responsible for creating instances for this model
+     */
+    get Instance() {
+        return this._Instance;
+    }
+    /**
+     * Gets the transforms which are applied whenever a document is received from the database, or
+     * prior to storing a document in the database. Tasks such as converting an ObjectID to a string
+     * and vice versa are all listed in this object.
+     */
+    get transforms() {
+        return this._transforms;
+    }
+    /**
+     * Gets the custom validation types available for this model. These validators are added to the
+     * default skmatc validators, as well as those available through plugins, for use when checking
+     * your instances.
+     */
+    get validators() {
+        return this._validators;
+    }
+    /**
+     * Gets the indexes which Iridium will manage on this model's database collection.
+     */
+    get indexes() {
+        return this._indexes;
+    }
+    find(conditions, fields) {
         conditions = conditions || {};
         if (!_.isPlainObject(conditions))
             conditions = { _id: conditions };
         conditions = this._helpers.convertToDB(conditions);
-        var cursor = this.collection.find(conditions);
+        let cursor = this.collection.find(conditions);
         if (fields)
             cursor = cursor.project(fields);
         return new Cursor_1.Cursor(this, conditions, cursor);
-    };
-    Model.prototype.get = function () {
-        var args = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i - 0] = arguments[_i];
-        }
+    }
+    get(...args) {
         return this.findOne.apply(this, args);
-    };
-    Model.prototype.findOne = function () {
-        var _this = this;
-        var args = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i - 0] = arguments[_i];
-        }
-        var conditions = null;
-        var options = null;
-        var callback = null;
-        for (var argI = 0; argI < args.length; argI++) {
+    }
+    findOne(...args) {
+        let conditions = null;
+        let options = null;
+        let callback = null;
+        for (let argI = 0; argI < args.length; argI++) {
             if (typeof args[argI] === "function")
                 callback = callback || args[argI];
             else if (_.isPlainObject(args[argI])) {
@@ -289,14 +227,14 @@ var Model = (function () {
         _.defaults(options, {
             cache: true
         });
-        return Bluebird.resolve().bind(this).then(function () {
-            conditions = _this._helpers.convertToDB(conditions);
-            return _this._cache.get(conditions);
-        }).then(function (cachedDocument) {
+        return Bluebird.resolve().bind(this).then(() => {
+            conditions = this._helpers.convertToDB(conditions);
+            return this._cache.get(conditions);
+        }).then((cachedDocument) => {
             if (cachedDocument)
                 return cachedDocument;
-            return new Bluebird(function (resolve, reject) {
-                var cursor = _this.collection.find(conditions);
+            return new Bluebird((resolve, reject) => {
+                let cursor = this.collection.find(conditions);
                 if (options.sort)
                     cursor = cursor.sort(options.sort);
                 if (typeof options.skip === "number")
@@ -304,34 +242,25 @@ var Model = (function () {
                 cursor = cursor.limit(1);
                 if (options.fields)
                     cursor = cursor.project(options.fields);
-                return cursor.next(function (err, result) {
+                return cursor.next((err, result) => {
                     if (err)
                         return reject(err);
                     return resolve(result);
                 });
             });
-        }).then(function (document) {
+        }).then((document) => {
             if (!document)
                 return null;
-            return _this._handlers.documentReceived(conditions, document, function (document, isNew, isPartial) { return _this._helpers.wrapDocument(document, isNew, isPartial); }, options);
+            return this._handlers.documentReceived(conditions, document, (document, isNew, isPartial) => this._helpers.wrapDocument(document, isNew, isPartial), options);
         }).nodeify(callback);
-    };
-    Model.prototype.create = function () {
-        var args = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i - 0] = arguments[_i];
-        }
+    }
+    create(...args) {
         return this.insert.apply(this, args);
-    };
-    Model.prototype.insert = function (objs) {
-        var _this = this;
-        var args = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            args[_i - 1] = arguments[_i];
-        }
-        var objects;
-        var options = {};
-        var callback = null;
+    }
+    insert(objs, ...args) {
+        let objects;
+        let options = {};
+        let callback = null;
         if (typeof args[0] === "function")
             callback = args[0];
         else {
@@ -347,16 +276,16 @@ var Model = (function () {
             w: "majority",
             forceServerObjectId: true
         });
-        return Bluebird.resolve().then(function () {
-            var queryOptions = { w: options.w, upsert: options.upsert, new: true };
+        return Bluebird.resolve().then(() => {
+            let queryOptions = { w: options.w, upsert: options.upsert, new: true };
             if (options.upsert) {
-                var docs = _this._handlers.creatingDocuments(objects);
-                return docs.map(function (object) {
-                    return new Bluebird(function (resolve, reject) {
-                        _this.collection.findOneAndUpdate({ _id: object._id }, object, {
+                let docs = this._handlers.creatingDocuments(objects);
+                return docs.map((object) => {
+                    return new Bluebird((resolve, reject) => {
+                        this.collection.findOneAndUpdate({ _id: object._id }, object, {
                             upsert: options.upsert,
                             returnOriginal: false
-                        }, function (err, result) {
+                        }, (err, result) => {
                             if (err)
                                 return reject(err);
                             return resolve(result.value);
@@ -365,25 +294,24 @@ var Model = (function () {
                 });
             }
             else
-                return _this._handlers.creatingDocuments(objects).then(function (objects) { return _.chunk(objects, 1000); }).map(function (objects) {
-                    return new Bluebird(function (resolve, reject) {
-                        _this.collection.insertMany(objects, queryOptions, function (err, result) {
+                return this._handlers.creatingDocuments(objects).then(objects => _.chunk(objects, 1000)).map((objects) => {
+                    return new Bluebird((resolve, reject) => {
+                        this.collection.insertMany(objects, queryOptions, (err, result) => {
                             if (err)
                                 return reject(err);
                             return resolve(result.ops);
                         });
                     });
-                }).then(function (results) { return _.flatten(results); });
-        }).map(function (inserted) {
-            return _this._handlers.documentReceived(null, inserted, function (document, isNew, isPartial) { return _this._helpers.wrapDocument(document, isNew, isPartial); }, { cache: options.cache });
-        }).then(function (results) {
+                }).then(results => _.flatten(results));
+        }).map((inserted) => {
+            return this._handlers.documentReceived(null, inserted, (document, isNew, isPartial) => this._helpers.wrapDocument(document, isNew, isPartial), { cache: options.cache });
+        }).then((results) => {
             if (Array.isArray(objs))
                 return results;
             return results[0];
         }).nodeify(callback);
-    };
-    Model.prototype.update = function (conditions, changes, options, callback) {
-        var _this = this;
+    }
+    update(conditions, changes, options, callback) {
         if (typeof options === "function") {
             callback = options;
             options = {};
@@ -397,10 +325,10 @@ var Model = (function () {
             w: "majority",
             multi: true
         });
-        return Bluebird.resolve().then(function () {
-            conditions = _this._helpers.convertToDB(conditions);
-            return new Bluebird(function (resolve, reject) {
-                _this.collection.updateMany(conditions, changes, options, function (err, response) {
+        return Bluebird.resolve().then(() => {
+            conditions = this._helpers.convertToDB(conditions);
+            return new Bluebird((resolve, reject) => {
+                this.collection.updateMany(conditions, changes, options, (err, response) => {
                     if (err)
                         return reject(err);
                     // New MongoDB 2.6+ response type
@@ -411,10 +339,9 @@ var Model = (function () {
                 });
             });
         }).nodeify(callback);
-    };
-    Model.prototype.count = function (conds, callback) {
-        var _this = this;
-        var conditions = conds;
+    }
+    count(conds, callback) {
+        let conditions = conds;
         if (typeof conds === "function") {
             callback = conds;
             conditions = {};
@@ -424,20 +351,19 @@ var Model = (function () {
             conditions = {
                 _id: conditions
             };
-        return Bluebird.resolve().then(function () {
-            conditions = _this._helpers.convertToDB(conditions);
-            return new Bluebird(function (resolve, reject) {
-                _this.collection.count(conditions, function (err, results) {
+        return Bluebird.resolve().then(() => {
+            conditions = this._helpers.convertToDB(conditions);
+            return new Bluebird((resolve, reject) => {
+                this.collection.count(conditions, (err, results) => {
                     if (err)
                         return reject(err);
                     return resolve(results);
                 });
             });
         }).nodeify(callback);
-    };
-    Model.prototype.remove = function (conds, options, callback) {
-        var _this = this;
-        var conditions = conds;
+    }
+    remove(conds, options, callback) {
+        let conditions = conds;
         if (typeof options === "function") {
             callback = options;
             options = {};
@@ -456,95 +382,89 @@ var Model = (function () {
             conditions = {
                 _id: conditions
             };
-        return Bluebird.resolve().then(function () {
-            conditions = _this._helpers.convertToDB(conditions);
-            return new Bluebird(function (resolve, reject) {
+        return Bluebird.resolve().then(() => {
+            conditions = this._helpers.convertToDB(conditions);
+            return new Bluebird((resolve, reject) => {
                 if (options.single)
-                    return _this.collection.deleteOne(conditions, options, function (err, response) {
+                    return this.collection.deleteOne(conditions, options, (err, response) => {
                         if (err)
                             return reject(err);
                         return resolve(response.result.n);
                     });
-                _this.collection.deleteMany(conditions, options, function (err, response) {
+                this.collection.deleteMany(conditions, options, (err, response) => {
                     if (err)
                         return reject(err);
                     return resolve(response.result.n);
                 });
             });
-        }).then(function (count) {
+        }).then((count) => {
             if (count === 1)
-                _this._cache.clear(conditions);
+                this._cache.clear(conditions);
             return Bluebird.resolve(count);
         }).nodeify(callback);
-    };
-    Model.prototype.aggregate = function (pipeline) {
-        var _this = this;
-        return new Bluebird(function (resolve, reject) {
-            _this.collection.aggregate(pipeline, function (err, results) {
+    }
+    aggregate(pipeline) {
+        return new Bluebird((resolve, reject) => {
+            this.collection.aggregate(pipeline, (err, results) => {
                 if (err)
                     return reject(err);
                 return resolve(results);
             });
         });
-    };
-    Model.prototype.ensureIndex = function (specification, options, callback) {
-        var _this = this;
+    }
+    ensureIndex(specification, options, callback) {
         if (typeof options === "function") {
             callback = options;
             options = {};
         }
-        return new Bluebird(function (resolve, reject) {
-            _this.collection.createIndex(specification, options, function (err, name) {
+        return new Bluebird((resolve, reject) => {
+            this.collection.createIndex(specification, options, (err, name) => {
                 if (err)
                     return reject(err);
                 return resolve(name);
             });
         }).nodeify(callback);
-    };
+    }
     /**
      * Ensures that all indexes defined in the model's options are created
      * @param {function(Error, String[])} callback A callback which is triggered when the operation completes
      * @returns {Promise<String[]>} The names of the indexes
      */
-    Model.prototype.ensureIndexes = function (callback) {
-        var _this = this;
-        return Bluebird.resolve(this._indexes).map(function (index) {
-            return _this.ensureIndex(index.spec || index, index.options || {});
+    ensureIndexes(callback) {
+        return Bluebird.resolve(this._indexes).map((index) => {
+            return this.ensureIndex(index.spec || index, index.options || {});
         }).nodeify(callback);
-    };
-    Model.prototype.dropIndex = function (specification, callback) {
-        var _this = this;
-        var index;
+    }
+    dropIndex(specification, callback) {
+        let index;
         if (typeof (specification) === "string")
             index = specification;
         else {
-            index = _(specification).map(function (direction, key) { return (key + "_" + direction); }).reduce(function (x, y) { return (x + "_" + y); });
+            index = _(specification).map((direction, key) => `${key}_${direction}`).reduce((x, y) => `${x}_${y}`);
         }
-        return new Bluebird(function (resolve, reject) {
-            _this.collection.dropIndex(index, function (err, result) {
+        return new Bluebird((resolve, reject) => {
+            this.collection.dropIndex(index, (err, result) => {
                 if (err)
                     return reject(err);
                 return resolve(!!result.ok);
             });
         }).nodeify(callback);
-    };
+    }
     /**
      * Removes all indexes (except for _id) from the collection
      * @param {function(Error, Boolean)} callback A callback which is triggered when the operation completes
      * @returns {Promise<Boolean>} Whether the indexes were dropped
      */
-    Model.prototype.dropIndexes = function (callback) {
-        var _this = this;
-        return new Bluebird(function (resolve, reject) {
-            _this.collection.dropIndexes(function (err, count) {
+    dropIndexes(callback) {
+        return new Bluebird((resolve, reject) => {
+            this.collection.dropIndexes((err, count) => {
                 if (err)
                     return reject(err);
                 return resolve(count);
             });
         }).nodeify(callback);
-    };
-    return Model;
-}());
+    }
+}
 exports.Model = Model;
 
 //# sourceMappingURL=Model.js.map

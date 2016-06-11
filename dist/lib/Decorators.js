@@ -1,8 +1,8 @@
 "use strict";
-var MongoDB = require("mongodb");
-var _ = require("lodash");
-var Skmatc = require("skmatc");
-var Transforms_1 = require("./Transforms");
+const MongoDB = require("mongodb");
+const _ = require("lodash");
+const Skmatc = require("skmatc");
+const Transforms_1 = require("./Transforms");
 /**
  * Specifies the name of the collection to which this instance's documents should be sent.
  * @param name The name of the MongoDB collection to store the documents in.
@@ -45,20 +45,16 @@ exports.Index = Index;
  */
 function Validate(forType, validate) {
     return function (target) {
-        target.validators = (target.validators || []).concat(Skmatc.create(function (schema) { return schema === forType; }, validate));
+        target.validators = (target.validators || []).concat(Skmatc.create(schema => schema === forType, validate));
     };
 }
 exports.Validate = Validate;
-function Property() {
-    var args = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i - 0] = arguments[_i];
-    }
-    var name = null, asType = false, required = true;
+function Property(...args) {
+    let name = null, asType = false, required = true;
     if (args.length > 1 && typeof args[args.length - 1] === "boolean")
         required = args.pop();
     return function (target, property) {
-        var staticTarget = target;
+        let staticTarget = target;
         if (!property)
             name = args.shift();
         else {
@@ -91,9 +87,8 @@ exports.Property = Property;
  * fromDB or toDB is called.
  */
 function Transform(fromDB, toDB) {
-    return function (target, property) {
-        if (property === void 0) { property = "$document"; }
-        var staticTarget = (target.constructor || target);
+    return function (target, property = "$document") {
+        let staticTarget = (target.constructor || target);
         staticTarget.transforms = _.clone(staticTarget.transforms || {});
         staticTarget.transforms[property] = {
             fromDB: fromDB,
