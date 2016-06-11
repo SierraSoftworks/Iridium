@@ -47,8 +47,7 @@
     "doc:submodule": "npm run doc:submodule:commit",
     "doc:submodule:commit": "git commit doc -m \"doc: Update documentation\"",
 
-    "postversion": "npm run version:commit && npm run version:tag",
-    "version:commit": "npm run exec -- git commit package.json -m \"Version $npm_package_version\"",
+    "postversion": "npm run version:tag",
     "version:tag": "npm run exec -- git tag -a v$npm_package_version -m \"Version $npm_package_version\"",
     "version:get": "npm run exec -- echo -e $npm_package_version",
 
