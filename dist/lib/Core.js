@@ -185,5 +185,4 @@ class Core {
     }
 }
 exports.Core = Core;
-
 //# sourceMappingURL=Core.js.map

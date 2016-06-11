@@ -259,5 +259,4 @@ Instance.transforms = {};
  */
 Instance.indexes = [];
 exports.Instance = Instance;
-
 //# sourceMappingURL=Instance.js.map

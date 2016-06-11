@@ -1,7 +1,8 @@
 language: node_js
 sudo: false
 node_js:
-  - '4.1'
+  - '4'
+  - '6'
 env:
   - CI_SERVER=1
 addons:
@@ -19,11 +20,10 @@ before_script:
   - 'mongod --dbpath=data/db &'
   - until nc -z localhost 27017; do echo Waiting for MongoDB; sleep 1; done
   - mongo --eval 'db.hostInfo()'
-  - gulp bundle
 script:
-  - gulp ci
+  - npm test
 after_script:
-  - gulp coverage
+  - npm run coverage
   - coveralls < coverage/lcov.info
   - codeclimate-test-reporter < coverage/lcov.info
 

@@ -1,3 +1,2 @@
---require test/support/chai
---require test/support/config
+--require dist/test/support/chai
 --timeout 10s

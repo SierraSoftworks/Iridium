@@ -60,5 +60,4 @@ class ModelHandlers {
     }
 }
 exports.ModelHandlers = ModelHandlers;
-
 //# sourceMappingURL=ModelHandlers.js.map

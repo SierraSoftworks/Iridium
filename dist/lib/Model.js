@@ -466,5 +466,4 @@ class Model {
     }
 }
 exports.Model = Model;
-
 //# sourceMappingURL=Model.js.map

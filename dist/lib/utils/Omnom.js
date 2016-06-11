@@ -183,5 +183,4 @@ class Omnom {
     }
 }
 exports.Omnom = Omnom;
-
 //# sourceMappingURL=Omnom.js.map

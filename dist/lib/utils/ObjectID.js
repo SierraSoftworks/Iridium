@@ -17,5 +17,4 @@ function toObjectID(value) {
     return MongoDB.ObjectID.createFromHexString(value);
 }
 exports.toObjectID = toObjectID;
-
 //# sourceMappingURL=ObjectID.js.map

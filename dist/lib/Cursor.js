@@ -176,5 +176,4 @@ class Cursor {
     }
 }
 exports.Cursor = Cursor;
-
 //# sourceMappingURL=Cursor.js.map

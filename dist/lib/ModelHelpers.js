@@ -128,5 +128,4 @@ class ModelHelpers {
     }
 }
 exports.ModelHelpers = ModelHelpers;
-
 //# sourceMappingURL=ModelHelpers.js.map

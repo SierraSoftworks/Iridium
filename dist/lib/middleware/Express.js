@@ -17,5 +17,4 @@ function ExpressMiddlewareFactory(core) {
     };
 }
 exports.ExpressMiddlewareFactory = ExpressMiddlewareFactory;
-
 //# sourceMappingURL=Express.js.map

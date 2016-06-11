@@ -26,5 +26,4 @@ class ModelCache {
     }
 }
 exports.ModelCache = ModelCache;
-
 //# sourceMappingURL=ModelCache.js.map

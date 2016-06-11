@@ -25,5 +25,4 @@ class MemoryCache {
     }
 }
 exports.MemoryCache = MemoryCache;
-
 //# sourceMappingURL=MemoryCache.js.map

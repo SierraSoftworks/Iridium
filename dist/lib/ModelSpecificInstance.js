@@ -46,5 +46,4 @@ function ModelSpecificInstance(model, instanceType) {
     return virtualClass;
 }
 exports.ModelSpecificInstance = ModelSpecificInstance;
-
 //# sourceMappingURL=ModelSpecificInstance.js.map
