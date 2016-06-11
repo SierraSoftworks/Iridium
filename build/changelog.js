@@ -23,7 +23,37 @@ let changelog = [
 let hasRelease = false;
 
 function generateTablet(content, colour, url) {
-    return `<a style="border-radius: 2px; padding: 4px 8px; background: ${colour}; color: #fff;" href="${url}">${content}</a>`
+    return `<a style="border-radius: 2px; padding: 4px 8px; background: ${colour}; color: #fff;" href="${url}">${content}</a>`;
+}
+
+function parseRefspec(refSpec) {
+    let properties = {
+        localHead: false,
+        version: false,
+        tags: [],
+        branches: []
+    };
+    
+    let refspecMatch;
+    while (refspecMatch = refspecRegex.exec(refSpec)) {
+        if (refspecMatch[1]) {
+            // origin/(xxxx)
+            properties.branches.push(refspecMatch[1]);
+        } else if(refspecMatch[2]) {
+            // tag: (xxxx)
+            const tag = refspecMatch[2];
+            if (tag.match(/^v[\d\w\-\.]+$/)) {
+                properties.version = tag.substring(1);
+            }
+
+            properties.tags.push(refspecMatch[2]);
+        } else if(refspecMatch[3]) {
+            // HEAD -> (xxxx)
+            properties.localHead = refspecMatch[3];
+        }
+    }
+
+    return properties;
 }
 
 gitLog.stdout.on('data', data => {
@@ -43,31 +73,7 @@ gitLog.stdout.on('data', data => {
         const message = commitLineMatch[3];
 
         if (refSpec) {
-            let properties = {
-                localHead: false,
-                version: false,
-                tags: [],
-                branches: []
-            }
-            
-            let refspecMatch;
-            while (refspecMatch = refspecRegex.exec(refSpec)) {
-                if (refspecMatch[1]) {
-                    // origin/(xxxx)
-                    properties.branches.push(refspecMatch[1]);
-                } else if(refspecMatch[2]) {
-                    // tag: (xxxx)
-                    const tag = refspecMatch[2];
-                    if (tag.match(/^v[\d\w\-\.]+$/)) {
-                        properties.version = tag.substring(1);
-                    }
-
-                    properties.tags.push(refspecMatch[2]);
-                } else if(refspecMatch[3]) {
-                    // HEAD -> (xxxx)
-                    properties.localHead = refspecMatch[3];
-                }
-            }
+            const properties = parseRefspec(refSpec);
 
             if (properties.version) {
                 changelog.push("");
