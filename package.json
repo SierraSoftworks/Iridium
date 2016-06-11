@@ -1,6 +1,6 @@
 {
   "name": "iridium",
-  "version": "7.0.0-alpha.8",
+  "version": "7.0.0-alpha.9",
   "author": "Benjamin Pannell <admin@sierrasoftworks.com>",
   "description": "A custom lightweight ORM for MongoDB designed for power-users",
   "license": "MIT",
@@ -20,37 +20,27 @@
   "scripts": {
     "build": "tsc",
     "build:definitions": "node ./build/bundle.js",
-
     "prepublish": "npm run build && npm run build:definitions",
-
     "pretest": "npm run build",
     "test": "mocha --opts test/mocha.opts dist/test",
-
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- --opts test/mocha.opts dist/test",
     "lint": "tslint lib/",
-
     "git:stash": "git stash",
     "git:stash:pop": "git stash pop",
-
     "changelog": "node build/changelog.js",
     "doc": "npm run doc:build && npm run doc:publish && npm run doc:submodule",
-
     "predoc:build": "cd ./doc && git checkout gh-pages",
     "doc:build": "typedoc --out ./doc --mode file --name Iridium typings/index.d.ts iridium.ts",
     "postdoc:build": "echo gitdir: ../.git/modules/doc> ./doc/.git",
-
     "doc:stage": "cd ./doc && git add -A",
     "doc:commit": "cd ./doc && git diff --cached --exit-code && git commit -m \"doc: Update documentation\" || true",
     "doc:push": "cd ./doc && git push",
     "doc:publish": "npm run doc:stage && npm run doc:commit && npm run doc:push",
-
     "doc:submodule": "npm run doc:submodule:commit",
     "doc:submodule:commit": "git commit doc -m \"doc: Update documentation\"",
-
     "postversion": "npm run version:tag",
     "version:tag": "npm run exec -- git tag -a v$npm_package_version -m \"Version $npm_package_version\"",
     "version:get": "npm run exec -- echo -e $npm_package_version",
-
     "exec": "node ./build/exec.js"
   },
   "typings": "iridium.ts",
