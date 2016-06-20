@@ -38,10 +38,6 @@
     "doc:publish": "npm run doc:stage && npm run doc:commit && npm run doc:push",
     "doc:submodule": "npm run doc:submodule:commit",
     "doc:submodule:commit": "git commit doc -m \"doc: Update documentation\"",
-    "postversion": "npm run version:tag",
-    "version:tag": "npm run exec -- git tag -a v$npm_package_version -m \"Version $npm_package_version\"",
-    "version:get": "npm run exec -- echo -e $npm_package_version",
-    "exec": "node ./build/exec.js",
     "watch": "concurrently -r --kill-others \"npm run watch:build\" \"npm run watch:test\"",
     "watch:build": "tsc --watch",
     "watch:test": "mocha --opts test/mocha.opts --watch dist/test"
