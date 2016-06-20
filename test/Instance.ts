@@ -195,7 +195,7 @@ describe("Instance",() => {
                 .then((instance) => chai.expect(instance.save({ $set: { answer: 10 } })).to.eventually.have.property("answer", 10));
         });
 
-        it("should allow you tp specify a custom update query and conditions for the update",() => {
+        it("should allow you to specify a custom update query and conditions for the update",() => {
             return core.Test.insert({
                 answer: 1
             })
