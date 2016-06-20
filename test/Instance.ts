@@ -178,6 +178,28 @@ describe("Instance",() => {
             return chai.expect(instance.save().then(() => chai.expect(core.Test.get(instance._id)).to.eventually.have.property("answer", instance.answer))).to.eventually.be.ok;
         });
 
+        it("should set isNew to false after inserting a new instance",() => {
+            let instance = new core.Test.Instance({
+                answer: 1
+            });
+
+            chai.expect((<any>instance)._isNew).to.be.true;
+            return instance.save().then(() => chai.expect((<any>instance)._isNew).to.be.false);
+        });
+
+        it("should allow a new instance to be saved on insertion, modified and saved again",() => {
+            let instance = new core.Test.Instance({
+                answer: 1
+            });
+
+            return chai.expect(instance.save().then(() => {
+                instance.answer = 2;
+                return instance.save();
+            })).to.eventually.not.be.rejected;
+
+            return chai.expect(instance.save().then(() => chai.expect(core.Test.get(instance._id)).to.eventually.have.property("answer", instance.answer))).to.eventually.be.ok;
+        });
+
         it("should automatically generate the update query if one was not provided",() => {
             return core.Test.insert({
                 answer: 1
