@@ -196,8 +196,6 @@ describe("Instance",() => {
                 instance.answer = 2;
                 return instance.save();
             })).to.eventually.not.be.rejected;
-
-            return chai.expect(instance.save().then(() => chai.expect(core.Test.get(instance._id)).to.eventually.have.property("answer", instance.answer))).to.eventually.be.ok;
         });
 
         it("should automatically generate the update query if one was not provided",() => {
