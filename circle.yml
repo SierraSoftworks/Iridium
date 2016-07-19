@@ -20,12 +20,13 @@ dependencies:
     - sudo apt-get install -y mongodb-org
     - sudo service mongod restart
     - npm install --progress=false
+    - npm install mocha-junit-reporter --progress=false
 
 test:
   pre:
     - mongo --version
     - mongo --eval 'db.hostInfo()'
   override:
-    - mocha test --reporter mocha-junit-reporter --opts test/mocha.opts dist/test:
+    - npm run test -- --reporter mocha-junit-reporter:
         environment:
           MOCHA_FILE: $CIRCLE_TEST_REPORTS/junit/test-results.xml
