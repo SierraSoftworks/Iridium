@@ -8,8 +8,6 @@ general:
 machine:
   node:
     version: 6
-  services:
-    - mongodb
   environment:
     CI_SERVER: 1
 
