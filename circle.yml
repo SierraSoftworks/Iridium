@@ -25,3 +25,7 @@ test:
   pre:
     - mongo --version
     - mongo --eval 'db.hostInfo()'
+  override:
+    - mocha test --reporter mocha-junit-reporter --opts test/mocha.opts dist/test:
+        environment:
+          MOCHA_FILE: $CIRCLE_TEST_REPORTS/junit/test-results.xml
