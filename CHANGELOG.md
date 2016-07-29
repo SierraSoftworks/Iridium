@@ -6,7 +6,6 @@ at the [Releases](https://github.com/SierraSoftworks/Iridium/releases) page.
 
 ## Version [7.0.0-alpha.11](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.11)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.11">tag: **v7.0.0-alpha.11**</a>
-<a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/7.0.0-dev">branch: **7.0.0-dev**</a>
 
 ```sh
 npm install iridium@7.0.0-alpha.11
@@ -19,6 +18,15 @@ npm install iridium@7.0.0-alpha.11
  - [07c3599](https://github.com/SierraSoftworks/Iridium/commit/07c3599) ci: Add junit output for CircleCI test runs
  - [1713a24](https://github.com/SierraSoftworks/Iridium/commit/1713a24) ci: Remove explicit MongoDB dependency in CircleCI
  - [299ee2b](https://github.com/SierraSoftworks/Iridium/commit/299ee2b) feat: Add CircleCI build config
+
+## Version [7.0.0-alpha.10](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.10)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.10">tag: **v7.0.0-alpha.10**</a>
+
+```sh
+npm install iridium@7.0.0-alpha.10
+```
+
+### Changes
  - [d84d339](https://github.com/SierraSoftworks/Iridium/commit/d84d339) 7.0.0-alpha.10
  - [a00de7a](https://github.com/SierraSoftworks/Iridium/commit/a00de7a) test: Remove extraneous lines
  - [74d8759](https://github.com/SierraSoftworks/Iridium/commit/74d8759) tweak: Remove postversion hook since it is not necessary
