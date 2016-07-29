@@ -11,10 +11,13 @@ import {Hooks} from "./Hooks";
 import {Plugin} from "./Plugins";
 import {Cache} from "./Cache";
 import {CacheDirector} from "./CacheDirector";
+import {CacheOnID} from "./cacheControllers/IDDirector";
 import * as General from "./General";
 import {Cursor} from "./Cursor";
 import * as Index from "./Index";
 import * as ModelOptions from "./ModelOptions";
+import {Conditions} from "./Conditions";
+import {Changes} from "./Changes";
 
 import {Omnom} from "./utils/Omnom";
 import {ModelCache} from "./ModelCache";
@@ -63,7 +66,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
         this._collection = instanceType.collection;
         this._schema = instanceType.schema;
         this._hooks = instanceType;
-        this._cacheDirector = instanceType.cache;
+        this._cacheDirector = instanceType.cache || new CacheOnID();
         this._transforms = instanceType.transforms || {};
         this._validators = instanceType.validators || [];
         this._indexes = instanceType.indexes || [];
@@ -162,7 +165,6 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      * @returns {Collection}
      */
     get collection(): MongoDB.Collection {
-        if (!this.core.connection) throw new Error("Iridium Core not connected to a database.");
         return this.core.connection.collection(this._collection);
     }
 
@@ -253,15 +255,15 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      * @param {Object} conditions The MongoDB query dictating which documents to return
      * @returns {Promise<TInstance[]>}
      */
-    find(conditions: { _id?: any, [key: string]: any } | any): Cursor<TDocument, TInstance>;
+    find(conditions: { _id?: string; } | Conditions | string): Cursor<TDocument, TInstance>;
     /**
      * Returns all documents in the collection which match the conditions
      * @param {Object} conditions The MongoDB query dictating which documents to return
      * @param {Object} fields The fields to include or exclude from the document
      * @returns {Promise<TInstance[]>}
      */
-    find(conditions: { _id?: any, [key: string]: any }  | any, fields: { [name: string]: number }): Cursor<TDocument, TInstance>;
-    find(conditions?: { _id?: any, [key: string]: any } | any, fields?: any): Cursor<TDocument, TInstance> {
+    find(conditions: { _id?: string; } | Conditions | string, fields: { [name: string]: number }): Cursor<TDocument, TInstance>;
+    find(conditions?: { _id?: string; } | Conditions | string, fields?: any): Cursor<TDocument, TInstance> {
         conditions = conditions || {};
 
         if (!_.isPlainObject(conditions)) conditions = { _id: conditions };
@@ -287,14 +289,14 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    get(id: any, callback?: General.Callback<TInstance>): Bluebird<TInstance>;
+    get(id: string, callback?: General.Callback<TInstance>): Bluebird<TInstance>;
     /**
      * Retrieves a single document from the collection which matches the conditions
      * @param {Object} conditions The MongoDB query dictating which document to return
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    get(conditions: { _id?: any, [key: string]: any }, callback?: General.Callback<TInstance>): Bluebird<TInstance>;
+    get(conditions: { _id?: string; } | Conditions, callback?: General.Callback<TInstance>): Bluebird<TInstance>;
     /**
      * Retrieves a single document from the collection with the given ID and wraps it as an instance
      * @param {any} id The document's unique _id field value in downstream format
@@ -302,7 +304,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    get(id: any, options: ModelOptions.QueryOptions, callback?: General.Callback<TInstance>): Bluebird<TInstance>;
+    get(id: string, options: ModelOptions.QueryOptions, callback?: General.Callback<TInstance>): Bluebird<TInstance>;
     /**
      * Retrieves a single document from the collection which matches the conditions
      * @param {Object} conditions The MongoDB query dictating which document to return
@@ -310,7 +312,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    get(conditions: { _id?: any, [key: string]: any }, options: ModelOptions.QueryOptions, callback?: General.Callback<TInstance>): Bluebird<TInstance>;
+    get(conditions: { _id?: string; } | Conditions, options: ModelOptions.QueryOptions, callback?: General.Callback<TInstance>): Bluebird<TInstance>;
     get(...args: any[]): Bluebird<TInstance> {
         return this.findOne.apply(this, args);
     }
@@ -320,21 +322,21 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    findOne(callback?: General.Callback<TInstance>): Bluebird<TInstance>;
+    findOne(callback?: General.Callback<TInstance>): Bluebird<TInstance|null>;
     /**
      * Retrieves a single document from the collection with the given ID and wraps it as an instance
      * @param {any} id The document's unique _id field value in downstream format
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    findOne(id: any, callback?: General.Callback<TInstance>): Bluebird<TInstance>;
+    findOne(id: string, callback?: General.Callback<TInstance>): Bluebird<TInstance|null>;
     /**
      * Retrieves a single document from the collection which matches the conditions
      * @param {Object} conditions The MongoDB query dictating which document to return
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    findOne(conditions: { _id?: any, [key: string]: any }, callback?: General.Callback<TInstance>): Bluebird<TInstance>;
+    findOne(conditions: { _id?: string; } | Conditions, callback?: General.Callback<TInstance>): Bluebird<TInstance|null>;
     /**
      * Retrieves a single document from the collection with the given ID and wraps it as an instance
      * @param {any} id The document's unique _id field value in downstream format
@@ -342,7 +344,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    findOne(id: any, options: ModelOptions.QueryOptions, callback?: General.Callback<TInstance>): Bluebird<TInstance>;
+    findOne(id: string, options: ModelOptions.QueryOptions, callback?: General.Callback<TInstance>): Bluebird<TInstance|null>;
     /**
      * Retrieves a single document from the collection which matches the conditions
      * @param {Object} conditions The MongoDB query dictating which document to return
@@ -350,11 +352,11 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    findOne(conditions: { _id?: any, [key: string]: any }, options: ModelOptions.QueryOptions, callback?: General.Callback<TInstance>): Bluebird<TInstance>;
-    findOne(...args: any[]): Bluebird<TInstance> {
-        let conditions: { _id?: any, [key: string]: any } = null;
-        let options: ModelOptions.QueryOptions = null;
-        let callback: General.Callback<TInstance> = null;
+    findOne(conditions: { _id?: string; } | Conditions, options: ModelOptions.QueryOptions, callback?: General.Callback<TInstance>): Bluebird<TInstance|null>;
+    findOne(...args: any[]): Bluebird<TInstance|null> {
+        let conditions: { _id?: any, [key: string]: any }|undefined;
+        let options: ModelOptions.QueryOptions|undefined;
+        let callback: General.Callback<TInstance>|undefined;
 
         for (let argI = 0; argI < args.length; argI++) {
             if (typeof args[argI] === "function") callback = callback || args[argI];
@@ -378,27 +380,27 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
             return this._cache.get<TDocument>(conditions);
         }).then((cachedDocument: TDocument) => {
             if (cachedDocument) return cachedDocument;
-            return new Bluebird<any>((resolve, reject) => {
+            return new Bluebird<TDocument|null>((resolve, reject) => {
                 let cursor = this.collection.find(conditions);
                     
-                if(options.sort)
-                    cursor = cursor.sort(options.sort);
+                if(options!.sort)
+                    cursor = cursor.sort(options!.sort!);
                 
-                if(typeof options.skip === "number")
-                    cursor = cursor.skip(options.skip);
+                if(typeof options!.skip === "number")
+                    cursor = cursor.skip(options!.skip!);
                 
                 cursor = cursor.limit(1);
                     
-                if(options.fields)
-                    cursor = cursor.project(options.fields);
+                if(options!.fields)
+                    cursor = cursor.project(options!.fields!);
                 
                 return cursor.next((err, result) => {
                     if (err) return reject(err);
                     return resolve(result);
                 });
             });
-        }).then((document: TDocument) => {
-            if (!document) return null;
+        }).then((document) => {
+            if (!document) return Bluebird.resolve(null);
             return this._handlers.documentReceived(conditions, document, (document, isNew?, isPartial?) => this._helpers.wrapDocument(document, isNew, isPartial), options);
         }).nodeify(callback);
     }
@@ -470,7 +472,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
     insert(objs: TDocument | TDocument[], ...args: any[]): Bluebird<any> {
         let objects: TDocument[];
         let options: ModelOptions.CreateOptions = {};
-        let callback: General.Callback<any> = null;
+        let callback: General.Callback<any>|undefined = undefined;
         if (typeof args[0] === "function") callback = args[0];
         else {
             options = args[0];
@@ -528,7 +530,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      * @param {Object} changes The changes to make to the documents
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      */
-    update(conditions: { _id?: any, [key: string]: any } | any, changes: any, callback?: General.Callback<number>): Bluebird<number>;
+    update(conditions: { _id?: string; } | Conditions | string, changes: Changes, callback?: General.Callback<number>): Bluebird<number>;
     /**
      * Updates the documents in the backing collection which match the conditions using the given update instructions
      * @param {Object} conditions The conditions which determine which documents will be updated
@@ -536,8 +538,8 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      * @param {UpdateOptions} options The options which dictate how this function behaves
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      */
-    update(conditions: { _id?: any, [key: string]: any } | any, changes: any, options: ModelOptions.UpdateOptions, callback?: General.Callback<number>): Bluebird<number>;
-    update(conditions: { _id?: any, [key: string]: any } | any, changes: any, options?: ModelOptions.UpdateOptions, callback?: General.Callback<number>): Bluebird<number> {
+    update(conditions: { _id?: string; } | Conditions | string, changes: Changes, options: ModelOptions.UpdateOptions, callback?: General.Callback<number>): Bluebird<number>;
+    update(conditions: { _id?: string; } | Conditions | string, changes: Changes, options?: ModelOptions.UpdateOptions, callback?: General.Callback<number>): Bluebird<number> {
         if (typeof options === "function") {
             callback = <General.Callback<number>>options;
             options = {};
@@ -558,7 +560,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
             conditions = this._helpers.convertToDB(conditions);
 
             return new Bluebird<number>((resolve, reject) => {
-                this.collection.updateMany(conditions, changes, options, (err, response) => {
+                this.collection.updateMany(conditions, changes, options!, (err, response) => {
                     if (err) return reject(err);
 
                     // New MongoDB 2.6+ response type
@@ -583,9 +585,9 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      * @returns {Promise<number>}
      */
-    count(conditions: { _id?: any, [key: string]: any } | any, callback?: General.Callback<number>): Bluebird<number>;
+    count(conditions: { _id?: string; } | Conditions, callback?: General.Callback<number>): Bluebird<number>;
     count(conds?: any, callback?: General.Callback<number>): Bluebird<number> {
-        let conditions: { _id?: any, [key: string]: any } = <{ _id?: any, [key: string]: any }>conds;
+        let conditions: { _id?: string; } | Conditions = conds;
         if (typeof conds === "function") {
             callback = <General.Callback<number>>conds;
             conditions = {};
@@ -621,7 +623,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      * @returns {Promise<number>}
      */
-    remove(conditions: { _id?: any, [key: string]: any } | any, callback?: General.Callback<number>): Bluebird<number>;
+    remove(conditions: { _id?: string; } | Conditions | any, callback?: General.Callback<number>): Bluebird<number>;
     /**
      * Removes all documents from the collection which match the conditions
      * @param {Object} conditions The conditions determining whether an object is removed or not
@@ -629,9 +631,9 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      * @returns {Promise<number>}
      */
-    remove(conditions: { _id?: any, [key: string]: any }, options: ModelOptions.RemoveOptions, callback?: General.Callback<number>): Bluebird<number>;
+    remove(conditions: { _id?: string; } | Conditions | string, options: ModelOptions.RemoveOptions, callback?: General.Callback<number>): Bluebird<number>;
     remove(conds?: any, options?: ModelOptions.RemoveOptions, callback?: General.Callback<number>): Bluebird<number> {
-        let conditions: { _id?: any, [key: string]: any } = <{ _id?: any, [key: string]: any }>conds;
+        let conditions: { _id?: string; } | Conditions = conds;
 
         if (typeof options === "function") {
             callback = <General.Callback<number>>options;
@@ -658,20 +660,21 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
         return Bluebird.resolve().then(() => {
             conditions = this._helpers.convertToDB(conditions);
 
-            return new Bluebird<number>((resolve, reject) => {
-                if(options.single) return this.collection.deleteOne(conditions, options, (err, response) => {
+            return new Bluebird<number|undefined>((resolve, reject) => {
+                if(options!.single) return this.collection.deleteOne(conditions, options!, (err, response) => {
                     if (err) return reject(err);
                     return resolve(response.result.n);
                 });
                 
-                this.collection.deleteMany(conditions, options, (err, response) => {
+                this.collection.deleteMany(conditions, options!, (err, response) => {
                     if (err) return reject(err);
                     return resolve(response.result.n);
                 });
             });
         }).then((count) => {
+            if (count === undefined) return Bluebird.resolve<number>(0);
             if (count === 1) this._cache.clear(conditions);
-            return Bluebird.resolve(count);
+            return Bluebird.resolve<number>(count);
         }).nodeify(callback);
     }
 
@@ -706,7 +709,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
         }
 
         return new Bluebird<string>((resolve, reject) => {
-            this.collection.createIndex(specification, options, (err, name: any) => {
+            this.collection.createIndex(specification, options || {}, (err, name: any) => {
                 if (err) return reject(err);
                 return resolve(name);
             });

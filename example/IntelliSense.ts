@@ -66,8 +66,9 @@ db.connect().then(function () {
     });
     
     db.Users.findOne().then(user => {
-        user.save().then(() => {
-            user.remove().then(() => {
+        if (!user) throw new Error("User could not be found...");
+        user.save().then(user => {
+            user.remove().then(user => {
                 user.username = "test";
                 return user.save();
             });

@@ -13,16 +13,15 @@
   },
   "dependencies": {
     "mute": [
-      "tsdoc",
-      "gulp-tsdoc",
-      "istanbul",
-      "semver",
-      "gulp",
-      "coveralls",
+      "chai",
+      "chai-as-promised",
+      "chalk",
       "codeclimate-test-reporter",
-      "del",
-      "gulp-bump",
-      "gulp-istanbul"
+      "concurrently",
+      "istanbul",
+      "mocha"
+      "tslint",
+      "typedoc"
     ]
   }
 }

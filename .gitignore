@@ -1,14 +1,4 @@
-Properties/
-bin/
-obj/
-*.suo
-*.user
-*.sublime*
-node_modules/
-.vs
-*.dat
-.idea
-*.tmp
+dist
+node_modules
 coverage/
-.tscache
 doc

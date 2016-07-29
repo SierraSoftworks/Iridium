@@ -32,7 +32,7 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
         return new Bluebird<number>((resolve, reject) => {
             this.cursor.count(true, (err, count) => {
                 if (err) return reject(err);
-                return resolve(<any>count);
+                return resolve(count);
             });
         }).nodeify(callback);
     }
@@ -50,7 +50,7 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
                 this.model.handlers.documentReceived(this.conditions, item, function () { return helpers.wrapDocument.apply(helpers, arguments); }).then(handler);
             }, (err) => {
                 if (err) return reject(err);
-                return resolve(null);
+                return resolve(undefined);
             });
         }).nodeify(callback);
     }
@@ -83,9 +83,9 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
     toArray(callback?: General.Callback<TInstance[]>): Bluebird<TInstance[]> {
         let helpers = this.model.helpers;
         return new Bluebird<TDocument[]>((resolve, reject) => {
-            this.cursor.toArray((err, results: any[]) => {
+            this.cursor.toArray((err, results: TDocument[]) => {
                 if (err) return reject(err);
-                return resolve(<any>results);
+                return resolve(results);
             });
         }).map<TDocument, TInstance>((document) => {
             return this.model.handlers.documentReceived(this.conditions, document, function () { return helpers.wrapDocument.apply(helpers, arguments); });
@@ -97,14 +97,14 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
      * @param {function(Error, TInstance)} callback A callback which is triggered when the next item becomes available
      * @return {Promise<TInstance>} A promise which is resolved with the next item
      */
-    next(callback?: General.Callback<TInstance>): Bluebird<TInstance> {
-        return new Bluebird<TDocument>((resolve, reject) => {
-            this.cursor.next((err, result: any) => {
+    next(callback?: General.Callback<TInstance>): Bluebird<TInstance|undefined> {
+        return new Bluebird<TDocument|undefined>((resolve, reject) => {
+            this.cursor.next((err, result: TDocument|undefined) => {
                 if (err) return reject(err);
-                return resolve(<any>result);
+                return resolve(result);
             });
         }).then((document) => {
-            if (!document) return Bluebird.resolve(<TInstance>null);
+            if (!document) return Bluebird.resolve<TInstance|undefined>(undefined);
             return this.model.handlers.documentReceived(this.conditions, document, (document, isNew?, isPartial?) => this.model.helpers.wrapDocument(document, isNew, isPartial));
         }).nodeify(callback);
     }
@@ -114,21 +114,21 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
      * @param {function(Error, TInstance)} callback A callback which is triggered when the next item becomes available
      * @return {Promise<TInstance>} A promise which is resolved once the item becomes available and the cursor has been closed.
      */
-    one(callback?: General.Callback<TInstance>): Bluebird<TInstance> {
-        return new Bluebird<TDocument>((resolve, reject) => {
-            this.cursor.next((err, result: any) => {
+    one(callback?: General.Callback<TInstance>): Bluebird<TInstance|undefined> {
+        return new Bluebird<TDocument|undefined>((resolve, reject) => {
+            this.cursor.next((err, result: TDocument) => {
                 if (err) return reject(err);
                 return resolve(result);
             });
         }).then((document) => {
-            return new Bluebird<TDocument>((resolve, reject) => {
+            return new Bluebird<TDocument|undefined>((resolve, reject) => {
                 this.cursor.close((err) => {
                     if (err) return reject(err);
-                    return resolve(<any>document);
+                    return resolve(document);
                 });
             });
         }).then((document) => {
-            if (!document) return Bluebird.resolve(<TInstance>null);
+            if (!document) return Bluebird.resolve<TInstance|undefined>(undefined);
             return this.model.handlers.documentReceived(this.conditions, document, (document, isNew?, isPartial?) => this.model.helpers.wrapDocument(document, isNew, isPartial));
         }).nodeify(callback);
     }

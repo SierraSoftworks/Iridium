@@ -52,11 +52,16 @@ export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
         
         if(!options.properties) return document;
         
-        for (let property in this.model.transforms)
-            if(property === "$document") continue;
-            else if(document.hasOwnProperty(property)) {
-                document[property] = this.model.transforms[property].toDB(document[property], property, this.model);
+        for (let property in this.model.transforms) {
+            if (property === "$document") continue;
+
+            const transform = this.model.transforms[property];
+            if (!transform) continue;
+
+            if(document.hasOwnProperty(property)) {
+                document[property] = transform.toDB(document[property], property, this.model);
             }
+        }
             
         return document;
     }
@@ -76,11 +81,16 @@ export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
         
         if(!options.properties) return document;
         
-        for (let property in this.model.transforms)
+        for (let property in this.model.transforms) {
             if(property === "$document") continue;
-            else if(document.hasOwnProperty(property)) {
-                document[property] = this.model.transforms[property].fromDB(document[property], property, this.model);
+
+            const transform = this.model.transforms[property];
+            if (!transform) continue;
+
+            if(document.hasOwnProperty(property)) {
+                document[property] = transform.fromDB(document[property], property, this.model);
             }
+        }
             
         return document;
     }

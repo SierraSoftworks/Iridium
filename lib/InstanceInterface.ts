@@ -4,6 +4,7 @@ import {Model} from "./Model";
 import * as Index from "./Index";
 import {CacheDirector} from "./CacheDirector";
 import {Transforms} from "./Transforms";
+import {Changes} from "./Changes";
 
 /**
  * This interface dictates the format of an instance class which wraps documents received
@@ -101,7 +102,7 @@ export interface InstanceImplementation<TDocument extends { _id ?: any }, TInsta
      * call to save. As a result, long running tasks will have a significant impact on how quickly your save
      * operations are dispatched.
      */
-    onSaving? (instance: TInstance, changes: any): Promise<any> | PromiseLike<any> | void;
+    onSaving? (instance: TInstance, changes: Changes): Promise<any> | PromiseLike<any> | void;
 
     /**
      * The cache controller used to determine whether a document may be cached, as well as deriving a unique cache
@@ -125,4 +126,31 @@ export interface InstanceImplementation<TDocument extends { _id ?: any }, TInsta
      * then back to ObjectIDs once they return to the database.
      */
     transforms?: Transforms;
+}
+
+export interface InstanceInternals<TDocument extends { _id ?: any }, TInstance> {
+    /**
+     * The original document received from the database
+     */
+    _original: TDocument;
+
+    /**
+     * A copy of the original document which may have had changes applied to it
+     */
+    _modified: TDocument;
+
+    /**
+     * Whether this instance is known to be present in the database or not
+     */
+    _isNew: boolean;
+
+    /**
+     * Whether this instance represents a partial document
+     */
+    _isPartial: boolean;
+
+    /**
+     * The model that this instance belongs to
+     */
+    _model: Model<TDocument, TInstance>;
 }

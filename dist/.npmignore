@@ -1,6 +1,0 @@
-benchmarks
-example
-lib/*.d.ts
-lib/*/**.d.ts
-browser.d.ts
-test

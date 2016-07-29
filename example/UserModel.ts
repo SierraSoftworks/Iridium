@@ -207,12 +207,13 @@ export class User extends Iridium.Instance<UserDocument, User> implements UserDo
     }
 }
 
-export function Users(core: Iridium.Core): Iridium.Model<UserDocument, User> {
-    return new Iridium.Model<UserDocument, User>(core, User);
+class Core extends Iridium.Core {
+    Users = new Iridium.Model<UserDocument, User>(this, User);
 }
 
-var usrModel = Users(null);
-usrModel.findOne().then(function (user) {
+let core = new Core("mongodb://localhost/iridium_users");
+core.Users.findOne().then(function (user) {
+    if (!user) throw new Error("Couldn't find a user");
     if (user.checkPassword("test")) return true;
     return false;
 });

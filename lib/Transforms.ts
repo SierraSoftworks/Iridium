@@ -7,7 +7,7 @@ export interface Transforms {
 	 */
 	$document?: PropertyTransform<any>;
 	_id?: PropertyTransform<any>;
-	[property:string]: PropertyTransform<any>;
+	[property:string]: PropertyTransform<any>|undefined;
 }
 
 /**

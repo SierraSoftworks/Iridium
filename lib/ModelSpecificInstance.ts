@@ -1,5 +1,5 @@
 ﻿import {Model} from "./Model";
-import {InstanceImplementation} from "./InstanceInterface";
+import {InstanceImplementation, InstanceInternals} from "./InstanceInterface";
 import {ModelSpecificInstanceConstructor} from "./ModelInterfaces";
 import * as util from "util";
 import * as _ from "lodash";
@@ -26,13 +26,14 @@ export function ModelSpecificInstance<TDocument extends { _id?: any }, TInstance
     }
 
     _.each(Object.keys(model.schema),(property) => {
-        if (model.transforms.hasOwnProperty(property)) {
+        const transform = model.transforms[property];
+        if (transform) {
             return Object.defineProperty(virtualClass.prototype, property, {
-                get: function () {
-                    return model.transforms[property].fromDB(this._modified[property], property, model);
+                get: function (this: InstanceInternals<TDocument, TInstance>) {
+                    return transform.fromDB(this._modified[property], property, model);
                 },
-                set: function (value) {
-                    this._modified[property] = model.transforms[property].toDB(value, property, model);
+                set: function (this: InstanceInternals<TDocument, TInstance>, value) {
+                    this._modified[property] = transform.toDB(value, property, model);
                 },
                 enumerable: true,
                 configurable: true
@@ -40,10 +41,10 @@ export function ModelSpecificInstance<TDocument extends { _id?: any }, TInstance
         }
 
         Object.defineProperty(virtualClass.prototype, property, {
-            get: function () {
+            get: function (this: InstanceInternals<TDocument, TInstance>) {
                 return this._modified[property];
             },
-            set: function (value) {
+            set: function (this: InstanceInternals<TDocument, TInstance>, value) {
                 this._modified[property] = value;
             },
             enumerable: true

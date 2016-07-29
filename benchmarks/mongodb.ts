@@ -1,8 +1,8 @@
-import Iridium = require("../iridium");
-import Bluebird = require("bluebird");
-import MongoDB = require("mongodb");
-import _ = require("lodash");
-import crypto = require("crypto");
+import * as Iridium from "../iridium";
+import * as Bluebird from "bluebird";
+import * as MongoDB from "mongodb";
+import * as _ from "lodash";
+import * as crypto from "crypto";
 
 var intensity = 1000;
 var samples = 3;
@@ -38,7 +38,7 @@ class IridiumDB extends Iridium.Core {
 console.log("Running benchmark with intensity of %d, %d samples", intensity, samples);
 
 var results: { [name: string]: number } = {};
-function benchmark(name: string, prepare: (objects: UserDocument[]) => Bluebird<any>, run: (objects: UserDocument[]) => Bluebird<any>, compareTo?: string) {
+function benchmark(name: string, prepare: (objects: UserDocument[]) => Bluebird<any>|null, run: (objects: UserDocument[]) => Bluebird<any>, compareTo?: string) {
     return Bluebird.resolve(new Array(samples)).map(() => {
         var objects: UserDocument[] = new Array(intensity);
         for (var i = 0; i < objects.length; i++)
@@ -80,7 +80,7 @@ iDB.connect()
     return new Bluebird((resolve, reject) => {
         iDB.connection.collection("mongodb").deleteMany({},(err) => {
             if (err) return reject(err);
-            return resolve(null);
+            return resolve({});
         });
     });
 },(objects) => {

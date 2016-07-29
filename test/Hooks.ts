@@ -42,7 +42,7 @@ class Test extends Iridium.Instance<TestDocument, Test> {
     }
 }
 
-describe("Hooks", function () {
+describe("Hooks", function (this: Mocha) {
     this.timeout(500);
 
     let core = new Iridium.Core({ database: "test" });
@@ -56,7 +56,7 @@ describe("Hooks", function () {
     describe("creating",() => {
         after(() => {
             // Not used again
-            Test.onCreating = null;
+            Test.onCreating = (doc) => Promise.resolve();
         });
 
         it("should be called when a document is being created",(done) => {
@@ -89,7 +89,7 @@ describe("Hooks", function () {
     describe("ready",() => {
         after(() => {
             // Not used again
-            Test.onReady = null;
+            Test.onReady = () => Promise.resolve();
         });
 
         it("should be called when an instance is prepared",() => {
@@ -127,7 +127,7 @@ describe("Hooks", function () {
     describe("retreived",() => {
         after(() => {
             // Not used again
-            Test.onRetrieved = null;
+            Test.onRetrieved = () => Promise.resolve();
         });
 
         it("should be called when a document is being retrieved",() => {
@@ -165,7 +165,7 @@ describe("Hooks", function () {
     describe("saving", () => {
         after(() => {
             // Not used again
-            Test.onSaving = null;
+            Test.onSaving = () => Promise.resolve();
         });
 
         it("should be triggered when save() is called on an instance",() => {

@@ -1,5 +1,6 @@
 import * as _ from "lodash";
 import * as MongoDB from "mongodb";
+import {Changes} from "../Changes";
 
 export class Omnom {
     constructor(public options: {
@@ -8,22 +9,8 @@ export class Omnom {
         this._changes = {};
     }
 
-    private _changes: {
-        $set?: any;
-        $unset?: any;
-        $inc?: any;
-        $push?: any;
-        $pull?: any;
-        $pullAll?: any;
-    };
-    get changes(): {
-        $set?: any;
-        $unset?: any;
-        $inc?: any;
-        $push?: any;
-        $pull?: any;
-        $pullAll?: any;
-    } {
+    private _changes: Changes;
+    get changes(): Changes {
         return this._changes;
     }
 
@@ -55,39 +42,49 @@ export class Omnom {
     }
 
     private onObject(original: number, modified: number, changePath?: string): void;
-    private onObject(original: [any], modified: any[], changePath?: string): void;
+    private onObject(original: any[], modified: any[], changePath?: string): void;
     private onObject(original: MongoDB.ObjectID, modified: MongoDB.ObjectID, changePath?: string): void;
     private onObject(original: Object, modified: Object, changePath?: string): void;
     private onObject(original: any, modified: any, changePath?: string): void {
-        if (original === undefined || original === null)
-            return (original !== modified) && this.set(changePath, modified);
+        if (changePath) {
+            if (original === undefined || original === null)
+                return (original !== modified) && this.set(changePath, modified);
 
-        if (typeof original === "number" && typeof modified === "number" && original !== modified) {
-            if (this.options.atomicNumbers) return this.inc(changePath, modified - original);
-            return this.set(changePath, modified);
+            if (typeof original === "number" && typeof modified === "number" && original !== modified) {
+                if (this.options.atomicNumbers) return this.inc(changePath, modified - original);
+                return this.set(changePath, modified);
+            }
+
+            if (Array.isArray(original) && Array.isArray(modified))
+                return this.onArray(original, modified, changePath);
+
+            if (original instanceof MongoDB.ObjectID && modified instanceof MongoDB.ObjectID)
+                return !original.equals(modified) && this.set(changePath, modified);
+
+            if (!_.isPlainObject(original) || !_.isPlainObject(modified))
+                return !_.isEqual(original, modified) && this.set(changePath, modified);
         }
 
-        if (Array.isArray(original) && Array.isArray(modified))
-            return this.onArray(original, modified, changePath);
-
-        if (original instanceof MongoDB.ObjectID && modified instanceof MongoDB.ObjectID)
-            return !original.equals(modified) && this.set(changePath, modified);
-
-        if (!_.isPlainObject(original) || !_.isPlainObject(modified))
-            return !_.isEqual(original, modified) && this.set(changePath, modified);
+        if (!_.isPlainObject(original) || !_.isPlainObject(modified)) {
+            throw new Error("Unable to perform a diff of a top level object unless it is an object itself. Provide an object to diff or specify the changePath");
+        }
 
         _.forOwn(modified, (value, key) => {
+            if (!key) return;
+
             // Handle array diffs in their own special way
             if (Array.isArray(value) && Array.isArray(original[key])) this.onArray(original[key], value, this.resolve(changePath, key));
 
             // Otherwise, just keep going
             else this.onObject(original[key], value, this.resolve(changePath, key));
-        }, this);
+        });
 
         // Unset removed properties
         _.forOwn(original, (value, key) => {
+            if (!key) return;
+
             if (modified[key] === undefined) return this.unset(this.resolve(changePath, key));
-        }, this);
+        });
     }
 
     private onArray(original: any[], modified: any[], changePath: string): void {
@@ -106,7 +103,7 @@ export class Omnom {
     }
 
     private onSmallerArray(original: any[], modified: any[], changePath: string): void {
-      let  pulls = [];
+      let pulls: any[] = [];
       let i = 0;
       let j = 0;
       
@@ -149,8 +146,8 @@ export class Omnom {
     private onSimilarArray(original: any[], modified: any[], changePath: string): void {
       // Check how many manipulations would need to be performed, if it's more than half the array size
       // then rather re-create the array
-      let sets = [];
-      let partials = [];
+      let sets: number[] = [];
+      let partials: number[] = [];
       for (let i = 0; i < modified.length; i++) {
           let equality = this.almostEqual(original[i], modified[i]);
           if (equality === 0) sets.push(i);
@@ -178,7 +175,7 @@ export class Omnom {
         if (!this.changes.$unset)
             this.changes.$unset = {};
 
-        this.changes.$unset[path] = 1;
+        this.changes.$unset[path] = true;
     }
 
     private inc(path: string, value: number) {
@@ -193,10 +190,11 @@ export class Omnom {
             this.changes.$push = {};
 
         if (this.changes.$push[path]) {
-            if (this.changes.$push[path].$each)
-                this.changes.$push[path].$each.push(value);
+            const change = <{ $each: any[]; }>this.changes.$push[path];
+            if (change && change.$each)
+                change.$each.push(value);
             else
-                this.changes.$push[path] = { $each: [this.changes.$push[path], value] };
+                this.changes.$push[path] = { $each: [change, value] };
         } else this.changes.$push[path] = value;
     }
 
@@ -205,7 +203,8 @@ export class Omnom {
             this.changes.$pull = {};
 
         if (this.changes.$pullAll && this.changes.$pullAll[path]) {
-            return this.changes.$pullAll[path].push(value);
+            this.changes.$pullAll[path].push(value);
+            return;
         }
 
         if (this.changes.$pull[path]) {
@@ -226,8 +225,8 @@ export class Omnom {
         this.changes.$pullAll[path] = values;
     }
 
-    private resolve(...args) {
-        let validArguments = [];
+    private resolve(...args: (string|undefined)[]) {
+        let validArguments: string[] = [];
         args.forEach(function (arg) {
             if (arg) validArguments.push(arg);
         });
@@ -241,7 +240,7 @@ export class Omnom {
         let object1KeyIndex, object1Keys = Object.keys(o1);
         let object2Keys = Object.keys(o2);
 
-        let commonKeys = [];
+        let commonKeys: string[] = [];
         for (object1KeyIndex = 0; object1KeyIndex < object1Keys.length; object1KeyIndex++)
             if (~object2Keys.indexOf(object1Keys[object1KeyIndex])) commonKeys.push(object1Keys[object1KeyIndex]);
 

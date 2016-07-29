@@ -49,7 +49,7 @@ describe("Core",() => {
         });
 
         it("should throw an error if no URI or configuration object was provided",() => {
-            chai.expect(() => new Iridium.Core("")).to.throw("Expected either a URI or config object to be supplied when initializing Iridium");
+            chai.expect(() => new Iridium.Core(<any>undefined)).to.throw("Expected either a URI or config object to be supplied when initializing Iridium");
         });
 
         describe("should correctly convert the configuration object into a URI string", () => {
@@ -157,7 +157,7 @@ describe("Core",() => {
                 }
             });
 
-            chai.expect(core.settings.options).to.eql({
+            chai.expect(core.settings!.options).to.eql({
                 server: {
                     socketOptions: {
                         connectTimeoutMS: 1000
@@ -305,7 +305,7 @@ describe("Core",() => {
             it("should be triggered before the connection is established", (done) => {
                 let core = new InheritedCoreWithHooks();
                 core.events.once("connecting", (connection) => {
-                    chai.expect(core.connection).to.not.exist;
+                    chai.expect(() => core.connection).to.throw;
                     done();
                 });
 
@@ -327,7 +327,7 @@ describe("Core",() => {
                 core.onConnectingResult = (conn) => Bluebird.reject(new Error("Test error"));
 
                 return chai.expect(core.connect().then(() => false, (err) => {
-                    chai.expect(core.connection).to.not.exist;
+                    chai.expect(() => core.connection).to.throw;
                     return Bluebird.resolve(true);
                 })).to.eventually.be.true;
             });
@@ -371,7 +371,7 @@ describe("Core",() => {
                 core.onConnectedResult = () => Bluebird.reject(new Error("Test error"));
 
                 return chai.expect(core.connect().then(() => false, (err) => {
-                    chai.expect(core.connection).to.not.exist;
+                    chai.expect(() => core.connection).to.throw;
                     return Bluebird.resolve(true);
                 })).to.eventually.be.true;
             });

@@ -8,6 +8,8 @@ import * as Index from "./Index";
 import {Schema} from "./Schema";
 import {Transforms} from "./Transforms";
 import {DefaultValidators} from "./Validators";
+import {Conditions} from "./Conditions";
+import {Changes} from "./Changes";
 
 import * as _ from "lodash";
 import * as MongoDB from "mongodb";
@@ -91,7 +93,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
      * @param instance The instance to which the changes are being made
      * @param changes The MongoDB change object describing the changes being made to the document.
      */
-    static onSaving: (instance: Instance<{ _id?: any }, Instance<{ _id?: any }, any>>, changes: any) => Promise<any> | PromiseLike<any> | void;
+    static onSaving: (instance: Instance<{ _id?: any }, Instance<{ _id?: any }, any>>, changes: Changes) => Promise<any> | PromiseLike<any> | void;
 
     /**
      * The name of the collection into which documents of this type are stored.
@@ -139,7 +141,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
      * @param {function(Error, IInstance)} callback A callback which is triggered when the save operation completes
      * @returns {Promise<TInstance>}
      */
-    save(changes: Object, callback?: General.Callback<TInstance>): Bluebird<TInstance>;
+    save(changes: Changes, callback?: General.Callback<TInstance>): Bluebird<TInstance>;
     /**
      * Saves the given changes to this instance and updates the instance to match the latest database document.
      * @param {Object} conditions The conditions under which the update will take place - these will be merged with an _id query
@@ -147,9 +149,9 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
      * @param {function(Error, IInstance)} callback A callback which is triggered when the save operation completes
      * @returns {Promise<TInstance>}
      */
-    save(conditions: Object, changes: Object, callback?: General.Callback<TInstance>): Bluebird<TInstance>;
+    save(conditions: Conditions, changes: Changes, callback?: General.Callback<TInstance>): Bluebird<TInstance>;
     save(...args: any[]): Bluebird<TInstance> {
-        let callback: General.Callback<any> = null;
+        let callback: General.Callback<any>|undefined = undefined;
         let changes: any = null;
         let conditions: any = {};
 
@@ -320,16 +322,16 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
      * @param predicate The function which determines whether to select an element
      * @returns The first element in the array which matched the predicate.
      */
-    first<T>(collection: T[], predicate: General.Predicate<T>): T;
+    first<T>(collection: T[], predicate: General.Predicate<this, T>): T|null;
     /**
      * Retrieves the first element in an enumerable collection which matches the predicate
      * @param collection The collection from which to retrieve the element
      * @param predicate The function which determines whether to select an element
      * @returns The first element in the object which matched the predicate.
      */
-    first<T>(collection: { [key: string]: T }, predicate: General.Predicate<T>): T;
-    first<T>(collection: T[]| { [key: string]: T }, predicate: General.Predicate<T>): T {
-        let result = null;
+    first<T>(collection: { [key: string]: T }, predicate: General.Predicate<this, T>): T|null;
+    first<T>(collection: T[]| { [key: string]: T }, predicate: General.Predicate<this, T>): T|null {
+        let result: T|null = null;
 
         _.each(collection, (value: T, key) => {
             if (predicate.call(this, value, key)) {
@@ -347,15 +349,15 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
      * @param predicate The function which determines the elements to be plucked
      * @returns A new array containing the elements in the array which matched the predicate.
      */
-    select<T>(collection: T[], predicate: General.Predicate<T>): T[];
+    select<T>(collection: T[], predicate: General.Predicate<this, T>): T[];
     /**
      * Retrieves a number of elements from an enumerable collection which match the predicate
      * @param collection The collection from which elements will be plucked
      * @param predicate The function which determines the elements to be plucked
      * @returns An object with the properties from the collection which matched the predicate.
      */
-    select<T>(collection: { [key: string]: T }, predicate: General.Predicate<T>): { [key: string]: T };
-    select<T>(collection: T[]| { [key: string]: T }, predicate: General.Predicate<T>): any {
+    select<T>(collection: { [key: string]: T }, predicate: General.Predicate<this, T>): { [key: string]: T };
+    select<T>(collection: T[]| { [key: string]: T }, predicate: General.Predicate<this, T>): any {
         let isArray = Array.isArray(collection);
         let results: any = isArray ? [] : {};
 

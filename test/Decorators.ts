@@ -10,14 +10,13 @@ interface TestDocument {
 	email: string;
 }
 
-function VersionValidator(schema, data) {
-    return this.assert(/^\d+\.\d+\.\d+(?:-.+)?$/.test(data));
-}
 
 @Iridium.Collection("test")
 @Iridium.Index({ name: 1 })
 @Iridium.Index({ email: 1 }, { background: true })
-@Iridium.Validate("version", VersionValidator)
+@Iridium.Validate("version", function (schema, data) {
+    return this.assert(/^\d+\.\d+\.\d+(?:-.+)?$/.test(data));
+})
 @Iridium.Property("version", "version")
 @Iridium.Property("optional2", Boolean, false)
 class Test extends Iridium.Instance<TestDocument, Test> implements TestDocument {
@@ -122,16 +121,16 @@ describe("Decorators", () => {
 
 		describe("the ObjectID transform", () => {
 			it("should convert an ObjectID to a string", () => {
-				chai.expect(Test.transforms["_id"].fromDB(Iridium.toObjectID("aaaaaaaaaaaaaaaaaaaaaaaa"), "_id", null)).to.eql("aaaaaaaaaaaaaaaaaaaaaaaa");
+				chai.expect(Test.transforms["_id"]!.fromDB(Iridium.toObjectID("aaaaaaaaaaaaaaaaaaaaaaaa"), "_id", <any>null)).to.eql("aaaaaaaaaaaaaaaaaaaaaaaa");
 			});
 
 			it("should convert a string to an ObjectID", () => {
-				chai.expect(Test.transforms["_id"].toDB("aaaaaaaaaaaaaaaaaaaaaaaa", "_id", null)).to.be.instanceOf(MongoDB.ObjectID);
+				chai.expect(Test.transforms["_id"]!.toDB("aaaaaaaaaaaaaaaaaaaaaaaa", "_id", <any>null)).to.be.instanceOf(MongoDB.ObjectID);
 			});
 
 			it("should handle undefined values correctly", () => {
-				chai.expect(Test.transforms["_id"].toDB(undefined, "_id", null)).to.not.exist;
-				chai.expect(Test.transforms["_id"].fromDB(undefined, "_id", null)).to.not.exist;
+				chai.expect(Test.transforms["_id"]!.toDB(undefined, "_id", <any>null)).to.not.exist;
+				chai.expect(Test.transforms["_id"]!.fromDB(undefined, "_id", <any>null)).to.not.exist;
 			});
 		});
 	});

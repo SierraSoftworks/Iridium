@@ -120,14 +120,14 @@ describe("Plugins",() => {
         it("should allow a plugin to define a single validator",() => {
             core.register({
                 newInstance: (instance, model) => { },
-                validate: Skmatc.create((schema) => schema == "Test", (schema, data) => this.assert(data == "test"))
+                validate: Skmatc.create((schema) => schema == "Test", function (schema, data) { return this.assert(data == "test") })
             });
         });
 
         it("should allow a plugin to define multiple validators",() => {
             core.register({
                 newInstance: (instance, model) => { },
-                validate: [Skmatc.create((schema) => schema == "Test",(schema, data) => this.assert(data == "test"))]
+                validate: [Skmatc.create((schema) => schema == "Test", function (schema, data) { return this.assert(data == "test") })]
             });
         });
     });

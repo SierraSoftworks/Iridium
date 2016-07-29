@@ -22,7 +22,7 @@ describe("Omnom",() => {
 
         let expectedDiff = {
             $set: { a: 3, b: "tested", f: "new" },
-            $unset: { e: 1 }
+            $unset: { e: true }
         };
 
         chai.expect(Omnom.diff(oldObject, newObject)).to.exist.and.be.eql(expectedDiff);
@@ -48,7 +48,7 @@ describe("Omnom",() => {
         let expectedDiff = {
             $set: { b: "tested", f: "new" },
             $inc: { a: 2 },
-            $unset: { e: 1 }
+            $unset: { e: true }
         };
 
         chai.expect(Omnom.diff(oldObject, newObject, { atomicNumbers: true })).to.exist.and.be.eql(expectedDiff);
@@ -73,7 +73,7 @@ describe("Omnom",() => {
 
         let expectedDiff = {
             $set: { "a.value": 3, "b.value1": "tested", "b.value2": 2, "e.value2": false },
-            $unset: { "e.value": 1 }
+            $unset: { "e.value": true }
         };
 
         chai.expect(Omnom.diff(oldObject, newObject)).to.exist.and.be.eql(expectedDiff);
@@ -138,7 +138,7 @@ describe("Omnom",() => {
 
         let expectedDiff = {
             $set: { "a.b.c.n": { x: 1, y: 2, z: "test" }, "a.b.d.m.w": 1, "a.b.e.m.y": 4 },
-            $unset: { "a.b.c.m": 1, "a.b.d.m.x": 1 }
+            $unset: { "a.b.c.m": true, "a.b.d.m.x": true }
         };
 
         chai.expect(Omnom.diff(oldObject, newObject)).to.exist.and.be.eql(expectedDiff);
@@ -178,7 +178,7 @@ describe("Omnom",() => {
             };
 
             let expectedDiff = {
-                $unset: { b: 1 }
+                $unset: { b: true }
             };
 
             chai.expect(Omnom.diff(oldObject, newObject)).to.exist.and.be.eql(expectedDiff);
@@ -204,10 +204,10 @@ describe("Omnom",() => {
 
     describe("arrays", function () {
         it("should correctly handle two pure arrays",() => {
-            let oldObject = [1, 2, 3];
-            let newObject = [4, 5, 6];
+            let oldObject = { arr: [1, 2, 3] };
+            let newObject = { arr: [4, 5, 6] };
             let expectedDiff = {
-                $set: { undefined: [4, 5, 6] }
+                $set: { arr: [4, 5, 6] }
             };
 
             chai.expect(Omnom.diff(oldObject, newObject)).to.exist.and.be.eql(expectedDiff);

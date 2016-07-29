@@ -39,31 +39,25 @@ export class Core {
      */
     constructor(uri: string, config?: Configuration);
     constructor(uri: string | Configuration, config?: Configuration) {
-
-        let args = Array.prototype.slice.call(arguments, 0);
-        uri = config = null;
-        for (let i = 0; i < args.length; i++) {
-            if (typeof args[i] == "string")
-                uri = args[i];
-            else if (typeof args[i] == "object")
-                config = args[i];
+        if (typeof uri === "string") {
+            this._url = uri;
+            this._config = config;
+        } else if (uri) {
+            this._config = uri;
+        } else {
+            throw new Error("Expected either a URI or config object to be supplied when initializing Iridium");
         }
-
-        if (!uri && !config) throw new Error("Expected either a URI or config object to be supplied when initializing Iridium");
-
-        this._url = <string>uri;
-        this._config = config;
     }
 
     private mongoConnectAsyc = Bluebird.promisify<MongoDB.Db, string, any>(MongoDB.MongoClient.connect);
 
     private _plugins: Plugin[] = [];
     private _url: string;
-    private _config: Configuration;
-    private _connection: MongoDB.Db;
+    private _config: Configuration|undefined;
+    private _connection: MongoDB.Db|undefined;
     private _cache: Cache = new NoOpCache();
 
-    private _connectPromise: Bluebird<MongoDB.Db>;
+    private _connectPromise: Bluebird<MongoDB.Db>|undefined;
 
     /**
      * Gets the plugins registered with this Iridium Core
@@ -78,7 +72,7 @@ export class Core {
      * Iridium Core.
      * @returns {Iridium.Configuration}
      */
-    get settings(): Configuration {
+    get settings(): Configuration|undefined {
         return this._config;
     }
 
@@ -88,6 +82,7 @@ export class Core {
      * @returns {MongoDB.Db}
      */
     get connection(): MongoDB.Db {
+        if (!this._connection) throw new Error("Iridium Core not connected to a database.");
         return this._connection;
     }
 
@@ -97,6 +92,8 @@ export class Core {
      */
     get url(): string {
         if (this._url) return this._url;
+        if (!this._config) throw new Error("No URL or configuration provided");
+
         let url: string = "mongodb://";
 
         if (this._config.username) {
@@ -106,11 +103,11 @@ export class Core {
             url += "@";
         }
 
-        let hosts = [];
+        let hosts: string[] = [];
 
         if (this._config.host) {
             if (this._config.port)
-                hosts.push(this._config.host + ":" + this._config.port);
+                hosts.push(`${this._config.host}:${this._config.port}`);
             else
                 hosts.push(this._config.host);
         }
@@ -118,9 +115,9 @@ export class Core {
         if (this._config.hosts) {
             _.each(this._config.hosts, (host) => {
                 if (host.port)
-                    hosts.push(host.address + ":" + host.port);
-                else if(this._config.port)
-                    hosts.push(host.address + ":" + this._config.port);
+                    hosts.push(`${host.address}:${host.port}`);
+                else if(this._config && this._config.port)
+                    hosts.push(`${host.address}:${this._config.port}`);
                 else
                     hosts.push(host.address);
             });
@@ -130,8 +127,9 @@ export class Core {
             url += _.uniq(hosts).join(",");
         else
             url += "localhost";
-
-        url += "/" + this._config.database;
+        
+        if (this._config.database)
+            url += "/" + this._config.database;
 
         return url;
     }
@@ -172,14 +170,14 @@ export class Core {
             return this.onConnecting(db);
         }).then(db => {
             this._connection = db;
-            this._connectPromise = null;
+            this._connectPromise = undefined;
             return this.onConnected();
         }).then(() => {
             return this;
         }, (err) => {
             if (this._connection) this._connection.close();
-            this._connection = null;
-            this._connectPromise = null;
+            this._connection = undefined;
+            this._connectPromise = undefined;
             return Bluebird.reject(err);
         }).nodeify(callback);
     }
@@ -192,7 +190,7 @@ export class Core {
         return Bluebird.resolve().then(() => {
             if (!this._connection) return this;
             let conn: MongoDB.Db = this._connection;
-            this._connection = null;
+            this._connection = undefined;
             conn.close();
             return this;
         });

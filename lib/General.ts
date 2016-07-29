@@ -15,13 +15,13 @@ export interface Callback<T> {
  * A method which is used to determine whether a value within a collection meets a set of criteria.
  * @param T The type of item in the collection.
  */
-export interface Predicate<T> {
+export interface Predicate<TThis,TObject> {
     /**
      * @param object The value of the item in the collection
      * @param key The key, if one is available, under which the item appeared within the collection
      * @returns A true-y value if the item met the predicate conditions, false-y values if it did not.
      */
-    (object: T, key?: string): boolean;
+    (this: TThis, object: TObject, key?: string): boolean;
 }
 
 /**

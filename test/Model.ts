@@ -5,6 +5,12 @@ import * as Promise from "bluebird";
 import * as _ from "lodash";
 import * as chai from "chai";
 
+class TestCore extends Iridium.Core {
+    constructor() {
+        super("mongodb://localhost/iridium_test");
+    }
+}
+
 interface TestDocument {
     _id?: string;
     answer: number;
@@ -44,7 +50,7 @@ describe("Model",() => {
 
         it("should throw an error if you don't provide a valid core",() => {
             chai.expect(() => {
-                new Iridium.Model<any, any>(null, createInstanceImplementation({
+                new Iridium.Model<any, any>(<any>null, createInstanceImplementation({
                     collection: "test",
                     schema: { _id: false }
                 }))
@@ -53,7 +59,7 @@ describe("Model",() => {
 
         it("should throw an error if you don't provide a valid instanceType",() => {
             chai.expect(() => {
-                new Iridium.Model<any, any>(core, null)
+                new Iridium.Model<any, any>(core, <any>null)
             }).to.throw("You failed to provide a valid instance constructor for this model");
         });
 
@@ -362,12 +368,12 @@ describe("Model",() => {
         });
 
         it("should support retrieving a document using its ID",() => {
-            return chai.expect(model.findOne().then((doc) => model.findOne(doc._id))).to.eventually.exist.and.have.property("answer").is.a("number");
+            return chai.expect(model.findOne().then((doc) => model.findOne(doc!._id))).to.eventually.exist.and.have.property("answer").is.a("number");
         });
 
         it("should retrieve the correct document by its ID",() => {
             return model.findOne().then((doc) => {
-                return chai.expect(model.findOne(doc._id)).to.eventually.exist.and.have.property("_id", doc._id);
+                return chai.expect(model.findOne(doc!._id)).to.eventually.exist.and.have.property("_id", doc!._id);
             });
         });
 
@@ -384,7 +390,7 @@ describe("Model",() => {
         it("should allow you to limit the returned fields",() => {
             return chai.expect(model.findOne({}, {
                 fields: { answer: 0 }
-            }).then((instance) => instance.answer)).to.eventually.be.undefined;
+            }).then((instance) => instance!.answer)).to.eventually.be.undefined;
         });
 
         it("should support a callback style instead of promises",(done) => {
@@ -633,7 +639,7 @@ describe("Model",() => {
 
             it("which should start returning items from the start of the query",() => {
                 let cursor = model.find();
-                return cursor.next().then(firstItem => cursor.rewind().next().then(rewoundItem => chai.expect(firstItem.document).to.eql(rewoundItem.document)));
+                return cursor.next().then(firstItem => cursor.rewind().next().then(rewoundItem => chai.expect(firstItem!.document).to.eql(rewoundItem!.document)));
             });
 
             it("should carry through any other attributes",() => {
@@ -696,7 +702,7 @@ describe("Model",() => {
             });
 
             it("should allow an ID to be specified directly",() => {
-                return model.find({ answer: 10 }).next().then((instance) => chai.expect(model.find(instance._id).count()).to.eventually.equal(1));
+                return model.find({ answer: 10 }).next().then((instance) => chai.expect(model.find(instance!._id).count()).to.eventually.equal(1));
             });
 
             it("should transform the conditions",() => {
@@ -840,7 +846,7 @@ describe("Model",() => {
     });
 
     describe("ensureIndexes()", () => {
-        let model = null;
+        let model: Iridium.Model<TestDocument, Test>;
 
         before(() => {
             Test.indexes = [{ answer: 1 }];
@@ -945,8 +951,8 @@ describe("Model",() => {
 
         it("should have a default ObjectID to String converter", () => {
             let model = new Iridium.Model<TestDocument, Test>(core, Test);
-            chai.expect(model.transforms["_id"].fromDB(MongoDB.ObjectID.createFromHexString("aaaaaaaaaaaaaaaaaaaaaaaa"), "_id", model)).to.eql("aaaaaaaaaaaaaaaaaaaaaaaa");
-            chai.expect(model.transforms["_id"].toDB("aaaaaaaaaaaaaaaaaaaaaaaa", "_id", model)).to.eql(MongoDB.ObjectID.createFromHexString("aaaaaaaaaaaaaaaaaaaaaaaa"));
+            chai.expect(model.transforms["_id"]!.fromDB(MongoDB.ObjectID.createFromHexString("aaaaaaaaaaaaaaaaaaaaaaaa"), "_id", model)).to.eql("aaaaaaaaaaaaaaaaaaaaaaaa");
+            chai.expect(model.transforms["_id"]!.toDB("aaaaaaaaaaaaaaaaaaaaaaaa", "_id", model)).to.eql(MongoDB.ObjectID.createFromHexString("aaaaaaaaaaaaaaaaaaaaaaaa"));
         });
 
         it("should allow you to specify a custom converter by providing a property on the class", () => {
@@ -955,8 +961,8 @@ describe("Model",() => {
             chai.expect(model.transforms["_id"]).to.exist.and.have.property("fromDB").which.is.a("function");
             chai.expect(model.transforms["_id"]).to.exist.and.have.property("toDB").which.is.a("function");
 
-            chai.expect(model.transforms["_id"].fromDB(12, "_id", model)).to.eql(120);
-            chai.expect(model.transforms["_id"].toDB(120, "_id", model)).to.eql(12);
+            chai.expect(model.transforms["_id"]!.fromDB(12, "_id", model)).to.eql(120);
+            chai.expect(model.transforms["_id"]!.toDB(120, "_id", model)).to.eql(12);
         });
     });
 });

@@ -48,7 +48,7 @@ export function Index(spec: IndexSpecification, options?: MongoDB.IndexOptions) 
  * classes. If your transpiler does not support decorators then you are free to make use of the
  * property instead.
  */
-export function Validate(forType: any, validate: (schema: any, data: any, path: string) => Skmatc.Result) {
+export function Validate(forType: any, validate: Skmatc.IValidationHandler) {
 	return function(target: InstanceImplementation<any,any>) {
 		target.validators = (target.validators || []).concat(Skmatc.create(schema => schema === forType, validate));
 	}
@@ -73,9 +73,9 @@ export function Property(asType: any, required?: boolean): (target: Instance<any
  */
 export function Property(name: string, asType: any, required?: boolean): (target: InstanceImplementation<any, any>) => void;
 export function Property(...args: any[]): (target: Instance<any, any> | InstanceImplementation<any, any>, name?: string) => void {
-	let name = null,
-		asType = false,
-		required = true;
+	let name: string|number|undefined = undefined,
+		asType: any = false,
+		required: boolean = true;
 
 	if (args.length > 1 && typeof args[args.length - 1] === "boolean")
 		required = args.pop();
@@ -90,8 +90,8 @@ export function Property(...args: any[]): (target: Instance<any, any> | Instance
 		asType = args.pop() || false;
 
 		staticTarget.schema = _.clone(staticTarget.schema || { _id: false });
-		if(!required && typeof asType !== "boolean") staticTarget.schema[name] = { $required: required, $type: asType };
-		else staticTarget.schema[name] = asType;
+		if(!required && typeof asType !== "boolean") staticTarget.schema[name!] = { $required: required, $type: asType };
+		else staticTarget.schema[name!] = asType;
 	}
 }
 
