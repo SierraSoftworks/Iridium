@@ -4,9 +4,47 @@ For a human friendly description of what changed in each release, take a look
 at the [Releases](https://github.com/SierraSoftworks/Iridium/releases) page.
 
 
+## Version [7.0.0-alpha.11](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.11)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.11">tag: **v7.0.0-alpha.11**</a>
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/7.0.0-dev">branch: **7.0.0-dev**</a>
+
+```sh
+npm install iridium@7.0.0-alpha.11
+```
+
+### Changes
+ - [8c8c07e](https://github.com/SierraSoftworks/Iridium/commit/8c8c07e) 7.0.0-alpha.11
+ - [ba773d0](https://github.com/SierraSoftworks/Iridium/commit/ba773d0) refactor: Update to use TypeScript 2.0 :smile:  (breaking)
+ - [cd4f4fe](https://github.com/SierraSoftworks/Iridium/commit/cd4f4fe) fix: Correctly execute tests
+ - [07c3599](https://github.com/SierraSoftworks/Iridium/commit/07c3599) ci: Add junit output for CircleCI test runs
+ - [1713a24](https://github.com/SierraSoftworks/Iridium/commit/1713a24) ci: Remove explicit MongoDB dependency in CircleCI
+ - [299ee2b](https://github.com/SierraSoftworks/Iridium/commit/299ee2b) feat: Add CircleCI build config
+ - [d84d339](https://github.com/SierraSoftworks/Iridium/commit/d84d339) 7.0.0-alpha.10
+ - [a00de7a](https://github.com/SierraSoftworks/Iridium/commit/a00de7a) test: Remove extraneous lines
+ - [74d8759](https://github.com/SierraSoftworks/Iridium/commit/74d8759) tweak: Remove postversion hook since it is not necessary
+ - [f6442a2](https://github.com/SierraSoftworks/Iridium/commit/f6442a2) test: Add tests to ensure that #40 works fine
+ - [6526b30](https://github.com/SierraSoftworks/Iridium/commit/6526b30) feat: Add an `npm run watch` command
+ - [3ee6d80](https://github.com/SierraSoftworks/Iridium/commit/3ee6d80) style: Fix a typo
+ - [8f0d96c](https://github.com/SierraSoftworks/Iridium/commit/8f0d96c) refactor: Improve changelog helper style
+
+## Version [7.0.0-alpha.9](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.9)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.9">tag: **v7.0.0-alpha.9**</a>
+
+```sh
+npm install iridium@7.0.0-alpha.9
+```
+
+### Changes
+ - [9bcb406](https://github.com/SierraSoftworks/Iridium/commit/9bcb406) 7.0.0-alpha.9
+ - [b9f5b32](https://github.com/SierraSoftworks/Iridium/commit/b9f5b32) tweak: Allow npm to version things itself
+ - [1f33d1b](https://github.com/SierraSoftworks/Iridium/commit/1f33d1b) tweak: Improve printing of exec arguments
+ - [69f1d1c](https://github.com/SierraSoftworks/Iridium/commit/69f1d1c) ci: Only test against latest version of Node.js 6.x
+ - [cdc2b10](https://github.com/SierraSoftworks/Iridium/commit/cdc2b10) fix: Ensure that docs are pushed to GitHub when compiled
+ - [c2c4e59](https://github.com/SierraSoftworks/Iridium/commit/c2c4e59) refactor: Switch to npm scripts instead of gulp
+ - [aec03a7](https://github.com/SierraSoftworks/Iridium/commit/aec03a7) refactor: Switch to ES6 as compilation target
+
 ## Version [7.0.0-alpha.8](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.8)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.8">tag: **v7.0.0-alpha.8**</a>
-<a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/7.0.0-dev">branch: **7.0.0-dev**</a>
 
 ```sh
 npm install iridium@7.0.0-alpha.8
@@ -1157,7 +1195,7 @@ npm install iridium@5.0.0-alpha.1
 
 ## Version [4.0.1](https://github.com/SierraSoftworks/Iridium/releases/tag/v4.0.1)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v4.0.1">tag: **v4.0.1**</a>
-<a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/master">branch: **master**</a> <a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/v4">branch: **v4**</a>
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/v4">branch: **v4**</a>
 
 ```sh
 npm install iridium@4.0.1
