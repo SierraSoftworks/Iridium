@@ -4,9 +4,21 @@ For a human friendly description of what changed in each release, take a look
 at the [Releases](https://github.com/SierraSoftworks/Iridium/releases) page.
 
 
+## Version [7.0.0-alpha.13](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.13)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.13">tag: **v7.0.0-alpha.13**</a>
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/7.0.0-dev">branch: **7.0.0-dev**</a>
+
+```sh
+npm install iridium@7.0.0-alpha.13
+```
+
+### Changes
+ - [7f9f68c](https://github.com/SierraSoftworks/Iridium/commit/7f9f68c) v7.0.0-alpha.13
+ - [e99f8e3](https://github.com/SierraSoftworks/Iridium/commit/e99f8e3) test: Fix tests for changes syntax
+ - [b799ab7](https://github.com/SierraSoftworks/Iridium/commit/b799ab7) doc: Update changelog
+
 ## Version [7.0.0-alpha.12](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.12)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.12">tag: **v7.0.0-alpha.12**</a>
-<a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/7.0.0-dev">branch: **7.0.0-dev**</a>
 
 ```sh
 npm install iridium@7.0.0-alpha.12
