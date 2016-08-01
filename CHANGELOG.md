@@ -4,6 +4,21 @@ For a human friendly description of what changed in each release, take a look
 at the [Releases](https://github.com/SierraSoftworks/Iridium/releases) page.
 
 
+## Version [7.0.0-alpha.12](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.12)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.12">tag: **v7.0.0-alpha.12**</a>
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/7.0.0-dev">branch: **7.0.0-dev**</a>
+
+```sh
+npm install iridium@7.0.0-alpha.12
+```
+
+### Changes
+ - [f0efb2b](https://github.com/SierraSoftworks/Iridium/commit/f0efb2b) v7.0.0-alpha.12
+ - [9d5633a](https://github.com/SierraSoftworks/Iridium/commit/9d5633a) fix: Correct the way BSON arrays are define to permit use of array operators
+ - [388f784](https://github.com/SierraSoftworks/Iridium/commit/388f784) tweak: Update the way changes and conditions are defined to allow arrays
+ - [74f9477](https://github.com/SierraSoftworks/Iridium/commit/74f9477) doc: Fix changelog
+ - [bf15ed6](https://github.com/SierraSoftworks/Iridium/commit/bf15ed6) doc: Updated changelog
+
 ## Version [7.0.0-alpha.11](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.11)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.11">tag: **v7.0.0-alpha.11**</a>
 
