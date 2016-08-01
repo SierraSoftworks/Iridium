@@ -17,6 +17,6 @@ export interface BSONObject {
     [property: string]: BSONType;
 }
 
-export interface BSONArray {
-    [property: number]: BSONType;
+export interface BSONArray extends Array<BSONType> {
+    
 }
