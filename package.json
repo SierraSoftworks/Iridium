@@ -24,6 +24,10 @@
     "prepublish": "npm run build",
     "test": "mocha --opts test/mocha.opts dist/test",
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- --opts test/mocha.opts dist/test",
+    "postcoverage": "npm run coverage:remap:lcov",
+    "coverage:remap:lcov": "remap-istanbul -i coverage/coverage.json -o coverage/coverage-ts.json",
+    "coverage:remap:json": "remap-istanbul -i coverage/coverage.json -o coverage/lcov.info -t lcovonly",
+    "coverage:remap:html": "remap-istanbul -i coverage/coverage.json -o coverage/report -t html",
     "lint": "tslint lib/",
     "git:stash": "git stash",
     "git:stash:pop": "git stash pop",
@@ -73,6 +77,7 @@
     "coveralls": "^2.11.8",
     "istanbul": "~0.4.3",
     "mocha": "^2.5.3",
+    "remap-istanbul": "^0.6.4",
     "tslint": "^3.5.0",
     "typedoc": "~0.4.2",
     "typescript": "~2.0.0"
