@@ -1,25 +1,15 @@
-import {ObjectID} from "mongodb";
-
-export type UnderlyingBSONType = null
-    |number
-    |string|symbol
-    |{[property: string]: UnderlyingBSONType;}
-    //|UnderlyingBSONType[]
-    |ObjectID
-    |boolean
-    |Date
-    |RegExp;
+import {BSONType, BSONArray, ObjectID} from "./BSON";
 
 export interface Conditions {
     [property: string]: {
-        $eq?: UnderlyingBSONType;
-        $ne?: UnderlyingBSONType;
-        $in?: UnderlyingBSONType[];
-        $nin?: UnderlyingBSONType[];
+        $eq?: BSONType;
+        $ne?: BSONType;
+        $in?: BSONArray;
+        $nin?: BSONArray;
         $elemMatch?: Conditions;
-        $gt?: UnderlyingBSONType;
-        $gte?: UnderlyingBSONType;
-        $lt?: UnderlyingBSONType;
-        $lte?: UnderlyingBSONType;
-    }|UnderlyingBSONType;
+        $gt?: BSONType;
+        $gte?: BSONType;
+        $lt?: BSONType;
+        $lte?: BSONType;
+    }|BSONType;
 }

@@ -1,9 +1,8 @@
-import {Conditions, UnderlyingBSONType} from "./Conditions";
+import {Conditions} from "./Conditions";
+import {BSONType, BSONArray, BSONObject} from "./BSON";
 
 export interface Changes {
-    $set?: {
-        [property: string]: UnderlyingBSONType;
-    };
+    $set?: BSONObject;
 
     $unset?: {
         [property: string]: boolean;
@@ -19,21 +18,21 @@ export interface Changes {
 
     $addToSet?: {
         [property: string]: {
-            $each: UnderlyingBSONType[];
-        }|any;
+            $each: BSONArray;
+        };
     }
 
     $push?: {
         [property: string]: {
-            $each: UnderlyingBSONType[];
-            $slice?: number;
-            $position?: number; 
-        }|{
-            $each: UnderlyingBSONType[];
+            $each: BSONArray;
             $slice: number;
             $sort: { [property: string]: number; };
             $position?: number; 
-        }|UnderlyingBSONType;
+        }|{
+            $each: BSONArray;
+            $slice?: number;
+            $position?: number; 
+        }|BSONObject|BSONType;
     };
 
     $pull?: {
@@ -41,7 +40,7 @@ export interface Changes {
     };
 
     $pullAll?: {
-        [property: string]: UnderlyingBSONType[];
+        [property: string]: BSONArray;
     };
 
     $rename?: {
