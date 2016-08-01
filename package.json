@@ -80,7 +80,7 @@
     "remap-istanbul": "^0.6.4",
     "source-map-support": "^0.4.2",
     "tslint": "^3.5.0",
-    "typedoc": "~0.4.2",
+    "typedoc": "~0.4.4",
     "typescript": "~2.0.0"
   },
   "keywords": [
