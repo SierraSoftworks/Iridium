@@ -31,6 +31,9 @@ class Core extends Iridium.Core {
 describe("Changes", () => {
     let core = new Core("mongodb://localhost/iridium_test");
 
+    before(() => core.connect());
+    after(() => core.close());
+
     describe("should allow you to specify valid operations", () => {
         it("should allow you to use the $push operator", () => {
             return core.Model.update({}, {
