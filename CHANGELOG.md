@@ -4,9 +4,23 @@ For a human friendly description of what changed in each release, take a look
 at the [Releases](https://github.com/SierraSoftworks/Iridium/releases) page.
 
 
+## Version [7.0.0-alpha.14](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.14)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.14">tag: **v7.0.0-alpha.14**</a>
+
+```sh
+npm install iridium@7.0.0-alpha.14
+```
+
+### Changes
+ - [52512a2](https://github.com/SierraSoftworks/Iridium/commit/52512a2) 7.0.0-alpha.14
+ - [2bb83c8](https://github.com/SierraSoftworks/Iridium/commit/2bb83c8) chore: Update typedoc to 0.4.4
+ - [10ee87d](https://github.com/SierraSoftworks/Iridium/commit/10ee87d) ci: Remove codeclimate coverage tracking
+ - [778eaf7](https://github.com/SierraSoftworks/Iridium/commit/778eaf7) test: Add sourcemap support to test stack traces
+ - [e6d41be](https://github.com/SierraSoftworks/Iridium/commit/e6d41be) ci: Track code coverage in the TypeScript files
+ - [2dba5e3](https://github.com/SierraSoftworks/Iridium/commit/2dba5e3) doc: Add changelog
+
 ## Version [7.0.0-alpha.13](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.13)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.13">tag: **v7.0.0-alpha.13**</a>
-<a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/7.0.0-dev">branch: **7.0.0-dev**</a>
 
 ```sh
 npm install iridium@7.0.0-alpha.13
@@ -1230,7 +1244,7 @@ npm install iridium@5.0.0-alpha.1
 
 ## Version [4.0.1](https://github.com/SierraSoftworks/Iridium/releases/tag/v4.0.1)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v4.0.1">tag: **v4.0.1**</a>
-<a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/v4">branch: **v4**</a>
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/master">branch: **master**</a> <a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/v4">branch: **v4**</a>
 
 ```sh
 npm install iridium@4.0.1
