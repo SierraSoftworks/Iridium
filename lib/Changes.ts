@@ -19,7 +19,7 @@ export interface Changes {
     $addToSet?: {
         [property: string]: {
             $each: BSONArray;
-        };
+        }|BSONType;
     }
 
     $push?: {
@@ -32,7 +32,7 @@ export interface Changes {
             $each: BSONArray;
             $slice?: number;
             $position?: number; 
-        }|BSONObject|BSONType;
+        }|BSONType;
     };
 
     $pull?: {
