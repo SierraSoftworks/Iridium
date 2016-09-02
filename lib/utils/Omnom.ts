@@ -48,7 +48,7 @@ export class Omnom {
     private onObject(original: any, modified: any, changePath?: string): void {
         if (changePath) {
             if (original === undefined || original === null)
-                return (original !== modified) && this.set(changePath, modified);
+                return <never>(original !== modified) && this.set(changePath, modified);
 
             if (typeof original === "number" && typeof modified === "number" && original !== modified) {
                 if (this.options.atomicNumbers) return this.inc(changePath, modified - original);
@@ -59,10 +59,10 @@ export class Omnom {
                 return this.onArray(original, modified, changePath);
 
             if (original instanceof MongoDB.ObjectID && modified instanceof MongoDB.ObjectID)
-                return !original.equals(modified) && this.set(changePath, modified);
+                return <never>!original.equals(modified) && this.set(changePath, modified);
 
             if (!_.isPlainObject(original) || !_.isPlainObject(modified))
-                return !_.isEqual(original, modified) && this.set(changePath, modified);
+                return <never>!_.isEqual(original, modified) && this.set(changePath, modified);
         }
 
         if (!_.isPlainObject(original) || !_.isPlainObject(modified)) {
