@@ -19,7 +19,7 @@
       "codeclimate-test-reporter",
       "concurrently",
       "istanbul",
-      "mocha"
+      "mocha",
       "tslint",
       "typedoc"
     ]
