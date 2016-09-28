@@ -40,11 +40,12 @@ npm install iridium --save
    can be found at [sierrasoftworks.github.io/Iridium](http://sierrasoftworks.github.io/Iridium).
 
 ## Requirements
-Iridium is built on top of a number of very modern technologies, including TypeScript 1.8, JavaScript ES6 (though we do compile
-to ES5 for compatibility with existing Node.js implementations) and the latest MongoDB Node.js Driver (version 2.1).
+Iridium is built on top of a number of very modern technologies, including TypeScript 2.0, JavaScript ES6 and the latest MongoDB
+Node.js Driver (version 2.2). You'll need to be running Node.js 6.x, or 4.x with the `--harmony` flag to run version 7 of Iridium.
+For older versions of Node.js, please considering using version 6 of Iridium instead.
 
-For starters, you will need to be running MongoDB 2.6 or later in order to use Iridium - however we recommend you use MongoDB 3.0
-due to the various performance improvements they've made. If you're working with TypeScript, you will also need to use the 1.5
+For starters, you will need to be running MongoDB 2.6 or later in order to use Iridium - however we recommend you use MongoDB 3.1
+due to the various performance improvements they've made. If you're working with TypeScript, you will also need to use the 2.0
 compiler or risk having the Iridium type definitions break your project.
 
 ## Using Iridium
