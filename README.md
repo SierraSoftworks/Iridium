@@ -18,19 +18,12 @@ It also means that, if you're familiar with the MongoDB CLI you should find work
 methods returning promises for their results and sensible, type annotated results being provided if you wish to make use of them.
 
 ## Installation
-Iridium is a relatively complex library, as a result its installation requires a little more than just `npm install` to get right.
-This is, unfortunately, a result of the way TypeScript handles modules at the moment - but they're working on making the workflow
-better and we'll always try to stay as up to date as possible.
+Iridium makes use of the latest set of `@types` TypeScript definitions files, allowing you to install everything using just a
+simple `npm install`.
 
 ```bash
 npm install iridium --save
-
-typings install -S 'npm!bluebird' 'npm!mongodb' 'npm!lodash'
-typings install -SA node es6-promise # don't install es6-promise if you're targetting ES6
 ```
-
-- **ES6 Users** - If you're targetting ES6, then you'll want to ensure that you don't install es6-promise above. It will conflict with
-  the ES6 promise library and cause problems. 
 
 ## Features
  - **Built with TypeScript** and designed for ease of use, you'll be hard pressed to find another Node.js ORM as easy to pick
