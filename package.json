@@ -47,7 +47,7 @@
     "watch:test": "mocha --opts test/mocha.opts --watch dist/test"
   },
   "engines": {
-    "node": ">= 0.10"
+    "node": ">= 6.0"
   },
   "dependencies": {
     "@types/bluebird": "^3.0.33",
