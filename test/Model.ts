@@ -792,9 +792,19 @@ describe("Model",() => {
             return chai.expect(model.update({ _id: { $exists: true } }, { $inc: { answer: 1 } })).to.eventually.equal(5);
         });
 
+        it("should allow multi update to be disabled",() => {
+            return chai.expect(model.update({ _id: { $exists: true } }, { $inc: { answer: 1 } }, { multi: false })).to.eventually.equal(1);
+        });
+
         it("should allow just the ID to be specified",() => {
             return model.get().then(instance => {
                 return chai.expect(model.update(instance._id, { $inc: { answer: 1 } })).to.eventually.equal(1);
+            });
+        });
+
+        it("should allow replacement updates to be conducted",() => {
+            return model.get().then(instance => {
+                return chai.expect(model.update(instance._id, instance.document, { multi: false })).to.eventually.equal(1);
             });
         });
 

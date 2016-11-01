@@ -545,13 +545,13 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
             options = {};
         }
 
-        options = options || {};
+        const opts = options || {};
 
         if (!_.isPlainObject(conditions)) conditions = {
             _id: conditions
         };
 
-        _.defaults(options, {
+        _.defaults(opts, {
             w: "majority",
             multi: true
         });
@@ -560,15 +560,21 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
             conditions = this._helpers.convertToDB(conditions);
 
             return new Bluebird<number>((resolve, reject) => {
-                this.collection.updateMany(conditions, changes, options!, (err, response) => {
+                if (opts.multi)
+                    return this.collection.updateMany(conditions, changes, opts, (err, response) => {
+                        if (err) return reject(err);
+
+                        // New MongoDB 2.6+ response type
+                        if (response.result && response.result.nModified !== undefined) return resolve(response.result.nModified);
+
+                        // Legacy response type
+                        return resolve(response.result.n);
+                    });
+                
+                return this.collection.update(conditions, changes, opts, (err, response) => {
                     if (err) return reject(err);
-
-                    // New MongoDB 2.6+ response type
-                    if (response.result && response.result.nModified !== undefined) return resolve(response.result.nModified);
-
-                    // Legacy response type
-                    return resolve(response.result.n);
-                });
+                    return resolve(1);
+                })
             })
         }).nodeify(callback);
     }
