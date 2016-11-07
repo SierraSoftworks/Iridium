@@ -560,21 +560,20 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
             conditions = this._helpers.convertToDB(conditions);
 
             return new Bluebird<number>((resolve, reject) => {
-                if (opts.multi)
-                    return this.collection.updateMany(conditions, changes, opts, (err, response) => {
-                        if (err) return reject(err);
-
-                        // New MongoDB 2.6+ response type
-                        if (response.result && response.result.nModified !== undefined) return resolve(response.result.nModified);
-
-                        // Legacy response type
-                        return resolve(response.result.n);
-                    });
-                
-                return this.collection.update(conditions, changes, opts, (err, response) => {
+                const callback = (err: Error, response: MongoDB.UpdateWriteOpResult) => {
                     if (err) return reject(err);
-                    return resolve(1);
-                })
+
+                    // New MongoDB 2.6+ response type
+                    if (response.result && response.result.nModified !== undefined) return resolve(response.result.nModified);
+
+                    // Legacy response type
+                    return resolve(response.result.n);
+                }
+
+                if (opts.multi)
+                    return this.collection.updateMany(conditions, changes, opts, callback);
+                
+                return this.collection.updateOne(conditions, changes, opts, callback)
             })
         }).nodeify(callback);
     }

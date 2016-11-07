@@ -804,6 +804,7 @@ describe("Model",() => {
 
         it("should allow replacement updates to be conducted",() => {
             return model.get().then(instance => {
+                instance.answer++;
                 return chai.expect(model.update(instance._id, instance.document, { multi: false })).to.eventually.equal(1);
             });
         });
