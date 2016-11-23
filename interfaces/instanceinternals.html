@@ -3,11 +3,10 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>BasicConnectionOptions | Iridium</title>
+	<title>InstanceInternals | Iridium</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
-	<script src="../assets/js/modernizr.js"></script>
 </head>
 <body>
 <header>
@@ -57,29 +56,32 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="basicconnectionoptions.html">BasicConnectionOptions</a>
+					<a href="instanceinternals.html">InstanceInternals</a>
 				</li>
 			</ul>
-			<h1>Interface BasicConnectionOptions</h1>
+			<h1>Interface InstanceInternals&lt;TDocument, TInstance&gt;</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-type-parameters">
+				<h3>Type parameters</h3>
+				<ul class="tsd-type-parameters">
+					<li>
+						<h4>TDocument<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></h4>
+					</li>
+					<li>
+						<h4>TInstance</h4>
+					</li>
+				</ul>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">BasicConnectionOptions</span>
-						<ul class="tsd-hierarchy">
-							<li>
-								<a href="serverlevelconnectionoptions.html" class="tsd-signature-type">ServerLevelConnectionOptions</a>
-							</li>
-							<li>
-								<a href="mongoslevelconnectionoptions.html" class="tsd-signature-type">MongosLevelConnectionOptions</a>
-							</li>
-						</ul>
+						<span class="target">InstanceInternals</span>
 					</li>
 				</ul>
 			</section>
@@ -90,14 +92,11 @@
 						<section class="tsd-index-section tsd-is-external">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="basicconnectionoptions.html#poolsize" class="tsd-kind-icon">pool<wbr>Size</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="basicconnectionoptions.html#socketoptions" class="tsd-kind-icon">socket<wbr>Options</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="basicconnectionoptions.html#ssl" class="tsd-kind-icon">ssl</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="basicconnectionoptions.html#sslca" class="tsd-kind-icon">sslCA</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="basicconnectionoptions.html#sslcert" class="tsd-kind-icon">ssl<wbr>Cert</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="basicconnectionoptions.html#sslkey" class="tsd-kind-icon">ssl<wbr>Key</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="basicconnectionoptions.html#sslpass" class="tsd-kind-icon">ssl<wbr>Pass</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="basicconnectionoptions.html#sslvalidate" class="tsd-kind-icon">ssl<wbr>Validate</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="instanceinternals.html#_isnew" class="tsd-kind-icon">_is<wbr>New</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="instanceinternals.html#_ispartial" class="tsd-kind-icon">_is<wbr>Partial</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="instanceinternals.html#_model" class="tsd-kind-icon">_model</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="instanceinternals.html#_modified" class="tsd-kind-icon">_modified</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="instanceinternals.html#_original" class="tsd-kind-icon">_original</a></li>
 							</ul>
 						</section>
 					</div>
@@ -106,101 +105,79 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-external">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="poolsize" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> pool<wbr>Size</h3>
-					<div class="tsd-signature tsd-kind-icon">pool<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="_isnew" class="tsd-anchor"></a>
+					<h3>_is<wbr>New</h3>
+					<div class="tsd-signature tsd-kind-icon">_is<wbr>New<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/aec03a7/lib/Configuration.ts#L111">lib/Configuration.ts:111</a></li>
+							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/23c9ff3/lib/InstanceInterface.ts#L145">lib/InstanceInterface.ts:145</a></li>
 						</ul>
 					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="socketoptions" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> socket<wbr>Options</h3>
-					<div class="tsd-signature tsd-kind-icon">socket<wbr>Options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/aec03a7/lib/Configuration.ts#L119">lib/Configuration.ts:119</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> connect<wbr>TimeoutMS<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> keep<wbr>Alive<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> no<wbr>Delay<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span></h5>
-							</li>
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> socket<wbr>TimeoutMS<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span></h5>
-							</li>
-						</ul>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether this instance is known to be present in the database or not</p>
+						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="ssl" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> ssl</h3>
-					<div class="tsd-signature tsd-kind-icon">ssl<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="_ispartial" class="tsd-anchor"></a>
+					<h3>_is<wbr>Partial</h3>
+					<div class="tsd-signature tsd-kind-icon">_is<wbr>Partial<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/aec03a7/lib/Configuration.ts#L112">lib/Configuration.ts:112</a></li>
+							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/23c9ff3/lib/InstanceInterface.ts#L150">lib/InstanceInterface.ts:150</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether this instance represents a partial document</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="sslca" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> sslCA</h3>
-					<div class="tsd-signature tsd-kind-icon">sslCA<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Buffer</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
+					<a name="_model" class="tsd-anchor"></a>
+					<h3>_model</h3>
+					<div class="tsd-signature tsd-kind-icon">_model<span class="tsd-signature-symbol">:</span> <a href="../classes/model.html" class="tsd-signature-type">Model</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TDocument</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TInstance</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/aec03a7/lib/Configuration.ts#L114">lib/Configuration.ts:114</a></li>
+							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/23c9ff3/lib/InstanceInterface.ts#L155">lib/InstanceInterface.ts:155</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The model that this instance belongs to</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="sslcert" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> ssl<wbr>Cert</h3>
-					<div class="tsd-signature tsd-kind-icon">ssl<wbr>Cert<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Buffer</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+					<a name="_modified" class="tsd-anchor"></a>
+					<h3>_modified</h3>
+					<div class="tsd-signature tsd-kind-icon">_modified<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">TDocument</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/aec03a7/lib/Configuration.ts#L115">lib/Configuration.ts:115</a></li>
+							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/23c9ff3/lib/InstanceInterface.ts#L140">lib/InstanceInterface.ts:140</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A copy of the original document which may have had changes applied to it</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="sslkey" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> ssl<wbr>Key</h3>
-					<div class="tsd-signature tsd-kind-icon">ssl<wbr>Key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Buffer</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+					<a name="_original" class="tsd-anchor"></a>
+					<h3>_original</h3>
+					<div class="tsd-signature tsd-kind-icon">_original<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">TDocument</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/aec03a7/lib/Configuration.ts#L116">lib/Configuration.ts:116</a></li>
+							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/23c9ff3/lib/InstanceInterface.ts#L135">lib/InstanceInterface.ts:135</a></li>
 						</ul>
 					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="sslpass" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> ssl<wbr>Pass</h3>
-					<div class="tsd-signature tsd-kind-icon">ssl<wbr>Pass<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Buffer</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/aec03a7/lib/Configuration.ts#L117">lib/Configuration.ts:117</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="sslvalidate" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> ssl<wbr>Validate</h3>
-					<div class="tsd-signature tsd-kind-icon">ssl<wbr>Validate<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/aec03a7/lib/Configuration.ts#L113">lib/Configuration.ts:113</a></li>
-						</ul>
-					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The original document received from the database</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -216,32 +193,23 @@
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface tsd-is-external">
-						<a href="basicconnectionoptions.html" class="tsd-kind-icon">Basic<wbr>Connection<wbr>Options</a>
+					<li class="current tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="instanceinternals.html" class="tsd-kind-icon">Instance<wbr>Internals</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="basicconnectionoptions.html#poolsize" class="tsd-kind-icon">pool<wbr>Size</a>
+								<a href="instanceinternals.html#_isnew" class="tsd-kind-icon">_is<wbr>New</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="basicconnectionoptions.html#socketoptions" class="tsd-kind-icon">socket<wbr>Options</a>
+								<a href="instanceinternals.html#_ispartial" class="tsd-kind-icon">_is<wbr>Partial</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="basicconnectionoptions.html#ssl" class="tsd-kind-icon">ssl</a>
+								<a href="instanceinternals.html#_model" class="tsd-kind-icon">_model</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="basicconnectionoptions.html#sslca" class="tsd-kind-icon">sslCA</a>
+								<a href="instanceinternals.html#_modified" class="tsd-kind-icon">_modified</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="basicconnectionoptions.html#sslcert" class="tsd-kind-icon">ssl<wbr>Cert</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="basicconnectionoptions.html#sslkey" class="tsd-kind-icon">ssl<wbr>Key</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="basicconnectionoptions.html#sslpass" class="tsd-kind-icon">ssl<wbr>Pass</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="basicconnectionoptions.html#sslvalidate" class="tsd-kind-icon">ssl<wbr>Validate</a>
+								<a href="instanceinternals.html#_original" class="tsd-kind-icon">_original</a>
 							</li>
 						</ul>
 					</li>
@@ -312,7 +280,7 @@
 	</div>
 </footer>
 <div class="container tsd-generator">
-	<p>Generated using <a href="http://typedoc.io" target="_blank">TypeDoc</a></p>
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
 </div>
 <div class="overlay"></div>
 <script src="../assets/js/main.js"></script>

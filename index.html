@@ -7,7 +7,6 @@
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
-	<script src="assets/js/modernizr.js"></script>
 </head>
 <body>
 <header>
@@ -81,18 +80,10 @@
 				<p>It also means that, if you&#39;re familiar with the MongoDB CLI you should find working with Iridium very natural, with all database
 				methods returning promises for their results and sensible, type annotated results being provided if you wish to make use of them.</p>
 				<h2 id="installation">Installation</h2>
-				<p>Iridium is a relatively complex library, as a result its installation requires a little more than just <code>npm install</code> to get right.
-					This is, unfortunately, a result of the way TypeScript handles modules at the moment - but they&#39;re working on making the workflow
-				better and we&#39;ll always try to stay as up to date as possible.</p>
+				<p>Iridium makes use of the latest set of <code>@types</code> TypeScript definitions files, allowing you to install everything using just a
+				simple <code>npm install</code>.</p>
 				<pre><code class="lang-bash">npm install iridium --save
-
-typings install -S <span class="hljs-string">'npm!bluebird'</span> <span class="hljs-string">'npm!mongodb'</span> <span class="hljs-string">'npm!lodash'</span>
-typings install -SA node es6-promise <span class="hljs-comment"># don't install es6-promise if you're targetting ES6</span>
 </code></pre>
-				<ul>
-					<li><strong>ES6 Users</strong> - If you&#39;re targetting ES6, then you&#39;ll want to ensure that you don&#39;t install es6-promise above. It will conflict with
-					the ES6 promise library and cause problems. </li>
-				</ul>
 				<h2 id="features">Features</h2>
 				<ul>
 					<li><strong>Built with TypeScript</strong> and designed for ease of use, you&#39;ll be hard pressed to find another Node.js ORM as easy to pick
@@ -109,10 +100,11 @@ typings install -SA node es6-promise <span class="hljs-comment"># don't install 
 					can be found at <a href="http://sierrasoftworks.github.io/Iridium">sierrasoftworks.github.io/Iridium</a>.</li>
 				</ul>
 				<h2 id="requirements">Requirements</h2>
-				<p>Iridium is built on top of a number of very modern technologies, including TypeScript 1.8, JavaScript ES6 (though we do compile
-				to ES5 for compatibility with existing Node.js implementations) and the latest MongoDB Node.js Driver (version 2.1).</p>
-				<p>For starters, you will need to be running MongoDB 2.6 or later in order to use Iridium - however we recommend you use MongoDB 3.0
-					due to the various performance improvements they&#39;ve made. If you&#39;re working with TypeScript, you will also need to use the 1.5
+				<p>Iridium is built on top of a number of very modern technologies, including TypeScript 2.0, JavaScript ES6 and the latest MongoDB
+					Node.js Driver (version 2.2). You&#39;ll need to be running Node.js 6.x, or 4.x with the <code>--harmony</code> flag to run version 7 of Iridium.
+				For older versions of Node.js, please considering using version 6 of Iridium instead.</p>
+				<p>For starters, you will need to be running MongoDB 2.6 or later in order to use Iridium - however we recommend you use MongoDB 3.1
+					due to the various performance improvements they&#39;ve made. If you&#39;re working with TypeScript, you will also need to use the 2.0
 				compiler or risk having the Iridium type definitions break your project.</p>
 				<h2 id="using-iridium">Using Iridium</h2>
 				<p>Rather than opt of the usual &quot;Look how quickly you can do something&quot; approach, we thought it might be useful to see
@@ -248,7 +240,7 @@ myDb.connect().then(() =&gt; myDb.Houses.insert({
 
 <span class="hljs-built_in">module</span>.exports.collection = <span class="hljs-string">'myCollection'</span>;
 <span class="hljs-built_in">module</span>.exports.schema = {
-    _id: <span class="hljs-literal">false</span>
+    <span class="hljs-attr">_id</span>: <span class="hljs-literal">false</span>
 };
 </code></pre>
 				<h3 id="configuration-options">Configuration Options</h3>
@@ -284,8 +276,8 @@ myDb.connect().then(() =&gt; myDb.Houses.insert({
 				<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">InstanceType</span>(<span class="hljs-params"></span>) </span>{}
 
 InstanceType.schema = {
-    _id: <span class="hljs-literal">false</span>,
-    email: <span class="hljs-regexp">/^.+@.+$/</span>
+    <span class="hljs-attr">_id</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">email</span>: <span class="hljs-regexp">/^.+@.+$/</span>
 };
 </code></pre>
 				<h3 id="the-iridium-instance-class">The Iridium Instance Class</h3>
@@ -346,7 +338,7 @@ InstanceType.validators = [
 ];
 
 InstanceType.schema = {
-    myProperty: <span class="hljs-string">'myValidator'</span>
+    <span class="hljs-attr">myProperty</span>: <span class="hljs-string">'myValidator'</span>
 };
 </code></pre>
 				<p>Iridium expects validators to operate in a read-only mode, modifying documents within your validators (while possible) is strongly discouraged as it can lead
@@ -380,18 +372,18 @@ InstanceType.schema = {
 <span class="hljs-built_in">require</span>(<span class="hljs-string">'util'</span>).inherits(InstanceType, Iridium.Instance);
 
 InstanceType.transforms = {
-    $<span class="hljs-built_in">document</span>: {
-        fromDB: <span class="hljs-built_in">document</span> =&gt; {
+    <span class="hljs-attr">$document</span>: {
+        <span class="hljs-attr">fromDB</span>: <span class="hljs-function"><span class="hljs-params">document</span> =&gt;</span> {
             <span class="hljs-built_in">document</span>.lastFetched = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>();
         },
-        toDB: <span class="hljs-built_in">document</span> =&gt; {
+        <span class="hljs-attr">toDB</span>: <span class="hljs-function"><span class="hljs-params">document</span> =&gt;</span> {
             <span class="hljs-built_in">document</span>.lastFetched &amp;&amp; <span class="hljs-keyword">delete</span> <span class="hljs-built_in">document</span>.lastFetched;
             <span class="hljs-keyword">return</span> <span class="hljs-built_in">document</span>;
         }
     },
-    email: {
-        fromDB: value =&gt; value.toUpperCase(),
-        toDB: value =&gt; value.toLowerCase()
+    <span class="hljs-attr">email</span>: {
+        <span class="hljs-attr">fromDB</span>: <span class="hljs-function"><span class="hljs-params">value</span> =&gt;</span> value.toUpperCase(),
+        <span class="hljs-attr">toDB</span>: <span class="hljs-function"><span class="hljs-params">value</span> =&gt;</span> value.toLowerCase()
     }
 };
 </code></pre>
@@ -421,10 +413,10 @@ InstanceType.transforms = {
 <span class="hljs-built_in">require</span>(<span class="hljs-string">'util'</span>).inherits(InstanceType, Iridium.Instance);
 
 InstanceType.transforms = {
-    $<span class="hljs-built_in">document</span>: {
-        fromDB: <span class="hljs-built_in">document</span> =&gt; <span class="hljs-built_in">document</span>,
-        toDB: (<span class="hljs-built_in">document</span>, property, model) =&gt; {
-            <span class="hljs-built_in">Object</span>.keys(<span class="hljs-built_in">document</span>).forEach(key =&gt; {
+    <span class="hljs-attr">$document</span>: {
+        <span class="hljs-attr">fromDB</span>: <span class="hljs-function"><span class="hljs-params">document</span> =&gt;</span> <span class="hljs-built_in">document</span>,
+        <span class="hljs-attr">toDB</span>: <span class="hljs-function">(<span class="hljs-params"><span class="hljs-built_in">document</span>, property, model</span>) =&gt;</span> {
+            <span class="hljs-built_in">Object</span>.keys(<span class="hljs-built_in">document</span>).forEach(<span class="hljs-function"><span class="hljs-params">key</span> =&gt;</span> {
                 <span class="hljs-keyword">if</span>(!model.schema.hasOwnProperty(key)) <span class="hljs-keyword">delete</span> <span class="hljs-built_in">document</span>[key];
             });
 
@@ -479,7 +471,10 @@ InstanceType.transforms = {
 						<a href="classes/omnom.html" class="tsd-kind-icon">Omnom</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-is-external">
-						<a href="interfaces/basicconnectionoptions.html" class="tsd-kind-icon">Basic<wbr>Connection<wbr>Options</a>
+						<a href="interfaces/bsonarray.html" class="tsd-kind-icon">BSONArray</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/bsonobject.html" class="tsd-kind-icon">BSONObject</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/cache.html" class="tsd-kind-icon">Cache</a>
@@ -491,16 +486,16 @@ InstanceType.transforms = {
 						<a href="interfaces/callback.html" class="tsd-kind-icon">Callback</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/changes.html" class="tsd-kind-icon">Changes</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/conditions.html" class="tsd-kind-icon">Conditions</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/configuration.html" class="tsd-kind-icon">Configuration</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-is-external">
-						<a href="interfaces/connectionoptions.html" class="tsd-kind-icon">Connection<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/createoptions.html" class="tsd-kind-icon">Create<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
-						<a href="interfaces/databaselevelconnectionoptions.html" class="tsd-kind-icon">Database<wbr>Level<wbr>Connection<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/expressmiddleware.html" class="tsd-kind-icon">Express<wbr>Middleware</a>
@@ -521,13 +516,13 @@ InstanceType.transforms = {
 						<a href="interfaces/instanceimplementation.html" class="tsd-kind-icon">Instance<wbr>Implementation</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="interfaces/instanceinternals.html" class="tsd-kind-icon">Instance<wbr>Internals</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="interfaces/middlewarefactory.html" class="tsd-kind-icon">Middleware<wbr>Factory</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="interfaces/modelspecificinstanceconstructor.html" class="tsd-kind-icon">Model<wbr>Specific<wbr>Instance<wbr>Constructor</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
-						<a href="interfaces/mongoslevelconnectionoptions.html" class="tsd-kind-icon">Mongos<wbr>Level<wbr>Connection<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/plugin.html" class="tsd-kind-icon">Plugin</a>
@@ -554,13 +549,7 @@ InstanceType.transforms = {
 						<a href="interfaces/removeoptions.html" class="tsd-kind-icon">Remove<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-is-external">
-						<a href="interfaces/replicasetlevelconnectionoptions.html" class="tsd-kind-icon">Replicaset<wbr>Level<wbr>Connection<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/schema.html" class="tsd-kind-icon">Schema</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
-						<a href="interfaces/serverlevelconnectionoptions.html" class="tsd-kind-icon">Server<wbr>Level<wbr>Connection<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/stage.html" class="tsd-kind-icon">Stage</a>
@@ -573,6 +562,9 @@ InstanceType.transforms = {
 					</li>
 					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/updateoptions.html" class="tsd-kind-icon">Update<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-is-external">
+						<a href="globals.html#bsontype" class="tsd-kind-icon">BSONType</a>
 					</li>
 					<li class=" tsd-kind-function tsd-is-external">
 						<a href="globals.html#binary" class="tsd-kind-icon">Binary</a>
@@ -669,7 +661,7 @@ InstanceType.transforms = {
 	</div>
 </footer>
 <div class="container tsd-generator">
-	<p>Generated using <a href="http://typedoc.io" target="_blank">TypeDoc</a></p>
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
 </div>
 <div class="overlay"></div>
 <script src="assets/js/main.js"></script>

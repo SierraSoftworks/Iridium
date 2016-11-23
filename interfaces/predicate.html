@@ -7,7 +7,6 @@
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
-	<script src="../assets/js/modernizr.js"></script>
 </head>
 <body>
 <header>
@@ -60,7 +59,7 @@
 					<a href="predicate.html">Predicate</a>
 				</li>
 			</ul>
-			<h1>Interface Predicate&lt;T&gt;</h1>
+			<h1>Interface Predicate&lt;TThis, TObject&gt;</h1>
 		</div>
 	</div>
 </header>
@@ -78,12 +77,10 @@
 				<h3>Type parameters</h3>
 				<ul class="tsd-type-parameters">
 					<li>
-						<h4>T</h4>
-						<div class="tsd-comment tsd-typography">
-							<div class="lead">
-								<p>The type of item in the collection.</p>
-							</div>
-						</div>
+						<h4>TThis</h4>
+					</li>
+					<li>
+						<h4>TObject</h4>
 					</li>
 				</ul>
 			</section>
@@ -98,13 +95,13 @@
 			<section class="tsd-panel">
 				<h3 class="tsd-before-signature">Callable</h3>
 				<ul class="tsd-signatures tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-					<li class="tsd-signature tsd-kind-icon">__call<span class="tsd-signature-symbol">(</span>object<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, key<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					<li class="tsd-signature tsd-kind-icon">__call<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TThis</span>, object<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TObject</span>, key<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/aec03a7/lib/General.ts#L18">lib/General.ts:18</a></li>
+								<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/23c9ff3/lib/General.ts#L18">lib/General.ts:18</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -115,7 +112,10 @@
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>object: <span class="tsd-signature-type">T</span></h5>
+								<h5>this: <span class="tsd-signature-type">TThis</span></h5>
+							</li>
+							<li>
+								<h5>object: <span class="tsd-signature-type">TObject</span></h5>
 								<div class="tsd-comment tsd-typography">
 									<p>The value of the item in the collection</p>
 								</div>
@@ -215,7 +215,7 @@
 	</div>
 </footer>
 <div class="container tsd-generator">
-	<p>Generated using <a href="http://typedoc.io" target="_blank">TypeDoc</a></p>
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
 </div>
 <div class="overlay"></div>
 <script src="../assets/js/main.js"></script>
