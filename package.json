@@ -34,7 +34,7 @@
     "changelog": "node build/changelog.js",
     "doc": "npm run doc:build && npm run doc:publish && npm run doc:submodule",
     "predoc:build": "cd ./doc && git checkout gh-pages",
-    "doc:build": "typedoc --out ./doc --mode file --name Iridium typings/index.d.ts iridium.ts",
+    "doc:build": "typedoc --out ./doc --mode file --name Iridium iridium.ts",
     "postdoc:build": "echo gitdir: ../.git/modules/doc> ./doc/.git",
     "doc:stage": "cd ./doc && git add -A",
     "doc:commit": "cd ./doc && git diff --cached --exit-code && git commit -m \"doc: Update documentation\" || true",
@@ -80,8 +80,8 @@
     "remap-istanbul": "^0.7.0",
     "source-map-support": "^0.4.2",
     "tslint": "^3.15.1",
-    "typedoc": "~0.4.5",
-    "typescript": "~2.0.3"
+    "typedoc": "~0.5.1",
+    "typescript": "~2.0.10"
   },
   "keywords": [
     "mongodb",
