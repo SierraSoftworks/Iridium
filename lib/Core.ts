@@ -216,7 +216,7 @@ export class Core {
      * resolves a connection object, Iridium will be unable to execute any queries. If you wish
      * to run Iridium queries then look at the onConnected method.
      */
-    protected onConnecting(connection: MongoDB.Db): Bluebird<MongoDB.Db> {
+    protected onConnecting(connection: MongoDB.Db): PromiseLike<MongoDB.Db> {
         return Bluebird.resolve(connection);
     }
 
@@ -227,7 +227,7 @@ export class Core {
      * connection to the database has been established - such as setting up indexes for your
      * collections or seeding the database.
      */
-    protected onConnected(): Bluebird<void> {
+    protected onConnected(): PromiseLike<void> {
         return Bluebird.resolve();
     }
 }
