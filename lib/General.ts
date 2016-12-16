@@ -5,52 +5,54 @@
  */
 export interface Callback<T> {
     /**
-     * @param err The error object, if one occurred, otherwise null if the operation completed successfully.
-     * @param object The result of the asynchronous operation if it completed successfully. If err is defined, the presence of this value is unknown.
+     * A function which is called upon the completion of an asynchronous operation
+     * @param {Error} err The error object, if one occurred, otherwise null if the operation completed successfully.
+     * @param {Object} object The result of the asynchronous operation if it completed successfully. If err is defined, the presence of this value is unknown.
      */
     (err: Error, object?: T): void;
 }
 
 /**
  * A method which is used to determine whether a value within a collection meets a set of criteria.
- * @param T The type of item in the collection.
+ * @param {any} T The type of item in the collection.
  */
 export interface Predicate<TThis,TObject> {
     /**
-     * @param object The value of the item in the collection
-     * @param key The key, if one is available, under which the item appeared within the collection
-     * @returns A true-y value if the item met the predicate conditions, false-y values if it did not.
+     * A function which is called to determine whether a value meets arbitrary criteria
+     * @param {Object} object The value of the item in the collection
+     * @param {String} key The key, if one is available, under which the item appeared within the collection
+     * @returns {Boolean} A true-y value if the item met the predicate conditions, false-y values if it did not.
      */
     (this: TThis, object: TObject, key?: string): boolean;
 }
 
 /**
  * A method which is called to retrieve a value of the given type.
- * @param T The type of value to be retrieved.
+ * @param {any} T The type of value to be retrieved.
  */
 export interface PropertyGetter<T> {
     /**
      * Gets the current value of the property
-     * @returns The current value
+     * @returns {T} The current value
      */
     (): T;
 }
 
 /**
  * A method which is called to set a value of the given type.
- * @param T The type of value to set
+ * @param {any} T The type of value to set
  */
 export interface PropertySetter<T> {
     /**
      * Sets the value to the provided one
-     * @param value The new value to set
+     * @param {T} value The new value to set
      */
     (value: T): void;
 }
 
 /**
  * A compound property which provides either a getter, setter or both.
- * @param T The type of objects stored in the property
+ * @param {any} T The type of objects stored in the property
  */
 export interface Property<T> {
     /**
