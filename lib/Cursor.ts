@@ -25,8 +25,8 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
 
     /**
      * Counts the number of documents which are matched by this cursor
-     * @param {function(Error, Number)} callback A callback which is triggered when the result is available
-     * @return {Promise<number>} A promise which will resolve with the number of documents matched by this cursor
+     * @param {function} [callback] A callback which is triggered when the result is available
+     * @return {Promise} A promise which will resolve with the number of documents matched by this cursor
      */
     count(callback?: General.Callback<number>): Bluebird<number> {
         return new Bluebird<number>((resolve, reject) => {
@@ -39,8 +39,8 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
 
     /**
      * Runs the specified handler over each instance in the query results
-     * @param {function(Instance)} handler The handler which is triggered for each element in the query
-     * @param {function(Error)} callback A callback which is triggered when all operations have been dispatched
+     * @param {function} handler The handler which is triggered for each element in the query
+     * @param {function} [callback] A callback which is triggered when all operations have been dispatched
      * @return {Promise} A promise which is resolved when all operations have been dispatched
      */
     forEach(handler: (instance: TInstance) => void, callback?: General.Callback<void>): Bluebird<void> {
@@ -57,9 +57,9 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
 
     /**
      * Runs the specified transform over each instance in the query results and returns the resulting transformed objects
-     * @param {function(Instance): TResult} transform A handler which is used to transform the result objects
-     * @param {function(Error, TResult[])} callback A callback which is triggered when the transformations are completed
-     * @return {Promise<TResult[]>} A promise which is fulfilled with the results of the transformations
+     * @param {function} transform A handler which is used to transform the result objects
+     * @param {function} [callback] A callback which is triggered when the transformations are completed
+     * @return {Promise} A promise which is fulfilled with the results of the transformations
      */
     map<TResult>(transform: (instance: TInstance) => TResult | Bluebird<TResult>, callback?: General.Callback<TResult[]>): Bluebird<TResult[]> {
         let helpers = this.model.helpers;
@@ -77,8 +77,8 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
 
     /**
      * Retrieves all matching instances and returns them in an array
-     * @param {function(Error, TInstance[])} callback A callback which is triggered with the resulting instances
-     * @return {Promise<TInstance[]>} A promise which resolves with the instances returned by the query
+     * @param {function} [callback] A callback which is triggered with the resulting instances
+     * @return {Promise} A promise which resolves with the instances returned by the query
      */
     toArray(callback?: General.Callback<TInstance[]>): Bluebird<TInstance[]> {
         let helpers = this.model.helpers;
@@ -94,8 +94,8 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
 
     /**
      * Retrieves the next item in the results list
-     * @param {function(Error, TInstance)} callback A callback which is triggered when the next item becomes available
-     * @return {Promise<TInstance>} A promise which is resolved with the next item
+     * @param {function} [callback] A callback which is triggered when the next item becomes available
+     * @return {Promise} A promise which is resolved with the next item
      */
     next(callback?: General.Callback<TInstance>): Bluebird<TInstance|undefined> {
         return new Bluebird<TDocument|undefined>((resolve, reject) => {
@@ -111,8 +111,8 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
 
     /**
      * Retrieves the next item in the result list and then closes the cursor
-     * @param {function(Error, TInstance)} callback A callback which is triggered when the next item becomes available
-     * @return {Promise<TInstance>} A promise which is resolved once the item becomes available and the cursor has been closed.
+     * @param {function} [callback] A callback which is triggered when the next item becomes available
+     * @return {Promise} A promise which is resolved once the item becomes available and the cursor has been closed.
      */
     one(callback?: General.Callback<TInstance>): Bluebird<TInstance|undefined> {
         return new Bluebird<TDocument|undefined>((resolve, reject) => {
