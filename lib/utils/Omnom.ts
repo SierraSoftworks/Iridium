@@ -25,19 +25,19 @@ export class Omnom {
 
     static diff(original: number, modified: number, options?: {
         atomicNumbers?: boolean;
-    });
+    }): Changes;
     static diff(original: [any], modified: any[], options?: {
         atomicNumbers?: boolean;
-    });
+    }): Changes;
     static diff(original: MongoDB.ObjectID, modified: MongoDB.ObjectID, options?: {
         atomicNumbers?: boolean;
-    });
+    }): Changes;
     static diff(original: Object, modified: Object, options?: {
         atomicNumbers?: boolean;
-    });
+    }): Changes;
     static diff(original: any, modified: any, options?: {
         atomicNumbers?: boolean;
-    }) {
+    }): Changes {
         return new Omnom(options).diff(original, modified).changes;
     }
 
@@ -233,15 +233,15 @@ export class Omnom {
         return validArguments.join(".");
     }
 
-    private almostEqual(o1: Object, o2: Object);
-    private almostEqual(o1: any, o2: any) {
+    private almostEqual(o1: Object, o2: Object): number;
+    private almostEqual(o1: any, o2: any): number {
         if (!_.isPlainObject(o1) || !_.isPlainObject(o2)) return o1 == o2 ? 1 : 0;
 
-        let object1KeyIndex, object1Keys = Object.keys(o1);
+        let object1Keys = Object.keys(o1);
         let object2Keys = Object.keys(o2);
 
         let commonKeys: string[] = [];
-        for (object1KeyIndex = 0; object1KeyIndex < object1Keys.length; object1KeyIndex++)
+        for (let object1KeyIndex = 0; object1KeyIndex < object1Keys.length; object1KeyIndex++)
             if (~object2Keys.indexOf(object1Keys[object1KeyIndex])) commonKeys.push(object1Keys[object1KeyIndex]);
 
         let totalKeys = object1Keys.length + object2Keys.length - commonKeys.length;

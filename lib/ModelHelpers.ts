@@ -59,7 +59,8 @@ export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
             if (!transform) continue;
 
             if(document.hasOwnProperty(property)) {
-                document[property] = transform.toDB(document[property], property, this.model);
+                (<T & { [prop: string]: any }>document)[property]
+                    = transform.toDB((<T & { [prop: string]: any }>document)[property], property, this.model);
             }
         }
             
@@ -88,7 +89,8 @@ export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
             if (!transform) continue;
 
             if(document.hasOwnProperty(property)) {
-                document[property] = transform.fromDB(document[property], property, this.model);
+                (<TDocument & { [prop: string]: any }>document)[property]
+                    = transform.fromDB((<TDocument & { [prop: string]: any }>document)[property], property, this.model);
             }
         }
             

@@ -20,7 +20,7 @@ export function ModelSpecificInstance<TDocument extends { _id?: any }, TInstance
     const instanceTypeConstructor = <InstanceConstructor><any>instanceType;
     
     let virtualClass = class extends instanceTypeConstructor {
-        constructor(...args) {
+        constructor(...args: any[]) {
             super(model, ...args);
         }
     }
@@ -30,10 +30,10 @@ export function ModelSpecificInstance<TDocument extends { _id?: any }, TInstance
         if (transform) {
             return Object.defineProperty(virtualClass.prototype, property, {
                 get: function (this: InstanceInternals<TDocument, TInstance>) {
-                    return transform.fromDB(this._modified[property], property, model);
+                    return transform.fromDB((<TDocument & { [prop: string]: any }>this._modified)[property], property, model);
                 },
-                set: function (this: InstanceInternals<TDocument, TInstance>, value) {
-                    this._modified[property] = transform.toDB(value, property, model);
+                set: function (this: InstanceInternals<TDocument, TInstance>, value: any) {
+                    (<TDocument & { [prop: string]: any }>this._modified)[property] = transform.toDB(value, property, model);
                 },
                 enumerable: true,
                 configurable: true
@@ -42,10 +42,10 @@ export function ModelSpecificInstance<TDocument extends { _id?: any }, TInstance
 
         Object.defineProperty(virtualClass.prototype, property, {
             get: function (this: InstanceInternals<TDocument, TInstance>) {
-                return this._modified[property];
+                return (<TDocument & { [prop: string]: any }>this._modified)[property];
             },
-            set: function (this: InstanceInternals<TDocument, TInstance>, value) {
-                this._modified[property] = value;
+            set: function (this: InstanceInternals<TDocument, TInstance>, value: any) {
+                (<TDocument & { [prop: string]: any }>this._modified)[property] = value;
             },
             enumerable: true
         });

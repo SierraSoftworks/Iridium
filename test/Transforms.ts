@@ -98,7 +98,7 @@ describe("Transforms", () => {
 
 		it("should only be applied after onCreating", () => {
 			let onCreatingCalled = false;
-			hookEmitter.once("creating", (doc) => {
+			hookEmitter.once("creating", (doc: Document) => {
 				onCreatingCalled = true;
 				chai.expect(doc.email).to.eql("Test@email.com");
 				chai.expect(doc.lastModified).to.not.exist;
@@ -150,7 +150,7 @@ describe("Transforms", () => {
 		
 		it("should apply the $document transform on saves", () => {
 			let onSavingCalled = false;
-			hookEmitter.once("saving", (doc) => {
+			hookEmitter.once("saving", (doc: Document) => {
 				onSavingCalled = true;
 				chai.expect(doc.lastModified).to.not.exist;
 			});
@@ -167,7 +167,7 @@ describe("Transforms", () => {
 
 		it("should diff the transformed property", () => {
 			let changesChecked = false;
-			hookEmitter.once("saving", (instance, changes) => {
+			hookEmitter.once("saving", (instance: Person, changes: Iridium.Changes) => {
 				chai.expect(changes).to.have.property("$set").with.property("name", "Testy User");
 				changesChecked = true;
 			});
@@ -187,7 +187,7 @@ describe("Transforms", () => {
 
 		it("should diff the transformed document", () => {
 			let changesChecked = false;
-			hookEmitter.once("saving", (instance, changes) => {
+			hookEmitter.once("saving", (instance: Person, changes: Iridium.Changes) => {
 				chai.expect(changes).to.have.property("$set").with.property("lastModified").which.is.instanceof(Date);
 				changesChecked = true;
 			});

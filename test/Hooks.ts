@@ -67,7 +67,7 @@ describe("Hooks", function (this: Mocha) {
         it("should be passed the document being created",() => {
             let result: Promise<void>;
 
-            hookEmitter.once("creating",(document) => {
+            hookEmitter.once("creating",(document: TestDocument) => {
                 result = Promise.resolve().then(() => {
                     chai.expect(document).to.eql({ answer: 11 });
                 });
@@ -105,7 +105,7 @@ describe("Hooks", function (this: Mocha) {
         it("should be passed the instance which was created",() => {
             let result: Promise<void>;
 
-            hookEmitter.once("ready",(instance) => {
+            hookEmitter.once("ready",(instance: Test) => {
                 result = Promise.resolve().then(() => {
                     chai.expect(instance).to.be.an.instanceof(model.Instance);
                 });
@@ -143,7 +143,7 @@ describe("Hooks", function (this: Mocha) {
         it("should be passed the document being retrieved",() => {
             let result: Promise<void>;
 
-            hookEmitter.once("retrieved",(document) => {
+            hookEmitter.once("retrieved",(document: TestDocument) => {
                 result = Promise.resolve().then(() => {
                     chai.expect(document).to.have.property("answer", 10);
                 });
@@ -184,7 +184,7 @@ describe("Hooks", function (this: Mocha) {
         it("should be passed the instance being saved",() => {
             let result: Promise<void>;
 
-            hookEmitter.once("saving",(instance) => {
+            hookEmitter.once("saving",(instance: Test) => {
                 result = Promise.resolve().then(() => {
                     chai.expect(instance).to.be.an.instanceof(model.Instance);
                 });
@@ -199,7 +199,7 @@ describe("Hooks", function (this: Mocha) {
         it("should be passed the changes being made to the instance",() => {
             let result: Promise<void>;
 
-            hookEmitter.once("saving",(instance, changes) => {
+            hookEmitter.once("saving",(instance: Test, changes: Iridium.Changes) => {
                 result = Promise.resolve().then(() => {
                     chai.expect(changes).to.eql({
                         $set: { answer: instance.answer }

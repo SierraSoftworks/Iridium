@@ -139,7 +139,7 @@ describe("Cache",() => {
         });
 
         describe("should be hit",() => {
-            let instanceID;
+            let instanceID: string;
             beforeEach(() => core.connect().then(() => model.remove()).then(() => model.insert({})).then(() => {
                 core.cache = new Iridium.MemoryCache();
             }).then(() => model.get()).then(instance => {

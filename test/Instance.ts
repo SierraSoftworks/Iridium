@@ -157,7 +157,7 @@ describe("Instance",() => {
 
         it("should avoid making calls to the database if no changes were made to the instance",() => {
             let update = core.Test.collection.updateOne;
-            core.Test.collection.updateOne = (...args) => {
+            core.Test.collection.updateOne = (...args: any[]) => {
                 chai.assert.fail();
                 return update.apply(core.Test.collection, args);
             };

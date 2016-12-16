@@ -70,7 +70,7 @@ iDB.connect()
     .then(() => iDB.UserWrapped.remove())
     .then(() => {
     return new Bluebird<any>((resolve, reject) => {
-        iDB.connection.collection("mongodb").deleteMany((err) => {
+        iDB.connection.collection("mongodb").deleteMany((err: Error) => {
             if (err) return reject(err);
             return resolve(null);
         });
@@ -96,7 +96,7 @@ iDB.connect()
 
     .then(() => benchmark("MongoDB find()",() => null,() => {
     return new Bluebird<any>((resolve, reject) => {
-        iDB.connection.collection("mongodb").find({}).toArray((err, objects: any) => {
+        iDB.connection.collection("mongodb").find({}).toArray((err: Error, objects: any) => {
             if (err) return reject(err);
             return resolve(objects);
         });
@@ -107,7 +107,7 @@ iDB.connect()
 
     .then(() => {
     return new Bluebird<any>((resolve, reject) => {
-        iDB.connection.collection("mongodb").deleteMany((err, objects: any) => {
+        iDB.connection.collection("mongodb").deleteMany((err: Error, objects: any) => {
             if (err) return reject(err);
             return resolve(objects);
         });
@@ -122,7 +122,7 @@ iDB.connect()
     });
 },() => {
         return new Bluebird<any>((resolve, reject) => {
-            iDB.connection.collection("mongodb").deleteMany((err, objects: any) => {
+            iDB.connection.collection("mongodb").deleteMany((err: Error, objects: any) => {
                 if (err) return reject(err);
                 return resolve(objects);
             });

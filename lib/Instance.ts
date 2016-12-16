@@ -22,8 +22,8 @@ import * as Skmatc from "skmatc";
  * built in document diff processor which allows clean, atomic, document updates to be performed
  * without needing to write the update queries yourself.
  *
- * @param TDocument The interface representing the structure of the documents in the collection.
- * @param TInstance The type of instance which wraps the documents, generally the subclass of this class.
+ * @param {any} TDocument The interface representing the structure of the documents in the collection.
+ * @param {any} TInstance The type of instance which wraps the documents, generally the subclass of this class.
  *
  * This class will be subclassed automatically by Iridium to create a model specific instance
  * which takes advantage of some of v8's optimizations to boost performance significantly.
@@ -33,10 +33,10 @@ import * as Skmatc from "skmatc";
 export class Instance<TDocument extends { _id?: any }, TInstance> {
     /**
      * Creates a new instance which represents the given document as a type of model
-     * @param model The model that dictates the collection the document originated from as well as how validations are performed.
-     * @param document The document which should be wrapped by this instance
-     * @param isNew Whether the document is new (doesn't exist in the database) or not
-     * @param isPartial Whether the document has only a subset of its fields populated
+     * @param {Model} model The model that dictates the collection the document originated from as well as how validations are performed.
+     * @param {Object} document The document which should be wrapped by this instance
+     * @param {Boolean} [isNew] Whether the document is new (doesn't exist in the database) or not
+     * @param {Boolean} [isPartial] Whether the document has only a subset of its fields populated
      *
      */
     constructor(model: Model<TDocument, TInstance>, document: TDocument, isNew: boolean = true, isPartial: boolean = false) {
@@ -69,20 +69,20 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
 
     /**
      * A function which is called whenever a new document is in the process of being inserted into the database.
-     * @param document The document which will be inserted into the database.
+     * @param {Object} document The document which will be inserted into the database.
      */
     static onCreating: (document: { _id?: any }) => Promise<any> | PromiseLike<any> | void;
 
     /**
      * A function which is called whenever a document of this type is received from the database, prior to it being
      * wrapped by an Instance object.
-     * @param document The document that was retrieved from the database.
+     * @param {Object} document The document that was retrieved from the database.
      */
     static onRetrieved: (document: { _id?: any }) => Promise<any> | PromiseLike<any> | void;
 
     /**
      * A function which is called whenever a new instance has been created to wrap a document.
-     * @param instance The instance which has been created.
+     * @param {Instance} instance The instance which has been created.
      */
     static onReady: (instance: Instance<{ _id?: any }, Instance<{ _id?: any }, any>>) => Promise<any> | PromiseLike<any> | void;
 
@@ -90,8 +90,8 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
      * A function which is called whenever an instance's save() method is called to allow you to interrogate and/or manipulate
      * the changes which are being made.
      *
-     * @param instance The instance to which the changes are being made
-     * @param changes The MongoDB change object describing the changes being made to the document.
+     * @param {Instance} instance The instance to which the changes are being made
+     * @param {Object} changes The MongoDB change object describing the changes being made to the document.
      */
     static onSaving: (instance: Instance<{ _id?: any }, Instance<{ _id?: any }, any>>, changes: Changes) => Promise<any> | PromiseLike<any> | void;
 
@@ -131,23 +131,23 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
 
     /**
      * Saves any changes to this instance, using the built in diff algorithm to write the update query.
-     * @param {function(Error, IInstance)} callback A callback which is triggered when the save operation completes
-     * @returns {Promise<TInstance>}
+     * @param {function} callback A callback which is triggered when the save operation completes
+     * @returns {Promise}
      */
     save(callback?: General.Callback<TInstance>): Bluebird<TInstance>;
     /**
      * Saves the given changes to this instance and updates the instance to match the latest database document.
      * @param {Object} changes The MongoDB changes object to be used when updating this instance
-     * @param {function(Error, IInstance)} callback A callback which is triggered when the save operation completes
-     * @returns {Promise<TInstance>}
+     * @param {function} callback A callback which is triggered when the save operation completes
+     * @returns {Promise}
      */
     save(changes: Changes, callback?: General.Callback<TInstance>): Bluebird<TInstance>;
     /**
      * Saves the given changes to this instance and updates the instance to match the latest database document.
      * @param {Object} conditions The conditions under which the update will take place - these will be merged with an _id query
      * @param {Object} changes The MongoDB changes object to be used when updating this instance
-     * @param {function(Error, IInstance)} callback A callback which is triggered when the save operation completes
-     * @returns {Promise<TInstance>}
+     * @param {function} callback A callback which is triggered when the save operation completes
+     * @returns {Promise}
      */
     save(conditions: Conditions, changes: Changes, callback?: General.Callback<TInstance>): Bluebird<TInstance>;
     save(...args: any[]): Bluebird<TInstance> {
@@ -155,7 +155,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
         let changes: any = null;
         let conditions: any = {};
 
-        Array.prototype.slice.call(args, 0).reverse().forEach((arg) => {
+        Array.prototype.slice.call(args, 0).reverse().forEach((arg: General.Callback<any>|Object) => {
             if (typeof arg == "function") callback = arg;
             else if (typeof arg == "object") {
                 if (!changes) changes = arg;
@@ -196,11 +196,11 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
                     });
                 });
             } else {
-                return new Bluebird<boolean>((resolve: (changed: boolean) => void, reject) => {
+                return new Bluebird<boolean>((resolve, reject) => {
                     this._model.collection.updateOne(conditions, changes, { w: "majority" }, (err, changed) => {
                         if(err) {
-                            err["conditions"] = conditions;
-                            err["changes"] = changes;
+                            (<Error&{conditions: Object}>err)["conditions"] = conditions;
+                            (<Error&{changes: Object}>err)["changes"] = changes;
                             return reject(err);
                         }
 
@@ -217,7 +217,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
             if (!changed) return this._modified;
 
             return new Bluebird<TDocument>((resolve, reject) => {
-                this._model.collection.find(conditions).limit(1).next((err: Error, latest) => {
+                this._model.collection.find(conditions).limit(1).next((err: Error, latest: TDocument) => {
                     if (err) return reject(err);
                     return resolve(latest);
                 });
@@ -333,7 +333,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
     first<T>(collection: T[]| { [key: string]: T }, predicate: General.Predicate<this, T>): T|null {
         let result: T|null = null;
 
-        _.each(collection, (value: T, key) => {
+        _.each(collection, (value: T, key: string) => {
             if (predicate.call(this, value, key)) {
                 result = value;
                 return false;
@@ -361,7 +361,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
         let isArray = Array.isArray(collection);
         let results: any = isArray ? [] : {};
 
-        _.each(collection, (value: T, key) => {
+        _.each(collection, (value: T, key: string) => {
             if (predicate.call(this, value, key)) {
                 if (isArray) results.push(value);
                 else results[key] = value;

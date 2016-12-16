@@ -25,5 +25,5 @@ export function ExpressMiddlewareFactory(core: Core): ExpressMiddleware {
  * has an active database connection before continuing the request handling process.
  */
 export interface ExpressMiddleware {
-    (req: http.ServerRequest, res: http.ServerResponse, next:(err?: Error, route?: String) => void);
+    (req: http.ServerRequest, res: http.ServerResponse, next:(err?: Error, route?: String) => void): void;
 }

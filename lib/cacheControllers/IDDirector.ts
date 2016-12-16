@@ -8,21 +8,21 @@ import * as MongoDB from "mongodb";
  * types of queries.
  */
 export class CacheOnID implements CacheDirector{
-    valid(object: { _id: any }) {
+    valid(object: { _id: any, [prop: string]: any }) {
         return !!object._id;
     }
 
-    buildKey(object: { _id: any }) {
+    buildKey(object: { _id: any, [prop: string]: any }) {
         if (object._id._bsontype === "ObjectID")
             return new MongoDB.ObjectID(object._id.id).toHexString();
         return object._id;
     }
 
-    validQuery(conditions) {
+    validQuery(conditions: { _id?: any, [prop: string]: any }) {
         return !!conditions._id;
     }
 
-    buildQueryKey(conditions) {
+    buildQueryKey(conditions: { _id: any, [prop: string]: any }) {
         if (conditions._id._bsontype === "ObjectID")
             return new MongoDB.ObjectID(conditions._id.id).toHexString();
         return conditions._id;

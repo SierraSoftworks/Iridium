@@ -9,7 +9,8 @@
         "outDir": "./dist/",
         "moduleResolution": "node",
         "strictNullChecks": true,
-        "noImplicitThis": true
+        "noImplicitThis": true,
+        "noImplicitAny": true
     },
     "exclude": [
         "dist",

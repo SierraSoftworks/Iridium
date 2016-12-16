@@ -2,6 +2,7 @@
 import * as events from "events";
 import * as Bluebird from "bluebird";
 import * as chai from "chai";
+import * as MongoDB from "mongodb";
 
 class InheritedCore extends Iridium.Core {
     theAnswer = 42;
@@ -21,10 +22,10 @@ class InheritedCoreWithHooks extends Iridium.Core {
 
     events: events.EventEmitter;
 
-    onConnectingResult: (connection) => Bluebird<any> = (connection) => Bluebird.resolve(connection);
+    onConnectingResult: (connection: MongoDB.Db) => Bluebird<any> = (connection) => Bluebird.resolve(connection);
     onConnectedResult: () => Bluebird<void> = () => Bluebird.resolve();
 
-    protected onConnecting(db) {
+    protected onConnecting(db: MongoDB.Db) {
         this.events.emit("connecting", db);
         return this.onConnectingResult(db);
     }
@@ -173,7 +174,7 @@ describe("Core",() => {
         });
 
         let plugin = {
-            newModel: (model) => {
+            newModel: (model: Iridium.Model<any, any>) => {
 
             }
         };
@@ -279,7 +280,7 @@ describe("Core",() => {
         describe("onConnecting", () => {
             it("should be called whenever a low level connection is established", (done) => {
                 let core = new InheritedCoreWithHooks();
-                core.events.once("connecting", (connection) => {
+                core.events.once("connecting", (connection: MongoDB.Db) => {
                     done();
                 });
 
@@ -291,7 +292,7 @@ describe("Core",() => {
 
             it("should be passed the underlying connection", (done) => {
                 let core = new InheritedCoreWithHooks();
-                core.events.once("connecting", (connection) => {
+                core.events.once("connecting", (connection: MongoDB.Db) => {
                     chai.expect(connection).to.exist;
                     done();
                 });
@@ -304,7 +305,7 @@ describe("Core",() => {
 
             it("should be triggered before the connection is established", (done) => {
                 let core = new InheritedCoreWithHooks();
-                core.events.once("connecting", (connection) => {
+                core.events.once("connecting", (connection: MongoDB.Db) => {
                     chai.expect(() => core.connection).to.throw;
                     done();
                 });

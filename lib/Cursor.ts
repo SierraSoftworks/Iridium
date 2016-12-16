@@ -67,7 +67,7 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
             let promises: Bluebird<TResult>[] = [];
             this.cursor.forEach((item: TDocument) => {
                 promises.push(this.model.handlers.documentReceived(this.conditions, item, function () { return helpers.wrapDocument.apply(helpers, arguments); })
-                    .then(<(instance) => TResult>transform));
+                    .then(<(instance: TInstance) => TResult>transform));
             }, (err) => {
                 if (err) return reject(err);
                 return resolve(Bluebird.all(promises));
@@ -83,7 +83,7 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
     toArray(callback?: General.Callback<TInstance[]>): Bluebird<TInstance[]> {
         let helpers = this.model.helpers;
         return new Bluebird<TDocument[]>((resolve, reject) => {
-            this.cursor.toArray((err, results: TDocument[]) => {
+            this.cursor.toArray((err: Error, results: TDocument[]) => {
                 if (err) return reject(err);
                 return resolve(results);
             });
@@ -99,7 +99,7 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
      */
     next(callback?: General.Callback<TInstance>): Bluebird<TInstance|undefined> {
         return new Bluebird<TDocument|undefined>((resolve, reject) => {
-            this.cursor.next((err, result: TDocument|undefined) => {
+            this.cursor.next((err: Error, result: TDocument|undefined) => {
                 if (err) return reject(err);
                 return resolve(result);
             });
@@ -116,7 +116,7 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
      */
     one(callback?: General.Callback<TInstance>): Bluebird<TInstance|undefined> {
         return new Bluebird<TDocument|undefined>((resolve, reject) => {
-            this.cursor.next((err, result: TDocument) => {
+            this.cursor.next((err: Error, result: TDocument) => {
                 if (err) return reject(err);
                 return resolve(result);
             });

@@ -42,7 +42,7 @@ describe("Model",() => {
     before(() => core.connect());
 
     describe("constructor", () => {
-        function createInstanceImplementation(properties): any {
+        function createInstanceImplementation(properties: any): any {
             let fn = function() { return {}; };
             _.merge(fn, properties);
             return fn;

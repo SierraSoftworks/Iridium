@@ -714,7 +714,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
         }
 
         return new Bluebird<string>((resolve, reject) => {
-            this.collection.createIndex(specification, options || {}, (err, name: any) => {
+            this.collection.createIndex(specification, options || {}, (err: Error, name: any) => {
                 if (err) return reject(err);
                 return resolve(name);
             });
@@ -751,11 +751,11 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
 
         if (typeof (specification) === "string") index = <string>specification;
         else {
-            index = _(<Index.IndexSpecification>specification).map((direction, key) => `${key}_${direction}`).reduce<string>((x, y) => `${x}_${y}`);
+            index = _(<Index.IndexSpecification>specification).map((direction: number, key: string) => `${key}_${direction}`).reduce<string>((x, y) => `${x}_${y}`);
         }
 
         return new Bluebird<boolean>((resolve, reject) => {
-            this.collection.dropIndex(index, (err, result: { ok: number }) => {
+            this.collection.dropIndex(index, (err: Error, result: { ok: number }) => {
                 if (err) return reject(err);
                 return resolve(<any>!!result.ok);
             });
