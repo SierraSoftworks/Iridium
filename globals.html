@@ -129,6 +129,7 @@
 							<h3>Functions</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-function tsd-is-external"><a href="globals.html#binary" class="tsd-kind-icon">Binary</a></li>
+								<li class="tsd-kind-function tsd-is-external"><a href="globals.html#buildurl" class="tsd-kind-icon">Build<wbr>Url</a></li>
 								<li class="tsd-kind-function tsd-is-external"><a href="globals.html#collection" class="tsd-kind-icon">Collection</a></li>
 								<li class="tsd-kind-function tsd-is-external"><a href="globals.html#defaultvalidators" class="tsd-kind-icon">Default<wbr>Validators</a></li>
 								<li class="tsd-kind-function tsd-is-external"><a href="globals.html#expressmiddlewarefactory" class="tsd-kind-icon">Express<wbr>Middleware<wbr>Factory</a></li>
@@ -136,6 +137,7 @@
 								<li class="tsd-kind-function tsd-is-external"><a href="globals.html#objectid" class="tsd-kind-icon">ObjectID</a></li>
 								<li class="tsd-kind-function tsd-is-external"><a href="globals.html#transform" class="tsd-kind-icon">Transform</a></li>
 								<li class="tsd-kind-function tsd-is-external"><a href="globals.html#validate" class="tsd-kind-icon">Validate</a></li>
+								<li class="tsd-kind-function tsd-is-external tsd-is-not-exported"><a href="globals.html#buildhostlist" class="tsd-kind-icon">build<wbr>Host<wbr>List</a></li>
 								<li class="tsd-kind-function tsd-is-external"><a href="globals.html#toobjectid" class="tsd-kind-icon">to<wbr>ObjectID</a></li>
 							</ul>
 						</section>
@@ -156,7 +158,7 @@
 					<div class="tsd-signature tsd-kind-icon">BSONType<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span><span class="tsd-signature-symbol"> | </span><a href="interfaces/bsonobject.html" class="tsd-signature-type">BSONObject</a><span class="tsd-signature-symbol"> | </span><a href="interfaces/bsonarray.html" class="tsd-signature-type">BSONArray</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ObjectID</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Date</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">RegExp</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/23c9ff3/lib/BSON.ts#L4">lib/BSON.ts:4</a></li>
+							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/2d81b95/lib/BSON.ts#L4">lib/BSON.ts:4</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -173,7 +175,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/23c9ff3/lib/Decorators.ts#L150">lib/Decorators.ts:150</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/2d81b95/lib/Decorators.ts#L150">lib/Decorators.ts:150</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -199,6 +201,29 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-is-external">
+					<a name="buildurl" class="tsd-anchor"></a>
+					<h3>Build<wbr>Url</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">Build<wbr>Url<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><a href="interfaces/configuration.html" class="tsd-signature-type">Configuration</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/2d81b95/lib/utils/UrlBuilder.ts#L4">lib/utils/UrlBuilder.ts:4</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>config: <a href="interfaces/configuration.html" class="tsd-signature-type">Configuration</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-is-external">
 					<a name="collection" class="tsd-anchor"></a>
 					<h3>Collection</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-is-external">
@@ -208,7 +233,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/23c9ff3/lib/Decorators.ts#L19">lib/Decorators.ts:19</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/2d81b95/lib/Decorators.ts#L19">lib/Decorators.ts:19</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -242,7 +267,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/23c9ff3/lib/Validators.ts#L4">lib/Validators.ts:4</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/2d81b95/lib/Validators.ts#L4">lib/Validators.ts:4</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Validator</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -259,7 +284,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/23c9ff3/lib/middleware/Express.ts#L12">lib/middleware/Express.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/2d81b95/lib/middleware/Express.ts#L12">lib/middleware/Express.ts:12</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -293,7 +318,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/23c9ff3/lib/ModelSpecificInstance.ts#L19">lib/ModelSpecificInstance.ts:19</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/2d81b95/lib/ModelSpecificInstance.ts#L19">lib/ModelSpecificInstance.ts:19</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -350,7 +375,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/23c9ff3/lib/Decorators.ts#L134">lib/Decorators.ts:134</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/2d81b95/lib/Decorators.ts#L134">lib/Decorators.ts:134</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -384,7 +409,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/23c9ff3/lib/Decorators.ts#L114">lib/Decorators.ts:114</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/2d81b95/lib/Decorators.ts#L114">lib/Decorators.ts:114</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -477,7 +502,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/23c9ff3/lib/Decorators.ts#L51">lib/Decorators.ts:51</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/2d81b95/lib/Decorators.ts#L51">lib/Decorators.ts:51</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -508,6 +533,29 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-is-external tsd-is-not-exported">
+					<a name="buildhostlist" class="tsd-anchor"></a>
+					<h3>build<wbr>Host<wbr>List</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-is-external tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">build<wbr>Host<wbr>List<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><a href="interfaces/configuration.html" class="tsd-signature-type">Configuration</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/2d81b95/lib/utils/UrlBuilder.ts#L22">lib/utils/UrlBuilder.ts:22</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>config: <a href="interfaces/configuration.html" class="tsd-signature-type">Configuration</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-is-external">
 					<a name="toobjectid" class="tsd-anchor"></a>
 					<h3>to<wbr>ObjectID</h3>
@@ -518,7 +566,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/23c9ff3/lib/utils/ObjectID.ts#L16">lib/utils/ObjectID.ts:16</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/2d81b95/lib/utils/ObjectID.ts#L16">lib/utils/ObjectID.ts:16</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -554,7 +602,7 @@
 					<div class="tsd-signature tsd-kind-icon">Default<wbr>Transforms<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/23c9ff3/lib/Transforms.ts#L38">lib/Transforms.ts:38</a></li>
+							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/2d81b95/lib/Transforms.ts#L38">lib/Transforms.ts:38</a></li>
 						</ul>
 					</aside>
 					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-external">
@@ -563,7 +611,7 @@
 						<div class="tsd-signature tsd-kind-icon">Binary<span class="tsd-signature-symbol">:</span> <a href="interfaces/propertytransform.html" class="tsd-signature-type">PropertyTransform</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Binary</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;&lt;PropertyTransform&lt;Binary&gt;&gt;{fromDB: value &#x3D;&gt; {if(!value) return null;if(value instanceof Binary) return (&lt;any&gt;value).buffer;return value;},toDB: value &#x3D;&gt; {if(Buffer.isBuffer(value)) return new Binary(value);if(Array.isArray(value)) return new Binary(new Buffer(value));return null;}}</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/23c9ff3/lib/Transforms.ts#L43">lib/Transforms.ts:43</a></li>
+								<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/2d81b95/lib/Transforms.ts#L43">lib/Transforms.ts:43</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -573,7 +621,7 @@
 						<div class="tsd-signature tsd-kind-icon">ObjectID<span class="tsd-signature-symbol">:</span> <a href="interfaces/propertytransform.html" class="tsd-signature-type">PropertyTransform</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ObjectID</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;&lt;PropertyTransform&lt;ObjectID&gt;&gt;{fromDB: value &#x3D;&gt; value instanceof ObjectID ? value.toHexString() : value,toDB: value &#x3D;&gt; typeof value &#x3D;&#x3D;&#x3D; &quot;string&quot; ? new ObjectID(value) : value}</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/23c9ff3/lib/Transforms.ts#L39">lib/Transforms.ts:39</a></li>
+								<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/2d81b95/lib/Transforms.ts#L39">lib/Transforms.ts:39</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -723,6 +771,9 @@
 						<a href="globals.html#binary" class="tsd-kind-icon">Binary</a>
 					</li>
 					<li class=" tsd-kind-function tsd-is-external">
+						<a href="globals.html#buildurl" class="tsd-kind-icon">Build<wbr>Url</a>
+					</li>
+					<li class=" tsd-kind-function tsd-is-external">
 						<a href="globals.html#collection" class="tsd-kind-icon">Collection</a>
 					</li>
 					<li class=" tsd-kind-function tsd-is-external">
@@ -742,6 +793,9 @@
 					</li>
 					<li class=" tsd-kind-function tsd-is-external">
 						<a href="globals.html#validate" class="tsd-kind-icon">Validate</a>
+					</li>
+					<li class=" tsd-kind-function tsd-is-external tsd-is-not-exported">
+						<a href="globals.html#buildhostlist" class="tsd-kind-icon">build<wbr>Host<wbr>List</a>
 					</li>
 					<li class=" tsd-kind-function tsd-is-external">
 						<a href="globals.html#toobjectid" class="tsd-kind-icon">to<wbr>ObjectID</a>

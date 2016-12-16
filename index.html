@@ -134,14 +134,14 @@
     cars?: Car[];
 }
 
-@Index({ name: <span class="hljs-number">1</span> })
-@Collection(<span class="hljs-string">'houses'</span>)
+<span class="hljs-meta">@Index</span>({ name: <span class="hljs-number">1</span> })
+<span class="hljs-meta">@Collection</span>(<span class="hljs-string">'houses'</span>)
 <span class="hljs-keyword">class</span> House extends Instance&lt;HouseDocument, House&gt; <span class="hljs-keyword">implements</span> HouseDocument {
-    @ObjectID _id: <span class="hljs-built_in">string</span>;
-    @Property(<span class="hljs-regexp">/^.+$/</span>)
+    <span class="hljs-meta">@ObjectID</span> _id: <span class="hljs-built_in">string</span>;
+    <span class="hljs-meta">@Property</span>(<span class="hljs-regexp">/^.+$/</span>)
     name: <span class="hljs-built_in">string</span>;
 
-    @Property([{
+    <span class="hljs-meta">@Property</span>([{
         make: <span class="hljs-built_in">String</span>,
         model: <span class="hljs-built_in">String</span>,
         colour: {
@@ -220,7 +220,7 @@ myDb.connect().then(() =&gt; myDb.Houses.insert({
 }
 
 <span class="hljs-keyword">class</span> InstanceType {
-    <span class="hljs-keyword">constructor</span>(model: Model&lt;Document, Instance&gt;, document: Document, isNew: boolean = true, isPartial: boolean = false) {
+    <span class="hljs-keyword">constructor</span>(<span class="hljs-params">model: Model&lt;Document, Instance&gt;, <span class="hljs-built_in">document</span>: Document, isNew: <span class="hljs-built_in">boolean</span> = <span class="hljs-literal">true</span>, isPartial: <span class="hljs-built_in">boolean</span> = <span class="hljs-literal">false</span></span>) {
 
     }
 
@@ -265,10 +265,10 @@ myDb.connect().then(() =&gt; myDb.Houses.insert({
 }
 </code></pre>
 				<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> InstanceType extends Iridium.Instance&lt;<span class="hljs-built_in">any</span>, InstanceType&gt; {
-    @Iridium.ObjectID
+    <span class="hljs-meta">@Iridium</span>.ObjectID
     _id: <span class="hljs-built_in">string</span>;
 
-    @Iridium.Property(<span class="hljs-built_in">String</span>)
+    <span class="hljs-meta">@Iridium</span>.Property(<span class="hljs-built_in">String</span>)
     email: <span class="hljs-built_in">string</span>;
 }
 </code></pre>
@@ -315,9 +315,9 @@ InstanceType.schema = {
 				translation within your application.</p>
 				<p>Custom validators can be added either using the <a href="http://sierrasoftworks.github.io/Iridium/interfaces/instanceimplementation.html#validators"><code>validators</code></a> property
 				or by using the <a href="http://sierrasoftworks.github.io/Iridium/globals.html#validate"><code>@Validate</code></a> decorator on your instance class.</p>
-				<pre><code class="lang-typescript">@Iridium.Validate(<span class="hljs-string">'myValidator'</span>, x =&gt; x === <span class="hljs-number">42</span>)
+				<pre><code class="lang-typescript"><span class="hljs-meta">@Iridium</span>.Validate(<span class="hljs-string">'myValidator'</span>, x =&gt; x === <span class="hljs-number">42</span>)
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> InstanceType extends Iridium.Instance&lt;<span class="hljs-built_in">any</span>, InstanceType&gt; {
-    @Iridium.Property(<span class="hljs-string">'myValidator'</span>)
+    <span class="hljs-meta">@Iridium</span>.Property(<span class="hljs-string">'myValidator'</span>)
     myProperty: <span class="hljs-built_in">number</span>;
 }
 </code></pre>
@@ -354,14 +354,14 @@ InstanceType.schema = {
 				<p>The easiest way to add a transform is using the <a href="http://sierrasoftworks.github.io/Iridium/globals.html#transform"><code>@Transform</code></a> decorator, however if you are working
 					in a language which doesn&#39;t yet support decorators then you can easily use the
 				<a href="http://sierrasoftworks.github.io/Iridium/interfaces/instanceimplementation.html#transforms"><code>transforms</code></a> property on your instance class.</p>
-				<pre><code class="lang-typescript">@Iridium.Transform(<span class="hljs-built_in">document</span> =&gt; {
+				<pre><code class="lang-typescript"><span class="hljs-meta">@Iridium</span>.Transform(<span class="hljs-built_in">document</span> =&gt; {
     <span class="hljs-built_in">document</span>.lastFetched = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>();
 }, <span class="hljs-built_in">document</span> =&gt; {
     <span class="hljs-built_in">document</span>.lastFetched &amp;&amp; <span class="hljs-keyword">delete</span> <span class="hljs-built_in">document</span>.lastFetched;
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">document</span>;
 })
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> InstanceType extends Iridium.Instance&lt;<span class="hljs-built_in">any</span>, InstanceType&gt; {
-    @Iridium.Transform(data =&gt; data.toUpperCase(), data =&gt; data.toLowerCase())
+    <span class="hljs-meta">@Iridium</span>.Transform(data =&gt; data.toUpperCase(), data =&gt; data.toLowerCase())
     email: <span class="hljs-built_in">string</span>;
 }
 </code></pre>
@@ -395,7 +395,7 @@ InstanceType.transforms = {
 					the properties you are going to insert. It could also simply be a way of lazily cleaning up old properties from documents as your schema evolves over time, helping to avoid
 					complications if someone forgets to clean up the database after making changes to the schema.
 				This can be easily achieved using the <code>$document</code> transform.</p>
-				<pre><code class="lang-typescript">@Iridium.Transform(<span class="hljs-built_in">document</span> =&gt; <span class="hljs-built_in">document</span>, (<span class="hljs-built_in">document</span>, property, model) =&gt; {
+				<pre><code class="lang-typescript"><span class="hljs-meta">@Iridium</span>.Transform(<span class="hljs-built_in">document</span> =&gt; <span class="hljs-built_in">document</span>, (<span class="hljs-built_in">document</span>, property, model) =&gt; {
     <span class="hljs-built_in">Object</span>.keys(<span class="hljs-built_in">document</span>).forEach(key =&gt; {
         <span class="hljs-keyword">if</span>(!model.schema.hasOwnProperty(key)) <span class="hljs-keyword">delete</span> <span class="hljs-built_in">document</span>[key];
     });
@@ -570,6 +570,9 @@ InstanceType.transforms = {
 						<a href="globals.html#binary" class="tsd-kind-icon">Binary</a>
 					</li>
 					<li class=" tsd-kind-function tsd-is-external">
+						<a href="globals.html#buildurl" class="tsd-kind-icon">Build<wbr>Url</a>
+					</li>
+					<li class=" tsd-kind-function tsd-is-external">
 						<a href="globals.html#collection" class="tsd-kind-icon">Collection</a>
 					</li>
 					<li class=" tsd-kind-function tsd-is-external">
@@ -589,6 +592,9 @@ InstanceType.transforms = {
 					</li>
 					<li class=" tsd-kind-function tsd-is-external">
 						<a href="globals.html#validate" class="tsd-kind-icon">Validate</a>
+					</li>
+					<li class=" tsd-kind-function tsd-is-external tsd-is-not-exported">
+						<a href="globals.html#buildhostlist" class="tsd-kind-icon">build<wbr>Host<wbr>List</a>
 					</li>
 					<li class=" tsd-kind-function tsd-is-external">
 						<a href="globals.html#toobjectid" class="tsd-kind-icon">to<wbr>ObjectID</a>
