@@ -17,6 +17,8 @@ import {Cache} from "./Cache";
 import {NoOpCache} from "./caches/NoOpCache";
 import {MemoryCache} from "./caches/MemoryCache";
 
+import {BuildUrl} from "./utils/UrlBuilder";
+
 /**
  * The Iridium Core, responsible for managing the connection to the database as well
  * as any plugins you are making use of.
@@ -94,44 +96,7 @@ export class Core {
         if (this._url) return this._url;
         if (!this._config) throw new Error("No URL or configuration provided");
 
-        let url: string = "mongodb://";
-
-        if (this._config.username) {
-            url += this._config.username;
-            if (this._config.password)
-                url += ":" + this._config.password;
-            url += "@";
-        }
-
-        let hosts: string[] = [];
-
-        if (this._config.host) {
-            if (this._config.port)
-                hosts.push(`${this._config.host}:${this._config.port}`);
-            else
-                hosts.push(this._config.host);
-        }
-
-        if (this._config.hosts) {
-            _.each(this._config.hosts, (host) => {
-                if (host.port)
-                    hosts.push(`${host.address}:${host.port}`);
-                else if(this._config && this._config.port)
-                    hosts.push(`${host.address}:${this._config.port}`);
-                else
-                    hosts.push(host.address);
-            });
-        }
-
-        if (hosts.length)
-            url += _.uniq(hosts).join(",");
-        else
-            url += "localhost";
-        
-        if (this._config.database)
-            url += "/" + this._config.database;
-
-        return url;
+        return BuildUrl(this._config);
     }
 
     /**
