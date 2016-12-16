@@ -61,7 +61,7 @@ export class Core {
 
     /**
      * Gets the plugins registered with this Iridium Core
-     * @returns {[Iridium.Plugin]}
+     * @returns {Iridium.Plugin[]}
      */
     get plugins(): Plugin[] {
         return this._plugins;
@@ -158,7 +158,7 @@ export class Core {
 
     /**
      * Connects to the database server specified in the provided configuration
-     * @param {function(Error, Iridium.Core)} [callback] A callback to be triggered once the connection is established.
+     * @param {function} [callback] A callback to be triggered once the connection is established.
      * @returns {Promise}
      */
     connect(callback?: (err: Error, core: Core) => any): Bluebird<Core> {
@@ -208,7 +208,7 @@ export class Core {
     /**
      * A method which is called whenever a new connection is made to the database.
      *
-     * @param connection The underlying MongoDB connection which was created, you can modify or replace this if you wish.
+     * @param {MongoDB.Db} connection The underlying MongoDB connection which was created, you can modify or replace this if you wish.
      * @returns A promise for the connection, allowing you to perform any asynchronous initialization required by your application.
      *
      * In subclassed Iridium Cores this method can be overridden to manipulate the properties
