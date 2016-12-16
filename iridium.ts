@@ -8,6 +8,7 @@ export * from "./lib/Plugins";
 export * from "./lib/Schema";
 export * from "./lib/Cache";
 export * from "./lib/CacheDirector";
+export * from "./lib/Changes";
 export * from "./lib/ModelOptions";
 export * from "./lib/Configuration";
 export * from "./lib/Hooks";
