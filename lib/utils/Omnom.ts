@@ -19,7 +19,7 @@ export class Omnom {
     diff(original: MongoDB.ObjectID, modified: MongoDB.ObjectID): Omnom;
     diff(original: Object, modified: Object): Omnom;
     diff(original: any, modified: any): Omnom {
-        this.onObject(original, modified);
+        this.onSomething(original, modified);
         return this;
     }
 
@@ -41,34 +41,54 @@ export class Omnom {
         return new Omnom(options).diff(original, modified).changes;
     }
 
-    private onObject(original: number, modified: number, changePath?: string): void;
-    private onObject(original: any[], modified: any[], changePath?: string): void;
-    private onObject(original: MongoDB.ObjectID, modified: MongoDB.ObjectID, changePath?: string): void;
-    private onObject(original: Object, modified: Object, changePath?: string): void;
-    private onObject(original: any, modified: any, changePath?: string): void {
+    private onSomething(original: number, modified: number, changePath?: string): void;
+    private onSomething(original: any[], modified: any[], changePath?: string): void;
+    private onSomething(original: MongoDB.ObjectID, modified: MongoDB.ObjectID, changePath?: string): void;
+    private onSomething(original: Object, modified: Object, changePath?: string): void;
+    private onSomething(original: any, modified: any, changePath?: string): void {
         if (changePath) {
             if (original === undefined || original === null)
-                return <never>(original !== modified) && this.set(changePath, modified);
+                return this.onUndefined(original, modified, changePath);
 
-            if (typeof original === "number" && typeof modified === "number" && original !== modified) {
-                if (this.options.atomicNumbers) return this.inc(changePath, modified - original);
-                return this.set(changePath, modified);
-            }
+            if (typeof original === "number" && typeof modified === "number")
+                return this.onNumber(original, modified, changePath);
 
             if (Array.isArray(original) && Array.isArray(modified))
                 return this.onArray(original, modified, changePath);
 
             if (original instanceof MongoDB.ObjectID && modified instanceof MongoDB.ObjectID)
-                return <never>!original.equals(modified) && this.set(changePath, modified);
+                return this.onObjectID(original, modified, changePath);
 
             if (!_.isPlainObject(original) || !_.isPlainObject(modified))
-                return <never>!_.isEqual(original, modified) && this.set(changePath, modified);
+                return this.onScalar(original, modified, changePath);
         }
 
         if (!_.isPlainObject(original) || !_.isPlainObject(modified)) {
             throw new Error("Unable to perform a diff of a top level object unless it is an object itself. Provide an object to diff or specify the changePath");
         }
 
+        return this.onObject(original, modified, changePath);
+    }
+
+    private onUndefined(original: undefined|null, modified: any, changePath: string): void {
+        return <never>(original !== modified) && this.set(changePath, modified);
+    }
+
+    private onNumber(original: number, modified: number, changePath: string): void {
+        if (original == modified) return;
+        if (this.options.atomicNumbers) return this.inc(changePath, modified - original);
+        return this.set(changePath, modified);
+    }
+
+    private onObjectID(original: MongoDB.ObjectID, modified: MongoDB.ObjectID, changePath: string): void {
+        return <never>!original.equals(modified) && this.set(changePath, modified);
+    }
+
+    private onScalar(original: any, modified: any, changePath: string): void {
+        return <never>!_.isEqual(original, modified) && this.set(changePath, modified);
+    }
+
+    private onObject(original: { [prop: string]: any }, modified: { [prop: string]: any }, changePath?: string): void {
         _.forOwn(modified, (value, key) => {
             if (!key) return;
 
@@ -76,7 +96,7 @@ export class Omnom {
             if (Array.isArray(value) && Array.isArray(original[key])) this.onArray(original[key], value, this.resolve(changePath, key));
 
             // Otherwise, just keep going
-            else this.onObject(original[key], value, this.resolve(changePath, key));
+            else this.onSomething(original[key], value, this.resolve(changePath, key));
         });
 
         // Unset removed properties
@@ -161,7 +181,7 @@ export class Omnom {
           this.set(this.resolve(changePath, sets[i].toString()), modified[sets[i]]);
 
       for (let i = 0; i < partials.length; i++)
-          this.onObject(original[partials[i]], modified[partials[i]], this.resolve(changePath, partials[i].toString()));
+          this.onSomething(original[partials[i]], modified[partials[i]], this.resolve(changePath, partials[i].toString()));
     }
 
     private set(path: string, value: any) {
