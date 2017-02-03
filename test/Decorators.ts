@@ -4,12 +4,21 @@ import * as MongoDB from "mongodb";
 import {DefaultValidators} from "../lib/Validators";
 import * as chai from "chai";
 
+interface RefTestDocument {
+	_id?: string;
+}
+
+@Iridium.Collection("reftest")
+class RefTest extends Iridium.Instance<RefTestDocument, RefTest> implements RefTestDocument {
+	@Iridium.ObjectID
+	_id: string;
+}
+
 interface TestDocument {
 	_id?: string;
 	name: string;
 	email: string;
 }
-
 
 @Iridium.Collection("test")
 @Iridium.Index({ name: 1 })
@@ -38,6 +47,9 @@ class Test extends Iridium.Instance<TestDocument, Test> implements TestDocument 
 	@Iridium.Property(Boolean, false)
 	optional1: boolean;
 	optional2: boolean;
+
+	@Iridium.DBRef(RefTest)
+	ref: string;
 }
 
 describe("Decorators", () => {
@@ -161,6 +173,16 @@ describe("Decorators", () => {
 			chai.expect(Iridium.Instance.schema).to.exist.and.not.have.property("optional2");
         });
     });
+
+	describe("DBRef", () => {
+		it("should populate the schema object with the correct type", () => {
+			chai.expect(Test.schema).to.exist.and.have.property("ref").eql(MongoDB.ObjectID);
+		});
+
+		it("should configure the transforms for the property", () => {
+			chai.expect(Test.transforms).to.exist.and.have.property("ref");
+		});
+	})
 
     describe("Transform", () => {
         it("should not remove existing entries in the transforms object", () => {

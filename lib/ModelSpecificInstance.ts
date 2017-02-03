@@ -25,7 +25,7 @@ export function ModelSpecificInstance<TDocument extends { _id?: any }, TInstance
         }
     }
 
-    _.each(Object.keys(model.schema),(property) => {
+    _.each(Object.keys(model.schema),(property: any) => {
         const transform = model.transforms[property];
         if (transform) {
             return Object.defineProperty(virtualClass.prototype, property, {

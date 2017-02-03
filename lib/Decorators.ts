@@ -116,7 +116,7 @@ export function Transform(fromDB: (value: any, property: string, model: Model<an
 		let staticTarget: InstanceImplementation<any, any> = <InstanceImplementation<any, any>>(target.constructor || target);
 
 		staticTarget.transforms = _.clone(staticTarget.transforms || <Transforms>{})
-		staticTarget.transforms[property] = {
+		staticTarget.transforms![property] = {
 			fromDB: fromDB,
 			toDB: toDB
 		};
@@ -153,4 +153,22 @@ export function Binary(target: Instance<any, any>, name: string) {
 		DefaultTransforms.Binary.fromDB,
 		DefaultTransforms.Binary.toDB
 	)(target, name);
+}
+
+/**
+ * Specifies that this property is a reference to another database model and should be enforced
+ * by MongoDB's storage engine.
+ * 
+ * @prop model {Model} The database model that this property references
+ * @prop db {string} The database that this model exists in (if different to the current collection). Only supported by certain engines.
+ */
+export function DBRef(model: InstanceImplementation<any, any>, db?: string) {
+	return function(target: Instance<any, any>, property: string) {
+		var t = DefaultTransforms.DBRef(model.collection, db);
+		Transform(
+			t.fromDB,
+			t.toDB
+		)(target, property);
+		Property(model.schema["_id"])(target, property);
+	}
 }

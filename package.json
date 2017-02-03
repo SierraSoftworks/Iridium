@@ -50,19 +50,22 @@
     "node": ">= 6.0"
   },
   "dependencies": {
-    "@types/bluebird": "^3.0.33",
-    "@types/lodash": "^4.14.36",
-    "@types/mongodb": "^2.1.33",
+    "@types/bluebird": "^3.0.37",
     "@types/chai": "^3.4.33",
-    "bluebird": "^3.4.6",
-    "lodash": "^4.16.2",
-    "mongodb": "^2.2.11",
-    "skmatc": "~1.2.2"
+    "@types/lodash": "^4.14.52",
+    "@types/mocha": "^2.2.38",
+    "@types/mongodb": "^2.1.37",
+    "bluebird": "^3.4.7",
+    "lodash": "^4.17.4",
+    "mongodb": "^2.2.22",
+    "skmatc": "^1.2.2",
+    "source-map-support": "^0.4.11",
+    "typedoc": "^0.5.5"
   },
   "peerDependencies": {
     "@types/bluebird": "^3.0.33",
     "@types/lodash": "^4.14.36",
-    "@types/mongodb": "^2.1.33",
+    "@types/mongodb": "^2.1.37",
     "@types/chai": "^3.4.33"
   },
   "devDependencies": {

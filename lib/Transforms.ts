@@ -1,5 +1,6 @@
 import {ObjectID, Binary} from "./BSON";
 import {Model} from "./Model";
+import {InstanceImplementation} from "./InstanceInterface";
 
 export interface Transforms {
 	/**
@@ -52,5 +53,23 @@ export const DefaultTransforms = {
 			if(Array.isArray(value)) return new Binary(new Buffer(value));
 			return null;
 		}
+	},
+	DBRef: (model: InstanceImplementation<any, any>, db?: string) => <PropertyTransform<DBRef>>{
+		fromDB: (value: DBRef, p: string, m: Model<any,any>): any => {
+			return (model.transforms && model.transforms["_id"]) ? model.transforms["_id"]!.fromDB(value.$id, "_id", m) : value.$id
+		},
+		toDB: (value: any, p: string, m: Model<any,any>): DBRef => {
+			return {
+				$ref: model.collection,
+				$id: (model.transforms && model.transforms["_id"]) ? model.transforms["_id"]!.toDB(value, "_id", m) : value,
+				$db: db
+			};
+		}
 	}
+}
+
+interface DBRef {
+	$ref: string;
+	$id: any;
+	$db?: string;
 }
