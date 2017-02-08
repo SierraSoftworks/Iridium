@@ -42,7 +42,7 @@ class Test extends Iridium.Instance<TestDocument, Test> {
     }
 }
 
-describe("Hooks", function (this: Mocha) {
+describe("Hooks", function() {
     this.timeout(500);
 
     let core = new Iridium.Core({ database: "test" });
