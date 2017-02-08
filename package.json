@@ -1,6 +1,6 @@
 {
   "name": "iridium",
-  "version": "7.1.0",
+  "version": "7.1.2",
   "author": "Benjamin Pannell <admin@sierrasoftworks.com>",
   "description": "A custom lightweight ORM for MongoDB designed for power-users",
   "license": "MIT",
@@ -50,25 +50,25 @@
     "node": ">= 6.0"
   },
   "dependencies": {
-    "@types/bluebird": "^3.0.33",
-    "@types/lodash": "^4.14.36",
-    "@types/mongodb": "^2.1.33",
-    "@types/chai": "^3.4.33",
+    "@types/bluebird": "^3.0.37",
+    "@types/lodash": "^4.14.52",
+    "@types/mongodb": "^2.1.38",
+    "@types/chai": "^3.4.34",
     "bluebird": "^3.4.6",
     "lodash": "^4.16.2",
     "mongodb": "^2.2.11",
     "skmatc": "~1.2.2"
   },
   "peerDependencies": {
-    "@types/bluebird": "^3.0.33",
-    "@types/lodash": "^4.14.36",
-    "@types/mongodb": "^2.1.33",
-    "@types/chai": "^3.4.33"
+    "@types/bluebird": "^3.0.37",
+    "@types/lodash": "^4.14.52",
+    "@types/mongodb": "^2.1.38",
+    "@types/chai": "^3.4.34"
   },
   "devDependencies": {
     "@types/chai": "^3.4.34",
     "@types/chai-as-promised": "^0.0.29",
-    "@types/mocha": "^2.2.32",
+    "@types/mocha": "^2.2.39",
     "@types/source-map-support": "^0.2.28",
     "chai": "^3.5.0",
     "chai-as-promised": "^5.3.0",

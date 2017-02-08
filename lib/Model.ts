@@ -497,7 +497,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
                 let docs = this._handlers.creatingDocuments(objects);
                 return docs.map((object: { _id: any; }) => {
                     return new Bluebird<any[]>((resolve, reject) => {
-                        this.collection.findOneAndUpdate({ _id: object._id }, object, {
+                        this.collection.findOneAndUpdate({ _id: object._id || { $exists: false }}, object, {
                             upsert: options.upsert,
                             returnOriginal: false
                         }, (err, result) => {

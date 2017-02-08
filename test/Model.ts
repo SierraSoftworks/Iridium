@@ -217,6 +217,10 @@ describe("Model",() => {
             return chai.expect(model.create({ answer: 14 }, { upsert: true })).to.eventually.exist;
         });
 
+        it("should generate an _id for new, upserted, documents", () => {
+            return chai.expect(model.create({ answer: 12 }, { upsert: true })).to.eventually.exist.and.have.property("_id").and.exist;
+        })
+
         it("should return an error if you don't meet the schema validation requirements",() => {
            return chai.expect(model.create(<any>{ answer: "wrong" })).to.eventually.be.rejected;
         });
@@ -264,6 +268,10 @@ describe("Model",() => {
         it("should allow you to provide options to control the creation",() => {
             return chai.expect(model.insert({ answer: 14 }, { upsert: true })).to.eventually.exist;
         });
+
+        it("should generate an _id for new, upserted, documents", () => {
+            return chai.expect(model.insert({ answer: 12 }, { upsert: true })).to.eventually.exist.and.have.property("_id").and.exist;
+        })
 
         it("should return an error if you don't meet the schema validation requirements",() => {
            return chai.expect(model.insert(<any>{ answer: "wrong" })).to.eventually.be.rejected;
