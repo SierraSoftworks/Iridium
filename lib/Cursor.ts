@@ -19,7 +19,7 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
      * @param {MongoDB.Cursor} cursor The MongoDB native cursor object to be wrapped
      * @constructor
      */
-    constructor(private model: Model<TDocument, TInstance>, private conditions: any, public cursor: MongoDB.Cursor) {
+    constructor(private model: Model<TDocument, TInstance>, private conditions: any, public cursor: MongoDB.Cursor<TDocument>) {
 
     }
 
