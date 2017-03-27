@@ -113,7 +113,7 @@ export function Property(...args: any[]): (target: Instance<any, any> | Instance
  */
 export function Transform(fromDB: (value: any, property: string, model: Model<any,any>) => any, toDB: (value: any, property: string, model: Model<any,any>) => any) {
 	return function(target: Instance<any, any>|InstanceImplementation<any, any>, property: string = "$document") {
-		let staticTarget: InstanceImplementation<any, any> = <InstanceImplementation<any, any>>(target.constructor || target);
+		let staticTarget: InstanceImplementation<any, any> = <InstanceImplementation<any, any>>(target instanceof Instance && target.constructor || target);
 
 		staticTarget.transforms = _.clone(staticTarget.transforms || <Transforms>{})
 		staticTarget.transforms[property] = {
