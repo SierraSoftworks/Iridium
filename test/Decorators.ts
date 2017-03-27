@@ -19,6 +19,7 @@ interface TestDocument {
 })
 @Iridium.Property("version", "version")
 @Iridium.Property("optional2", Boolean, false)
+@Iridium.Transform(doc => doc, doc => doc)
 class Test extends Iridium.Instance<TestDocument, Test> implements TestDocument {
 	static transforms: Iridium.Transforms = {};
 	static indexes = [];
