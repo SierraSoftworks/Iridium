@@ -164,18 +164,36 @@ describe("Decorators", () => {
     });
 
     describe("Transform", () => {
-        it("should not remove existing entries in the transforms object", () => {
-            chai.expect(Test.transforms).to.exist.and.have.property("_id").with.property("fromDB").which.is.a("function");
-			chai.expect(Test.transforms).to.exist.and.have.property("_id").with.property("toDB").which.is.a("function");
-        });
+		describe("on a property", () => {
+			it("should not remove existing entries in the transforms object", () => {
+				chai.expect(Test.transforms).to.exist.and.have.property("_id").with.property("fromDB").which.is.a("function");
+				chai.expect(Test.transforms).to.exist.and.have.property("_id").with.property("toDB").which.is.a("function");
+			});
 
-        it("should populate the constructor's transforms object", () => {
-            chai.expect(Test.transforms).to.exist.and.have.property("email").with.property("fromDB").which.is.a("function");
-			chai.expect(Test.transforms).to.exist.and.have.property("email").with.property("toDB").which.is.a("function");
-        });
+			it("should populate the constructor's transforms object", () => {
+				chai.expect(Test.transforms).to.exist.and.have.property("email").with.property("fromDB").which.is.a("function");
+				chai.expect(Test.transforms).to.exist.and.have.property("email").with.property("toDB").which.is.a("function");
+			});
 
-        it("should not pollute the parent's transforms object", () => {
-            chai.expect(Iridium.Instance.transforms).to.exist.and.not.have.property("email");
-        });
+			it("should not pollute the parent's transforms object", () => {
+				chai.expect(Iridium.Instance.transforms).to.exist.and.not.have.property("email");
+			});
+		});
+
+		describe("on a class", () => {
+			it("should not remove existing entries in the transforms object", () => {
+				chai.expect(Test.transforms).to.exist.and.have.property("_id").with.property("fromDB").which.is.a("function");
+				chai.expect(Test.transforms).to.exist.and.have.property("_id").with.property("toDB").which.is.a("function");
+			});
+
+			it("should populate the constructor's transforms object", () => {
+				chai.expect(Test.transforms).to.exist.and.have.property("$document").with.property("fromDB").which.is.a("function");
+				chai.expect(Test.transforms).to.exist.and.have.property("$document").with.property("toDB").which.is.a("function");
+			});
+
+			it("should not pollute the parent's transforms object", () => {
+				chai.expect(Iridium.Instance.transforms).to.exist.and.not.have.property("$document");
+			});
+		});
     });
 });
