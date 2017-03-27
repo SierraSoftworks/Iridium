@@ -1,6 +1,6 @@
 {
   "name": "iridium",
-  "version": "7.1.4",
+  "version": "7.1.5",
   "author": "Benjamin Pannell <admin@sierrasoftworks.com>",
   "description": "A custom lightweight ORM for MongoDB designed for power-users",
   "license": "MIT",
@@ -50,20 +50,20 @@
     "node": ">= 6.0"
   },
   "dependencies": {
-    "@types/bluebird": "^3.0.37",
-    "@types/lodash": "^4.14.52",
-    "@types/mongodb": "^2.1.38",
-    "@types/chai": "^3.4.34",
-    "bluebird": "^3.4.6",
-    "lodash": "^4.16.2",
-    "mongodb": "^2.2.11",
+    "@types/bluebird": "^3.5.2",
+    "@types/lodash": "^4.14.58",
+    "@types/mongodb": "^2.1.41",
+    "@types/chai": "^3.4.35",
+    "bluebird": "^3.5.0",
+    "lodash": "^4.17.4",
+    "mongodb": "^2.2.25",
     "skmatc": "~1.2.2"
   },
   "peerDependencies": {
-    "@types/bluebird": "^3.0.37",
-    "@types/lodash": "^4.14.52",
-    "@types/mongodb": "^2.1.38",
-    "@types/chai": "^3.4.34"
+    "@types/bluebird": "^3.5.2",
+    "@types/lodash": "^4.14.58",
+    "@types/mongodb": "^2.1.41",
+    "@types/chai": "^3.4.35"
   },
   "devDependencies": {
     "@types/chai": "^3.4.34",
@@ -81,7 +81,7 @@
     "source-map-support": "^0.4.2",
     "tslint": "^4.1.0",
     "typedoc": "~0.5.1",
-    "typescript": "~2.1.4"
+    "typescript": "~2.2.1"
   },
   "keywords": [
     "mongodb",
