@@ -106,6 +106,10 @@ export function Property(...args: any[]): (target: Instance<any, any> | Instance
  * @param {function} fromDB The function used to convert values from the database for the application.
  * @param {function} toDB The function used to convert values from the application to the form used in the database.
  *
+ * Property transforms are lazily evaluated when their fields are accessed for performance reasons.
+ * Modifying the values of an array or object will *not* trigger its transform function unless the
+ * document level property is re-assigned.
+ * 
  * This decorator can either compliment or replace the static transforms property on your instance
  * class, however only one transform can be applied to any property at a time.
  * If your transpiler does not support decorators then you are free to make use of the

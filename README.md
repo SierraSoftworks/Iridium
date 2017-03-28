@@ -383,6 +383,45 @@ InstanceType.transforms = {
 };
 ```
 
+#### Transform Gotchas
+It is important to note that property transforms are lazily evaluated on field access, rather than when the document is retrieved from the database.
+This is done for performance reasons, but has the side effect that complex objects which are the targets of property transforms must be re-assigned to the field
+if you wish to trigger the `toDB` transform function.
+
+Let's take the following model definition for our example, here we have a GeoJSON representation of a location but we want our application to use the data
+in a `{lat,lng}` style object. In this case we can use a transform which translates from one form to another to accomplish our task.
+
+```typescript
+import {inspect} from "util";
+
+export class InstanceType extends Iridium.Instance<any, InstanceType> {
+    // Converts a GeoJSON object into a simple {lat, lng} object and back.
+    @Iridium.Transform(
+        data => { lat: data.coordinates[1], lng: data.coordinates[0] },
+        data => { type: "Point", coordinates: [data.lng, data.lat] }
+    )
+    position: {
+        lat: number;
+        lng: number;
+    };
+}
+
+db.Model.findOne().then(instance => {
+    console.log(util.inspect(instance.position)); // { lat: 1, lng: 2 }
+    console.log(util.inspect(instance.document.position)); // { type: "Point", coordinates: [2, 1] }
+
+    let pos = instance.pos;
+    pos.lat = 3;
+    console.log(util.inspect(pos)); // { lat: 3, lng: 2 }
+    console.log(util.inspect(instance.position)); // { lat: 1, lng: 2 }
+    console.log(util.inspect(instance.document.position)); // { type: "Point", coordinates: [2, 1] }
+
+    instance.position = pos
+    console.log(util.inspect(instance.position)); // { lat: 3, lng: 2 }
+    console.log(util.inspect(instance.document.position)); // { type: "Point", coordinates: [2, 3] }
+});
+```
+
 #### Useful Transform Tricks
 There are a couple of clever tricks you can do using transforms to enable additional functionality within Iridium. An example would be cleaning your documents of properties
 not defined within your schemas whenever they are saved to the database.
