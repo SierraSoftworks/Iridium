@@ -1,7 +1,7 @@
 import _ = require("lodash");
 import Promise = require("bluebird");
 import * as Iridium from "../iridium";
-import {Index, Property} from "../iridium";
+import {Index, Property, Validate} from "../iridium";
 
 var settings: any = {};
 
@@ -43,7 +43,12 @@ export interface UserDocument {
 @Iridium.Collection("user")
 @Index({ email: 1 }, { unique: true })
 @Index({ sessions: 1 }, { sparse: true })
-@Index({ "skill.xp": -1 }, { background: true }) 
+@Index({ "skill.xp": -1 }, { background: true })
+@Validate("password", function(schema, data, path) {
+    // This should use something like zxcvbn to determine whether a password
+    // is strong enough for your use case.
+    return this.assert(typeof data === "string" && /^.{8,}$/.test(data), "Expected password to be at least 8 characters long.");
+})
 export class User extends Iridium.Instance<UserDocument, User> implements UserDocument {
     @Iridium.Property(/^[a-z][a-z0-9_]{7,}$/) _id: string;
     get username() {
@@ -52,7 +57,7 @@ export class User extends Iridium.Instance<UserDocument, User> implements UserDo
 
     @Property(String) fullname: string;
     @Property(/^.+@.+$/) email: string;
-    @Property(String) password: string;
+    @Property("password") password: string;
     @Property(/Player|Moderator|Admin/) type: string;
     @Property(Boolean) banned: boolean;
 

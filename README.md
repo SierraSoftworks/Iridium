@@ -298,7 +298,9 @@ Custom validators can be added either using the [`validators`](http://sierrasoft
 or by using the [`@Validate`](http://sierrasoftworks.github.io/Iridium/globals.html#validate) decorator on your instance class.
 
 ```typescript
-@Iridium.Validate('myValidator', x => x === 42)
+@Iridium.Validate('myValidator', function(schema, data, path) {
+    return this.assert(data == 42)
+})
 export class InstanceType extends Iridium.Instance<any, InstanceType> {
     @Iridium.Property('myValidator')
     myProperty: number;

@@ -47,6 +47,11 @@ export function Index(spec: IndexSpecification, options?: MongoDB.IndexOptions) 
  * This decorator replaces the use of the static validators property on instance implementation
  * classes. If your transpiler does not support decorators then you are free to make use of the
  * property instead.
+ * 
+ * @example
+ * @Iridium.Validate('everything', function(schema, data, path) {
+ * 		return this.assert(data == 42, "Expected the answer to life, the universe and everything.");
+ * })
  */
 export function Validate(forType: any, validate: Skmatc.IValidationHandler) {
 	return function(target: InstanceImplementation<any,any>) {
