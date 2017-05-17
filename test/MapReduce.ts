@@ -61,12 +61,12 @@ describe("Model", () => {
         });
 
         it("should correctly map and reduce with model", () => {
-            let t = model.mapReduce(MapReducedInstance, { out:{replace:'mapReduced'}, query: { status: "A" } }).then(()=>{
+            let t = model.mapReduce(MapReducedInstance, { 
+                out: { 
+                    replace: "mapReduced" 
+                }, query: { status: "A" } }).then(() => {
                 let reducedModel = new Iridium.Model<Iridium.MapReducedDocument<string, number>, MapReducedInstance>(core, MapReducedInstance);
                 return reducedModel.find().toArray()
-            })
-            t.then(instances => {
-                instances.forEach((val, i, arr) => { console.log(JSON.stringify(val)) });
             })
             return chai.expect(t).to.eventually.exist.and.have.length(2);
         });
@@ -81,9 +81,6 @@ describe("Model", () => {
                     return sum;
                 }
             }, { out: { inline: 1 }, query: { status: "A" } })
-            t.then(instances => {
-                instances.forEach((val, i, arr) => { console.log(JSON.stringify(val)) });
-            })
             return chai.expect(t).to.eventually.exist.and.have.length(2);
         });
 
