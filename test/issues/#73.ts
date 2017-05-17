@@ -24,7 +24,7 @@ class Test extends Iridium.Instance<TestDocument, Test> implements TestDocument 
     metadata: any;
 }
 
-describe.only("issues", () => {
+describe("issues", () => {
     let core = new Iridium.Core({ database: "test" });
     before(() => core.connect());
     after(() => core.close());
