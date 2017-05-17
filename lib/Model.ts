@@ -28,6 +28,7 @@ import {ModelSpecificInstance} from "./ModelSpecificInstance";
 import {InstanceImplementation} from "./InstanceInterface";
 import {Transforms, DefaultTransforms} from "./Transforms";
 import * as AggregationPipeline from "./Aggregate";
+import {MapFunction, ReduceFunction, MapReducedDocument, MapReduceFunctions} from './MapReduce';
 
 /**
  * An Iridium Model which represents a structured MongoDB collection.
@@ -690,6 +691,52 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
                 return resolve(results);
             });
         });
+    }
+
+    private _mapReduce<Key, Value>(instanceType: InstanceImplementation<MapReducedDocument<Key, Value>, any>, options: MongoDB.MapReduceOptions): Bluebird<void> {
+        return new Bluebird<void>((resolve, reject) => {
+            if (instanceType.mapReduceOptions == undefined)
+                reject(new Error("Cannot mapReduce to this instance."))
+            else
+                this.collection.mapReduce(instanceType.mapReduceOptions.map, instanceType.mapReduceOptions.reduce, options, (err, data) => {
+                    if (err) return reject(err)
+                    return resolve()
+                })
+        })
+    }
+
+    /**
+     * 
+     * @param functions Map and Reduce functions
+     * @param options Options
+     * 
+     * @return Map promise
+     */
+    mapReduce<Key, Value>(functions: MapReduceFunctions<TDocument, Key, Value>, options: MongoDB.MapReduceOptions): Bluebird<MapReducedDocument<Key, Value>[]>;
+    /**
+     * 
+     * @param instanceType Returned instance type
+     * @param options Options
+     * 
+     * @return Void promise
+     */
+    mapReduce<Key, Value>(instanceType: InstanceImplementation<MapReducedDocument<Key, Value>, any>, options: MongoDB.MapReduceOptions): Bluebird<void>;
+    mapReduce<Key, Value>(functions: InstanceImplementation<MapReducedDocument<Key, Value>, any> | MapReduceFunctions<TDocument, Key, Value>, options: MongoDB.MapReduceOptions) {
+        type fn = MapReduceFunctions<TDocument, Key, Value>;
+        type inst = InstanceImplementation<MapReducedDocument<Key, Value>, any>;
+        if ((<fn>functions).map)
+            return new Bluebird<MapReducedDocument<Key, Value>[]>((resolve, reject) => {
+                if (options.out && options.out && (<any>options.out).inline != 1 )
+                    return reject(new Error("Use inline output option"));
+                else
+                    options.out = { inline: 1 }
+                this.collection.mapReduce((<fn>functions).map, (<fn>functions).reduce, options, function (err, data) {
+                    if (err) return reject(err);
+                    return resolve(data);
+                })
+            })
+        else
+            return this._mapReduce(<inst>functions, options);
     }
 
     /**

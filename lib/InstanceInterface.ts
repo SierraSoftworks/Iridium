@@ -5,6 +5,7 @@ import * as Index from "./Index";
 import {CacheDirector} from "./CacheDirector";
 import {Transforms} from "./Transforms";
 import {Changes} from "./Changes";
+import {MapFunction, ReduceFunction, MapReduceFunctions} from './MapReduce'
 
 /**
  * This interface dictates the format of an instance class which wraps documents received
@@ -49,6 +50,11 @@ export interface InstanceImplementation<TDocument extends { _id ?: any }, TInsta
      * to automatically generate all specified indexes.
      */
     indexes?: (Index.Index | Index.IndexSpecification)[];
+    
+    /**
+     * mapReduce Options
+     */
+    mapReduceOptions?: MapReduceFunctions<any, any, any>;
 
     /**
      * An optional method which will be called whenever a document is about to be inserted into the database,
