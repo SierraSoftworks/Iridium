@@ -61,12 +61,11 @@ describe("Model", () => {
         });
 
         it("should correctly map and reduce with model", () => {
+            let reducedModel = new Iridium.Model<Iridium.MapReducedDocument<string, number>, MapReducedInstance>(core, MapReducedInstance);
+            reducedModel.remove()
             let t = model.mapReduce(MapReducedInstance, {
                 out: "replace", query: { status: "A" }
-            }).then(() => {
-                let reducedModel = new Iridium.Model<Iridium.MapReducedDocument<string, number>, MapReducedInstance>(core, MapReducedInstance);
-                return reducedModel.find().toArray()
-            })
+            }).then(() => reducedModel.find().toArray())
             return chai.expect(t).to.eventually.exist.and.have.length(2);
         });
 
