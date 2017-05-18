@@ -20,3 +20,4 @@ export * from "./lib/caches/NoOpCache";
 export * from "./lib/cacheControllers/IDDirector";
 
 export * from "./lib/utils/ObjectID";
+export * from "./lib/MapReduce";

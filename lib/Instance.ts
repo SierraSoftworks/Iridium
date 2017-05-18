@@ -10,6 +10,7 @@ import {Transforms} from "./Transforms";
 import {DefaultValidators} from "./Validators";
 import {Conditions} from "./Conditions";
 import {Changes} from "./Changes";
+import * as MapReduce from "./MapReduce";
 
 import * as _ from "lodash";
 import * as MongoDB from "mongodb";
@@ -128,6 +129,11 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
      * The indexes which should be managed by Iridium for the collection used by this type.
      */
     static indexes: (Index.Index | Index.IndexSpecification)[] = [];
+
+    /**
+     * mapReduce Options
+     */
+    static mapReduceOptions?: MapReduce.MapReduceFunctions<any,any,any>;
 
     /**
      * Saves any changes to this instance, using the built in diff algorithm to write the update query.

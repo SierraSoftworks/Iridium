@@ -7,6 +7,7 @@ import {Index, IndexSpecification} from "./Index";
 import {Schema} from "./Schema";
 import {InstanceImplementation} from "./InstanceInterface";
 import {Transforms, DefaultTransforms} from "./Transforms";
+import * as MapReduceDef from "./MapReduce";
 
 /**
  * Specifies the name of the collection to which this instance's documents should be sent.
@@ -47,6 +48,11 @@ export function Index(spec: IndexSpecification, options?: MongoDB.IndexOptions) 
  * This decorator replaces the use of the static validators property on instance implementation
  * classes. If your transpiler does not support decorators then you are free to make use of the
  * property instead.
+ * 
+ * @example
+ * @Iridium.Validate('everything', function(schema, data, path) {
+ * 		return this.assert(data == 42, "Expected the answer to life, the universe and everything.");
+ * })
  */
 export function Validate(forType: any, validate: Skmatc.IValidationHandler) {
 	return function(target: InstanceImplementation<any,any>) {
@@ -101,6 +107,10 @@ export function Property(...args: any[]): (target: Instance<any, any> | Instance
  * @param {function} fromDB The function used to convert values from the database for the application.
  * @param {function} toDB The function used to convert values from the application to the form used in the database.
  *
+ * Property transforms are lazily evaluated when their fields are accessed for performance reasons.
+ * Modifying the values of an array or object will *not* trigger its transform function unless the
+ * document level property is re-assigned.
+ * 
  * This decorator can either compliment or replace the static transforms property on your instance
  * class, however only one transform can be applied to any property at a time.
  * If your transpiler does not support decorators then you are free to make use of the
@@ -153,4 +163,24 @@ export function Binary(target: Instance<any, any>, name: string) {
 		DefaultTransforms.Binary.fromDB,
 		DefaultTransforms.Binary.toDB
 	)(target, name);
+}
+
+/**
+ * Specifies that the instance is a result of a mapReduce operation and functions of that operation.
+ * 
+ * @param TDocument Interface of the document on which the operation will run
+ * @param Key Type of the mapped keys
+ * @param Value Type of the mapped values
+ * 
+ * @param {MapReduce.MapFunction<TDocument>} map A function which maps documents.
+ * @param {MapReduce.ReduceFunction<Key, Value>} reduce A function which reduces mapped pairs.
+ *
+ * This decorator replaces the use of the static mapReduce property on instance implementation
+ * classes. If your transpiler does not support decorators then you are free to make use of the
+ * property instead.
+ */
+export function MapReduce<TDocument, Key, Value>(map: MapReduceDef.MapFunction<TDocument>, reduce: MapReduceDef.ReduceFunction<Key, Value>) {
+	return function (target: InstanceImplementation<any, any>) {
+		target.mapReduceOptions = { map: map, reduce: reduce };
+	};
 }
