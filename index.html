@@ -113,7 +113,7 @@
 				<p>You&#39;ll notice that the <code>House</code> class extends Iridium&#39;s <code>Instance</code> class, which gives it methods like <code>save()</code> as well
 					as change tracking when calling <code>save()</code> on the instance. If you&#39;d prefer a lighter approach or to use your own home-grown
 				implementation then you can do so by taking a look at the <a href="#custom-instances">Custom Instances</a> section.</p>
-				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> {Core, Model, Instance, Collection, Index, Property, ObjectID} Iridium from <span class="hljs-string">'iridium'</span>;
+				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> {Core, Model, Instance, Collection, Index, Property, ObjectID} Iridium <span class="hljs-keyword">from</span> <span class="hljs-string">'iridium'</span>;
 
 <span class="hljs-keyword">interface</span> Colour {
     r: <span class="hljs-built_in">number</span>;
@@ -136,7 +136,7 @@
 
 <span class="hljs-meta">@Index</span>({ name: <span class="hljs-number">1</span> })
 <span class="hljs-meta">@Collection</span>(<span class="hljs-string">'houses'</span>)
-<span class="hljs-keyword">class</span> House extends Instance&lt;HouseDocument, House&gt; <span class="hljs-keyword">implements</span> HouseDocument {
+<span class="hljs-keyword">class</span> House <span class="hljs-keyword">extends</span> Instance&lt;HouseDocument, House&gt; <span class="hljs-keyword">implements</span> HouseDocument {
     <span class="hljs-meta">@ObjectID</span> _id: <span class="hljs-built_in">string</span>;
     <span class="hljs-meta">@Property</span>(<span class="hljs-regexp">/^.+$/</span>)
     name: <span class="hljs-built_in">string</span>;
@@ -169,13 +169,13 @@
     }
 }
 
-<span class="hljs-keyword">class</span> MyDatabase extends Core {
+<span class="hljs-keyword">class</span> MyDatabase <span class="hljs-keyword">extends</span> Core {
     Houses = <span class="hljs-keyword">new</span> Model&lt;HouseDocument, House&gt;(<span class="hljs-keyword">this</span>, House);
 }
 
 <span class="hljs-keyword">var</span> myDb = <span class="hljs-keyword">new</span> MyDatabase({ database: <span class="hljs-string">'houses_test'</span> });
 
-myDb.connect().then(() =&gt; myDb.Houses.insert({
+myDb.connect().then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> myDb.Houses.insert({
         name: <span class="hljs-string">'My House'</span>,
         cars: [{
             make: <span class="hljs-string">'Audi'</span>,
@@ -183,12 +183,12 @@ myDb.connect().then(() =&gt; myDb.Houses.insert({
             colour: { r: <span class="hljs-number">0</span>, g: <span class="hljs-number">0</span>, b: <span class="hljs-number">0</span> }
         }]
     }))
-    .then(() =&gt; myDb.Houses.get())
-    .then((house) =&gt; {
+    .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> myDb.Houses.get())
+    .then(<span class="hljs-function">(<span class="hljs-params">house</span>) =&gt;</span> {
         house.addCar(<span class="hljs-string">'Audi'</span>, <span class="hljs-string">'S4'</span>, { r: <span class="hljs-number">255</span>, g: <span class="hljs-number">255</span>, b: <span class="hljs-number">255</span> });
         <span class="hljs-keyword">return</span> house.save();
     })
-    .then(() =&gt; myDb.close());
+    .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> myDb.close());
 </code></pre>
 				<h2 id="defining-a-model">Defining a Model</h2>
 				<p>Iridium models are created with a reference to their Core (which provides the database connection) and an <code>InstanceType</code> which
@@ -204,7 +204,7 @@ myDb.connect().then(() =&gt; myDb.Houses.insert({
 					for any instances which are retrieved from the database. This information is carried through all promises and callbacks you will use
 				within Iridium and it makes your life significantly easier.</p>
 				<p>Typically you will expose your models as variables on a custom Core implementation like this.</p>
-				<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> MyCore extends Core {
+				<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> MyCore <span class="hljs-keyword">extends</span> Core {
     MyModel = <span class="hljs-keyword">new</span> Model&lt;MyDocumentInterface, MyInstanceType&gt;(<span class="hljs-keyword">this</span>, MyInstanceType);
 }
 </code></pre>
@@ -264,7 +264,7 @@ myDb.connect().then(() =&gt; myDb.Houses.insert({
     };
 }
 </code></pre>
-				<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> InstanceType extends Iridium.Instance&lt;<span class="hljs-built_in">any</span>, InstanceType&gt; {
+				<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> InstanceType <span class="hljs-keyword">extends</span> Iridium.Instance&lt;<span class="hljs-built_in">any</span>, InstanceType&gt; {
     <span class="hljs-meta">@Iridium</span>.ObjectID
     _id: <span class="hljs-built_in">string</span>;
 
@@ -286,7 +286,7 @@ InstanceType.schema = {
 				<p>To use it, simply inherit from it (if you need any computed properties or custom methods) or provide it as your instance type when instantiating
 				the model.</p>
 				<p><strong>TypeScript</strong></p>
-				<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> InstanceType extends Iridium.Instance&lt;Document, InstanceType&gt; {
+				<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> InstanceType <span class="hljs-keyword">extends</span> Iridium.Instance&lt;Document, InstanceType&gt; {
     _id: <span class="hljs-built_in">string</span>;
 }
 
@@ -315,8 +315,10 @@ InstanceType.schema = {
 				translation within your application.</p>
 				<p>Custom validators can be added either using the <a href="http://sierrasoftworks.github.io/Iridium/interfaces/instanceimplementation.html#validators"><code>validators</code></a> property
 				or by using the <a href="http://sierrasoftworks.github.io/Iridium/globals.html#validate"><code>@Validate</code></a> decorator on your instance class.</p>
-				<pre><code class="lang-typescript"><span class="hljs-meta">@Iridium</span>.Validate(<span class="hljs-string">'myValidator'</span>, x =&gt; x === <span class="hljs-number">42</span>)
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> InstanceType extends Iridium.Instance&lt;<span class="hljs-built_in">any</span>, InstanceType&gt; {
+				<pre><code class="lang-typescript"><span class="hljs-meta">@Iridium</span>.Validate(<span class="hljs-string">'myValidator'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">schema, data, path</span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.assert(data == <span class="hljs-number">42</span>)
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> InstanceType <span class="hljs-keyword">extends</span> Iridium.Instance&lt;<span class="hljs-built_in">any</span>, InstanceType&gt; {
     <span class="hljs-meta">@Iridium</span>.Property(<span class="hljs-string">'myValidator'</span>)
     myProperty: <span class="hljs-built_in">number</span>;
 }
@@ -354,14 +356,14 @@ InstanceType.schema = {
 				<p>The easiest way to add a transform is using the <a href="http://sierrasoftworks.github.io/Iridium/globals.html#transform"><code>@Transform</code></a> decorator, however if you are working
 					in a language which doesn&#39;t yet support decorators then you can easily use the
 				<a href="http://sierrasoftworks.github.io/Iridium/interfaces/instanceimplementation.html#transforms"><code>transforms</code></a> property on your instance class.</p>
-				<pre><code class="lang-typescript"><span class="hljs-meta">@Iridium</span>.Transform(<span class="hljs-built_in">document</span> =&gt; {
+				<pre><code class="lang-typescript"><span class="hljs-meta">@Iridium</span>.Transform(<span class="hljs-function"><span class="hljs-params">document</span> =&gt;</span> {
     <span class="hljs-built_in">document</span>.lastFetched = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>();
-}, <span class="hljs-built_in">document</span> =&gt; {
+}, <span class="hljs-function"><span class="hljs-params">document</span> =&gt;</span> {
     <span class="hljs-built_in">document</span>.lastFetched &amp;&amp; <span class="hljs-keyword">delete</span> <span class="hljs-built_in">document</span>.lastFetched;
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">document</span>;
 })
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> InstanceType extends Iridium.Instance&lt;<span class="hljs-built_in">any</span>, InstanceType&gt; {
-    <span class="hljs-meta">@Iridium</span>.Transform(data =&gt; data.toUpperCase(), data =&gt; data.toLowerCase())
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> InstanceType <span class="hljs-keyword">extends</span> Iridium.Instance&lt;<span class="hljs-built_in">any</span>, InstanceType&gt; {
+    <span class="hljs-meta">@Iridium</span>.Transform(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> data.toUpperCase(), <span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> data.toLowerCase())
     email: <span class="hljs-built_in">string</span>;
 }
 </code></pre>
@@ -387,6 +389,41 @@ InstanceType.transforms = {
     }
 };
 </code></pre>
+				<h4 id="transform-gotchas">Transform Gotchas</h4>
+				<p>It is important to note that property transforms are lazily evaluated on field access, rather than when the document is retrieved from the database.
+					This is done for performance reasons, but has the side effect that complex objects which are the targets of property transforms must be re-assigned to the field
+				if you wish to trigger the <code>toDB</code> transform function.</p>
+				<p>Let&#39;s take the following model definition for our example, here we have a GeoJSON representation of a location but we want our application to use the data
+				in a <code>{lat,lng}</code> style object. In this case we can use a transform which translates from one form to another to accomplish our task.</p>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> {inspect} <span class="hljs-keyword">from</span> <span class="hljs-string">"util"</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> InstanceType <span class="hljs-keyword">extends</span> Iridium.Instance&lt;<span class="hljs-built_in">any</span>, InstanceType&gt; {
+    <span class="hljs-comment">// Converts a GeoJSON object into a simple {lat, lng} object and back.</span>
+    <span class="hljs-meta">@Iridium</span>.Transform(
+        <span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> { lat: data.coordinates[<span class="hljs-number">1</span>], lng: data.coordinates[<span class="hljs-number">0</span>] },
+        <span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> { <span class="hljs-keyword">type</span>: <span class="hljs-string">"Point"</span>, coordinates: [data.lng, data.lat] }
+    )
+    position: {
+        lat: <span class="hljs-built_in">number</span>;
+        lng: <span class="hljs-built_in">number</span>;
+    };
+}
+
+db.Model.findOne().then(<span class="hljs-function"><span class="hljs-params">instance</span> =&gt;</span> {
+    <span class="hljs-built_in">console</span>.log(util.inspect(instance.position)); <span class="hljs-comment">// { lat: 1, lng: 2 }</span>
+    <span class="hljs-built_in">console</span>.log(util.inspect(instance.document.position)); <span class="hljs-comment">// { type: "Point", coordinates: [2, 1] }</span>
+
+    <span class="hljs-keyword">let</span> pos = instance.pos;
+    pos.lat = <span class="hljs-number">3</span>;
+    <span class="hljs-built_in">console</span>.log(util.inspect(pos)); <span class="hljs-comment">// { lat: 3, lng: 2 }</span>
+    <span class="hljs-built_in">console</span>.log(util.inspect(instance.position)); <span class="hljs-comment">// { lat: 1, lng: 2 }</span>
+    <span class="hljs-built_in">console</span>.log(util.inspect(instance.document.position)); <span class="hljs-comment">// { type: "Point", coordinates: [2, 1] }</span>
+
+    instance.position = pos
+    <span class="hljs-built_in">console</span>.log(util.inspect(instance.position)); <span class="hljs-comment">// { lat: 3, lng: 2 }</span>
+    <span class="hljs-built_in">console</span>.log(util.inspect(instance.document.position)); <span class="hljs-comment">// { type: "Point", coordinates: [2, 3] }</span>
+});
+</code></pre>
 				<h4 id="useful-transform-tricks">Useful Transform Tricks</h4>
 				<p>There are a couple of clever tricks you can do using transforms to enable additional functionality within Iridium. An example would be cleaning your documents of properties
 				not defined within your schemas whenever they are saved to the database.</p>
@@ -395,14 +432,14 @@ InstanceType.transforms = {
 					the properties you are going to insert. It could also simply be a way of lazily cleaning up old properties from documents as your schema evolves over time, helping to avoid
 					complications if someone forgets to clean up the database after making changes to the schema.
 				This can be easily achieved using the <code>$document</code> transform.</p>
-				<pre><code class="lang-typescript"><span class="hljs-meta">@Iridium</span>.Transform(<span class="hljs-built_in">document</span> =&gt; <span class="hljs-built_in">document</span>, (<span class="hljs-built_in">document</span>, property, model) =&gt; {
-    <span class="hljs-built_in">Object</span>.keys(<span class="hljs-built_in">document</span>).forEach(key =&gt; {
+				<pre><code class="lang-typescript"><span class="hljs-meta">@Iridium</span>.Transform(<span class="hljs-function"><span class="hljs-params">document</span> =&gt;</span> <span class="hljs-built_in">document</span>, <span class="hljs-function">(<span class="hljs-params"><span class="hljs-built_in">document</span>, property, model</span>) =&gt;</span> {
+    <span class="hljs-built_in">Object</span>.keys(<span class="hljs-built_in">document</span>).forEach(<span class="hljs-function"><span class="hljs-params">key</span> =&gt;</span> {
         <span class="hljs-keyword">if</span>(!model.schema.hasOwnProperty(key)) <span class="hljs-keyword">delete</span> <span class="hljs-built_in">document</span>[key];
     });
 
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">document</span>;
 })
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> InstanceType extends Iridium.Instance&lt;<span class="hljs-built_in">any</span>, InstanceType&gt; {
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> InstanceType <span class="hljs-keyword">extends</span> Iridium.Instance&lt;<span class="hljs-built_in">any</span>, InstanceType&gt; {
 
 }
 </code></pre>
@@ -433,173 +470,281 @@ InstanceType.transforms = {
 					<li class="globals  ">
 						<a href="globals.html"><em>Globals</em></a>
 					</li>
+					<li class=" tsd-kind-module tsd-is-not-exported">
+						<a href="modules/__global.html">__global</a>
+					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class tsd-is-external">
+					<li class=" tsd-kind-class">
 						<a href="classes/cacheonid.html" class="tsd-kind-icon">Cache<wbr>OnID</a>
 					</li>
-					<li class=" tsd-kind-class tsd-is-external">
+					<li class=" tsd-kind-class">
 						<a href="classes/core.html" class="tsd-kind-icon">Core</a>
 					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
+					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="classes/cursor.html" class="tsd-kind-icon">Cursor</a>
 					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
+					<li class=" tsd-kind-class tsd-is-not-exported">
+						<a href="classes/inheritedcore.html" class="tsd-kind-icon">Inherited<wbr>Core</a>
+					</li>
+					<li class=" tsd-kind-class tsd-is-not-exported">
+						<a href="classes/inheritedcorewithcustomconstructor.html" class="tsd-kind-icon">Inherited<wbr>Core<wbr>With<wbr>Custom<wbr>Constructor</a>
+					</li>
+					<li class=" tsd-kind-class tsd-is-not-exported">
+						<a href="classes/inheritedcorewithhooks.html" class="tsd-kind-icon">Inherited<wbr>Core<wbr>With<wbr>Hooks</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="classes/instance.html" class="tsd-kind-icon">Instance</a>
 					</li>
-					<li class=" tsd-kind-class tsd-is-external">
+					<li class=" tsd-kind-class tsd-is-not-exported">
+						<a href="classes/iridiumdb.html" class="tsd-kind-icon">IridiumDB</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/lowercasecollectionsplugin.html" class="tsd-kind-icon">Lowercase<wbr>Collections<wbr>Plugin</a>
+					</li>
+					<li class=" tsd-kind-class tsd-is-not-exported">
+						<a href="classes/mapreducedinstance.html" class="tsd-kind-icon">Map<wbr>Reduced<wbr>Instance</a>
+					</li>
+					<li class=" tsd-kind-class">
 						<a href="classes/memorycache.html" class="tsd-kind-icon">Memory<wbr>Cache</a>
 					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
+					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="classes/model.html" class="tsd-kind-icon">Model</a>
 					</li>
-					<li class=" tsd-kind-class tsd-is-external">
+					<li class=" tsd-kind-class">
 						<a href="classes/modelcache.html" class="tsd-kind-icon">Model<wbr>Cache</a>
 					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
+					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="classes/modelhandlers.html" class="tsd-kind-icon">Model<wbr>Handlers</a>
 					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
+					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="classes/modelhelpers.html" class="tsd-kind-icon">Model<wbr>Helpers</a>
 					</li>
-					<li class=" tsd-kind-class tsd-is-external">
+					<li class=" tsd-kind-class tsd-is-not-exported">
+						<a href="classes/mydb.html" class="tsd-kind-icon">MyDB</a>
+					</li>
+					<li class=" tsd-kind-class">
 						<a href="classes/noopcache.html" class="tsd-kind-icon">No<wbr>OpCache</a>
 					</li>
-					<li class=" tsd-kind-class tsd-is-external">
+					<li class=" tsd-kind-class">
 						<a href="classes/omnom.html" class="tsd-kind-icon">Omnom</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
+					<li class=" tsd-kind-class tsd-is-not-exported">
+						<a href="classes/person.html" class="tsd-kind-icon">Person</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/stringcasevalidationplugin.html" class="tsd-kind-icon">String<wbr>Case<wbr>Validation<wbr>Plugin</a>
+					</li>
+					<li class=" tsd-kind-class tsd-is-not-exported">
+						<a href="classes/test.html" class="tsd-kind-icon">Test</a>
+					</li>
+					<li class=" tsd-kind-class tsd-is-not-exported">
+						<a href="classes/testcore.html" class="tsd-kind-icon">Test<wbr>Core</a>
+					</li>
+					<li class=" tsd-kind-class tsd-is-not-exported">
+						<a href="classes/testdb.html" class="tsd-kind-icon">TestDB</a>
+					</li>
+					<li class=" tsd-kind-class tsd-is-not-exported">
+						<a href="classes/testwithcustomid.html" class="tsd-kind-icon">Test<wbr>With<wbr>CustomID</a>
+					</li>
+					<li class=" tsd-kind-class tsd-is-not-exported">
+						<a href="classes/user.html" class="tsd-kind-icon">User</a>
+					</li>
+					<li class=" tsd-kind-class tsd-is-not-exported">
+						<a href="classes/wrappeduser.html" class="tsd-kind-icon">Wrapped<wbr>User</a>
+					</li>
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/bsonarray.html" class="tsd-kind-icon">BSONArray</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/bsonobject.html" class="tsd-kind-icon">BSONObject</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/cache.html" class="tsd-kind-icon">Cache</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/cachedirector.html" class="tsd-kind-icon">Cache<wbr>Director</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/callback.html" class="tsd-kind-icon">Callback</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/changes.html" class="tsd-kind-icon">Changes</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/conditions.html" class="tsd-kind-icon">Conditions</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/configuration.html" class="tsd-kind-icon">Configuration</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/createoptions.html" class="tsd-kind-icon">Create<wbr>Options</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
+					<li class=" tsd-kind-interface tsd-is-not-exported">
+						<a href="interfaces/document.html" class="tsd-kind-icon">Document</a>
+					</li>
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/expressmiddleware.html" class="tsd-kind-icon">Express<wbr>Middleware</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/hooks.html" class="tsd-kind-icon">Hooks</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/index.html" class="tsd-kind-icon">Index</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/indexspecification.html" class="tsd-kind-icon">Index<wbr>Specification</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-external tsd-is-not-exported">
+					<li class=" tsd-kind-interface tsd-is-not-exported">
 						<a href="interfaces/instanceconstructor.html" class="tsd-kind-icon">Instance<wbr>Constructor</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/instanceimplementation.html" class="tsd-kind-icon">Instance<wbr>Implementation</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/instanceinternals.html" class="tsd-kind-icon">Instance<wbr>Internals</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/mapfunction.html" class="tsd-kind-icon">Map<wbr>Function</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/mapreducefunctions.html" class="tsd-kind-icon">Map<wbr>Reduce<wbr>Functions</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/mapreduceoptions.html" class="tsd-kind-icon">Map<wbr>Reduce<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/mapreduceddocument.html" class="tsd-kind-icon">Map<wbr>Reduced<wbr>Document</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/middlewarefactory.html" class="tsd-kind-icon">Middleware<wbr>Factory</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/modelspecificinstanceconstructor.html" class="tsd-kind-icon">Model<wbr>Specific<wbr>Instance<wbr>Constructor</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/plugin.html" class="tsd-kind-icon">Plugin</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/predicate.html" class="tsd-kind-icon">Predicate</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/property.html" class="tsd-kind-icon">Property</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/propertygetter.html" class="tsd-kind-icon">Property<wbr>Getter</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/propertysetter.html" class="tsd-kind-icon">Property<wbr>Setter</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/propertytransform.html" class="tsd-kind-icon">Property<wbr>Transform</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/queryoptions.html" class="tsd-kind-icon">Query<wbr>Options</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/reducefunction.html" class="tsd-kind-icon">Reduce<wbr>Function</a>
+					</li>
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/removeoptions.html" class="tsd-kind-icon">Remove<wbr>Options</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/schema.html" class="tsd-kind-icon">Schema</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/stage.html" class="tsd-kind-icon">Stage</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
+					<li class=" tsd-kind-interface tsd-is-not-exported">
+						<a href="interfaces/testdocument.html" class="tsd-kind-icon">Test<wbr>Document</a>
+					</li>
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/transformoptions.html" class="tsd-kind-icon">Transform<wbr>Options</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/transforms.html" class="tsd-kind-icon">Transforms</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/updateoptions.html" class="tsd-kind-icon">Update<wbr>Options</a>
 					</li>
-					<li class=" tsd-kind-type-alias tsd-is-external">
+					<li class=" tsd-kind-interface tsd-is-not-exported">
+						<a href="interfaces/userdoc.html" class="tsd-kind-icon">User<wbr>Doc</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-not-exported">
+						<a href="interfaces/userdocument.html" class="tsd-kind-icon">User<wbr>Document</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#bsontype" class="tsd-kind-icon">BSONType</a>
 					</li>
-					<li class=" tsd-kind-function tsd-is-external">
+					<li class=" tsd-kind-variable tsd-is-not-exported">
+						<a href="globals.html#core" class="tsd-kind-icon">core</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-is-not-exported">
+						<a href="globals.html#db" class="tsd-kind-icon">db</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-is-not-exported">
+						<a href="globals.html#hookemitter" class="tsd-kind-icon">hook<wbr>Emitter</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-is-not-exported">
+						<a href="globals.html#idb" class="tsd-kind-icon">iDB</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-is-not-exported">
+						<a href="globals.html#intensity" class="tsd-kind-icon">intensity</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-is-not-exported">
+						<a href="globals.html#results" class="tsd-kind-icon">results</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-is-not-exported">
+						<a href="globals.html#samples" class="tsd-kind-icon">samples</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-is-not-exported">
+						<a href="globals.html#settings" class="tsd-kind-icon">settings</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-is-not-exported">
+						<a href="globals.html#shouldreject" class="tsd-kind-icon">should<wbr>Reject</a>
+					</li>
+					<li class=" tsd-kind-function">
 						<a href="globals.html#binary" class="tsd-kind-icon">Binary</a>
 					</li>
-					<li class=" tsd-kind-function tsd-is-external">
+					<li class=" tsd-kind-function">
 						<a href="globals.html#buildurl" class="tsd-kind-icon">Build<wbr>Url</a>
 					</li>
-					<li class=" tsd-kind-function tsd-is-external">
+					<li class=" tsd-kind-function">
 						<a href="globals.html#collection" class="tsd-kind-icon">Collection</a>
 					</li>
-					<li class=" tsd-kind-function tsd-is-external">
+					<li class=" tsd-kind-function">
 						<a href="globals.html#defaultvalidators" class="tsd-kind-icon">Default<wbr>Validators</a>
 					</li>
-					<li class=" tsd-kind-function tsd-is-external">
+					<li class=" tsd-kind-function">
 						<a href="globals.html#expressmiddlewarefactory" class="tsd-kind-icon">Express<wbr>Middleware<wbr>Factory</a>
 					</li>
-					<li class=" tsd-kind-function tsd-has-type-parameter tsd-is-external">
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#mapreduce" class="tsd-kind-icon">Map<wbr>Reduce</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
 						<a href="globals.html#modelspecificinstance" class="tsd-kind-icon">Model<wbr>Specific<wbr>Instance</a>
 					</li>
-					<li class=" tsd-kind-function tsd-is-external">
+					<li class=" tsd-kind-function">
 						<a href="globals.html#objectid" class="tsd-kind-icon">ObjectID</a>
 					</li>
-					<li class=" tsd-kind-function tsd-is-external">
+					<li class=" tsd-kind-function">
 						<a href="globals.html#transform" class="tsd-kind-icon">Transform</a>
 					</li>
-					<li class=" tsd-kind-function tsd-is-external">
+					<li class=" tsd-kind-function">
 						<a href="globals.html#validate" class="tsd-kind-icon">Validate</a>
 					</li>
-					<li class=" tsd-kind-function tsd-is-external tsd-is-not-exported">
+					<li class=" tsd-kind-function tsd-is-not-exported">
+						<a href="globals.html#benchmark" class="tsd-kind-icon">benchmark</a>
+					</li>
+					<li class=" tsd-kind-function tsd-is-not-exported">
 						<a href="globals.html#buildhostlist" class="tsd-kind-icon">build<wbr>Host<wbr>List</a>
 					</li>
-					<li class=" tsd-kind-function tsd-is-external">
+					<li class=" tsd-kind-function">
 						<a href="globals.html#toobjectid" class="tsd-kind-icon">to<wbr>ObjectID</a>
 					</li>
-					<li class=" tsd-kind-object-literal tsd-is-external">
+					<li class=" tsd-kind-object-literal">
 						<a href="globals.html#defaulttransforms" class="tsd-kind-icon">Default<wbr>Transforms</a>
 					</li>
 				</ul>
