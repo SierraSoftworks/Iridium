@@ -4,6 +4,214 @@ For a human friendly description of what changed in each release, take a look
 at the [Releases](https://github.com/SierraSoftworks/Iridium/releases) page.
 
 
+## Version [7.2.0](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.2.0)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.2.0">tag: **v7.2.0**</a>
+
+```sh
+npm install iridium@7.2.0
+```
+
+### Changes
+ - [550dee5](https://github.com/SierraSoftworks/Iridium/commit/550dee5) 7.2.0
+ - [28a05d0](https://github.com/SierraSoftworks/Iridium/commit/28a05d0) doc: Update documentation
+ - [e88242c](https://github.com/SierraSoftworks/Iridium/commit/e88242c) doc: Update doc generation to avoid including extraneous info
+ - [227e965](https://github.com/SierraSoftworks/Iridium/commit/227e965) fix: Don't include test files in generated documentation
+ - [fd534fb](https://github.com/SierraSoftworks/Iridium/commit/fd534fb) doc: Update documentation
+ - [1f6c788](https://github.com/SierraSoftworks/Iridium/commit/1f6c788) fix: Correct export order for examples
+ - [e172b23](https://github.com/SierraSoftworks/Iridium/commit/e172b23) chore: Update NPM modules
+ - [8c01e17](https://github.com/SierraSoftworks/Iridium/commit/8c01e17) style: Tweak things to look like the rest of the Iridium codebase
+ - [a02dc9a](https://github.com/SierraSoftworks/Iridium/commit/a02dc9a) tweak: Make mapReduce output errors a bit easier to understand
+ - [5a7b63d](https://github.com/SierraSoftworks/Iridium/commit/5a7b63d) style: Fix a typo in the emit function's documentation
+ - [60e0db8](https://github.com/SierraSoftworks/Iridium/commit/60e0db8) Merge pull request #76 from RagibHasin/master
+ - [4cc024c](https://github.com/SierraSoftworks/Iridium/commit/4cc024c) fix: mapReduce test pending
+ - [84cd189](https://github.com/SierraSoftworks/Iridium/commit/84cd189) improve: mapReduce test remove documents from model before test
+ - [c4e87dd](https://github.com/SierraSoftworks/Iridium/commit/c4e87dd) fix: mapReduce private function improve: mapReduce output option parameter add: mapReduce error test case
+ - [e98d541](https://github.com/SierraSoftworks/Iridium/commit/e98d541) fix: mapReduce test
+ - [a53a28e](https://github.com/SierraSoftworks/Iridium/commit/a53a28e) Added mapReduce on Model
+ - [1adb2ef](https://github.com/SierraSoftworks/Iridium/commit/1adb2ef) test: Re-enable tests other than #73's repro
+ - [a2062b7](https://github.com/SierraSoftworks/Iridium/commit/a2062b7) test: Added reproduction case for #73
+ - [08ccd6d](https://github.com/SierraSoftworks/Iridium/commit/08ccd6d) fix #70: Improve documentation for Transform decorator on properties
+ - [cc702d7](https://github.com/SierraSoftworks/Iridium/commit/cc702d7) fix #69: Improve documentation for Validate decorator
+
+## Version [7.1.6](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.1.6)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.1.6">tag: **v7.1.6**</a>
+
+```sh
+npm install iridium@7.1.6
+```
+
+### Changes
+ - [a2fe04b](https://github.com/SierraSoftworks/Iridium/commit/a2fe04b) 7.1.6
+ - [a135f93](https://github.com/SierraSoftworks/Iridium/commit/a135f93) fix: Use the correct target when setting Transform decorators on a class
+ - [f5a7268](https://github.com/SierraSoftworks/Iridium/commit/f5a7268) test #70: Add tests to demonstrate class-level decorator failures for Transform
+
+## Version [7.1.5](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.1.5)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.1.5">tag: **v7.1.5**</a>
+
+```sh
+npm install iridium@7.1.5
+```
+
+### Changes
+ - [54bc543](https://github.com/SierraSoftworks/Iridium/commit/54bc543) 7.1.5
+ - [0d54379](https://github.com/SierraSoftworks/Iridium/commit/0d54379) chore: Update NPM packages
+
+## Version [7.1.4](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.1.4)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.1.4">tag: **v7.1.4**</a>
+
+```sh
+npm install iridium@7.1.4
+```
+
+### Changes
+ - [16b8907](https://github.com/SierraSoftworks/Iridium/commit/16b8907) 7.1.4
+ - [d8bde85](https://github.com/SierraSoftworks/Iridium/commit/d8bde85) fix #70: Ensure that Transform decorator can be applied to instance classes
+
+## Version [7.1.3](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.1.3)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.1.3">tag: **v7.1.3**</a>
+
+```sh
+npm install iridium@7.1.3
+```
+
+### Changes
+ - [542af39](https://github.com/SierraSoftworks/Iridium/commit/542af39) 7.1.3
+ - [104d967](https://github.com/SierraSoftworks/Iridium/commit/104d967) fix #68: Update Cursor to use new MongoDB client cursor type
+
+## Version [7.1.2](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.1.2)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.1.2">tag: **v7.1.2**</a>
+
+```sh
+npm install iridium@7.1.2
+```
+
+### Changes
+ - [9161b8a](https://github.com/SierraSoftworks/Iridium/commit/9161b8a) 7.1.2
+ - [51dc2f5](https://github.com/SierraSoftworks/Iridium/commit/51dc2f5) fix: Correct test definition now that Mocha has decent TS files
+
+## Version [7.1.1](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.1.1)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.1.1">tag: **v7.1.1**</a>
+
+```sh
+npm install iridium@7.1.1
+```
+
+### Changes
+ - [d37e501](https://github.com/SierraSoftworks/Iridium/commit/d37e501) 7.1.1
+ - [3b913af](https://github.com/SierraSoftworks/Iridium/commit/3b913af) Merged feature/test-upsert-ids into master
+ - [81e69c0](https://github.com/SierraSoftworks/Iridium/commit/81e69c0) fix: Elegantly handle insert() and create() with upsert: true and no _id specified.
+ - [3990aa5](https://github.com/SierraSoftworks/Iridium/commit/3990aa5) chore: Update type definition files
+
+## Version [7.1.0](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.1.0)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.1.0">tag: **v7.1.0**</a>
+
+```sh
+npm install iridium@7.1.0
+```
+
+### Changes
+ - [7ed07e4](https://github.com/SierraSoftworks/Iridium/commit/7ed07e4) 7.1.0
+ - [2547568](https://github.com/SierraSoftworks/Iridium/commit/2547568) doc: Update documentation
+ - [2d81b95](https://github.com/SierraSoftworks/Iridium/commit/2d81b95) refactor: Make Omnom easier to follow
+ - [ece5d59](https://github.com/SierraSoftworks/Iridium/commit/ece5d59) chore: Update to using TypeScript 2.1.4
+ - [a227f0b](https://github.com/SierraSoftworks/Iridium/commit/a227f0b) refactor: Enable compiling with allowImplicitAny: false
+ - [da7447f](https://github.com/SierraSoftworks/Iridium/commit/da7447f) feat: Expose Iridium's Changes interface publicly
+ - [6b3f22f](https://github.com/SierraSoftworks/Iridium/commit/6b3f22f) refactor: Move URL building out of Core
+ - [e61c57e](https://github.com/SierraSoftworks/Iridium/commit/e61c57e) doc: Improve inline docs for general helpers
+ - [a345f51](https://github.com/SierraSoftworks/Iridium/commit/a345f51) doc: Improve inline docs for decorators
+ - [969f394](https://github.com/SierraSoftworks/Iridium/commit/969f394) doc: Improve inline docs for cursors
+ - [571ea96](https://github.com/SierraSoftworks/Iridium/commit/571ea96) doc: Improve inline docs for some core methods
+ - [d735f86](https://github.com/SierraSoftworks/Iridium/commit/d735f86) chore: Update skmatc to 1.2.2
+ - [99ad887](https://github.com/SierraSoftworks/Iridium/commit/99ad887) Merged #63 into master
+ - [1654b47](https://github.com/SierraSoftworks/Iridium/commit/1654b47) Allow returning native promise from `Core.onConnected()`
+ - [7e045c9](https://github.com/SierraSoftworks/Iridium/commit/7e045c9) doc: Updated documentation
+
+## Version [7.0.3](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.3)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.3">tag: **v7.0.3**</a>
+
+```sh
+npm install iridium@7.0.3
+```
+
+### Changes
+ - [23c9ff3](https://github.com/SierraSoftworks/Iridium/commit/23c9ff3) 7.0.3
+ - [2922b2f](https://github.com/SierraSoftworks/Iridium/commit/2922b2f) refactor: Switch to using the native MongoDB type data for connection options
+ - [af62373](https://github.com/SierraSoftworks/Iridium/commit/af62373) chore: Update out of date packages
+
+## Version [7.0.2](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.2)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.2">tag: **v7.0.2**</a>
+
+```sh
+npm install iridium@7.0.2
+```
+
+### Changes
+ - [29ee5e9](https://github.com/SierraSoftworks/Iridium/commit/29ee5e9) 7.0.2
+ - [edb1428](https://github.com/SierraSoftworks/Iridium/commit/edb1428) Merged fix/update-one-return-value into master
+ - [df39cea](https://github.com/SierraSoftworks/Iridium/commit/df39cea) fix: Ensure that update returns the correct answer for single updates
+
+## Version [7.0.1](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.1)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.1">tag: **v7.0.1**</a>
+
+```sh
+npm install iridium@7.0.1
+```
+
+### Changes
+ - [47f9831](https://github.com/SierraSoftworks/Iridium/commit/47f9831) 7.0.1
+ - [e2f9c25](https://github.com/SierraSoftworks/Iridium/commit/e2f9c25) fix #55: Correct behavior of update() operation with `multi: false` option
+ - [6a44a87](https://github.com/SierraSoftworks/Iridium/commit/6a44a87) feat: Add a yarn.lock file
+ - [1ec605e](https://github.com/SierraSoftworks/Iridium/commit/1ec605e) fix: Update package to require Node 6
+
+## Version [7.0.0](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0">tag: **v7.0.0**</a>
+
+```sh
+npm install iridium@7.0.0
+```
+
+### Changes
+ - [09f6e2c](https://github.com/SierraSoftworks/Iridium/commit/09f6e2c) 7.0.0
+ - [fdd9ff7](https://github.com/SierraSoftworks/Iridium/commit/fdd9ff7) fix: Correct BitHound config file
+ - [8f483b8](https://github.com/SierraSoftworks/Iridium/commit/8f483b8) doc: Update Iridium requirements
+ - [ff519b7](https://github.com/SierraSoftworks/Iridium/commit/ff519b7) doc: Update README to remove reference to typings
+
+## Version [7.0.0-alpha.17](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.17)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.17">tag: **v7.0.0-alpha.17**</a>
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/7.0.0-dev">branch: **7.0.0-dev**</a>
+
+```sh
+npm install iridium@7.0.0-alpha.17
+```
+
+### Changes
+ - [3f1242d](https://github.com/SierraSoftworks/Iridium/commit/3f1242d) 7.0.0-alpha.17
+ - [e7c4b7b](https://github.com/SierraSoftworks/Iridium/commit/e7c4b7b) chore: Update packages
+
+## Version [7.0.0-alpha.16](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.16)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.16">tag: **v7.0.0-alpha.16**</a>
+
+```sh
+npm install iridium@7.0.0-alpha.16
+```
+
+### Changes
+ - [1c0f53d](https://github.com/SierraSoftworks/Iridium/commit/1c0f53d) 7.0.0-alpha.16
+ - [1f4e26a](https://github.com/SierraSoftworks/Iridium/commit/1f4e26a) fix: Correct issues seen in #47
+
+## Version [7.0.0-alpha.15](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.15)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.15">tag: **v7.0.0-alpha.15**</a>
+
+```sh
+npm install iridium@7.0.0-alpha.15
+```
+
+### Changes
+ - [327719d](https://github.com/SierraSoftworks/Iridium/commit/327719d) 7.0.0-alpha.15
+ - [2b348a4](https://github.com/SierraSoftworks/Iridium/commit/2b348a4) fix: Allow standard BSON types to be used with
+ - [e850d5d](https://github.com/SierraSoftworks/Iridium/commit/e850d5d) ci: Fix coverage remapping for lcov and json
+ - [1f89416](https://github.com/SierraSoftworks/Iridium/commit/1f89416) doc: Updated changelog
+
 ## Version [7.0.0-alpha.14](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.14)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.14">tag: **v7.0.0-alpha.14**</a>
 
@@ -1244,7 +1452,7 @@ npm install iridium@5.0.0-alpha.1
 
 ## Version [4.0.1](https://github.com/SierraSoftworks/Iridium/releases/tag/v4.0.1)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v4.0.1">tag: **v4.0.1**</a>
-<a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/master">branch: **master**</a> <a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/v4">branch: **v4**</a>
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/v4">branch: **v4**</a>
 
 ```sh
 npm install iridium@4.0.1
