@@ -34,7 +34,7 @@
     "changelog": "node build/changelog.js",
     "doc": "npm run doc:build && npm run doc:publish && npm run doc:submodule",
     "predoc:build": "cd ./doc && git checkout gh-pages",
-    "doc:build": "typedoc --out ./doc --mode file --name Iridium iridium.ts",
+    "doc:build": "typedoc --out ./doc --mode file --name Iridium --exclude test/**/* iridium.ts",
     "postdoc:build": "echo gitdir: ../.git/modules/doc> ./doc/.git",
     "doc:stage": "cd ./doc && git add -A",
     "doc:commit": "cd ./doc && git diff --cached --exit-code && git commit -m \"doc: Update documentation\" || true",
