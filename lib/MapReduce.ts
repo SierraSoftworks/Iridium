@@ -5,6 +5,8 @@ import { Instance } from "./Instance"
 declare global {
     /**
      * Emits a key-value pair for mapping.
+     * This is NOT a global function but is a MongoDB srever internal function.
+     * Only use in map function and nowhere else.
      * 
      * @param {any} key Key to emit
      * @param {any} value Value to emit
@@ -14,8 +16,10 @@ declare global {
 
 /**
  * A function to map values.
+ * Values are mapped by calling a MongoDB server internal function `emit`.
  * 
  * @param TDocument Interface of the document it works on.
+ * @return {void} Nothing
  */
 export interface MapFunction<TDocument> {
     (this: TDocument): void
@@ -57,4 +61,8 @@ export interface MapReducedDocument<Key, Value> {
 export interface MapReduceFunctions<TDocument, Key, Value> {
     map: MapFunction<TDocument>
     reduce: ReduceFunction<Key, Value>
+}
+
+export interface MapReduceOptions extends MongoDB.MapReduceOptions {
+    out?: "inline" | "replace" | "merge" | "reduce"
 }

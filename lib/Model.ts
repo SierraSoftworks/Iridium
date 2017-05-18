@@ -28,7 +28,7 @@ import {ModelSpecificInstance} from "./ModelSpecificInstance";
 import {InstanceImplementation} from "./InstanceInterface";
 import {Transforms, DefaultTransforms} from "./Transforms";
 import * as AggregationPipeline from "./Aggregate";
-import {MapFunction, ReduceFunction, MapReducedDocument, MapReduceFunctions} from './MapReduce';
+import {MapFunction, ReduceFunction, MapReducedDocument, MapReduceFunctions, MapReduceOptions} from "./MapReduce";
 
 /**
  * An Iridium Model which represents a structured MongoDB collection.
@@ -693,50 +693,52 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
         });
     }
 
-    private _mapReduce<Key, Value>(instanceType: InstanceImplementation<MapReducedDocument<Key, Value>, any>, options: MongoDB.MapReduceOptions): Bluebird<void> {
-        return new Bluebird<void>((resolve, reject) => {
-            if (instanceType.mapReduceOptions == undefined)
-                reject(new Error("Cannot mapReduce to this instance."))
-            else
-                this.collection.mapReduce(instanceType.mapReduceOptions.map, instanceType.mapReduceOptions.reduce, options, (err, data) => {
-                    if (err) return reject(err)
-                    return resolve()
-                })
-        })
-    }
-
     /**
-     * 
-     * @param functions Map and Reduce functions
-     * @param options Options
-     * 
-     * @return Map promise
+     * Runs a mapReduce operation in MongoDB and returns the contents of the resulting collection.
+     * @param functions The mapReduce functions which will be passed to MongoDB to complete the operation.
+     * @param options Options used to configure how MongoDB runs the mapReduce operation on your collection.
+     * @return A promise which completes when the mapReduce operation has written its results to the provided collection.
      */
-    mapReduce<Key, Value>(functions: MapReduceFunctions<TDocument, Key, Value>, options: MongoDB.MapReduceOptions): Bluebird<MapReducedDocument<Key, Value>[]>;
+    mapReduce<Key, Value>(functions: MapReduceFunctions<TDocument, Key, Value>, options: MapReduceOptions): Bluebird<MapReducedDocument<Key, Value>[]>;
     /**
-     * 
-     * @param instanceType Returned instance type
-     * @param options Options
-     * 
-     * @return Void promise
+     * Runs a mapReduce operation in MongoDB and writes the results to a collection.
+     * @param instanceType An Iridium.Instance type whichThe mapReduce functions which will be passed to MongoDB to complete the operation.
+     * @param options Options used to configure how MongoDB runs the mapReduce operation on your collection.
+     * @return A promise which completes when the mapReduce operation has written its results to the provided collection.
      */
-    mapReduce<Key, Value>(instanceType: InstanceImplementation<MapReducedDocument<Key, Value>, any>, options: MongoDB.MapReduceOptions): Bluebird<void>;
-    mapReduce<Key, Value>(functions: InstanceImplementation<MapReducedDocument<Key, Value>, any> | MapReduceFunctions<TDocument, Key, Value>, options: MongoDB.MapReduceOptions) {
+    mapReduce<Key, Value>(instanceType: InstanceImplementation<MapReducedDocument<Key, Value>, any> & { mapReduceOptions: MapReduceFunctions<TDocument, Key, Value> },
+        options: MapReduceOptions): Bluebird<void>;
+    mapReduce<Key, Value>(functions: (InstanceImplementation<MapReducedDocument<Key, Value>, any> & { mapReduceOptions: MapReduceFunctions<TDocument, Key, Value> }) |
+        MapReduceFunctions<TDocument, Key, Value>, options: MapReduceOptions) {
         type fn = MapReduceFunctions<TDocument, Key, Value>;
-        type inst = InstanceImplementation<MapReducedDocument<Key, Value>, any>;
-        if ((<fn>functions).map)
+
+        if ((<fn>functions).map) {
             return new Bluebird<MapReducedDocument<Key, Value>[]>((resolve, reject) => {
-                if (options.out && options.out && (<any>options.out).inline != 1 )
+                if (options.out && options.out != "inline")
                     return reject(new Error("Use inline output option"));
-                else
-                    options.out = { inline: 1 }
-                this.collection.mapReduce((<fn>functions).map, (<fn>functions).reduce, options, function (err, data) {
+                let opts = <MongoDB.MapReduceOptions>options
+                opts.out = { inline: 1 }
+                this.collection.mapReduce((<fn>functions).map, (<fn>functions).reduce, opts, function (err, data) {
                     if (err) return reject(err);
                     return resolve(data);
                 })
             })
-        else
-            return this._mapReduce(<inst>functions, options);
+        }
+        else {
+            let instanceType = <InstanceImplementation<MapReducedDocument<Key, Value>, any> & { mapReduceOptions: MapReduceFunctions<TDocument, Key, Value> }>functions
+            return new Bluebird<void>((resolve, reject) => {
+                if (options.out && options.out == "inline")
+                    return reject(new Error("Output cannot be inline"));
+                let opts = <MongoDB.MapReduceOptions>options
+                let out : {[op: string]: string} = {}
+                out[(<string>options.out)] = instanceType.collection
+                opts.out = out
+                this.collection.mapReduce(instanceType.mapReduceOptions.map, instanceType.mapReduceOptions.reduce, opts, (err, data) => {
+                    if (err) return reject(err)
+                    return resolve()
+                })
+            })
+        }
     }
 
     /**

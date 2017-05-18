@@ -5,6 +5,8 @@ import * as Promise from "bluebird";
 import * as _ from "lodash";
 import * as chai from "chai";
 
+// This test folows the example depicted on https://docs.mongodb.com/manual/core/map-reduce/
+
 interface TestDocument {
     _id?: string;
     cust_id: string;
@@ -34,9 +36,7 @@ class MapReducedInstance extends Iridium.Instance<Iridium.MapReducedDocument<str
             emit(this.cust_id, this.amount);
         },
         reduce: function (key: string, values: number[]) {
-            var sum = 0;
-            values.forEach(function (val, i, arr) { sum += val });
-            return sum;
+            return values.reduce((sum, val) => sum + val, 0)
         }
     }
     _id: string
@@ -61,46 +61,42 @@ describe("Model", () => {
         });
 
         it("should correctly map and reduce with model", () => {
-            let t = model.mapReduce(MapReducedInstance, { 
-                out: { 
-                    replace: "mapReduced" 
-                }, query: { status: "A" } }).then(() => {
+            let t = model.mapReduce(MapReducedInstance, {
+                out: "replace", query: { status: "A" }
+            }).then(() => {
                 let reducedModel = new Iridium.Model<Iridium.MapReducedDocument<string, number>, MapReducedInstance>(core, MapReducedInstance);
                 return reducedModel.find().toArray()
             })
             return chai.expect(t).to.eventually.exist.and.have.length(2);
         });
 
-        it("should correctly map and reduce inline", () => {
+        it("should correctly map and reduce inline without specifying out option", () => {
             let t = model.mapReduce({
                 map: function (this: TestDocument) {
                     emit(this.cust_id, this.amount);
                 }, reduce: function (k: string, v: number[]) {
-                    var sum = 0;
-                    v.forEach((val, i, arr) => { sum += val });
-                    return sum;
+                    return v.reduce((sum, val) => sum + val, 0)
                 }
-            }, { out: { inline: 1 }, query: { status: "A" } })
+            }, { query: { status: "A" } })
             return chai.expect(t).to.eventually.exist.and.have.length(2);
         });
 
-        /*
-                it("should correctly pass through the aggregation pipeline", () => {
-                    return chai.expect(model.aggregate([
-                        { $group: { _id: "$group", score: { $sum: "$score" } } }
-                    ])).to.eventually.exist.and.have.length(3);
-                });
-        
-                it("should allow you to specify the type of the resulting documents", () => {
-                    return model.aggregate<{ _id: string; score: number; }>([
-                        { $match: { group: "A" } },
-                        { $group: { _id: "$group", score: { $sum: "$score" } } }
-                    ]).then(results => {
-                        chai.expect(results).to.exist.and.have.length(1);
-                        chai.expect(results[0]._id).to.eql("A");
-                        chai.expect(results[0].score).to.eql(23);
-                    });
-                });
-                */
+        it("should reject with wrong out option for inline", () => {
+            let t = model.mapReduce({
+                map: function (this: TestDocument) {
+                    emit(this.cust_id, this.amount);
+                }, reduce: function (k: string, v: number[]) {
+                    return v.reduce((sum, val) => sum + val, 0)
+                }
+            }, { out: "replace", query: { status: "A" } })
+            return chai.expect(t).to.eventually.be.rejected
+        });
+
+        it("should reject with wrong out option for model", () => {
+            let t = model.mapReduce(MapReducedInstance, {
+                out: "inline", query: { status: "A" }
+            })
+            return chai.expect(t).to.eventually.be.rejected
+        });
     });
 });

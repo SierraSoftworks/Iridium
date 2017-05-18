@@ -22,7 +22,7 @@
     "build": "tsc",
     "pretest": "npm run build",
     "prepublish": "npm run build",
-    "test": "mocha --opts test/mocha.opts dist/test/*.js && mocha --opts test/mocha.opts dist/test",
+    "test": "mocha --opts test/mocha.opts dist/test",
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- --opts test/mocha.opts dist/test",
     "postcoverage": "npm run coverage:remap:lcov",
     "coverage:remap:lcov": "remap-istanbul -i coverage/coverage.json -o coverage/lcov.info -t lcovonly",

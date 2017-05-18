@@ -5,7 +5,7 @@ import * as Index from "./Index";
 import {CacheDirector} from "./CacheDirector";
 import {Transforms} from "./Transforms";
 import {Changes} from "./Changes";
-import {MapFunction, ReduceFunction, MapReduceFunctions} from './MapReduce'
+import {MapFunction, ReduceFunction, MapReduceFunctions} from "./MapReduce"
 
 /**
  * This interface dictates the format of an instance class which wraps documents received
