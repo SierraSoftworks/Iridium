@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "version": true,
+        "module": "commonjs",
+        "target": "es6",
+        "sourceMap": true,
+        "declaration": true,
+        "experimentalDecorators": true,
+        "noEmit": true,
+        "moduleResolution": "node",
+        "strictNullChecks": true,
+        "noImplicitThis": true,
+        "noImplicitAny": true
+    },
+    "exclude": [
+        "benchmarks",
+        "dist",
+        "example",
+        "node_modules",
+        "test"
+    ]
+}
