@@ -5,7 +5,7 @@ import { Instance } from "./Instance"
 declare global {
     /**
      * Emits a key-value pair for mapping.
-     * This is NOT a global function but is a MongoDB srever internal function.
+     * This is NOT a global function but is a MongoDB server internal function.
      * Only use in map function and nowhere else.
      * 
      * @param {any} key Key to emit
