@@ -7,7 +7,7 @@ import {Index, IndexSpecification} from "./Index";
 import {Schema} from "./Schema";
 import {InstanceImplementation} from "./InstanceInterface";
 import {Transforms, DefaultTransforms} from "./Transforms";
-import * as MapReduceDef from './MapReduce';
+import * as MapReduceDef from "./MapReduce";
 
 /**
  * Specifies the name of the collection to which this instance's documents should be sent.
@@ -179,8 +179,7 @@ export function Binary(target: Instance<any, any>, name: string) {
  * classes. If your transpiler does not support decorators then you are free to make use of the
  * property instead.
  */
-export function MapReduce<TDocument, Key, Value>(map: MapReduceDef.MapFunction<TDocument>,
-	reduce: MapReduceDef.ReduceFunction<Key, Value>) {
+export function MapReduce<TDocument, Key, Value>(map: MapReduceDef.MapFunction<TDocument>, reduce: MapReduceDef.ReduceFunction<Key, Value>) {
 	return function (target: InstanceImplementation<any, any>) {
 		target.mapReduceOptions = { map: map, reduce: reduce };
 	};

@@ -716,27 +716,27 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
             return new Bluebird<MapReducedDocument<Key, Value>[]>((resolve, reject) => {
                 if (options.out && options.out != "inline")
                     return reject(new Error("Expected inline mapReduce output mode for this method signature"));
-                let opts = <MongoDB.MapReduceOptions>options
-                opts.out = { inline: 1 }
+                let opts = <MongoDB.MapReduceOptions>options;
+                opts.out = { inline: 1 };
                 this.collection.mapReduce((<fn>functions).map, (<fn>functions).reduce, opts, function (err, data) {
                     if (err) return reject(err);
                     return resolve(data);
-                })
+                });
             })
         }
         else {
-            let instanceType = <InstanceImplementation<MapReducedDocument<Key, Value>, any> & { mapReduceOptions: MapReduceFunctions<TDocument, Key, Value> }>functions
+            let instanceType = <InstanceImplementation<MapReducedDocument<Key, Value>, any> & { mapReduceOptions: MapReduceFunctions<TDocument, Key, Value> }>functions;
             return new Bluebird<void>((resolve, reject) => {
                 if (options.out && options.out == "inline")
                     return reject(new Error("Expected a non-inline mapReduce output mode for this method signature"));
-                let opts = <MongoDB.MapReduceOptions>options
-                let out : {[op: string]: string} = {}
-                out[(<string>options.out)] = instanceType.collection
-                opts.out = out
+                let opts = <MongoDB.MapReduceOptions>options;
+                let out : {[op: string]: string} = {};
+                out[(<string>options.out)] = instanceType.collection;
+                opts.out = out;
                 this.collection.mapReduce(instanceType.mapReduceOptions.map, instanceType.mapReduceOptions.reduce, opts, (err, data) => {
-                    if (err) return reject(err)
-                    return resolve()
-                })
+                    if (err) return reject(err);
+                    return resolve();
+                });
             })
         }
     }

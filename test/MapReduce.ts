@@ -36,11 +36,12 @@ class MapReducedInstance extends Iridium.Instance<Iridium.MapReducedDocument<str
             emit(this.cust_id, this.amount);
         },
         reduce: function (key: string, values: number[]) {
-            return values.reduce((sum, val) => sum + val, 0)
+            return values.reduce((sum, val) => sum + val, 0);
         }
     }
-    _id: string
-    value: number
+
+    _id: string;
+    value: number;
 }
 
 describe("Model", () => {
@@ -64,7 +65,7 @@ describe("Model", () => {
             let reducedModel = new Iridium.Model<Iridium.MapReducedDocument<string, number>, MapReducedInstance>(core, MapReducedInstance);
             let t = reducedModel.remove().then(() => model.mapReduce(MapReducedInstance, {
                 out: "replace", query: { status: "A" }
-            }).then(() => reducedModel.find().toArray()))
+            }).then(() => reducedModel.find().toArray()));
             return chai.expect(t).to.eventually.exist.and.have.length(2);
         });
 
@@ -73,9 +74,9 @@ describe("Model", () => {
                 map: function (this: TestDocument) {
                     emit(this.cust_id, this.amount);
                 }, reduce: function (k: string, v: number[]) {
-                    return v.reduce((sum, val) => sum + val, 0)
+                    return v.reduce((sum, val) => sum + val, 0);
                 }
-            }, { query: { status: "A" } })
+            }, { query: { status: "A" } });
             return chai.expect(t).to.eventually.exist.and.have.length(2);
         });
 
@@ -84,17 +85,17 @@ describe("Model", () => {
                 map: function (this: TestDocument) {
                     emit(this.cust_id, this.amount);
                 }, reduce: function (k: string, v: number[]) {
-                    return v.reduce((sum, val) => sum + val, 0)
+                    return v.reduce((sum, val) => sum + val, 0);
                 }
-            }, { out: "replace", query: { status: "A" } })
-            return chai.expect(t).to.eventually.be.rejected
+            }, { out: "replace", query: { status: "A" } });
+            return chai.expect(t).to.eventually.be.rejected;
         });
 
         it("should reject with wrong out option for model", () => {
             let t = model.mapReduce(MapReducedInstance, {
                 out: "inline", query: { status: "A" }
-            })
-            return chai.expect(t).to.eventually.be.rejected
+            });
+            return chai.expect(t).to.eventually.be.rejected;
         });
     });
 });
