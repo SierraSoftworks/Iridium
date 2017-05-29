@@ -730,17 +730,16 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
             return new Bluebird<void>((resolve, reject) => {
                 if (options.out && options.out == "inline")
                     return reject(new Error("Expected a non-inline mapReduce output mode for this method signature"));
+                if (!instanceType.mapReduceOptions)
+                    return reject(new Error("mapReduceOptions not provided"));
                 let opts = <MongoDB.MapReduceOptions>options;
                 let out : {[op: string]: string} = {};
                 out[(<string>options.out)] = instanceType.collection;
                 opts.out = out;
-                if (instanceType.mapReduceOptions) {
-                    this.collection.mapReduce(instanceType.mapReduceOptions.map, instanceType.mapReduceOptions.reduce, opts, (err, data) => {
-                        if (err) return reject(err);
-                        return resolve();
-                    });
-                }
-                else return reject("mapReduceOptions not provided");
+                this.collection.mapReduce(instanceType.mapReduceOptions.map, instanceType.mapReduceOptions.reduce, opts, (err, data) => {
+                    if (err) return reject(err);
+                    return resolve();
+                });
             })
         }
     }
