@@ -35,7 +35,7 @@ export interface MapFunction<TDocument> {
  * @param {Value[]} values The values to reduce
  */
 export interface ReduceFunction<Key, Value> {
-    (key: Key, values: Value[]): Value
+    (key: Key, values: Value[]): Value | Value[] | any
 }
 
 /**

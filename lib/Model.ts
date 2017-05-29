@@ -271,7 +271,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
         conditions = this._helpers.convertToDB(conditions);
 
         let cursor = this.collection.find(conditions);
-        
+
         if(fields)
             cursor = cursor.project(fields);
 
@@ -383,18 +383,18 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
             if (cachedDocument) return cachedDocument;
             return new Bluebird<TDocument|null>((resolve, reject) => {
                 let cursor = this.collection.find(conditions);
-                    
+
                 if(options!.sort)
                     cursor = cursor.sort(options!.sort!);
-                
+
                 if(typeof options!.skip === "number")
                     cursor = cursor.skip(options!.skip!);
-                
+
                 cursor = cursor.limit(1);
-                    
+
                 if(options!.fields)
                     cursor = cursor.project(options!.fields!);
-                
+
                 return cursor.next((err, result) => {
                     if (err) return reject(err);
                     return resolve(result);
@@ -573,7 +573,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
 
                 if (opts.multi)
                     return this.collection.updateMany(conditions, changes, opts, callback);
-                
+
                 return this.collection.updateOne(conditions, changes, opts, callback)
             })
         }).nodeify(callback);
@@ -671,7 +671,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
                     if (err) return reject(err);
                     return resolve(response.result.n);
                 });
-                
+
                 this.collection.deleteMany(conditions, options!, (err, response) => {
                     if (err) return reject(err);
                     return resolve(response.result.n);
@@ -706,11 +706,12 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      * @param options Options used to configure how MongoDB runs the mapReduce operation on your collection.
      * @return A promise which completes when the mapReduce operation has written its results to the provided collection.
      */
-    mapReduce<Key, Value>(instanceType: InstanceImplementation<MapReducedDocument<Key, Value>, any> & { mapReduceOptions: MapReduceFunctions<TDocument, Key, Value> },
+    mapReduce<Key, Value>(instanceType: InstanceImplementation<MapReducedDocument<Key, Value>, any>,
         options: MapReduceOptions): Bluebird<void>;
-    mapReduce<Key, Value>(functions: (InstanceImplementation<MapReducedDocument<Key, Value>, any> & { mapReduceOptions: MapReduceFunctions<TDocument, Key, Value> }) |
+    mapReduce<Key, Value>(functions: InstanceImplementation<MapReducedDocument<Key, Value>, any> |
         MapReduceFunctions<TDocument, Key, Value>, options: MapReduceOptions) {
         type fn = MapReduceFunctions<TDocument, Key, Value>;
+        type instance = InstanceImplementation<MapReducedDocument<Key, Value>, any>
 
         if ((<fn>functions).map) {
             return new Bluebird<MapReducedDocument<Key, Value>[]>((resolve, reject) => {
@@ -725,10 +726,12 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
             })
         }
         else {
-            let instanceType = <InstanceImplementation<MapReducedDocument<Key, Value>, any> & { mapReduceOptions: MapReduceFunctions<TDocument, Key, Value> }>functions;
+            let instanceType = <instance>functions;
             return new Bluebird<void>((resolve, reject) => {
                 if (options.out && options.out == "inline")
                     return reject(new Error("Expected a non-inline mapReduce output mode for this method signature"));
+                if (!instanceType.mapReduceOptions)
+                    return reject(new Error("mapReduceOptions not provided"));
                 let opts = <MongoDB.MapReduceOptions>options;
                 let out : {[op: string]: string} = {};
                 out[(<string>options.out)] = instanceType.collection;
