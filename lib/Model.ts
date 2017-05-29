@@ -731,7 +731,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
                 if (options.out && options.out == "inline")
                     return reject(new Error("Expected a non-inline mapReduce output mode for this method signature"));
                 if (!instanceType.mapReduceOptions)
-                    return reject(new Error("mapReduceOptions not provided"));
+                    return reject(new Error("Expected mapReduceOptions to be specified on the instance type"));
                 let opts = <MongoDB.MapReduceOptions>options;
                 let out : {[op: string]: string} = {};
                 out[(<string>options.out)] = instanceType.collection;
