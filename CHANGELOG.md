@@ -4,6 +4,21 @@ For a human friendly description of what changed in each release, take a look
 at the [Releases](https://github.com/SierraSoftworks/Iridium/releases) page.
 
 
+## Version [7.2.1](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.2.1)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.2.1">tag: **v7.2.1**</a>
+
+```sh
+npm install iridium@7.2.1
+```
+
+### Changes
+ - [8bc77dd](https://github.com/SierraSoftworks/Iridium/commit/8bc77dd) 7.2.1
+ - [f5e543f](https://github.com/SierraSoftworks/Iridium/commit/f5e543f) style: Improve error message for missing mapReduceOptions on instance
+ - [23a3d1a](https://github.com/SierraSoftworks/Iridium/commit/23a3d1a) Merge pull request #78 from RagibHasin/master
+ - [5eb054f](https://github.com/SierraSoftworks/Iridium/commit/5eb054f) Fix code quality with mapReduce
+ - [c79b2a4](https://github.com/SierraSoftworks/Iridium/commit/c79b2a4) Fix mapReduce reduce function return type, mapReduce parameter validation and add new tests
+ - [db0d44e](https://github.com/SierraSoftworks/Iridium/commit/db0d44e) doc: Update changelog
+
 ## Version [7.2.0](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.2.0)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.2.0">tag: **v7.2.0**</a>
 
