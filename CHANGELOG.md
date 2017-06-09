@@ -4,6 +4,19 @@ For a human friendly description of what changed in each release, take a look
 at the [Releases](https://github.com/SierraSoftworks/Iridium/releases) page.
 
 
+## Version [7.2.2](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.2.2)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.2.2">tag: **v7.2.2**</a>
+
+```sh
+npm install iridium@7.2.2
+```
+
+### Changes
+ - [5453437](https://github.com/SierraSoftworks/Iridium/commit/5453437) 7.2.2
+ - [33d7019](https://github.com/SierraSoftworks/Iridium/commit/33d7019) chore: Update to support latest TypeScript compiler and MongoDB type definitions
+ - [fdc71d1](https://github.com/SierraSoftworks/Iridium/commit/fdc71d1) doc: Update changelog
+ - [6e726ea](https://github.com/SierraSoftworks/Iridium/commit/6e726ea) doc: Update documentation
+
 ## Version [7.2.1](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.2.1)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.2.1">tag: **v7.2.1**</a>
 

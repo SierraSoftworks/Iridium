@@ -150,20 +150,12 @@ describe("Core",() => {
             let core = new Iridium.Core({
                 database: "test",
                 options: {
-                    server: {
-                        socketOptions: {
-                            connectTimeoutMS: 1000
-                        }
-                    }
+                    connectTimeoutMS: 1000
                 }
             });
 
             chai.expect(core.settings!.options).to.eql({
-                server: {
-                    socketOptions: {
-                        connectTimeoutMS: 1000
-                    }
-                }
+                connectTimeoutMS: 1000
             });
         });
     });
