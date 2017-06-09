@@ -397,7 +397,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
 
                 return cursor.next((err, result) => {
                     if (err) return reject(err);
-                    return resolve(result);
+                    return resolve(<TDocument|null>result);
                 });
             });
         }).then((document) => {
@@ -799,15 +799,18 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      */
     dropIndex(index: Index.IndexSpecification, callback?: General.Callback<boolean>): Bluebird<boolean>;
     dropIndex(specification: string | Index.IndexSpecification, callback?: General.Callback<boolean>): Bluebird<boolean> {
-        let index: string;
+        let index: string|undefined;
 
         if (typeof (specification) === "string") index = <string>specification;
         else {
             index = _(<Index.IndexSpecification>specification).map((direction: number, key: string) => `${key}_${direction}`).reduce<string>((x, y) => `${x}_${y}`);
         }
 
+        if (!index)
+            return Bluebird.reject(new Error("Expected a valid index name to be provided"));
+
         return new Bluebird<boolean>((resolve, reject) => {
-            this.collection.dropIndex(index, (err: Error, result: { ok: number }) => {
+            this.collection.dropIndex(index!, (err: Error, result: { ok: number }) => {
                 if (err) return reject(err);
                 return resolve(<any>!!result.ok);
             });
