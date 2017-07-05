@@ -4,6 +4,23 @@ For a human friendly description of what changed in each release, take a look
 at the [Releases](https://github.com/SierraSoftworks/Iridium/releases) page.
 
 
+## Version [7.2.4](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.2.4)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.2.4">tag: **v7.2.4**</a>
+
+```sh
+npm install iridium@7.2.4
+```
+
+### Changes
+ - [5175f06](https://github.com/SierraSoftworks/Iridium/commit/5175f06) 7.2.4
+ - [f1c5d28](https://github.com/SierraSoftworks/Iridium/commit/f1c5d28) Merge remote-tracking branch 'EMSSConsulting/release'
+ - [7637ccf](https://github.com/SierraSoftworks/Iridium/commit/7637ccf) tweak: refactoring unit test.
+ - [bca530c](https://github.com/SierraSoftworks/Iridium/commit/bca530c) fix: $pull bug
+ - [9ee0709](https://github.com/SierraSoftworks/Iridium/commit/9ee0709) tweak: refactoring unit test.
+ - [ec3217d](https://github.com/SierraSoftworks/Iridium/commit/ec3217d) fix: $pull bug
+ - [55cd409](https://github.com/SierraSoftworks/Iridium/commit/55cd409) Merge branch 'master' into release
+ - [1d4ebb4](https://github.com/SierraSoftworks/Iridium/commit/1d4ebb4) doc: Update changlog
+
 ## Version [7.2.3](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.2.3)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.2.3">tag: **v7.2.3**</a>
 
@@ -14,6 +31,7 @@ npm install iridium@7.2.3
 ### Changes
  - [b13e55a](https://github.com/SierraSoftworks/Iridium/commit/b13e55a) 7.2.3
  - [2fba993](https://github.com/SierraSoftworks/Iridium/commit/2fba993) chore: Update skmatc to the latest version
+ - [f9feb69](https://github.com/SierraSoftworks/Iridium/commit/f9feb69) Merge branch 'master' into release
  - [a1ad0ec](https://github.com/SierraSoftworks/Iridium/commit/a1ad0ec) doc: Update documentation
  - [6155809](https://github.com/SierraSoftworks/Iridium/commit/6155809) doc: Update changelog
 
@@ -27,6 +45,7 @@ npm install iridium@7.2.2
 ### Changes
  - [5453437](https://github.com/SierraSoftworks/Iridium/commit/5453437) 7.2.2
  - [33d7019](https://github.com/SierraSoftworks/Iridium/commit/33d7019) chore: Update to support latest TypeScript compiler and MongoDB type definitions
+ - [bad4b0d](https://github.com/SierraSoftworks/Iridium/commit/bad4b0d) Merge branch 'master' into release
  - [fdc71d1](https://github.com/SierraSoftworks/Iridium/commit/fdc71d1) doc: Update changelog
  - [6e726ea](https://github.com/SierraSoftworks/Iridium/commit/6e726ea) doc: Update documentation
 
@@ -43,6 +62,7 @@ npm install iridium@7.2.1
  - [23a3d1a](https://github.com/SierraSoftworks/Iridium/commit/23a3d1a) Merge pull request #78 from RagibHasin/master
  - [5eb054f](https://github.com/SierraSoftworks/Iridium/commit/5eb054f) Fix code quality with mapReduce
  - [c79b2a4](https://github.com/SierraSoftworks/Iridium/commit/c79b2a4) Fix mapReduce reduce function return type, mapReduce parameter validation and add new tests
+ - [5a6639c](https://github.com/SierraSoftworks/Iridium/commit/5a6639c) Merge branch 'master' into release
  - [db0d44e](https://github.com/SierraSoftworks/Iridium/commit/db0d44e) doc: Update changelog
 
 ## Version [7.2.0](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.2.0)
@@ -73,6 +93,7 @@ npm install iridium@7.2.0
  - [a2062b7](https://github.com/SierraSoftworks/Iridium/commit/a2062b7) test: Added reproduction case for #73
  - [08ccd6d](https://github.com/SierraSoftworks/Iridium/commit/08ccd6d) fix #70: Improve documentation for Transform decorator on properties
  - [cc702d7](https://github.com/SierraSoftworks/Iridium/commit/cc702d7) fix #69: Improve documentation for Validate decorator
+ - [78109f4](https://github.com/SierraSoftworks/Iridium/commit/78109f4) Merge branch 'master' into release
 
 ## Version [7.1.6](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.1.6)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.1.6">tag: **v7.1.6**</a>
@@ -85,6 +106,8 @@ npm install iridium@7.1.6
  - [a2fe04b](https://github.com/SierraSoftworks/Iridium/commit/a2fe04b) 7.1.6
  - [a135f93](https://github.com/SierraSoftworks/Iridium/commit/a135f93) fix: Use the correct target when setting Transform decorators on a class
  - [f5a7268](https://github.com/SierraSoftworks/Iridium/commit/f5a7268) test #70: Add tests to demonstrate class-level decorator failures for Transform
+ - [6bb1873](https://github.com/SierraSoftworks/Iridium/commit/6bb1873) Merge branch 'release' of https://github.com/SierraSoftworks/Iridium into release
+ - [1e62d09](https://github.com/SierraSoftworks/Iridium/commit/1e62d09) Merge branch 'master' into release
 
 ## Version [7.1.5](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.1.5)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.1.5">tag: **v7.1.5**</a>
@@ -96,6 +119,7 @@ npm install iridium@7.1.5
 ### Changes
  - [54bc543](https://github.com/SierraSoftworks/Iridium/commit/54bc543) 7.1.5
  - [0d54379](https://github.com/SierraSoftworks/Iridium/commit/0d54379) chore: Update NPM packages
+ - [29c24ad](https://github.com/SierraSoftworks/Iridium/commit/29c24ad) Merge branch 'master' into release
 
 ## Version [7.1.4](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.1.4)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.1.4">tag: **v7.1.4**</a>
@@ -107,6 +131,7 @@ npm install iridium@7.1.4
 ### Changes
  - [16b8907](https://github.com/SierraSoftworks/Iridium/commit/16b8907) 7.1.4
  - [d8bde85](https://github.com/SierraSoftworks/Iridium/commit/d8bde85) fix #70: Ensure that Transform decorator can be applied to instance classes
+ - [9ef7601](https://github.com/SierraSoftworks/Iridium/commit/9ef7601) Merged branch master into release
 
 ## Version [7.1.3](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.1.3)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.1.3">tag: **v7.1.3**</a>
@@ -118,6 +143,7 @@ npm install iridium@7.1.3
 ### Changes
  - [542af39](https://github.com/SierraSoftworks/Iridium/commit/542af39) 7.1.3
  - [104d967](https://github.com/SierraSoftworks/Iridium/commit/104d967) fix #68: Update Cursor to use new MongoDB client cursor type
+ - [c8d63f0](https://github.com/SierraSoftworks/Iridium/commit/c8d63f0) Merged master into release
 
 ## Version [7.1.2](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.1.2)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.1.2">tag: **v7.1.2**</a>
@@ -219,7 +245,7 @@ npm install iridium@7.0.0
 
 ## Version [7.0.0-alpha.17](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.17)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.17">tag: **v7.0.0-alpha.17**</a>
-<a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/7.0.0-dev">branch: **7.0.0-dev**</a>
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/7.0.0-dev">branch: **7.0.0-dev**</a> <a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/7.0.0-dev">branch: **7.0.0-dev**</a>
 
 ```sh
 npm install iridium@7.0.0-alpha.17
@@ -1493,7 +1519,7 @@ npm install iridium@5.0.0-alpha.1
 
 ## Version [4.0.1](https://github.com/SierraSoftworks/Iridium/releases/tag/v4.0.1)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v4.0.1">tag: **v4.0.1**</a>
-<a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/v4">branch: **v4**</a>
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/v4">branch: **v4**</a> <a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/v4">branch: **v4**</a>
 
 ```sh
 npm install iridium@4.0.1
