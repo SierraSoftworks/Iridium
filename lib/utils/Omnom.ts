@@ -224,6 +224,8 @@ export class Omnom {
 
         if (this.changes.$pullAll && this.changes.$pullAll[path]) {
             this.changes.$pullAll[path].push(value);
+            if (_.keys(this.changes.$pull).length === 0)
+                delete this.changes.$pull;
             return;
         }
 
