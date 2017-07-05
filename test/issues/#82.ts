@@ -19,15 +19,6 @@ interface TestDocument {
 
 
 @Iridium.Collection("test")
-@Iridium.Transform(doc => {
-    if (doc.metadata && typeof doc.metadata === "string")
-        doc.metadata = JSON.parse(doc.metadata);
-    return doc;
-}, doc => {
-    if (doc.metadata && typeof doc.metadata === "object")
-        doc.metadata = JSON.stringify(doc.metadata);
-    return doc
-})
 class Test extends Iridium.Instance<TestDocument, Test> implements TestDocument {
     @Iridium.ObjectID
     _id: string;
@@ -63,7 +54,7 @@ describe("issues", () => {
     before(() => core.connect());
     after(() => core.close());
 
-    describe("pull", () => {
+    describe("#82", () => {
         let model = new Iridium.Model<TestDocument, Test>(core, Test);
 
         it("save should not throw $pull is empty", () => {
@@ -94,7 +85,6 @@ describe("issues", () => {
                         ]
                     }
                 }
-                console.log("test ran");
                 return test.save();
             });
         });
