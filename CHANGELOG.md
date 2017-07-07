@@ -4,6 +4,21 @@ For a human friendly description of what changed in each release, take a look
 at the [Releases](https://github.com/SierraSoftworks/Iridium/releases) page.
 
 
+## Version [7.2.5](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.2.5)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.2.5">tag: **v7.2.5**</a>
+
+```sh
+npm install iridium@7.2.5
+```
+
+### Changes
+ - [dbdf193](https://github.com/SierraSoftworks/Iridium/commit/dbdf193) 7.2.5
+ - [e131d36](https://github.com/SierraSoftworks/Iridium/commit/e131d36) Merge branch 'pull/83'
+ - [5202a5a](https://github.com/SierraSoftworks/Iridium/commit/5202a5a) fix #83: Correctly handle changing and shrinking object arrays in diffs
+ - [44cfc9f](https://github.com/SierraSoftworks/Iridium/commit/44cfc9f) test: Simplify #83 issue reproduction
+ - [23a0066](https://github.com/SierraSoftworks/Iridium/commit/23a0066) tweak: added unit test that reveals bug in test.save()
+ - [98e05c6](https://github.com/SierraSoftworks/Iridium/commit/98e05c6) doc: Update CHANGELOG
+
 ## Version [7.2.4](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.2.4)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.2.4">tag: **v7.2.4**</a>
 
