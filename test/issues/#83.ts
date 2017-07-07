@@ -1,4 +1,5 @@
 import * as Iridium from "../../iridium";
+import {Omnom} from "../../lib/utils/Omnom";
 import * as chai from "chai";
 
 interface TestDocument {
@@ -31,7 +32,7 @@ describe("issues", () => {
         });
     }
 
-    describe.only("#83", () => {
+    describe("#83", () => {
         let model = new Iridium.Model<TestDocument, Test>(core, Test);
 
         it("track.save should update track accordingly", () => {
@@ -42,6 +43,20 @@ describe("issues", () => {
                 return test.save();
             }).then(test => {
                 chai.expect(test.stuff).to.eql(build_dataset(20, 14));
+            });
+        });
+
+        it("should derive the correct change definition", () => {
+            const diff = Omnom.diff({
+                stuff: build_dataset(1, 19)
+            }, {
+                stuff: build_dataset(20, 14)
+            });
+
+            chai.expect(diff).to.eql({
+                "$set": {
+                    stuff: build_dataset(20, 14)
+                }
             });
         });
     });

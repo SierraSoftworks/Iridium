@@ -128,7 +128,12 @@ export class Omnom {
       let j = 0;
       
       for (; i < original.length && j < modified.length; i++) {
-          if (this.almostEqual(original[i], modified[j])) j++;
+          const equalityDistance = this.almostEqual(original[i], modified[j])
+          if (equalityDistance == 1) j++;
+          else if(equalityDistance > 0)
+            // If we would need to both pull and $set on this array, we have to
+            // just use the $set operator.
+            return this.set(changePath, modified);
           else pulls.push(original[i]);
       }
 
@@ -143,7 +148,7 @@ export class Omnom {
 
       // If we have a smaller target array than our source, we will need to re-create it
       // regardless (if we want to do so in a single operation anyway)
-      else return this.set(changePath, modified);
+      return this.set(changePath, modified);
     }
     
     private onLargerArray(original: any[], modified: any[], changePath: string): void {

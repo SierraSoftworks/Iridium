@@ -303,5 +303,32 @@ describe("Omnom",() => {
 
             chai.expect(Omnom.diff(oldObject, newObject)).to.exist.and.be.eql(expectedDiff);
         });
+
+        it("should handle complex array objects which should be replaced in a smaller array", () => {
+            let oldObject = { a: [{x: 1, y: "a"}, {x: 2, y: "b"}, {x: 3, y: "c"}, {x: 4, y: "d"}]};
+            let newObject = { a: [{x: 1, y: "z"}, {x: 2, y: "y"}] };
+            let expectedDiff = {
+                $set: {
+                    "a": [{x: 1, y: "z"}, {x: 2, y: "y"}]
+                }
+            };
+
+            chai.expect(Omnom.diff(oldObject, newObject)).to.exist.and.be.eql(expectedDiff);
+        });
+
+        it("should handle complex array objects which should be replaced in a larger array", () => {
+            let oldObject = { a: [{x: 1, y: "a"}, {x: 2, y: "b"}]};
+            let newObject = { a: [{x: 1, y: "z"}, {x: 2, y: "y"}, {x: 3, y: "x"}, {x: 4, y: "w"}] };
+            let expectedDiff = {
+                $set: {
+                    "a.0.y": "z",
+                    "a.1.y": "y",
+                    "a.2": {x: 3, y: "x"},
+                    "a.3": {x: 4, y: "w"}
+                }
+            };
+
+            chai.expect(Omnom.diff(oldObject, newObject)).to.exist.and.be.eql(expectedDiff);
+        });
     });
 });
