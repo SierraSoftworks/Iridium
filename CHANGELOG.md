@@ -4,6 +4,19 @@ For a human friendly description of what changed in each release, take a look
 at the [Releases](https://github.com/SierraSoftworks/Iridium/releases) page.
 
 
+## Version [8.0.0-alpha.1](https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.1)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.1">tag: **v8.0.0-alpha.1**</a>
+
+```sh
+npm install iridium@8.0.0-alpha.1
+```
+
+### Changes
+ - [8838831](https://github.com/SierraSoftworks/Iridium/commit/8838831) 8.0.0-alpha.1
+ - [4a05389](https://github.com/SierraSoftworks/Iridium/commit/4a05389) chore #86: Update to support TypeScript 2.4.1
+ - [343282b](https://github.com/SierraSoftworks/Iridium/commit/343282b) fix #83: Remove the default `[string]: any` index type on Instance
+ - [6cdcc7d](https://github.com/SierraSoftworks/Iridium/commit/6cdcc7d) doc: Update CHANGELOG
+
 ## Version [7.2.5](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.2.5)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.2.5">tag: **v7.2.5**</a>
 
