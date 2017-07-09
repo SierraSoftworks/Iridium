@@ -9,15 +9,15 @@ import * as Bluebird from "bluebird";
  * not impose any significant performance overhead.
  */
 export class NoOpCache implements Cache {
-    set<T>(key: string, object: T): Bluebird<T> {
+    set<T>(key: string, object: T): PromiseLike<T> {
         return Bluebird.resolve(object);
     }
 
-    get<T>(key: string): Bluebird<void> {
-        return Bluebird.resolve();
+    get<T>(key: string): PromiseLike<T> {
+        return Bluebird.resolve<T>(<any>undefined);
     }
 
-    clear(key: string): Bluebird<boolean> {
+    clear(key: string): PromiseLike<boolean> {
         return Bluebird.resolve(false);
     }
 }
