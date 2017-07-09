@@ -4,6 +4,18 @@ For a human friendly description of what changed in each release, take a look
 at the [Releases](https://github.com/SierraSoftworks/Iridium/releases) page.
 
 
+## Version [8.0.0-alpha.2](https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.2)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.2">tag: **v8.0.0-alpha.2**</a>
+
+```sh
+npm install iridium@8.0.0-alpha.2
+```
+
+### Changes
+ - [d38301e](https://github.com/SierraSoftworks/Iridium/commit/d38301e) 8.0.0-alpha.2
+ - [f8e3489](https://github.com/SierraSoftworks/Iridium/commit/f8e3489) fix #86: Update the cache interface to work correctly with TypeScript 2.4
+ - [1889b63](https://github.com/SierraSoftworks/Iridium/commit/1889b63) doc: Update changelog
+
 ## Version [8.0.0-alpha.1](https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.1)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.1">tag: **v8.0.0-alpha.1**</a>
 
