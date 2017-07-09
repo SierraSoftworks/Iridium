@@ -16,3 +16,23 @@ import * as MongoDB from "mongodb";
 export function toObjectID(value: string): MongoDB.ObjectID {
 	return MongoDB.ObjectID.createFromHexString(value);
 }
+
+/**
+ * Type guard method which determines whether an object has an _id field
+ * present.
+ * @param object The object to test for a _id field.
+ * @return Boolean indicating whether the object has an _id field present.
+ */
+export function hasObjectID(object: any): object is { _id?: any; } {
+	return typeof object === "object" && object.hasOwnProperty("_id");
+}
+
+/**
+ * Type guard method which determines whether an object has an _id field
+ * present and populated.
+ * @param object The object to test for a _id field.
+ * @return Boolean indicating whether the object has an _id field present.
+ */
+export function hasValidObjectID(object: any): object is { _id: any; } {
+	return typeof object === "object" && object._id !== undefined && object._id !== null;
+}

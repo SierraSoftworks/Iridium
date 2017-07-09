@@ -40,7 +40,7 @@ import {MapFunction, ReduceFunction, MapReducedDocument, MapReduceFunctions, Map
  *
  * @class
  */
-export class Model<TDocument extends { _id?: any }, TInstance> {
+export class Model<TDocument, TInstance> {
     /**
      * Creates a new Iridium model representing a given ISchema and backed by a collection whose name is specified
      * @param core The Iridium core that this model should use for database access
@@ -270,7 +270,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
         if (!_.isPlainObject(conditions)) conditions = { _id: conditions };
         conditions = this._helpers.convertToDB(conditions);
 
-        let cursor = this.collection.find(conditions);
+        let cursor = this.collection.find<TDocument>(conditions);
 
         if(fields)
             cursor = cursor.project(fields);
@@ -531,7 +531,14 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      * @param {Object} changes The changes to make to the documents
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      */
-    update(conditions: { _id?: string; } | Conditions | string, changes: Changes, callback?: General.Callback<number>): Bluebird<number>;
+    update(conditions: { _id?: any } | Conditions | string, changes: Changes, callback?: General.Callback<number>): Bluebird<number>;
+    /**
+     * Updates the documents in the backing collection which match the conditions using the given update instructions
+     * @param {Object} conditions The conditions which determine which documents will be updated
+     * @param {Object} changes The replacement document to do a full update
+     * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
+     */
+    update(conditions: { _id?: any } | Conditions | string, changes: TDocument, callback?: General.Callback<number>): Bluebird<number>;
     /**
      * Updates the documents in the backing collection which match the conditions using the given update instructions
      * @param {Object} conditions The conditions which determine which documents will be updated
@@ -540,6 +547,14 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      */
     update(conditions: { _id?: string; } | Conditions | string, changes: Changes, options: ModelOptions.UpdateOptions, callback?: General.Callback<number>): Bluebird<number>;
+    /**
+     * Updates the documents in the backing collection which match the conditions using the given update instructions
+     * @param {Object} conditions The conditions which determine which documents will be updated
+     * @param {Object} changes The replacement document to do a full update
+     * @param {UpdateOptions} options The options which dictate how this function behaves
+     * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
+     */
+    update(conditions: { _id?: string; } | Conditions | string, changes: TDocument, options: ModelOptions.UpdateOptions, callback?: General.Callback<number>): Bluebird<number>;
     update(conditions: { _id?: string; } | Conditions | string, changes: Changes, options?: ModelOptions.UpdateOptions, callback?: General.Callback<number>): Bluebird<number> {
         if (typeof options === "function") {
             callback = <General.Callback<number>>options;
@@ -591,7 +606,7 @@ export class Model<TDocument extends { _id?: any }, TInstance> {
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      * @returns {Promise<number>}
      */
-    count(conditions: { _id?: string; } | Conditions, callback?: General.Callback<number>): Bluebird<number>;
+    count(conditions: { _id?: string; } | Conditions | string, callback?: General.Callback<number>): Bluebird<number>;
     count(conds?: any, callback?: General.Callback<number>): Bluebird<number> {
         let conditions: { _id?: string; } | Conditions = conds;
         if (typeof conds === "function") {

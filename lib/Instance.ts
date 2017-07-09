@@ -11,6 +11,7 @@ import {DefaultValidators} from "./Validators";
 import {Conditions} from "./Conditions";
 import {Changes} from "./Changes";
 import * as MapReduce from "./MapReduce";
+import {hasValidObjectID} from "./utils/ObjectID";
 
 import * as _ from "lodash";
 import * as MongoDB from "mongodb";
@@ -31,7 +32,7 @@ import * as Skmatc from "skmatc";
  * The instance returned by the model, and all of this instance's methods, will be of type
  * TInstance - which should represent the merger of TSchema and IInstance for best results.
  */
-export class Instance<TDocument extends { _id?: any }, TInstance> {
+export class Instance<TDocument, TInstance> {
     /**
      * Creates a new instance which represents the given document as a type of model
      * @param {Model} model The model that dictates the collection the document originated from as well as how validations are performed.
@@ -70,20 +71,20 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
      * A function which is called whenever a new document is in the process of being inserted into the database.
      * @param {Object} document The document which will be inserted into the database.
      */
-    static onCreating: (document: { _id?: any }) => Promise<any> | PromiseLike<any> | void;
+    static onCreating: (document: any) => Promise<any> | PromiseLike<any> | void;
 
     /**
      * A function which is called whenever a document of this type is received from the database, prior to it being
      * wrapped by an Instance object.
      * @param {Object} document The document that was retrieved from the database.
      */
-    static onRetrieved: (document: { _id?: any }) => Promise<any> | PromiseLike<any> | void;
+    static onRetrieved: (document: any) => Promise<any> | PromiseLike<any> | void;
 
     /**
      * A function which is called whenever a new instance has been created to wrap a document.
      * @param {Instance} instance The instance which has been created.
      */
-    static onReady: (instance: Instance<{ _id?: any }, Instance<{ _id?: any }, any>>) => Promise<any> | PromiseLike<any> | void;
+    static onReady: (instance: Instance<any, Instance<any, any>>) => Promise<any> | PromiseLike<any> | void;
 
     /**
      * A function which is called whenever an instance's save() method is called to allow you to interrogate and/or manipulate
@@ -92,7 +93,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
      * @param {Instance} instance The instance to which the changes are being made
      * @param {Object} changes The MongoDB change object describing the changes being made to the document.
      */
-    static onSaving: (instance: Instance<{ _id?: any }, Instance<{ _id?: any }, any>>, changes: Changes) => Promise<any> | PromiseLike<any> | void;
+    static onSaving: (instance: Instance<any, Instance<any, any>>, changes: Changes) => Promise<any> | PromiseLike<any> | void;
 
     /**
      * The name of the collection into which documents of this type are stored.
@@ -169,7 +170,8 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
 
         return Bluebird.resolve().then(() => {
             conditions = this._model.helpers.cloneConditions(conditions);
-            _.merge(conditions, { _id: this._modified._id });
+            if (hasValidObjectID(this._modified))
+                _.merge(conditions, { _id: this._modified._id });
 
             if (!changes) {
                 let validation = this._model.helpers.validate(this._modified);
@@ -217,6 +219,7 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
             err["modified"] = this._modified;
             return Bluebird.reject(err);
         }).then((changed: boolean) => {
+            if (!hasValidObjectID(this._modified)) return Bluebird.reject(new Error("Cannot save a modified document without an ID"));
             conditions = { _id: this._modified._id };
             if (!changed) return this._modified;
 
@@ -258,6 +261,8 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
      * @returns {Promise<TInstance>}
      */
     refresh(callback?: General.Callback<TInstance>): Bluebird<TInstance> {
+        if (!hasValidObjectID(this._original)) return Bluebird.reject(new Error("Cannot refresh a document without an ID"));
+
         let conditions = { _id: this._original._id };
 
         return Bluebird.resolve().then(() => {
@@ -301,6 +306,8 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
      * @returns {Promise<TInstance>}
      */
     remove(callback?: General.Callback<TInstance>): Bluebird<TInstance> {
+        if (!hasValidObjectID(this._original)) return Bluebird.reject(new Error("Cannot remove a document without an ID"));
+
         let conditions = { _id: this._original._id };
 
         return Bluebird.resolve().then(() => {

@@ -10,6 +10,6 @@
  *
  * @internal
  */
-export interface ModelSpecificInstanceConstructor<TDocument extends { _id?: any }, TInstance> {
+export interface ModelSpecificInstanceConstructor<TDocument, TInstance> {
     new (doc: TDocument, isNew?: boolean, isPartial?: boolean): TInstance;
 }

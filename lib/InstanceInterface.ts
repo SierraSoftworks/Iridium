@@ -19,7 +19,7 @@ import {MapFunction, ReduceFunction, MapReduceFunctions} from "./MapReduce"
  * on the instance implementation, since prototype methods and variables become available to consumers of the
  * instance itself.
  */
-export interface InstanceImplementation<TDocument extends { _id ?: any }, TInstance> {
+export interface InstanceImplementation<TDocument, TInstance> {
     /**
      * A constructor which creates a new instance tied to the given model and representing the given document.
      * @param model The Iridium Model which this instance should be tied to, gives the instance access to the database collection and any other context it requires.

@@ -11,7 +11,7 @@ import * as Bluebird from "bluebird";
  * help to improve testability and reduce code duplication (mouse abuse) throughout the codebase.
  * @internal
  */
-export class ModelHelpers<TDocument extends { _id?: any }, TInstance> {
+export class ModelHelpers<TDocument, TInstance> {
     constructor(public model: Model<TDocument, TInstance>) {
         this._validator = Skmatc.scope(model.schema);
         model.validators.forEach(validator => this._validator.register(validator));

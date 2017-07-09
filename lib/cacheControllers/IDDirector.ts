@@ -1,4 +1,5 @@
 import {CacheDirector} from "../CacheDirector";
+import {hasValidObjectID} from "../utils/ObjectID";
 import * as MongoDB from "mongodb";
 
 /**
@@ -8,14 +9,22 @@ import * as MongoDB from "mongodb";
  * types of queries.
  */
 export class CacheOnID implements CacheDirector{
-    valid(object: { _id: any, [prop: string]: any }) {
-        return !!object._id;
+    valid<T>(object: T) {
+        if (hasValidObjectID(object)) {
+            return !!object._id;
+        }
+
+        return false;
     }
 
-    buildKey(object: { _id: any, [prop: string]: any }) {
-        if (object._id._bsontype === "ObjectID")
-            return new MongoDB.ObjectID(object._id.id).toHexString();
-        return object._id;
+    buildKey<T>(object: T) {
+        if (hasValidObjectID(object)) {
+            if (object._id._bsontype === "ObjectID")
+                return new MongoDB.ObjectID(object._id.id).toHexString();
+            return object._id;
+        }
+        
+        throw new Error("Cannot build key for object without an _id");
     }
 
     validQuery(conditions: { _id?: any, [prop: string]: any }) {
