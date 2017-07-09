@@ -66,8 +66,6 @@ export class Instance<TDocument extends { _id?: any }, TInstance> {
         return this._modified;
     }
 
-    [name: string]: any;
-
     /**
      * A function which is called whenever a new document is in the process of being inserted into the database.
      * @param {Object} document The document which will be inserted into the database.
