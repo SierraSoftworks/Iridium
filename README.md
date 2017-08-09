@@ -407,18 +407,18 @@ export class InstanceType extends Iridium.Instance<any, InstanceType> {
 }
 
 db.Model.findOne().then(instance => {
-    console.log(util.inspect(instance.position)); // { lat: 1, lng: 2 }
-    console.log(util.inspect(instance.document.position)); // { type: "Point", coordinates: [2, 1] }
+    console.log(inspect(instance.position)); // { lat: 1, lng: 2 }
+    console.log(inspect(instance.document.position)); // { type: "Point", coordinates: [2, 1] }
 
     let pos = instance.pos;
     pos.lat = 3;
-    console.log(util.inspect(pos)); // { lat: 3, lng: 2 }
-    console.log(util.inspect(instance.position)); // { lat: 1, lng: 2 }
-    console.log(util.inspect(instance.document.position)); // { type: "Point", coordinates: [2, 1] }
+    console.log(inspect(pos)); // { lat: 3, lng: 2 }
+    console.log(inspect(instance.position)); // { lat: 1, lng: 2 }
+    console.log(inspect(instance.document.position)); // { type: "Point", coordinates: [2, 1] }
 
     instance.position = pos
-    console.log(util.inspect(instance.position)); // { lat: 3, lng: 2 }
-    console.log(util.inspect(instance.document.position)); // { type: "Point", coordinates: [2, 3] }
+    console.log(inspect(instance.position)); // { lat: 3, lng: 2 }
+    console.log(inspect(instance.document.position)); // { type: "Point", coordinates: [2, 3] }
 });
 ```
 
