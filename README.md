@@ -58,7 +58,7 @@ as change tracking when calling `save()` on the instance. If you'd prefer a ligh
 implementation then you can do so by taking a look at the [Custom Instances](#custom-instances) section.
 
 ```typescript
-import {Core, Model, Instance, Collection, Index, Property, ObjectID} Iridium from 'iridium';
+import {Core, Model, Instance, Collection, Index, Property, ObjectID} from 'iridium';
 
 interface Colour {
     r: number;
