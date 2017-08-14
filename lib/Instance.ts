@@ -12,10 +12,10 @@ import {Conditions} from "./Conditions";
 import {Changes} from "./Changes";
 import * as MapReduce from "./MapReduce";
 import {hasValidObjectID} from "./utils/ObjectID";
+import {Nodeify} from "./utils/Promise";
 
 import * as _ from "lodash";
 import * as MongoDB from "mongodb";
-import * as Bluebird from "bluebird";
 import * as Skmatc from "skmatc";
 
 /**
@@ -139,14 +139,14 @@ export class Instance<TDocument, TInstance> {
      * @param {function} callback A callback which is triggered when the save operation completes
      * @returns {Promise}
      */
-    save(callback?: General.Callback<TInstance>): Bluebird<TInstance>;
+    save(callback?: General.Callback<TInstance>): Promise<TInstance>;
     /**
      * Saves the given changes to this instance and updates the instance to match the latest database document.
      * @param {Object} changes The MongoDB changes object to be used when updating this instance
      * @param {function} callback A callback which is triggered when the save operation completes
      * @returns {Promise}
      */
-    save(changes: Changes, callback?: General.Callback<TInstance>): Bluebird<TInstance>;
+    save(changes: Changes, callback?: General.Callback<TInstance>): Promise<TInstance>;
     /**
      * Saves the given changes to this instance and updates the instance to match the latest database document.
      * @param {Object} conditions The conditions under which the update will take place - these will be merged with an _id query
@@ -154,8 +154,8 @@ export class Instance<TDocument, TInstance> {
      * @param {function} callback A callback which is triggered when the save operation completes
      * @returns {Promise}
      */
-    save(conditions: Conditions, changes: Changes, callback?: General.Callback<TInstance>): Bluebird<TInstance>;
-    save(...args: any[]): Bluebird<TInstance> {
+    save(conditions: Conditions, changes: Changes, callback?: General.Callback<TInstance>): Promise<TInstance>;
+    save(...args: any[]): Promise<TInstance> {
         let callback: General.Callback<any>|undefined = undefined;
         let changes: any = null;
         let conditions: any = {};
@@ -168,14 +168,14 @@ export class Instance<TDocument, TInstance> {
             }
         });
 
-        return Bluebird.resolve().then(() => {
+        return Nodeify(Promise.resolve().then(() => {
             conditions = this._model.helpers.cloneConditions(conditions);
             if (hasValidObjectID(this._modified))
                 _.merge(conditions, { _id: this._modified._id });
 
             if (!changes) {
                 let validation = this._model.helpers.validate(this._modified);
-                if (validation.failed) return Bluebird.reject(validation.error).bind(this).nodeify(callback);
+                if (validation.failed) return Nodeify(Promise.reject(validation.error), callback);
 
                 let original = this._model.helpers.cloneDocument(this._original);
                 let modified = this._model.helpers.cloneDocument(this._modified);
@@ -195,14 +195,14 @@ export class Instance<TDocument, TInstance> {
             if (!changes && !this._isNew) return false;
 
             if (this._isNew) {
-                return new Bluebird<boolean>((resolve, reject) => {
+                return new Promise<boolean>((resolve, reject) => {
                     this._model.collection.insertOne(this._modified, { w: "majority" }, (err, doc) => {
                         if (err) return reject(err);
                         return resolve(<any>!!doc);
                     });
                 });
             } else {
-                return new Bluebird<boolean>((resolve, reject) => {
+                return new Promise<boolean>((resolve, reject) => {
                     this._model.collection.updateOne(conditions, changes, { w: "majority" }, (err, changed) => {
                         if(err) {
                             (<Error&{conditions: Object}>err)["conditions"] = conditions;
@@ -217,13 +217,13 @@ export class Instance<TDocument, TInstance> {
         }).catch(err => {
             err["original"] = this._original;
             err["modified"] = this._modified;
-            return Bluebird.reject(err);
+            return Promise.reject(err);
         }).then((changed: boolean) => {
-            if (!hasValidObjectID(this._modified)) return Bluebird.reject(new Error("Cannot save a modified document without an ID"));
+            if (!hasValidObjectID(this._modified)) return Promise.reject(new Error("Cannot save a modified document without an ID"));
             conditions = { _id: this._modified._id };
             if (!changed) return this._modified;
 
-            return new Bluebird<TDocument>((resolve, reject) => {
+            return new Promise<TDocument>((resolve, reject) => {
                 this._model.collection.find(conditions).limit(1).next((err: Error, latest: TDocument) => {
                     if (err) return reject(err);
                     return resolve(latest);
@@ -233,7 +233,7 @@ export class Instance<TDocument, TInstance> {
             if(!latest) {
                 this._isNew = true;
                 this._original = this._model.helpers.cloneDocument(this._modified);
-                return Bluebird.resolve(<TInstance><any>this);
+                return Promise.resolve(<TInstance><any>this);
             }
 
             return this._model.handlers.documentReceived(conditions, latest, (value) => {
@@ -243,7 +243,7 @@ export class Instance<TDocument, TInstance> {
                 this._original = this._model.helpers.cloneDocument(value);
                 return <TInstance><any>this;
             });
-        }).nodeify(callback);
+        }), callback);
     }
 
     /**
@@ -251,7 +251,7 @@ export class Instance<TDocument, TInstance> {
      * @param {function(Error, IInstance)} callback A callback which is triggered when the update completes
      * @returns {Promise<TInstance>}
      */
-    update(callback?: General.Callback<TInstance>): Bluebird<TInstance> {
+    update(callback?: General.Callback<TInstance>): Promise<TInstance> {
         return this.refresh(callback);
     }
 
@@ -260,13 +260,13 @@ export class Instance<TDocument, TInstance> {
      * @param {function(Error, IInstance)} callback A callback which is triggered when the update completes
      * @returns {Promise<TInstance>}
      */
-    refresh(callback?: General.Callback<TInstance>): Bluebird<TInstance> {
-        if (!hasValidObjectID(this._original)) return Bluebird.reject(new Error("Cannot refresh a document without an ID"));
+    refresh(callback?: General.Callback<TInstance>): Promise<TInstance> {
+        if (!hasValidObjectID(this._original)) return Promise.reject(new Error("Cannot refresh a document without an ID"));
 
         let conditions = { _id: this._original._id };
 
-        return Bluebird.resolve().then(() => {
-            return new Bluebird<TDocument>((resolve, reject) => {
+        return Nodeify(Promise.resolve().then(() => {
+            return new Promise<TDocument>((resolve, reject) => {
                 this._model.collection.find(conditions).limit(1).next((err: Error, doc: any) => {
                     if (err) return reject(err);
                     return resolve(doc);
@@ -277,7 +277,7 @@ export class Instance<TDocument, TInstance> {
                 this._isPartial = true;
                 this._isNew = true;
                 this._original = this._model.helpers.cloneDocument(this._modified);
-                return <Bluebird<TInstance>><any>this;
+                return <Promise<TInstance>><any>this;
             }
 
             return this._model.handlers.documentReceived(conditions, newDocument, (doc) => {
@@ -288,7 +288,7 @@ export class Instance<TDocument, TInstance> {
 
                 return <TInstance><any>this;
             });
-        }).nodeify(callback);
+        }), callback);
     }
 
     /**
@@ -296,7 +296,7 @@ export class Instance<TDocument, TInstance> {
      * @param {function(Error, IInstance)} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    delete(callback?: General.Callback<TInstance>): Bluebird<TInstance> {
+    delete(callback?: General.Callback<TInstance>): Promise<TInstance> {
         return this.remove(callback);
     }
 
@@ -305,14 +305,14 @@ export class Instance<TDocument, TInstance> {
      * @param {function(Error, IInstance)} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    remove(callback?: General.Callback<TInstance>): Bluebird<TInstance> {
-        if (!hasValidObjectID(this._original)) return Bluebird.reject(new Error("Cannot remove a document without an ID"));
+    remove(callback?: General.Callback<TInstance>): Promise<TInstance> {
+        if (!hasValidObjectID(this._original)) return Promise.reject(new Error("Cannot remove a document without an ID"));
 
         let conditions = { _id: this._original._id };
 
-        return Bluebird.resolve().then(() => {
+        return Nodeify(Promise.resolve().then(() => {
             if (this._isNew) return 0;
-            return new Bluebird<number>((resolve, reject) => {
+            return new Promise<number>((resolve, reject) => {
                 this._model.collection.deleteOne(conditions, { w: "majority" }, (err: Error, removed?: any) => {
                     if (err) return reject(err);
                     return resolve(removed);
@@ -324,7 +324,7 @@ export class Instance<TDocument, TInstance> {
         }).then(() => {
             this._isNew = true;
             return <TInstance><any>this;
-        }).nodeify(callback);
+        }), callback);
     }
 
     /**

@@ -1,6 +1,5 @@
 ﻿import * as Iridium from "../iridium";
 import * as events from "events";
-import * as Bluebird from "bluebird";
 import * as chai from "chai";
 import * as MongoDB from "mongodb";
 
@@ -22,8 +21,8 @@ class InheritedCoreWithHooks extends Iridium.Core {
 
     events: events.EventEmitter;
 
-    onConnectingResult: (connection: MongoDB.Db) => Bluebird<any> = (connection) => Bluebird.resolve(connection);
-    onConnectedResult: () => Bluebird<void> = () => Bluebird.resolve();
+    onConnectingResult: (connection: MongoDB.Db) => Promise<any> = (connection) => Promise.resolve(connection);
+    onConnectedResult: () => Promise<void> = () => Promise.resolve();
 
     protected onConnecting(db: MongoDB.Db) {
         this.events.emit("connecting", db);
@@ -310,18 +309,18 @@ describe("Core",() => {
 
             it("should abort the connection if it throws an error", () => {
                 let core = new InheritedCoreWithHooks();
-                core.onConnectingResult = (conn) => Bluebird.reject(new Error("Test error"));
+                core.onConnectingResult = (conn) => Promise.reject(new Error("Test error"));
 
                 return chai.expect(core.connect()).to.eventually.be.rejectedWith("Test error");
             });
 
             it("should leave the Iridium core disconnected if it throws an error", () => {
                 let core = new InheritedCoreWithHooks();
-                core.onConnectingResult = (conn) => Bluebird.reject(new Error("Test error"));
+                core.onConnectingResult = (conn) => Promise.reject(new Error("Test error"));
 
                 return chai.expect(core.connect().then(() => false, (err) => {
                     chai.expect(() => core.connection).to.throw;
-                    return Bluebird.resolve(true);
+                    return Promise.resolve(true);
                 })).to.eventually.be.true;
             });
         });
@@ -354,18 +353,18 @@ describe("Core",() => {
 
             it("should abort the connection if it throws an error", () => {
                 let core = new InheritedCoreWithHooks();
-                core.onConnectedResult = () => Bluebird.reject(new Error("Test error"));
+                core.onConnectedResult = () => Promise.reject(new Error("Test error"));
 
                 return chai.expect(core.connect()).to.eventually.be.rejectedWith("Test error");
             });
 
             it("should leave the Iridium core disconnected if it throws an error", () => {
                 let core = new InheritedCoreWithHooks();
-                core.onConnectedResult = () => Bluebird.reject(new Error("Test error"));
+                core.onConnectedResult = () => Promise.reject(new Error("Test error"));
 
                 return chai.expect(core.connect().then(() => false, (err) => {
                     chai.expect(() => core.connection).to.throw;
-                    return Bluebird.resolve(true);
+                    return Promise.resolve(true);
                 })).to.eventually.be.true;
             });
         });

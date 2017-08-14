@@ -1,4 +1,3 @@
-import * as Bluebird from "bluebird";
 import {Cache} from "../Cache";
 
 /**
@@ -12,16 +11,16 @@ export class MemoryCache implements Cache {
 
     set<T>(key: string, value: T): PromiseLike<T> {
         this.cache[key] = value;
-        return Bluebird.resolve(value);
+        return Promise.resolve(value);
     }
 
     get<T>(key: string): PromiseLike<T> {
-        return Bluebird.resolve(this.cache[key]);
+        return Promise.resolve(this.cache[key]);
     }
 
     clear(key: string): PromiseLike<boolean> {
         let has = this.cache.hasOwnProperty(key);
         if(has) delete this.cache[key];
-        return Bluebird.resolve(has);
+        return Promise.resolve(has);
     }
 }

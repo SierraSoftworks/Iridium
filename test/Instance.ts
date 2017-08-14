@@ -1,6 +1,5 @@
 ﻿import * as Iridium from "../iridium";
 import * as MongoDB from "mongodb";
-import * as Bluebird from "bluebird";
 import * as chai from "chai";
 
 interface TestDocument {
@@ -484,7 +483,7 @@ describe("Instance",() => {
         });
 
         it("should correctly diff simple property changes", () => {
-            return Bluebird.resolve(instance).then(i => {
+            return Promise.resolve(instance).then(i => {
                 i.answer = 2;
                 return i.save();
             }).then(i => {
@@ -494,7 +493,7 @@ describe("Instance",() => {
         });
 
         it("should correctly diff deep property changes", () => {
-            return Bluebird.resolve(instance).then(i => {
+            return Promise.resolve(instance).then(i => {
                 i.less["a"] = 2;
                 return i.save();
             }).then(i => {
@@ -504,7 +503,7 @@ describe("Instance",() => {
         });
 
         it("should correctly diff array operations", () => {
-            return Bluebird.resolve(instance).then(i => {
+            return Promise.resolve(instance).then(i => {
                 i.lots.push(5);
                 return i.save();
             }).then(i => {

@@ -1,6 +1,6 @@
 ﻿import * as Iridium from "../iridium";
+import {Delay} from "../lib/utils/Promise";
 import * as Events from "events";
-import * as Promise from "bluebird";
 import * as chai from "chai";
 
 interface TestDocument {
@@ -21,22 +21,22 @@ class Test extends Iridium.Instance<TestDocument, Test> {
     id: string;
     answer: number;
 
-    static onCreating(document: TestDocument) {
+    static onCreating(document: TestDocument): Promise<void>|undefined {
         if (shouldReject === 1) return Promise.reject("test rejection");
         hookEmitter.emit("creating", document);
     }
 
-    static onReady(instance: Test) {
+    static onReady(instance: Test): Promise<void>|undefined {
         if (shouldReject === 2) return Promise.reject("test rejection");
         hookEmitter.emit("ready", instance);
     }
 
-    static onRetrieved(document: TestDocument) {
+    static onRetrieved(document: TestDocument): Promise<void>|undefined {
         if (shouldReject === 3) return Promise.reject("test rejection");
         hookEmitter.emit("retrieved", document);
     }
 
-    static onSaving(instance: Test, changes: any) {
+    static onSaving(instance: Test, changes: any): Promise<void>|undefined {
         if (shouldReject === 4) return Promise.reject("test rejection");
         hookEmitter.emit("saving", instance, changes);
     }
@@ -79,7 +79,7 @@ describe("Hooks", function() {
         it("should support blocking async calls", () => {
             let result: boolean = false;
             Test.onCreating = (document: TestDocument) => {
-                return Promise.delay(50, true).then(() => result = true);
+                return Delay(50, true).then(() => { result = true });
             };
 
             return model.insert({ answer: 11 }).then(() => chai.expect(result).to.be.true);
@@ -117,7 +117,7 @@ describe("Hooks", function() {
         it("should support blocking async calls", () => {
             let result: boolean = false;
             Test.onReady = (instance: Test) => {
-                return Promise.delay(50, true).then(() => result = true);
+                return Delay(50, true).then(() => { result = true });
             };
 
             return model.get().then(() => chai.expect(result).to.be.true);
@@ -155,7 +155,7 @@ describe("Hooks", function() {
         it("should support blocking async calls", () => {
             let result: boolean = false;
             Test.onRetrieved = (document: TestDocument) => {
-                return Promise.delay(50, true).then(() => result = true);
+                return Delay(50, true).then(() => { result = true });
             };
 
             return model.get().then(() => chai.expect(result).to.be.true);
@@ -216,7 +216,7 @@ describe("Hooks", function() {
         it("should support blocking async calls", () => {
             let result: boolean = false;
             Test.onSaving = (instance: Test, changes: any) => {
-                return Promise.delay(50, true).then(() => result = true);
+                return Delay(50, true).then(() => { result = true });
             };
 
             return model.get().then((instance) => {

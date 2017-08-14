@@ -1,5 +1,4 @@
 ﻿import {Model} from "./Model";
-import * as Bluebird from "bluebird";
 
 /**
  * A centralized class which ties the cache and cache directors together in a cohesive way
@@ -16,9 +15,9 @@ export class ModelCache {
         this.model.core.cache.set(this.model.cacheDirector.buildKey(value), value);
     }
 
-    get<T>(conditions: any): Bluebird<T|null> {
-        if (!this.model.cacheDirector || !this.model.cacheDirector.validQuery(conditions)) return Bluebird.resolve<T|null>(null);
-        return Bluebird.resolve(this.model.core.cache.get<T>(this.model.cacheDirector.buildQueryKey(conditions)));
+    get<T>(conditions: any): Promise<T|null> {
+        if (!this.model.cacheDirector || !this.model.cacheDirector.validQuery(conditions)) return Promise.resolve<T|null>(null);
+        return Promise.resolve(this.model.core.cache.get<T>(this.model.cacheDirector.buildQueryKey(conditions)));
     }
 
     clear(conditions: any): void {

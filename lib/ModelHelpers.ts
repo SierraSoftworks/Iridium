@@ -3,7 +3,6 @@ import {Model} from "./Model";
 import * as Skmatc from "skmatc";
 import {Omnom} from "./utils/Omnom";
 import * as _ from "lodash";
-import * as Bluebird from "bluebird";
 
 /**
  * A number of helper methods used commonly within Iridium, they provide a means to transform,

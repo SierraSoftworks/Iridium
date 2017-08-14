@@ -1,4 +1,3 @@
-import * as Bluebird from "bluebird";
 import * as MongoDB from "mongodb";
 import * as _ from "lodash";
 import * as http from "http";
@@ -18,6 +17,8 @@ import {NoOpCache} from "./caches/NoOpCache";
 import {MemoryCache} from "./caches/MemoryCache";
 
 import {BuildUrl} from "./utils/UrlBuilder";
+import {Callback} from "./General";
+import {Nodeify} from "./utils/Promise";
 
 /**
  * The Iridium Core, responsible for managing the connection to the database as well
@@ -51,7 +52,12 @@ export class Core {
         }
     }
 
-    private mongoConnectAsyc = Bluebird.promisify<MongoDB.Db, string, MongoDB.MongoClientOptions>(MongoDB.MongoClient.connect);
+    private mongoConnectAsyc = (url: string, opts: MongoDB.MongoClientOptions) => new Promise<MongoDB.Db>((resolve, reject) => {
+        MongoDB.MongoClient.connect(url, opts, (err, db) => {
+            if (err) return reject(err);
+            return resolve(db);
+        });
+    });
 
     private _plugins: Plugin[] = [];
     private _url: string;
@@ -59,7 +65,7 @@ export class Core {
     private _connection: MongoDB.Db|undefined;
     private _cache: Cache = new NoOpCache();
 
-    private _connectPromise: Bluebird<MongoDB.Db>|undefined;
+    private _connectPromise: Promise<MongoDB.Db>|undefined;
 
     /**
      * Gets the plugins registered with this Iridium Core
@@ -116,7 +122,7 @@ export class Core {
      * @param {Iridium.Plugin} plugin The plugin to register with this Iridium Core
      * @returns {Iridium.Core}
      */
-    register(plugin: Plugin): Core {
+    register(plugin: Plugin): this {
         this.plugins.push(plugin);
         return this;
     }
@@ -126,8 +132,8 @@ export class Core {
      * @param {function} [callback] A callback to be triggered once the connection is established.
      * @returns {Promise}
      */
-    connect(callback?: (err: Error, core: Core) => any): Bluebird<Core> {
-        return Bluebird.resolve().then(() => {
+    connect(callback?: Callback<this>): Promise<this> {
+        return Nodeify(Promise.resolve().then(() => {
             if (this._connection) return this._connection;
             if (this._connectPromise) return this._connectPromise;
             return this._connectPromise = this.mongoConnectAsyc(this.url, this._config && this._config.options || {});
@@ -143,22 +149,22 @@ export class Core {
             if (this._connection) this._connection.close();
             this._connection = undefined;
             this._connectPromise = undefined;
-            return Bluebird.reject(err);
-        }).nodeify(callback);
+            return Promise.reject(err);
+        }), callback);
     }
 
     /**
      * Closes the active database connection
      * @type {Promise}
      */
-    close(): Bluebird<Core> {
-        return Bluebird.resolve().then(() => {
+    close(callback?: Callback<this>): Promise<this> {
+        return Nodeify(Promise.resolve().then(() => {
             if (!this._connection) return this;
             let conn: MongoDB.Db = this._connection;
             this._connection = undefined;
             conn.close();
             return this;
-        });
+        }), callback);
     }
 
     /**
@@ -182,7 +188,7 @@ export class Core {
      * to run Iridium queries then look at the onConnected method.
      */
     protected onConnecting(connection: MongoDB.Db): PromiseLike<MongoDB.Db> {
-        return Bluebird.resolve(connection);
+        return Promise.resolve(connection);
     }
 
     /**
@@ -193,6 +199,6 @@ export class Core {
      * collections or seeding the database.
      */
     protected onConnected(): PromiseLike<void> {
-        return Bluebird.resolve();
+        return Promise.resolve();
     }
 }

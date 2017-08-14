@@ -1,7 +1,7 @@
 ﻿import * as Iridium from "../iridium";
 import * as MongoDB from "mongodb";
 import {Cursor} from "../lib/Cursor";
-import * as Promise from "bluebird";
+import {Delay} from "../lib/utils/Promise";
 import * as _ from "lodash";
 import * as chai from "chai";
 
@@ -507,14 +507,14 @@ describe("Model",() => {
             });
 
             it("should return a promise immediately",() => {
-                chai.expect(model.find().forEach(i => { })).to.be.instanceof(Promise);
+                chai.expect(model.find().forEach(i => { })).to.have.property("then").a("function");
             });
 
             it("should resolve the promise after all handlers have been dispatched",() => {
                 let count = 0;
                 return chai.expect(model.find().forEach((instance) => {
                     count++;
-                }).then(() => chai.expect(count).to.not.equal(5)).then(() => Promise.delay(10)).then(() => count)).to.eventually.equal(5);
+                }).then(() => chai.expect(count).to.not.equal(5)).then(() => Delay(10)).then(() => count)).to.eventually.equal(5);
             });
 
             it("should be capable of functioning correctly with empty result sets",() => {
@@ -527,7 +527,7 @@ describe("Model",() => {
                 let count = 0;
                 model.find().forEach(i => count++,(err) => {
                     if (err) return done(err);
-                    Promise.delay(10).then(() => chai.expect(count).to.eql(5)).then(() => done());
+                    Delay(10).then(() => chai.expect(count).to.eql(5)).then(() => done());
                 });
             });
         });
@@ -547,7 +547,7 @@ describe("Model",() => {
             });
 
             it("should return its result promise immediately",() => {
-                chai.expect(model.find().map(i => i)).to.be.instanceof(Promise);
+                chai.expect(model.find().map(i => i)).to.have.property("then").a("function");
             });
 
             it("should only resolve its result promise after all results have been resolved",() => {
@@ -593,7 +593,7 @@ describe("Model",() => {
 
         describe("next()",() => {
             it("should return a promise",() => {
-                chai.expect(model.find().next()).to.be.an.instanceof(Promise);
+                chai.expect(model.find().next()).to.have.property("then").a("function");
             });
 
             it("which should resolve to the next instance in the query",() => {
@@ -615,7 +615,7 @@ describe("Model",() => {
 
         describe("one()", () => {
             it("should return a promise",() => {
-                chai.expect(model.find().one()).to.be.an.instanceof(Promise);
+                chai.expect(model.find().one()).to.have.property("then").a("function");
             });
 
             it("which should resolve to the next instance in the query",() => {
@@ -658,7 +658,7 @@ describe("Model",() => {
 
         describe("count()",() => {
             it("should return a promise",() => {
-                chai.expect(model.find().count()).to.be.instanceof(Promise);
+                chai.expect(model.find().count()).to.have.property("then").a("function");
             });
 
             it("should resolve the promise with the number of documents which match the query",() => {

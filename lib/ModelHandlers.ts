@@ -7,7 +7,6 @@ import * as ModelOptions from "./ModelOptions";
 import * as Skmatc from "skmatc";
 import * as _ from "lodash";
 import * as MongoDB from "mongodb";
-import * as Bluebird from "bluebird";
 
 /**
  * Provides a number of methods which are used to handle events that occur within
@@ -25,16 +24,16 @@ export class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
     documentReceived<TResult>(conditions: any,
         result: TDocument,
         wrapper: (document: TDocument, isNew?: boolean, isPartial?: boolean) => TResult,
-        options: ModelOptions.QueryOptions = {}): Bluebird<TResult> {
+        options: ModelOptions.QueryOptions = {}): Promise<TResult> {
         _.defaults(options, {
             cache: true,
             partial: false
         });
 
         let wrapped: TResult;
-        return Bluebird.resolve(this.model.helpers.transformFromDB(result, { document: true })).then((target: any) => {
-            return <Bluebird<TResult>>Bluebird
-                // If onRetrieved returns a Bluebird promise then there is no significant performance overhead here
+        return Promise.resolve(this.model.helpers.transformFromDB(result, { document: true })).then((target: any) => {
+            return <Promise<TResult>>Promise
+                // If onRetrieved returns a Promise promise then there is no significant performance overhead here
                 .resolve(this.model.hooks.onRetrieved && this.model.hooks.onRetrieved(target))
                 .then(() => {
                     // Cache the document if caching is enabled
@@ -47,7 +46,7 @@ export class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
 
                     // Only incur the additional promise's performance penalty if this hook is being used
                     if (this.model.hooks.onReady)
-                        return Bluebird
+                        return Promise
                             .resolve(this.model.hooks.onReady(<TInstance><any>wrapped))
                             .then(() => wrapped);
                     return wrapped;
@@ -55,24 +54,24 @@ export class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
         });
     }
 
-    creatingDocuments(documents: TDocument[]): Bluebird<any[]> {
-        return Bluebird.all(documents.map((document: any) => {
-            return Bluebird
-                // If onCreating returns a Bluebird promise then there is no significant performance overhead here
+    creatingDocuments(documents: TDocument[]): Promise<any[]> {
+        return Promise.all(documents.map((document: any) => {
+            return Promise
+                // If onCreating returns a Promise promise then there is no significant performance overhead here
                 .resolve(this.model.hooks.onCreating && this.model.hooks.onCreating(document))
                 .then(() => {
                     document = this.model.helpers.convertToDB(document, { document: true, properties: true });
                     let validation: Skmatc.Result = this.model.helpers.validate(document);
-                    if (validation.failed) return Bluebird.reject(validation.error);
+                    if (validation.failed) return Promise.reject(validation.error);
 
                     return document;
                 });
         }));
     }
 
-    savingDocument(instance: TInstance, changes: any): Bluebird<TInstance> {
-        return Bluebird
-            // If onSaving returns a Bluebird promise then there is no significant performance overhead here
+    savingDocument(instance: TInstance, changes: any): Promise<TInstance> {
+        return Promise
+            // If onSaving returns a Promise promise then there is no significant performance overhead here
             .resolve(this.model.hooks.onSaving && this.model.hooks.onSaving(instance, changes))
             .then(() => {
                 return instance;

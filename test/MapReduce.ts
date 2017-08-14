@@ -1,7 +1,6 @@
 import * as Iridium from "../iridium";
 import * as MongoDB from "mongodb";
 import { Cursor } from "../lib/Cursor";
-import * as Promise from "bluebird";
 import * as _ from "lodash";
 import * as chai from "chai";
 

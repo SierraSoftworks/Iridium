@@ -1,8 +1,8 @@
 ﻿import {Model} from "./Model";
 import * as General from "./General";
 import * as MongoDB from "mongodb";
-import * as Bluebird from "bluebird";
 import * as Index from "./Index";
+import {Nodeify} from "./utils/Promise";
 
 /**
  * An Iridium collection cursor which allows the itteration through documents
@@ -28,13 +28,13 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
      * @param {function} [callback] A callback which is triggered when the result is available
      * @return {Promise} A promise which will resolve with the number of documents matched by this cursor
      */
-    count(callback?: General.Callback<number>): Bluebird<number> {
-        return new Bluebird<number>((resolve, reject) => {
+    count(callback?: General.Callback<number>): Promise<number> {
+        return Nodeify(new Promise<number>((resolve, reject) => {
             this.cursor.count(true, (err, count) => {
                 if (err) return reject(err);
                 return resolve(count);
             });
-        }).nodeify(callback);
+        }), callback);
     }
 
     /**
@@ -43,16 +43,16 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
      * @param {function} [callback] A callback which is triggered when all operations have been dispatched
      * @return {Promise} A promise which is resolved when all operations have been dispatched
      */
-    forEach(handler: (instance: TInstance) => void, callback?: General.Callback<void>): Bluebird<void> {
+    forEach(handler: (instance: TInstance) => void, callback?: General.Callback<void>): Promise<void> {
         let helpers = this.model.helpers;
-        return new Bluebird<void>((resolve, reject) => {
+        return Nodeify(new Promise<void>((resolve, reject) => {
             this.cursor.forEach((item: TDocument) => {
                 this.model.handlers.documentReceived(this.conditions, item, function () { return helpers.wrapDocument.apply(helpers, arguments); }).then(handler);
             }, (err) => {
                 if (err) return reject(err);
                 return resolve(undefined);
             });
-        }).nodeify(callback);
+        }), callback);
     }
 
     /**
@@ -61,18 +61,18 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
      * @param {function} [callback] A callback which is triggered when the transformations are completed
      * @return {Promise} A promise which is fulfilled with the results of the transformations
      */
-    map<TResult>(transform: (instance: TInstance) => TResult | Bluebird<TResult>, callback?: General.Callback<TResult[]>): Bluebird<TResult[]> {
+    map<TResult>(transform: (instance: TInstance) => TResult | Promise<TResult>, callback?: General.Callback<TResult[]>): Promise<TResult[]> {
         let helpers = this.model.helpers;
-        return new Bluebird<TResult[]>((resolve, reject) => {
-            let promises: Bluebird<TResult>[] = [];
+        return Nodeify(new Promise<TResult[]>((resolve, reject) => {
+            let promises: Promise<TResult>[] = [];
             this.cursor.forEach((item: TDocument) => {
                 promises.push(this.model.handlers.documentReceived(this.conditions, item, function () { return helpers.wrapDocument.apply(helpers, arguments); })
                     .then(<(instance: TInstance) => TResult>transform));
             }, (err) => {
                 if (err) return reject(err);
-                return resolve(Bluebird.all(promises));
+                return resolve(Promise.all(promises));
             });
-        }).nodeify(callback);
+        }), callback);
     }
 
     /**
@@ -80,16 +80,16 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
      * @param {function} [callback] A callback which is triggered with the resulting instances
      * @return {Promise} A promise which resolves with the instances returned by the query
      */
-    toArray(callback?: General.Callback<TInstance[]>): Bluebird<TInstance[]> {
+    toArray(callback?: General.Callback<TInstance[]>): Promise<TInstance[]> {
         let helpers = this.model.helpers;
-        return new Bluebird<TDocument[]>((resolve, reject) => {
+        return Nodeify(new Promise<TDocument[]>((resolve, reject) => {
             this.cursor.toArray((err: Error, results: TDocument[]) => {
                 if (err) return reject(err);
                 return resolve(results);
             });
-        }).map<TDocument, TInstance>((document) => {
+        }).then(docs => Promise.all(docs.map((document) => {
             return this.model.handlers.documentReceived(this.conditions, document, function () { return helpers.wrapDocument.apply(helpers, arguments); });
-        }).nodeify(callback);
+        }))), callback);
     }
 
     /**
@@ -97,16 +97,16 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
      * @param {function} [callback] A callback which is triggered when the next item becomes available
      * @return {Promise} A promise which is resolved with the next item
      */
-    next(callback?: General.Callback<TInstance>): Bluebird<TInstance|undefined> {
-        return new Bluebird<TDocument|undefined>((resolve, reject) => {
+    next(callback?: General.Callback<TInstance>): Promise<TInstance|undefined> {
+        return Nodeify(new Promise<TDocument|undefined>((resolve, reject) => {
             this.cursor.next((err: Error, result: TDocument|undefined) => {
                 if (err) return reject(err);
                 return resolve(result);
             });
         }).then((document) => {
-            if (!document) return Bluebird.resolve<TInstance|undefined>(undefined);
+            if (!document) return Promise.resolve<TInstance|undefined>(undefined);
             return this.model.handlers.documentReceived(this.conditions, document, (document, isNew?, isPartial?) => this.model.helpers.wrapDocument(document, isNew, isPartial));
-        }).nodeify(callback);
+        }), callback);
     }
 
     /**
@@ -114,23 +114,23 @@ export class Cursor<TDocument extends { _id?: any }, TInstance> {
      * @param {function} [callback] A callback which is triggered when the next item becomes available
      * @return {Promise} A promise which is resolved once the item becomes available and the cursor has been closed.
      */
-    one(callback?: General.Callback<TInstance>): Bluebird<TInstance|undefined> {
-        return new Bluebird<TDocument|undefined>((resolve, reject) => {
+    one(callback?: General.Callback<TInstance>): Promise<TInstance|undefined> {
+        return Nodeify(new Promise<TDocument|undefined>((resolve, reject) => {
             this.cursor.next((err: Error, result: TDocument) => {
                 if (err) return reject(err);
                 return resolve(result);
             });
         }).then((document) => {
-            return new Bluebird<TDocument|undefined>((resolve, reject) => {
+            return new Promise<TDocument|undefined>((resolve, reject) => {
                 this.cursor.close((err) => {
                     if (err) return reject(err);
                     return resolve(document);
                 });
             });
         }).then((document) => {
-            if (!document) return Bluebird.resolve<TInstance|undefined>(undefined);
+            if (!document) return Promise.resolve<TInstance|undefined>(undefined);
             return this.model.handlers.documentReceived(this.conditions, document, (document, isNew?, isPartial?) => this.model.helpers.wrapDocument(document, isNew, isPartial));
-        }).nodeify(callback);
+        }), callback);
     }
 
     /**
