@@ -218,7 +218,7 @@ export class Instance<TDocument, TInstance> {
             err["original"] = this._original;
             err["modified"] = this._modified;
             return Promise.reject(err);
-        }).then((changed: boolean) => {
+        }).then<TDocument>((changed: boolean) => {
             if (!hasValidObjectID(this._modified)) return Promise.reject(new Error("Cannot save a modified document without an ID"));
             conditions = { _id: this._modified._id };
             if (!changed) return this._modified;

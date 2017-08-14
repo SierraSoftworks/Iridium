@@ -1,5 +1,4 @@
 ﻿import * as Iridium from "../iridium";
-import Bluebird = require('bluebird');
 
 interface UserDoc {
     _id?: string;

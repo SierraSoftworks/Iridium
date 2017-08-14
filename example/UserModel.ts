@@ -1,5 +1,4 @@
 import _ = require("lodash");
-import Promise = require("bluebird");
 import * as Iridium from "../iridium";
 import {Index, Property, Validate} from "../iridium";
 
