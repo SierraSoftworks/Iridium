@@ -52,14 +52,14 @@
   "dependencies": {
     "@types/chai": "^3.5.2",
     "@types/lodash": "^4.14.64",
-    "@types/mongodb": "^2.2.9",
+    "@types/mongodb": "^2.2.13",
     "lodash": "^4.17.4",
     "mongodb": "^2.2.31",
     "skmatc": "~1.2.3"
   },
   "peerDependencies": {
     "@types/lodash": "^4.14.64",
-    "@types/mongodb": "^2.2.9",
+    "@types/mongodb": "^2.2.13",
     "@types/chai": "^3.5.2"
   },
   "devDependencies": {
