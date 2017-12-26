@@ -4,6 +4,18 @@ For a human friendly description of what changed in each release, take a look
 at the [Releases](https://github.com/SierraSoftworks/Iridium/releases) page.
 
 
+## Version [8.0.0-alpha.7](https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.7)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.7">tag: **v8.0.0-alpha.7**</a>
+
+```sh
+npm install iridium@8.0.0-alpha.7
+```
+
+### Changes
+ - [d22e7e8](https://github.com/SierraSoftworks/Iridium/commit/d22e7e8) 8.0.0-alpha.7
+ - [74e3d49](https://github.com/SierraSoftworks/Iridium/commit/74e3d49) feat #106: Fix bug in MongoDB client driver when passing aggregate options
+ - [90d632c](https://github.com/SierraSoftworks/Iridium/commit/90d632c) doc: Update changelog
+
 ## Version [8.0.0-alpha.6](https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.6)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.6">tag: **v8.0.0-alpha.6**</a>
 
