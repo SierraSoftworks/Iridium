@@ -4,6 +4,55 @@ For a human friendly description of what changed in each release, take a look
 at the [Releases](https://github.com/SierraSoftworks/Iridium/releases) page.
 
 
+## Version [8.0.0-alpha.6](https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.6)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.6">tag: **v8.0.0-alpha.6**</a>
+
+```sh
+npm install iridium@8.0.0-alpha.6
+```
+
+### Changes
+ - [19a6ffa](https://github.com/SierraSoftworks/Iridium/commit/19a6ffa) 8.0.0-alpha.6
+ - [0146271](https://github.com/SierraSoftworks/Iridium/commit/0146271) feat #106: Add support for aggregate options
+ - [6173aac](https://github.com/SierraSoftworks/Iridium/commit/6173aac) doc: Update documentation
+
+## Version [8.0.0-alpha.5](https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.5)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.5">tag: **v8.0.0-alpha.5**</a>
+
+```sh
+npm install iridium@8.0.0-alpha.5
+```
+
+### Changes
+ - [991a480](https://github.com/SierraSoftworks/Iridium/commit/991a480) 8.0.0-alpha.5
+ - [20abc84](https://github.com/SierraSoftworks/Iridium/commit/20abc84) feat #103: Exposed numeric BSON type helpers
+ - [ede68d6](https://github.com/SierraSoftworks/Iridium/commit/ede68d6) test #96: Add a test case to attempt reproducing the URL issue
+
+## Version [8.0.0-alpha.4](https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.4)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.4">tag: **v8.0.0-alpha.4**</a>
+
+```sh
+npm install iridium@8.0.0-alpha.4
+```
+
+### Changes
+ - [c51d7e6](https://github.com/SierraSoftworks/Iridium/commit/c51d7e6) 8.0.0-alpha.4
+ - [3860b9a](https://github.com/SierraSoftworks/Iridium/commit/3860b9a) fix #95: Correct an issue with outdated dev-side dependencies causing the build to erroneously pass
+
+## Version [8.0.0-alpha.3](https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.3)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.3">tag: **v8.0.0-alpha.3**</a>
+
+```sh
+npm install iridium@8.0.0-alpha.3
+```
+
+### Changes
+ - [b43fca7](https://github.com/SierraSoftworks/Iridium/commit/b43fca7) 8.0.0-alpha.3
+ - [09613a0](https://github.com/SierraSoftworks/Iridium/commit/09613a0) refactor #95: Switch to native Promises instead of Bluebird
+ - [ba1c9fd](https://github.com/SierraSoftworks/Iridium/commit/ba1c9fd) test: Add tests to ensure that #91 doesn't get broken
+ - [35cf575](https://github.com/SierraSoftworks/Iridium/commit/35cf575) test: Add tests to attempt reproducing #88
+ - [332f409](https://github.com/SierraSoftworks/Iridium/commit/332f409) doc: Update CHANGELOG
+
 ## Version [8.0.0-alpha.2](https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.2)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.2">tag: **v8.0.0-alpha.2**</a>
 
@@ -285,7 +334,7 @@ npm install iridium@7.0.0
 
 ## Version [7.0.0-alpha.17](https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.17)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v7.0.0-alpha.17">tag: **v7.0.0-alpha.17**</a>
-<a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/7.0.0-dev">branch: **7.0.0-dev**</a> <a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/7.0.0-dev">branch: **7.0.0-dev**</a>
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/7.0.0-dev">branch: **7.0.0-dev**</a>
 
 ```sh
 npm install iridium@7.0.0-alpha.17
@@ -1559,7 +1608,7 @@ npm install iridium@5.0.0-alpha.1
 
 ## Version [4.0.1](https://github.com/SierraSoftworks/Iridium/releases/tag/v4.0.1)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v4.0.1">tag: **v4.0.1**</a>
-<a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/v4">branch: **v4**</a> <a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/v4">branch: **v4**</a>
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(108, 198, 68); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/tree/v4">branch: **v4**</a>
 
 ```sh
 npm install iridium@4.0.1
