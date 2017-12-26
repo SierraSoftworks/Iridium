@@ -699,9 +699,14 @@ export class Model<TDocument, TInstance> {
         }), callback);
     }
 
-    aggregate<T>(pipeline: AggregationPipeline.Stage[]): Promise<T[]> {
+    /**
+     * Runs an aggregate operation in MongoDB and returns the contents of the resulting aggregation
+     * @param pipeline The list of aggregation pipeline stages to be executed for this aggregation
+     * @return A promise which completes with the results of the aggregation task
+     */
+    aggregate<T>(pipeline: AggregationPipeline.Stage[], options?: AggregationPipeline.Options): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
-            this.collection.aggregate(pipeline, (err, results) => {
+            this.collection.aggregate(pipeline, options || undefined, (err, results) => {
                 if(err) return reject(err);
                 return resolve(results);
             });
