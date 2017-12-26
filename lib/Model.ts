@@ -706,7 +706,7 @@ export class Model<TDocument, TInstance> {
      */
     aggregate<T>(pipeline: AggregationPipeline.Stage[], options?: AggregationPipeline.Options): Promise<T[]> {
         return new Promise<T[]>((resolve, reject) => {
-            this.collection.aggregate(pipeline, options || undefined, (err, results) => {
+            this.collection.aggregate(pipeline, options || {}, (err, results) => {
                 if(err) return reject(err);
                 return resolve(results);
             });
