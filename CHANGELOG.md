@@ -4,6 +4,19 @@ For a human friendly description of what changed in each release, take a look
 at the [Releases](https://github.com/SierraSoftworks/Iridium/releases) page.
 
 
+## Version [8.0.0-alpha.8](https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.8)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.8">tag: **v8.0.0-alpha.8**</a>
+
+```sh
+npm install iridium@8.0.0-alpha.8
+```
+
+### Changes
+ - [a4dac5a](https://github.com/SierraSoftworks/Iridium/commit/a4dac5a) 8.0.0-alpha.8
+ - [583784d](https://github.com/SierraSoftworks/Iridium/commit/583784d) feat #108: Add support for renaming instance fields
+ - [c6e7b46](https://github.com/SierraSoftworks/Iridium/commit/c6e7b46) test #110: Add a test case for instance instantiation
+ - [a993042](https://github.com/SierraSoftworks/Iridium/commit/a993042) doc: Update changelog
+
 ## Version [8.0.0-alpha.7](https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.7)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.7">tag: **v8.0.0-alpha.7**</a>
 
