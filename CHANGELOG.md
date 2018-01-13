@@ -4,6 +4,18 @@ For a human friendly description of what changed in each release, take a look
 at the [Releases](https://github.com/SierraSoftworks/Iridium/releases) page.
 
 
+## Version [8.0.0-alpha.9](https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.9)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.9">tag: **v8.0.0-alpha.9**</a>
+
+```sh
+npm install iridium@8.0.0-alpha.9
+```
+
+### Changes
+ - [c16c90d](https://github.com/SierraSoftworks/Iridium/commit/c16c90d) 8.0.0-alpha.9
+ - [e5750bc](https://github.com/SierraSoftworks/Iridium/commit/e5750bc) chore: Update to support TypeScript 2.6
+ - [286cca5](https://github.com/SierraSoftworks/Iridium/commit/286cca5) doc: Update changelog
+
 ## Version [8.0.0-alpha.8](https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.8)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.8">tag: **v8.0.0-alpha.8**</a>
 
