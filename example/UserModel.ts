@@ -168,7 +168,7 @@ export class User extends Iridium.Instance<UserDocument, User> implements UserDo
         };
     }
 
-    setPassword(newPassword: string, callback: (err?: Error, user?: User) => void) {
+    setPassword(newPassword: string, callback: (err: Error, user?: User) => void) {
         /// <summary>Updates the user's stored password hash</summary>
         /// <param name="newPassword" type="String">The new password to use for the user</param>
         /// <param name="callback" type="Function">A function to be called once the user's password has been updated</param>
@@ -188,7 +188,7 @@ export class User extends Iridium.Instance<UserDocument, User> implements UserDo
         var hashed = require("crypto").createHash("sha512").update(settings.security.salt).update(password).digest("hex");
         return hashed == this.password;
     }
-    addFriend(friend: string, callback: (err?: Error, user?: User) => void) {
+    addFriend(friend: string, callback: (err: Error, user?: User) => void) {
         this.save({ $push: { friends: friend } }, callback);
     }
     updateLevel() {

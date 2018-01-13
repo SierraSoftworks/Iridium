@@ -355,9 +355,9 @@ export class Instance<TDocument, TInstance> {
     first<T>(collection: T[]| { [key: string]: T }, predicate: General.Predicate<this, T>): T|null {
         let result: T|null = null;
 
-        _.each(collection, (value: T, key: string) => {
+        _.each(collection, (value, key) => {
             if (predicate.call(this, value, key)) {
-                result = value;
+                result = <T><any>value;
                 return false;
             }
         });
@@ -383,10 +383,10 @@ export class Instance<TDocument, TInstance> {
         let isArray = Array.isArray(collection);
         let results: any = isArray ? [] : {};
 
-        _.each(collection, (value: T, key: string) => {
+        _.each(collection, (value, key) => {
             if (predicate.call(this, value, key)) {
-                if (isArray) results.push(value);
-                else results[key] = value;
+                if (isArray) results.push(<T><any>value);
+                else results[key] = <T><any>value;
             }
         });
 

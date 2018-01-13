@@ -542,6 +542,7 @@ export class Model<TDocument, TInstance> {
      * @param {Object} changes The changes to make to the documents
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      */
+    // @ts-ignore We implement support for leaving out `options` but providing the `callback` in our base implementation, even though this complains
     update(conditions: { _id?: any } | Conditions | string, changes: Changes, callback?: General.Callback<number>): Promise<number>;
     /**
      * Updates the documents in the backing collection which match the conditions using the given update instructions
@@ -655,6 +656,7 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      * @returns {Promise<number>}
      */
+    // @ts-ignore We implement support for leaving out `options` but providing the `callback` in our base implementation, even though this complains
     remove(conditions: { _id?: string; } | Conditions | any, callback?: General.Callback<number>): Promise<number>;
     /**
      * Removes all documents from the collection which match the conditions
@@ -781,6 +783,7 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, String)} callback A callback which is triggered when the operation completes
      * @returns {Promise<String>} The name of the index
      */
+    // @ts-ignore We implement support for leaving out `options` but providing the `callback` in our base implementation, even though this complains
     ensureIndex(specification: Index.IndexSpecification, callback?: General.Callback<string>): Promise<string>;
     /**
      * Ensures that the given index is created for the collection
@@ -834,7 +837,7 @@ export class Model<TDocument, TInstance> {
 
         if (typeof (specification) === "string") index = <string>specification;
         else {
-            index = _(<Index.IndexSpecification>specification).map((direction: number, key: string) => `${key}_${direction}`).reduce<string>((x, y) => `${x}_${y}`);
+            index = _(<Index.IndexSpecification>specification).map((direction: number, key: string) => `${key}_${direction}`).reduce((x, y) => `${x}_${y}`);
         }
 
         if (!index)
