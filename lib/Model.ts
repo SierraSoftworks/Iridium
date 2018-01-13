@@ -26,7 +26,7 @@ import {ModelHandlers} from "./ModelHandlers";
 import * as ModelInterfaces from "./ModelInterfaces";
 import {ModelSpecificInstance} from "./ModelSpecificInstance";
 import {InstanceImplementation} from "./InstanceInterface";
-import {Transforms, DefaultTransforms} from "./Transforms";
+import {Transforms, DefaultTransforms, RenameMap} from "./Transforms";
 import * as AggregationPipeline from "./Aggregate";
 import {MapFunction, ReduceFunction, MapReducedDocument, MapReduceFunctions, MapReduceOptions} from "./MapReduce";
 
@@ -69,6 +69,7 @@ export class Model<TDocument, TInstance> {
         this._hooks = instanceType;
         this._cacheDirector = instanceType.cache || new CacheOnID();
         this._transforms = instanceType.transforms || {};
+        this._renames = instanceType.renames || {};
         this._validators = instanceType.validators || [];
         this._indexes = instanceType.indexes || [];
 
@@ -223,6 +224,16 @@ export class Model<TDocument, TInstance> {
      */
     get transforms() {
         return this._transforms;
+    }
+
+    private _renames: RenameMap;
+
+    /**
+     * Gets the renamed fields for this model, which will result in the field names
+     * used in your code being different to those used in the database.
+     */
+    get renames() {
+        return this._renames;
     }
 
     private _validators: Skmatc.Validator[];

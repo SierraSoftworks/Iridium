@@ -45,24 +45,32 @@ export class ModelHelpers<TDocument, TInstance> {
      * @returns {any} The result of having transformed the document.
      * @remarks This is only really called from insert/create - as 
      */
-    transformToDB<T>(document: T, options: TransformOptions = { properties: true }): T {
+    transformToDB<T>(document: T, options: TransformOptions = { properties: true, renames: true }): T {
         if(options.document && this.model.transforms.$document)
             document = <any>this.model.transforms.$document.toDB(document, "$document", this.model);
         
-        if(!options.properties) return document;
-        
-        for (let property in this.model.transforms) {
-            if (property === "$document") continue;
+        if(options.properties) {
+            for (let property in this.model.transforms) {
+                if (property === "$document") continue;
 
-            const transform = this.model.transforms[property];
-            if (!transform) continue;
+                const transform = this.model.transforms[property];
+                if (!transform) continue;
 
-            if(document.hasOwnProperty(property)) {
-                (<T & { [prop: string]: any }>document)[property]
-                    = transform.toDB((<T & { [prop: string]: any }>document)[property], property, this.model);
+                if(document.hasOwnProperty(property)) {
+                    (<T & { [prop: string]: any }>document)[property]
+                        = transform.toDB((<T & { [prop: string]: any }>document)[property], property, this.model);
+                }
             }
         }
-            
+
+        if(options.renames) {
+            for (let property in this.model.renames) {
+                const dbField = this.model.renames[property];
+                (<T & { [prop: string]: any }>document)[dbField] = (<T & { [prop: string]: any }>document)[property]
+                delete (<T & { [prop: string]: any }>document)[property]
+            }
+        }
+
         return document;
     }
     
@@ -75,21 +83,29 @@ export class ModelHelpers<TDocument, TInstance> {
      * document level transforms, as property level transforms are applied in
      * their relevant instance setters.
      */
-    transformFromDB(document: TDocument, options: TransformOptions = { properties: true }): TDocument {
+    transformFromDB(document: TDocument, options: TransformOptions = { properties: true, renames: true }): TDocument {
         if(options.document && this.model.transforms.$document)
             document = this.model.transforms.$document.fromDB(document, "$document", this.model);
-        
-        if(!options.properties) return document;
-        
-        for (let property in this.model.transforms) {
-            if(property === "$document") continue;
 
-            const transform = this.model.transforms[property];
-            if (!transform) continue;
+        if(options.renames) {
+            for (let property in this.model.renames) {
+                const dbField = this.model.renames[property];
+                (<TDocument & { [prop: string]: any }>document)[property] = (<TDocument & { [prop: string]: any }>document)[dbField]
+                delete (<TDocument & { [prop: string]: any }>document)[dbField]
+            }
+        }
+        
+        if(options.properties) {
+            for (let property in this.model.transforms) {
+                if(property === "$document") continue;
 
-            if(document.hasOwnProperty(property)) {
-                (<TDocument & { [prop: string]: any }>document)[property]
-                    = transform.fromDB((<TDocument & { [prop: string]: any }>document)[property], property, this.model);
+                const transform = this.model.transforms[property];
+                if (!transform) continue;
+
+                if(document.hasOwnProperty(property)) {
+                    (<TDocument & { [prop: string]: any }>document)[property]
+                        = transform.fromDB((<TDocument & { [prop: string]: any }>document)[property], property, this.model);
+                }
             }
         }
             
@@ -104,7 +120,7 @@ export class ModelHelpers<TDocument, TInstance> {
      * document level transforms.
      * @returns {any} A new document cloned from the original and transformed
      */
-    convertToDB<T>(document: T, options: TransformOptions = { properties: true }): T {
+    convertToDB<T>(document: T, options: TransformOptions = { properties: true, renames: true }): T {
         let doc: T = this.cloneDocument(document);
         return this.transformToDB(doc, options);
     }
@@ -156,5 +172,6 @@ export class ModelHelpers<TDocument, TInstance> {
 
 export interface TransformOptions {
     properties?: boolean;
+    renames?: boolean;
     document?: boolean;
 }

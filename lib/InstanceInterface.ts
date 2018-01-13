@@ -3,7 +3,7 @@ import {Schema} from "./Schema";
 import {Model} from "./Model";
 import * as Index from "./Index";
 import {CacheDirector} from "./CacheDirector";
-import {Transforms} from "./Transforms";
+import {Transforms, RenameMap} from "./Transforms";
 import {Changes} from "./Changes";
 import {MapFunction, ReduceFunction, MapReduceFunctions} from "./MapReduce"
 
@@ -132,6 +132,13 @@ export interface InstanceImplementation<TDocument, TInstance> {
      * then back to ObjectIDs once they return to the database.
      */
     transforms?: Transforms;
+
+    /**
+     * The map of code field names to DB field names which will be used by Iridium to rename
+     * those fields should you wish to have differing field names within the DB to those represented
+     * in your code.
+     */
+    renames?: RenameMap;
 }
 
 export interface InstanceInternals<TDocument extends { _id ?: any }, TInstance> {

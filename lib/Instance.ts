@@ -6,7 +6,7 @@ import * as General from "./General";
 import * as ModelInterfaces from "./ModelInterfaces";
 import * as Index from "./Index";
 import {Schema} from "./Schema";
-import {Transforms} from "./Transforms";
+import {Transforms, RenameMap} from "./Transforms";
 import {DefaultValidators} from "./Validators";
 import {Conditions} from "./Conditions";
 import {Changes} from "./Changes";
@@ -120,6 +120,13 @@ export class Instance<TDocument, TInstance> {
     };
 
     /**
+     * The rename map which will be used to map code field names to DB fields
+     */
+    static renames: RenameMap = {
+
+    };
+
+    /**
      * The cache director used to derive unique cache keys for documents of this type.
      */
     static cache: CacheDirector;
@@ -196,8 +203,12 @@ export class Instance<TDocument, TInstance> {
 
             if (this._isNew) {
                 return new Promise<boolean>((resolve, reject) => {
-                    this._model.collection.insertOne(this._modified, { w: "majority" }, (err, doc) => {
+                    let modified = this._model.helpers.cloneDocument(this._modified);
+                    modified = this._model.helpers.transformToDB(modified, { document: true });
+
+                    this._model.collection.insertOne(modified, { w: "majority" }, (err, doc) => {
                         if (err) return reject(err);
+                        (<any>this._modified)._id = doc.insertedId
                         return resolve(<any>!!doc);
                     });
                 });

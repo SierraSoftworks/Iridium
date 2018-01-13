@@ -133,6 +133,17 @@ export function Transform(fromDB: (value: any, property: string, model: Model<an
 	};
 }
 
+/**
+ * Renames a code field to a new name when it is persisted in the database
+ * @param {string} dbField the name of the field as it is stored in the DB
+ */
+export function Rename(dbField: string) {
+	return function(target: Instance<any, any>|InstanceImplementation<any, any>, property: string) {
+		let staticTarget: InstanceImplementation<any, any> = <InstanceImplementation<any, any>>(target instanceof Instance && target.constructor || target);
+		staticTarget.renames = _.clone(staticTarget.renames || { });
+		staticTarget.renames[property] = dbField
+	}
+}
 
 /**
  * Specifies that this property should be treated as an ObjectID, with the requisite validator and transforms.

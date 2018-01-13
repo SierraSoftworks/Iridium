@@ -1,6 +1,13 @@
 import {ObjectID, Binary} from "./BSON";
 import {Model} from "./Model";
 
+/**
+ * A map which converts a code field into the corresponding DB field
+*/
+export interface RenameMap {
+	[codeField: string]: string;
+}
+
 export interface Transforms {
 	/**
 	 * A transform which is applied to the entire document.
