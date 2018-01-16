@@ -135,6 +135,7 @@ describe("Transforms", () => {
 
 		it("should apply the transform on property reads", () => {
 			return db.Person.get().then(person => {
+				chai.expect(person).to.exist
 				chai.expect(person.email).to.eql("TEST@EMAIL.COM");
 				chai.expect(person.document.email).to.eql("test@email.com");
 			});
@@ -142,6 +143,7 @@ describe("Transforms", () => {
 
 		it("should apply the transform on property writes", () => {
 			return db.Person.get().then(person => {
+				chai.expect(person).to.exist
 				person.email = "Test@email.com";
 				chai.expect(person.email).to.eql("TEST@EMAIL.COM");
 				chai.expect(person.document.email).to.eql("test@email.com");
@@ -173,6 +175,7 @@ describe("Transforms", () => {
 			});
 
 			return db.Person.get().then(person => {
+				chai.expect(person.name).to.eql("Test User");
 				person.name = "Testy User";
 				person.email = "Test@email.com";
 				chai.expect(person.email).to.eql("TEST@EMAIL.COM");

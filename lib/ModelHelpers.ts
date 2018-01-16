@@ -66,8 +66,10 @@ export class ModelHelpers<TDocument, TInstance> {
         if(options.renames) {
             for (let property in this.model.renames) {
                 const dbField = this.model.renames[property];
-                (<T & { [prop: string]: any }>document)[dbField] = (<T & { [prop: string]: any }>document)[property]
-                delete (<T & { [prop: string]: any }>document)[property]
+                if ((<T & Object>document).hasOwnProperty(property)) {
+                    (<T & { [prop: string]: any }>document)[dbField] = (<T & { [prop: string]: any }>document)[property]
+                    delete (<T & { [prop: string]: any }>document)[property]
+                }
             }
         }
 
@@ -90,8 +92,10 @@ export class ModelHelpers<TDocument, TInstance> {
         if(options.renames) {
             for (let property in this.model.renames) {
                 const dbField = this.model.renames[property];
-                (<TDocument & { [prop: string]: any }>document)[property] = (<TDocument & { [prop: string]: any }>document)[dbField]
-                delete (<TDocument & { [prop: string]: any }>document)[dbField]
+                if ((<TDocument & Object>document).hasOwnProperty(dbField)) {
+                    (<TDocument & { [prop: string]: any }>document)[property] = (<TDocument & { [prop: string]: any }>document)[dbField]
+                    delete (<TDocument & { [prop: string]: any }>document)[dbField]
+                }
             }
         }
         
@@ -118,10 +122,11 @@ export class ModelHelpers<TDocument, TInstance> {
      * @param document The document to be converted
      * @param processProperties Whether or not to process properties in addition
      * document level transforms.
+     * @param clone Whether or not to clone the document before performing any transforms (performance boost)
      * @returns {any} A new document cloned from the original and transformed
      */
-    convertToDB<T>(document: T, options: TransformOptions = { properties: true, renames: true }): T {
-        let doc: T = this.cloneDocument(document);
+    convertToDB<T>(document: T, options: TransformOptions = { properties: true, renames: true }, clone: boolean = true): T {
+        let doc: T = clone ? this.cloneDocument(document) : document;
         return this.transformToDB(doc, options);
     }
 

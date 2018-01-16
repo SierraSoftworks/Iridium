@@ -279,7 +279,7 @@ export class Model<TDocument, TInstance> {
         conditions = conditions || {};
 
         if (!_.isPlainObject(conditions)) conditions = { _id: conditions };
-        conditions = this._helpers.convertToDB(conditions);
+        conditions = this._helpers.convertToDB(conditions, { document: true, properties: true, renames: true });
 
         let cursor = this.collection.find<TDocument>(conditions);
 
@@ -387,7 +387,7 @@ export class Model<TDocument, TInstance> {
         });
 
         return Nodeify(Promise.resolve().then(() => {
-            conditions = this._helpers.convertToDB(conditions);
+            conditions = this._helpers.convertToDB(conditions, { document: false, properties: true, renames: true });
 
             return this._cache.get<TDocument>(conditions);
         }).then((cachedDocument: TDocument) => {
@@ -585,7 +585,7 @@ export class Model<TDocument, TInstance> {
         });
 
         return Nodeify(Promise.resolve().then(() => {
-            conditions = this._helpers.convertToDB(conditions);
+            conditions = this._helpers.convertToDB(conditions, { document: true, properties: true, renames: true });
 
             return new Promise<number>((resolve, reject) => {
                 const callback = (err: Error, response: MongoDB.UpdateWriteOpResult) => {
@@ -633,7 +633,7 @@ export class Model<TDocument, TInstance> {
         };
 
         return Nodeify(Promise.resolve().then(() => {
-            conditions = this._helpers.convertToDB(conditions);
+            conditions = this._helpers.convertToDB(conditions, { document: true, properties: true, renames: true });
 
             return new Promise<number>((resolve, reject) => {
                 this.collection.count(conditions, (err, results) => {
@@ -692,7 +692,7 @@ export class Model<TDocument, TInstance> {
         };
 
         return Nodeify(Promise.resolve().then(() => {
-            conditions = this._helpers.convertToDB(conditions);
+            conditions = this._helpers.convertToDB(conditions, { document: true, properties: true, renames: true });
 
             return new Promise<number|undefined>((resolve, reject) => {
                 if(options!.single) return this.collection.deleteOne(conditions, options!, (err, response) => {

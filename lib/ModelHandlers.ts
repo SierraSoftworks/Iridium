@@ -31,7 +31,7 @@ export class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
         });
 
         let wrapped: TResult;
-        return Promise.resolve(this.model.helpers.transformFromDB(result, { document: true })).then((target: any) => {
+        return Promise.resolve(this.model.helpers.transformFromDB(result, { document: true, renames: true })).then((target: any) => {
             return <Promise<TResult>>Promise
                 // If onRetrieved returns a Promise promise then there is no significant performance overhead here
                 .resolve(this.model.hooks.onRetrieved && this.model.hooks.onRetrieved(target))
@@ -64,7 +64,8 @@ export class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
                     let validation: Skmatc.Result = this.model.helpers.validate(document);
                     if (validation.failed) return Promise.reject(validation.error);
 
-                    return document;
+                    // Only process the renames after performing validation
+                    return this.model.helpers.convertToDB(document, { renames: true }, false);
                 });
         }));
     }

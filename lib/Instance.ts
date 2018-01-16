@@ -187,7 +187,8 @@ export class Instance<TDocument, TInstance> {
                 let original = this._model.helpers.cloneDocument(this._original);
                 let modified = this._model.helpers.cloneDocument(this._modified);
                 
-                modified = this._model.helpers.transformToDB(modified, { document: true }); 
+                original = this._model.helpers.transformToDB(original, { renames: true }); 
+                modified = this._model.helpers.transformToDB(modified, { document: true, renames: true }); 
 
                 changes = this._model.helpers.diff(original, modified);
             }
@@ -204,7 +205,7 @@ export class Instance<TDocument, TInstance> {
             if (this._isNew) {
                 return new Promise<boolean>((resolve, reject) => {
                     let modified = this._model.helpers.cloneDocument(this._modified);
-                    modified = this._model.helpers.transformToDB(modified, { document: true });
+                    modified = this._model.helpers.transformToDB(modified, { document: true, renames: true });
 
                     this._model.collection.insertOne(modified, { w: "majority" }, (err, doc) => {
                         if (err) return reject(err);
@@ -245,6 +246,10 @@ export class Instance<TDocument, TInstance> {
                 this._isNew = true;
                 this._original = this._model.helpers.cloneDocument(this._modified);
                 return Promise.resolve(<TInstance><any>this);
+            }
+
+            if (this._modified === latest) {
+                this._modified = this._model.helpers.transformToDB(this._modified, { document: true, renames: true })
             }
 
             return this._model.handlers.documentReceived(conditions, latest, (value) => {

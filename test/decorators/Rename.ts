@@ -24,7 +24,8 @@ class Database extends Iridium.Core {
 describe("decorators", () => {
     let core = new Database({ database: "test" });
     before(() => core.connect());
-    beforeEach(() => core.Houses.remove());
+    before(() => core.Houses.remove());
+    afterEach(() => core.Houses.remove());
     after(() => core.close());
 
     describe("Rename", () => {
@@ -56,45 +57,37 @@ describe("decorators", () => {
                 houseName: "My House"
             });
 
-            return house.save().then(() => {
-                return core.Houses.collection.findOne({}).then(doc => {
+            return house.save()
+                .then(() => core.Houses.collection.findOne({}))
+                .then(doc => {
                     chai.expect(doc).to.have.property("house_name", "My House")
                 });
-            });
         });
 
-        it("should correctly insert the document", () => {
-            return core.Houses.insert({
-                houseName: "My House"
-            }).then(house => {
-                chai.expect(house.houseName).to.eql("My House")
-                return core.Houses.collection.findOne({}).then(doc => {
-                    chai.expect(doc).to.have.property("house_name", "My House")
+        describe("after inserting an entity", () => {
+            beforeEach(() => core.Houses.insert({ houseName: "My House" }))
+
+            it("should have inserted the document with the renamed field", () => {
+                return chai.expect(core.Houses.collection.findOne({})).to.eventually.have.property("house_name", "My House");
+            });
+
+            it("should correctly retrieve the entity", () => {
+                return chai.expect(core.Houses.findOne()).to.eventually.have.property("houseName", "My House");
+            });
+
+            it("should correctly update the document", () => {
+                return core.Houses.findOne().then(house => {
+                    chai.expect(house).to.exist;
+                    if (!house) throw new Error("House should not be null");
+
+                    house.houseName = "My Other House";
+                    return house.save();
+                }).then(house => {
+                    chai.expect(house).to.have.property("houseName", "My Other House");
+                    return core.Houses.findOne();
+                }).then(house => {
+                    chai.expect(house).to.exist.and.have.property("houseName", "My Other House");
                 });
-            });
-        });
-
-        it("should correctly retrieve the document", () => {
-            return core.Houses.insert({
-                houseName: "My House"
-            }).then(house => {
-                chai.expect(house.houseName).to.eql("My House")
-                return core.Houses.findOne().then(doc => {
-                    chai.expect(doc).to.have.property("houseName", "My House")
-                });
-            });
-        });
-
-        it("should correctly update the document", () => {
-            return core.Houses.insert({
-                houseName: "My House"
-            }).then(house => {
-                house.houseName = "My Other House";
-                return house.save();
-            }).then(house => {
-                return core.Houses.findOne();
-            }).then(house => {
-                chai.expect(house).to.have.property("houseName", "My Other House");
             });
         });
     });
