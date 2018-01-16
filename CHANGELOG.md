@@ -4,6 +4,20 @@ For a human friendly description of what changed in each release, take a look
 at the [Releases](https://github.com/SierraSoftworks/Iridium/releases) page.
 
 
+## Version [8.0.0-alpha.10](https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.10)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.10">tag: **v8.0.0-alpha.10**</a>
+
+```sh
+npm install iridium@8.0.0-alpha.10
+```
+
+### Changes
+ - [de77be7](https://github.com/SierraSoftworks/Iridium/commit/de77be7) 8.0.0-alpha.10
+ - [fcd98c0](https://github.com/SierraSoftworks/Iridium/commit/fcd98c0) fix #108: Improve various edge cases with the rename implementation
+ - [00cf41e](https://github.com/SierraSoftworks/Iridium/commit/00cf41e) test: Use Bluebird as the Promise implementation for testing
+ - [9257908](https://github.com/SierraSoftworks/Iridium/commit/9257908) fix: Correct an issue with out of date yarn modules
+ - [0547340](https://github.com/SierraSoftworks/Iridium/commit/0547340) doc: Update changelog
+
 ## Version [8.0.0-alpha.9](https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.9)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.9">tag: **v8.0.0-alpha.9**</a>
 
