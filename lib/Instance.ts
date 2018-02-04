@@ -203,15 +203,16 @@ export class Instance<TDocument, TInstance> {
             if (!changes && !this._isNew) return false;
 
             if (this._isNew) {
-                return this._model.handlers.creatingDocuments([this._modified]).then((modifiedDocs) => {
+                //return this._model.handlers.creatingDocuments([this._modified]).then((modifiedDocs) => {
                     return new Promise((resolve, reject) => {
-                        this._model.collection.insertOne(modifiedDocs[0], { w: "majority" }, (err, doc) => {
+                        //this._model.collection.insertOne(modifiedDocs[0], { w: "majority" }, (err, doc) => {
+                        this._model.collection.insertOne(this._modified, { w: "majority" }, (err, doc) => {
                             if (err) return reject(err);
                             (<any>this._modified)._id = doc.insertedId
                             return resolve(<any>!!doc);
                         });
                     });
-                });
+                //});
             } else {
                 return new Promise<boolean>((resolve, reject) => {
                     this._model.collection.updateOne(conditions, changes, { w: "majority" }, (err, changed) => {
