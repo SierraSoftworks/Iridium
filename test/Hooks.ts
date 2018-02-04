@@ -59,9 +59,20 @@ describe("Hooks", function() {
             Test.onCreating = (doc) => Promise.resolve();
         });
 
-        it("should be called when a document is being created",(done) => {
+        it("should be called when a document is being created from Model.insert",(done) => {
             hookEmitter.once("creating",() => done());
             model.insert({ answer: 11 });
+        });
+
+        it("should be called when a document is being created from Model.create",(done) => {
+            hookEmitter.once("creating",() => done());
+            model.create({ answer: 11 });
+        });
+
+        it("should be called when a document is being created from Instance.save",(done) => {
+            hookEmitter.once("creating",() => done());
+            const testInstance = new model.Instance({ answer: 11 });
+            testInstance.save();
         });
 
         it("should be passed the document being created",() => {
