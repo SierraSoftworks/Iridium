@@ -139,7 +139,6 @@ export class Core {
             return this._connectPromise = this.mongoConnectAsyc(this.url, this._config && this._config.options || {});
         }).then((db: MongoDB.Db) => {
             return this.onConnecting(db);
-            return db;
         }).then(db => {
             this._connection = db;
             this._connectPromise = undefined;
