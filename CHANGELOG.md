@@ -4,6 +4,26 @@ For a human friendly description of what changed in each release, take a look
 at the [Releases](https://github.com/SierraSoftworks/Iridium/releases) page.
 
 
+## Version [8.0.0-alpha.11](https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.11)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.11">tag: **v8.0.0-alpha.11**</a>
+
+```sh
+npm install iridium@8.0.0-alpha.11
+```
+
+### Changes
+ - [34975b4](https://github.com/SierraSoftworks/Iridium/commit/34975b4) 8.0.0-alpha.11
+ - [ed797b1](https://github.com/SierraSoftworks/Iridium/commit/ed797b1) doc: Updated CONTRIBUTING.md doc to reflect current repo structure
+ - [a888ea5](https://github.com/SierraSoftworks/Iridium/commit/a888ea5) Merge pull request #115 from CatGuardian/feature/8.0.0
+ - [0edcc7c](https://github.com/SierraSoftworks/Iridium/commit/0edcc7c) Forgot to remove a temporary line of code in Core.ts.
+ - [28d11e5](https://github.com/SierraSoftworks/Iridium/commit/28d11e5) Added TODO's for documentation and restored Core.ts since the onConnect hook tests were actually performing a test and not just always passing.
+ - [f6f5224](https://github.com/SierraSoftworks/Iridium/commit/f6f5224) Fixing othe tests that have a similar flaw. And testing if this flaw extends to the onConnecting methods of core.
+ - [890aca1](https://github.com/SierraSoftworks/Iridium/commit/890aca1) Now that I have fixed the test, add the code to fix the onCreating hook not being called bug where the onCreating hook isn't called when creating a document from the Instance.save method.
+ - [86fb0a8](https://github.com/SierraSoftworks/Iridium/commit/86fb0a8) Update an onCreating hook test to see why it isn't failing when it is expected to fail.
+ - [2d26f3c](https://github.com/SierraSoftworks/Iridium/commit/2d26f3c) Checking if test actually works by forcing it to fail.
+ - [de8f1bd](https://github.com/SierraSoftworks/Iridium/commit/de8f1bd) Added support for the onCreating hook to be triggered when creating a new document through the Model.Save method.
+ - [ad04db2](https://github.com/SierraSoftworks/Iridium/commit/ad04db2) doc: Updated changelog
+
 ## Version [8.0.0-alpha.10](https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.10)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.10">tag: **v8.0.0-alpha.10**</a>
 
