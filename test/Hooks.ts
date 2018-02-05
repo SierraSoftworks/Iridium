@@ -59,14 +59,22 @@ describe("Hooks", function() {
             Test.onCreating = (doc) => Promise.resolve();
         });
 
-        it("should be called when a document is being created from Model.insert",(done) => {
-            hookEmitter.once("creating",() => done());
-            model.insert({ answer: 11 });
+        it("should be called when a document is being created from Model.insert", async () => {
+            let onCreatingHit: boolean = false;
+            hookEmitter.once("creating", () => onCreatingHit = true);
+
+            await model.insert({ answer: 11 });
+
+            chai.expect(onCreatingHit).to.be.true;
         });
 
-        it("should be called when a document is being created from Model.create",(done) => {
-            hookEmitter.once("creating",() => done());
-            model.create({ answer: 11 });
+        it("should be called when a document is being created from Model.create", async () => {
+            let onCreatingHit: boolean = false;
+            hookEmitter.once("creating", () => onCreatingHit = true);
+
+            await model.create({ answer: 11 });
+
+            chai.expect(onCreatingHit).to.be.true;
         });
 
         it("should be called when a document is being created from Instance.save", async () => {
