@@ -203,14 +203,13 @@ export class Instance<TDocument, TInstance> {
             if (!changes && !this._isNew) return false;
 
             if (this._isNew) {
-                return new Promise<boolean>((resolve, reject) => {
-                    let modified = this._model.helpers.cloneDocument(this._modified);
-                    modified = this._model.helpers.transformToDB(modified, { document: true, renames: true });
-
-                    this._model.collection.insertOne(modified, { w: "majority" }, (err, doc) => {
-                        if (err) return reject(err);
-                        (<any>this._modified)._id = doc.insertedId
-                        return resolve(<any>!!doc);
+                return this._model.handlers.creatingDocuments([this._modified]).then((modifiedDocs) => {
+                    return new Promise((resolve, reject) => {
+                        this._model.collection.insertOne(modifiedDocs[0], { w: "majority" }, (err, doc) => {
+                            if (err) return reject(err);
+                            (<any>this._modified)._id = doc.insertedId
+                            return resolve(<any>!!doc);
+                        });
                     });
                 });
             } else {

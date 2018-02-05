@@ -1,6 +1,7 @@
 import * as MongoDB from "mongodb";
 import * as Skmatc from "skmatc";
 
+// TODO: Add documentation
 export function DefaultValidators() {
 	return [
 		Skmatc.create(schema => schema === MongoDB.ObjectID, function(schema, data) {
