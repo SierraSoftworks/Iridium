@@ -69,10 +69,14 @@ describe("Hooks", function() {
             model.create({ answer: 11 });
         });
 
-        it("should be called when a document is being created from Instance.save",(done) => {
-            hookEmitter.once("creating",() => done());
+        it("should be called when a document is being created from Instance.save", async () => {
+            let onCreatingHit: boolean = false;
+            hookEmitter.once("creating", () => onCreatingHit = true);
+
             const testInstance = new model.Instance({ answer: 11 });
-            testInstance.save();
+            await testInstance.save();
+
+            chai.expect(onCreatingHit).to.be.true;
         });
 
         it("should be passed the document being created",() => {
