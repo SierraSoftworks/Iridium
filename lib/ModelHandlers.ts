@@ -21,6 +21,7 @@ export class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
 
     }
 
+    // TODO: Add documentation
     documentReceived<TResult>(conditions: any,
         result: TDocument,
         wrapper: (document: TDocument, isNew?: boolean, isPartial?: boolean) => TResult,
@@ -54,6 +55,7 @@ export class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
         });
     }
 
+    // TODO: Add documentation
     creatingDocuments(documents: TDocument[]): Promise<any[]> {
         return Promise.all(documents.map((document: any) => {
             return Promise
@@ -70,6 +72,7 @@ export class ModelHandlers<TDocument extends { _id?: any }, TInstance> {
         }));
     }
 
+    // TODO: Add documentation
     savingDocument(instance: TInstance, changes: any): Promise<TInstance> {
         return Promise
             // If onSaving returns a Promise promise then there is no significant performance overhead here
