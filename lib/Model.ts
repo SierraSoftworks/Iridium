@@ -167,7 +167,7 @@ export class Model<TDocument, TInstance> {
      * @returns {Collection}
      */
     get collection(): MongoDB.Collection {
-        return this.core.connection.collection(this._collection);
+        return this.core.db.collection(this._collection);
     }
 
     /**
@@ -579,14 +579,20 @@ export class Model<TDocument, TInstance> {
             _id: conditions
         };
 
+        const isReplacement = Object.keys(changes).every(key => !!key.indexOf("$"));
+
         _.defaults(opts, {
             w: "majority",
-            multi: true
+            multi: !isReplacement
         });
 
+        
         return Nodeify(Promise.resolve().then(() => {
-            conditions = this._helpers.convertToDB(conditions, { document: true, properties: true, renames: true });
+            if (opts.multi && isReplacement)
+                return Promise.reject(new Error("You cannot use a replacement document and { multi: true }"));
 
+            conditions = this._helpers.convertToDB(conditions, { document: true, properties: true, renames: true });
+            
             return new Promise<number>((resolve, reject) => {
                 const callback = (err: Error, response: MongoDB.UpdateWriteOpResult) => {
                     if (err) return reject(err);
@@ -600,6 +606,9 @@ export class Model<TDocument, TInstance> {
 
                 if (opts.multi)
                     return this.collection.updateMany(conditions, changes, opts, callback);
+                
+                if (isReplacement)
+                    return this.collection.replaceOne(conditions, changes, callback);
 
                 return this.collection.updateOne(conditions, changes, opts, callback)
             })
@@ -718,12 +727,8 @@ export class Model<TDocument, TInstance> {
      * @return A promise which completes with the results of the aggregation task
      */
     aggregate<T>(pipeline: AggregationPipeline.Stage[], options?: AggregationPipeline.Options): Promise<T[]> {
-        return new Promise<T[]>((resolve, reject) => {
-            this.collection.aggregate(pipeline, options || {}, (err, results) => {
-                if(err) return reject(err);
-                return resolve(results);
-            });
-        });
+        const cursor = this.collection.aggregate<T>(pipeline, options || {});
+        return cursor.toArray();
     }
 
     /**

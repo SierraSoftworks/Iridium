@@ -2,6 +2,7 @@ import * as MongoDB from "mongodb";
 import * as _ from "lodash";
 import * as http from "http";
 import * as events from "events";
+import * as url from "url";
 
 import {Configuration} from "./Configuration";
 import {Plugin} from "./Plugins";
@@ -45,14 +46,18 @@ export class Core {
         if (typeof uri === "string") {
             this._url = uri;
             this._config = config;
+
+            this._dbName = config && config.database || this.parseDbName(this.url)
         } else if (uri) {
             this._config = uri;
+            this._dbName = uri && uri.database || "";
+            if (!this._dbName) throw new Error("Expected the database name to be provided when initializing Iridium");
         } else {
             throw new Error("Expected either a URI or config object to be supplied when initializing Iridium");
         }
     }
 
-    private mongoConnectAsyc = (url: string, opts: MongoDB.MongoClientOptions) => new Promise<MongoDB.Db>((resolve, reject) => {
+    private mongoConnectAsyc = (url: string, opts: MongoDB.MongoClientOptions) => new Promise<MongoDB.MongoClient>((resolve, reject) => {
         MongoDB.MongoClient.connect(url, opts, (err, db) => {
             if (err) return reject(err);
             return resolve(db);
@@ -62,10 +67,11 @@ export class Core {
     private _plugins: Plugin[] = [];
     private _url: string;
     private _config: Configuration|undefined;
-    private _connection: MongoDB.Db|undefined;
+    private _connection: MongoDB.MongoClient|undefined;
     private _cache: Cache = new NoOpCache();
+    private _dbName: string;
 
-    private _connectPromise: Promise<MongoDB.Db>|undefined;
+    private _connectPromise: Promise<MongoDB.MongoClient>|undefined;
 
     /**
      * Gets the plugins registered with this Iridium Core
@@ -89,9 +95,23 @@ export class Core {
      * Core.
      * @returns {MongoDB.Db}
      */
-    get connection(): MongoDB.Db {
+    get connection(): MongoDB.MongoClient {
         if (!this._connection) throw new Error("Iridium Core not connected to a database.");
         return this._connection;
+    }
+
+    /**
+     * Gets the name of the database that this Iridium core is connected to
+     */
+    get dbName(): string {
+        return this._dbName;
+    }
+
+    /**
+     * Gets the database that this Iridium core is connected to
+     */
+    get db(): MongoDB.Db {
+        return this.connection.db(this.dbName);
     }
 
     /**
@@ -137,7 +157,7 @@ export class Core {
             if (this._connection) return this._connection;
             if (this._connectPromise) return this._connectPromise;
             return this._connectPromise = this.mongoConnectAsyc(this.url, this._config && this._config.options || {});
-        }).then((db: MongoDB.Db) => {
+        }).then((db: MongoDB.MongoClient) => {
             return this.onConnecting(db);
         }).then(db => {
             this._connection = db;
@@ -146,9 +166,14 @@ export class Core {
         }).then(() => {
             return this;
         }, (err) => {
-            if (this._connection) this._connection.close();
+            if (this._connection && this._connection.close) return this._connection.close().then(() => {
+                this._connection = undefined;
+                this._connectPromise = undefined;
+            }).then(() => Promise.reject(err));
+
             this._connection = undefined;
             this._connectPromise = undefined;
+
             return Promise.reject(err);
         }), callback);
     }
@@ -160,7 +185,7 @@ export class Core {
     close(callback?: Callback<this>): Promise<this> {
         return Nodeify(Promise.resolve().then(() => {
             if (!this._connection) return this;
-            let conn: MongoDB.Db = this._connection;
+            let conn: MongoDB.MongoClient = this._connection;
             this._connection = undefined;
             conn.close();
             return this;
@@ -187,7 +212,7 @@ export class Core {
      * resolves a connection object, Iridium will be unable to execute any queries. If you wish
      * to run Iridium queries then look at the onConnected method.
      */
-    protected onConnecting(connection: MongoDB.Db): PromiseLike<MongoDB.Db> {
+    protected onConnecting(connection: MongoDB.MongoClient): PromiseLike<MongoDB.MongoClient> {
         return Promise.resolve(connection);
     }
 
@@ -200,5 +225,16 @@ export class Core {
      */
     protected onConnected(): PromiseLike<void> {
         return Promise.resolve();
+    }
+
+    /**
+     * Parses the name of a DB from a URL string
+     * @param urlStr The url string whose path component is the name of the DB
+     */
+    private parseDbName(urlStr: string): string {
+        const path = (url.parse(urlStr).path || "").replace(/^\/*/, "");
+        if (!path) throw new Error("Database URL does not include the DB name");
+        if (!path.match(/^[^\.\s\/\\]*$/)) throw new Error("Database name provided in the URL is invalid");
+        return path;
     }
 }

@@ -24,9 +24,9 @@ class InheritedCoreWithHooks extends Iridium.Core {
     onConnectingResult: (connection: MongoDB.Db) => Promise<any> = (connection) => Promise.resolve(connection);
     onConnectedResult: () => Promise<void> = () => Promise.resolve();
 
-    protected onConnecting(db: MongoDB.Db) {
-        this.events.emit("connecting", db);
-        return this.onConnectingResult(db);
+    protected onConnecting(client: MongoDB.MongoClient) {
+        this.events.emit("connecting", client);
+        return this.onConnectingResult(client.db("test"));
     }
 
     protected onConnected() {

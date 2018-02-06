@@ -176,10 +176,6 @@ describe("Model",() => {
             let model = new Iridium.Model(new Iridium.Core("mongodb://localhost/test"), Test);
             chai.expect(() => model.collection).to.throw("Iridium Core not connected to a database.");
         });
-
-        it("should return a MongoDB DB object",() => {
-            chai.expect(core.connection).to.exist.and.be.an.instanceof(MongoDB.Db);
-        });
     });
 
     describe("create()",() => {
