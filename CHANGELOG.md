@@ -4,6 +4,18 @@ For a human friendly description of what changed in each release, take a look
 at the [Releases](https://github.com/SierraSoftworks/Iridium/releases) page.
 
 
+## Version [8.0.0-alpha.12](https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.12)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.12">tag: **v8.0.0-alpha.12**</a>
+
+```sh
+npm install iridium@8.0.0-alpha.12
+```
+
+### Changes
+ - [b6023fb](https://github.com/SierraSoftworks/Iridium/commit/b6023fb) 8.0.0-alpha.12
+ - [3506c45](https://github.com/SierraSoftworks/Iridium/commit/3506c45) chore: Update to use MongoDB Client 3.0
+ - [e8d6ed6](https://github.com/SierraSoftworks/Iridium/commit/e8d6ed6) doc: Updated changelog
+
 ## Version [8.0.0-alpha.11](https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.11)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.11">tag: **v8.0.0-alpha.11**</a>
 
