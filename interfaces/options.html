@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>MapReduceOptions | Iridium</title>
+	<title>Options | Iridium</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="mapreduceoptions.html">MapReduceOptions</a>
+					<a href="options.html">Options</a>
 				</li>
 			</ul>
-			<h1>Interface MapReduceOptions</h1>
+			<h1>Interface Options</h1>
 		</div>
 	</div>
 </header>
@@ -70,10 +70,10 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="tsd-signature-type">MapReduceOptions</span>
+						<span class="tsd-signature-type">CollectionAggregationOptions</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">MapReduceOptions</span>
+								<span class="target">Options</span>
 							</li>
 						</ul>
 					</li>
@@ -83,102 +83,147 @@
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
-						<section class="tsd-index-section tsd-is-external">
+						<section class="tsd-index-section tsd-is-inherited tsd-is-external">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="mapreduceoptions.html#bypassdocumentvalidation" class="tsd-kind-icon">bypass<wbr>Document<wbr>Validation</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="mapreduceoptions.html#finalize" class="tsd-kind-icon">finalize</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="mapreduceoptions.html#jsmode" class="tsd-kind-icon">js<wbr>Mode</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="mapreduceoptions.html#keeptemp" class="tsd-kind-icon">keeptemp</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="mapreduceoptions.html#limit" class="tsd-kind-icon">limit</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-external"><a href="mapreduceoptions.html#out" class="tsd-kind-icon">out</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="mapreduceoptions.html#query" class="tsd-kind-icon">query</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="mapreduceoptions.html#readpreference" class="tsd-kind-icon">read<wbr>Preference</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="mapreduceoptions.html#scope" class="tsd-kind-icon">scope</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="mapreduceoptions.html#session" class="tsd-kind-icon">session</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="mapreduceoptions.html#sort" class="tsd-kind-icon">sort</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="mapreduceoptions.html#verbose" class="tsd-kind-icon">verbose</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="options.html#allowdiskuse" class="tsd-kind-icon">allow<wbr>Disk<wbr>Use</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="options.html#bypassdocumentvalidation" class="tsd-kind-icon">bypass<wbr>Document<wbr>Validation</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="options.html#collation" class="tsd-kind-icon">collation</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="options.html#comment" class="tsd-kind-icon">comment</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="options.html#cursor" class="tsd-kind-icon">cursor</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="options.html#explain" class="tsd-kind-icon">explain</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="options.html#maxtimems" class="tsd-kind-icon">max<wbr>TimeMS</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="options.html#promotebuffers" class="tsd-kind-icon">promote<wbr>Buffers</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="options.html#promotelongs" class="tsd-kind-icon">promote<wbr>Longs</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="options.html#promotevalues" class="tsd-kind-icon">promote<wbr>Values</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="options.html#raw" class="tsd-kind-icon">raw</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="options.html#readpreference" class="tsd-kind-icon">read<wbr>Preference</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="options.html#session" class="tsd-kind-icon">session</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-external">
+			<section class="tsd-panel-group tsd-member-group tsd-is-inherited tsd-is-external">
 				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
+					<a name="allowdiskuse" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> allow<wbr>Disk<wbr>Use</h3>
+					<div class="tsd-signature tsd-kind-icon">allow<wbr>Disk<wbr>Use<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from CollectionAggregationOptions.allowDiskUse</p>
+						<ul>
+							<li>Defined in node_modules/@types/mongodb/index.d.ts:824</li>
+						</ul>
+					</aside>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 					<a name="bypassdocumentvalidation" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> bypass<wbr>Document<wbr>Validation</h3>
 					<div class="tsd-signature tsd-kind-icon">bypass<wbr>Document<wbr>Validation<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from MapReduceOptions.bypassDocumentValidation</p>
+						<p>Inherited from CollectionAggregationOptions.bypassDocumentValidation</p>
 						<ul>
-							<li>Defined in node_modules/@types/mongodb/index.d.ts:1139</li>
+							<li>Defined in node_modules/@types/mongodb/index.d.ts:829</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-					<a name="finalize" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> finalize</h3>
-					<div class="tsd-signature tsd-kind-icon">finalize<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+					<a name="collation" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> collation</h3>
+					<div class="tsd-signature tsd-kind-icon">collation<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Object</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from MapReduceOptions.finalize</p>
+						<p>Inherited from CollectionAggregationOptions.collation</p>
 						<ul>
-							<li>Defined in node_modules/@types/mongodb/index.d.ts:1135</li>
+							<li>Defined in node_modules/@types/mongodb/index.d.ts:834</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-					<a name="jsmode" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> js<wbr>Mode</h3>
-					<div class="tsd-signature tsd-kind-icon">js<wbr>Mode<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span></div>
+					<a name="comment" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> comment</h3>
+					<div class="tsd-signature tsd-kind-icon">comment<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from MapReduceOptions.jsMode</p>
+						<p>Inherited from CollectionAggregationOptions.comment</p>
 						<ul>
-							<li>Defined in node_modules/@types/mongodb/index.d.ts:1137</li>
+							<li>Defined in node_modules/@types/mongodb/index.d.ts:835</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-					<a name="keeptemp" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> keeptemp</h3>
-					<div class="tsd-signature tsd-kind-icon">keeptemp<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span></div>
+					<a name="cursor" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> cursor</h3>
+					<div class="tsd-signature tsd-kind-icon">cursor<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from MapReduceOptions.keeptemp</p>
+						<p>Inherited from CollectionAggregationOptions.cursor</p>
 						<ul>
-							<li>Defined in node_modules/@types/mongodb/index.d.ts:1134</li>
+							<li>Defined in node_modules/@types/mongodb/index.d.ts:819</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-					<a name="limit" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> limit</h3>
-					<div class="tsd-signature tsd-kind-icon">limit<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></div>
+					<a name="explain" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> explain</h3>
+					<div class="tsd-signature tsd-kind-icon">explain<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from MapReduceOptions.limit</p>
+						<p>Inherited from CollectionAggregationOptions.explain</p>
 						<ul>
-							<li>Defined in node_modules/@types/mongodb/index.d.ts:1133</li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-external">
-					<a name="out" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> out</h3>
-					<div class="tsd-signature tsd-kind-icon">out<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"inline"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"replace"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"merge"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"reduce"</span></div>
-					<aside class="tsd-sources">
-						<p>Overrides MapReduceOptions.out</p>
-						<ul>
-							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/ed406bc/lib/MapReduce.ts#L67">lib/MapReduce.ts:67</a></li>
+							<li>Defined in node_modules/@types/mongodb/index.d.ts:821</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-					<a name="query" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> query</h3>
-					<div class="tsd-signature tsd-kind-icon">query<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Object</span></div>
+					<a name="maxtimems" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> max<wbr>TimeMS</h3>
+					<div class="tsd-signature tsd-kind-icon">max<wbr>TimeMS<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from MapReduceOptions.query</p>
+						<p>Inherited from CollectionAggregationOptions.maxTimeMS</p>
 						<ul>
-							<li>Defined in node_modules/@types/mongodb/index.d.ts:1131</li>
+							<li>Defined in node_modules/@types/mongodb/index.d.ts:827</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
+					<a name="promotebuffers" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> promote<wbr>Buffers</h3>
+					<div class="tsd-signature tsd-kind-icon">promote<wbr>Buffers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from CollectionAggregationOptions.promoteBuffers</p>
+						<ul>
+							<li>Defined in node_modules/@types/mongodb/index.d.ts:833</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
+					<a name="promotelongs" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> promote<wbr>Longs</h3>
+					<div class="tsd-signature tsd-kind-icon">promote<wbr>Longs<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from CollectionAggregationOptions.promoteLongs</p>
+						<ul>
+							<li>Defined in node_modules/@types/mongodb/index.d.ts:831</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
+					<a name="promotevalues" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> promote<wbr>Values</h3>
+					<div class="tsd-signature tsd-kind-icon">promote<wbr>Values<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from CollectionAggregationOptions.promoteValues</p>
+						<ul>
+							<li>Defined in node_modules/@types/mongodb/index.d.ts:832</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
+					<a name="raw" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> raw</h3>
+					<div class="tsd-signature tsd-kind-icon">raw<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from CollectionAggregationOptions.raw</p>
+						<ul>
+							<li>Defined in node_modules/@types/mongodb/index.d.ts:830</li>
 						</ul>
 					</aside>
 				</section>
@@ -187,20 +232,9 @@
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> read<wbr>Preference</h3>
 					<div class="tsd-signature tsd-kind-icon">read<wbr>Preference<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ReadPreference</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from MapReduceOptions.readPreference</p>
+						<p>Inherited from CollectionAggregationOptions.readPreference</p>
 						<ul>
-							<li>Defined in node_modules/@types/mongodb/index.d.ts:1129</li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-					<a name="scope" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> scope</h3>
-					<div class="tsd-signature tsd-kind-icon">scope<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Object</span></div>
-					<aside class="tsd-sources">
-						<p>Inherited from MapReduceOptions.scope</p>
-						<ul>
-							<li>Defined in node_modules/@types/mongodb/index.d.ts:1136</li>
+							<li>Defined in node_modules/@types/mongodb/index.d.ts:816</li>
 						</ul>
 					</aside>
 				</section>
@@ -209,31 +243,9 @@
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> session</h3>
 					<div class="tsd-signature tsd-kind-icon">session<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ClientSession</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from MapReduceOptions.session</p>
+						<p>Inherited from CollectionAggregationOptions.session</p>
 						<ul>
-							<li>Defined in node_modules/@types/mongodb/index.d.ts:1140</li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-					<a name="sort" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> sort</h3>
-					<div class="tsd-signature tsd-kind-icon">sort<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Object</span></div>
-					<aside class="tsd-sources">
-						<p>Inherited from MapReduceOptions.sort</p>
-						<ul>
-							<li>Defined in node_modules/@types/mongodb/index.d.ts:1132</li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-					<a name="verbose" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> verbose</h3>
-					<div class="tsd-signature tsd-kind-icon">verbose<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span></div>
-					<aside class="tsd-sources">
-						<p>Inherited from MapReduceOptions.verbose</p>
-						<ul>
-							<li>Defined in node_modules/@types/mongodb/index.d.ts:1138</li>
+							<li>Defined in node_modules/@types/mongodb/index.d.ts:836</li>
 						</ul>
 					</aside>
 				</section>
@@ -252,43 +264,46 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-is-external">
-						<a href="mapreduceoptions.html" class="tsd-kind-icon">Map<wbr>Reduce<wbr>Options</a>
+						<a href="options.html" class="tsd-kind-icon">Options</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="mapreduceoptions.html#bypassdocumentvalidation" class="tsd-kind-icon">bypass<wbr>Document<wbr>Validation</a>
+								<a href="options.html#allowdiskuse" class="tsd-kind-icon">allow<wbr>Disk<wbr>Use</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="mapreduceoptions.html#finalize" class="tsd-kind-icon">finalize</a>
+								<a href="options.html#bypassdocumentvalidation" class="tsd-kind-icon">bypass<wbr>Document<wbr>Validation</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="mapreduceoptions.html#jsmode" class="tsd-kind-icon">js<wbr>Mode</a>
+								<a href="options.html#collation" class="tsd-kind-icon">collation</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="mapreduceoptions.html#keeptemp" class="tsd-kind-icon">keeptemp</a>
+								<a href="options.html#comment" class="tsd-kind-icon">comment</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="mapreduceoptions.html#limit" class="tsd-kind-icon">limit</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-external">
-								<a href="mapreduceoptions.html#out" class="tsd-kind-icon">out</a>
+								<a href="options.html#cursor" class="tsd-kind-icon">cursor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="mapreduceoptions.html#query" class="tsd-kind-icon">query</a>
+								<a href="options.html#explain" class="tsd-kind-icon">explain</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="mapreduceoptions.html#readpreference" class="tsd-kind-icon">read<wbr>Preference</a>
+								<a href="options.html#maxtimems" class="tsd-kind-icon">max<wbr>TimeMS</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="mapreduceoptions.html#scope" class="tsd-kind-icon">scope</a>
+								<a href="options.html#promotebuffers" class="tsd-kind-icon">promote<wbr>Buffers</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="mapreduceoptions.html#session" class="tsd-kind-icon">session</a>
+								<a href="options.html#promotelongs" class="tsd-kind-icon">promote<wbr>Longs</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="mapreduceoptions.html#sort" class="tsd-kind-icon">sort</a>
+								<a href="options.html#promotevalues" class="tsd-kind-icon">promote<wbr>Values</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="mapreduceoptions.html#verbose" class="tsd-kind-icon">verbose</a>
+								<a href="options.html#raw" class="tsd-kind-icon">raw</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
+								<a href="options.html#readpreference" class="tsd-kind-icon">read<wbr>Preference</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
+								<a href="options.html#session" class="tsd-kind-icon">session</a>
 							</li>
 						</ul>
 					</li>
