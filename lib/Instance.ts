@@ -59,6 +59,7 @@ export class Instance<TDocument, TInstance> {
     private _model: Model<TDocument, TInstance>;
     private _original: TDocument;
     private _modified: TDocument;
+    private _modificationCache: {}
 
     /**
      * Gets the underlying document representation of this instance
@@ -395,6 +396,24 @@ export class Instance<TDocument, TInstance> {
         });
 
         return results;
+    }
+
+    protected _getField<K extends keyof TInstance, V extends TInstance[K]>(field: K): V {
+        const transform = this._model.transforms[field]
+        if (transform) {
+            return transform.fromDB((<any>this._modified)[field], field, this._model)
+        }
+
+        return (<any>this._modified)[field]
+    }
+
+    protected _setField<K extends keyof TInstance, V extends TInstance[K]>(field: K, value: V) {
+        const transform = this._model.transforms[field]
+        if (transform) {
+            (<any>this._modified)[field] = transform.toDB(value, field, this._model)
+        } else {
+            (<any>this._modified)[field] = value
+        }
     }
 
     /**

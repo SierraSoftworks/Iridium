@@ -166,4 +166,8 @@ export interface InstanceInternals<TDocument extends { _id ?: any }, TInstance> 
      * The model that this instance belongs to
      */
     _model: Model<TDocument, TInstance>;
+
+    _getField<K extends keyof TInstance, V extends TInstance[K]>(field: K): V;
+
+    _setField<K extends keyof TInstance, V extends TInstance[K]>(field: K, value: V): void;
 }

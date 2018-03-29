@@ -25,29 +25,16 @@ export function ModelSpecificInstance<TDocument extends { _id?: any }, TInstance
         }
     }
 
-    _.each(Object.keys(model.schema),(property) => {
-        const transform = model.transforms[property];
-        if (transform) {
-            return Object.defineProperty(virtualClass.prototype, property, {
-                get: function (this: InstanceInternals<TDocument, TInstance>) {
-                    return transform.fromDB((<TDocument & { [prop: string]: any }>this._modified)[property], property, model);
-                },
-                set: function (this: InstanceInternals<TDocument, TInstance>, value: any) {
-                    (<TDocument & { [prop: string]: any }>this._modified)[property] = transform.toDB(value, property, model);
-                },
-                enumerable: true,
-                configurable: true
-            });
-        }
-
-        Object.defineProperty(virtualClass.prototype, property, {
+    _.each(Object.keys(model.schema), (property: keyof TInstance) => {
+        return Object.defineProperty(virtualClass.prototype, property, {
             get: function (this: InstanceInternals<TDocument, TInstance>) {
-                return (<TDocument & { [prop: string]: any }>this._modified)[property];
+                return this._getField(property)
             },
             set: function (this: InstanceInternals<TDocument, TInstance>, value: any) {
-                (<TDocument & { [prop: string]: any }>this._modified)[property] = value;
+                this._setField(property, value)
             },
-            enumerable: true
+            enumerable: true,
+            configurable: true
         });
     });
 
