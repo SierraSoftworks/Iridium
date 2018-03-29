@@ -4,7 +4,7 @@
   "author": "Benjamin Pannell <admin@sierrasoftworks.com>",
   "description": "A custom lightweight ORM for MongoDB designed for power-users",
   "license": "MIT",
-  "homepage": "https://sierrasoftworks.com/iridium",
+  "homepage": "https://sierrasoftworks.github.com/Iridium/",
   "repository": {
     "url": "https://github.com/sierrasoftworks/iridium",
     "type": "git"
@@ -51,15 +51,15 @@
   },
   "dependencies": {
     "@types/chai": "^4.1.2",
-    "@types/lodash": "^4.14.101",
-    "@types/mongodb": "^3.0.5",
+    "@types/lodash": "^4.14.106",
+    "@types/mongodb": "^3.0.9",
     "lodash": "^4.17.5",
-    "mongodb": "^3.0.2",
+    "mongodb": "^3.0.5",
     "skmatc": "~1.2.3"
   },
   "peerDependencies": {
-    "@types/lodash": "^4.14.101",
-    "@types/mongodb": "^3.0.5",
+    "@types/lodash": "^4.14.106",
+    "@types/mongodb": "^3.0.9",
     "@types/chai": "^4.1.2"
   },
   "devDependencies": {
@@ -80,8 +80,8 @@
     "remap-istanbul": "~0.10.1",
     "source-map-support": "~0.5.3",
     "tslint": "^5.9.1",
-    "typedoc": "~0.10.0",
-    "typescript": "~2.7.1"
+    "typedoc": "~0.11.1",
+    "typescript": "~2.8.1"
   },
   "keywords": [
     "mongodb",
@@ -89,6 +89,7 @@
     "odm",
     "iridium",
     "validation",
-    "preprocessing"
+    "preprocessing",
+    "typescript"
   ]
 }
