@@ -30,6 +30,8 @@ import {Transforms, DefaultTransforms, RenameMap} from "./Transforms";
 import * as AggregationPipeline from "./Aggregate";
 import {MapFunction, ReduceFunction, MapReducedDocument, MapReduceFunctions, MapReduceOptions} from "./MapReduce";
 
+export type InsertionDocument<TDocument> = TDocument | { toDB(): TDocument };
+
 /**
  * An Iridium Model which represents a structured MongoDB collection.
  * Models expose the methods you will generally use to query those collections, and ensure that
@@ -423,7 +425,7 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, TInstance)} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    create(objects: TDocument, callback?: General.Callback<TInstance>): Promise<TInstance>;
+    create(object: InsertionDocument<TDocument>, callback?: General.Callback<TInstance>): Promise<TInstance>;
     /**
      * Inserts an object into the collection after validating it against this model's schema
      * @param {Object} object The object to insert into the collection
@@ -431,14 +433,14 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, TInstance)} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    create(objects: TDocument, options: ModelOptions.CreateOptions, callback?: General.Callback<TInstance>): Promise<TInstance>;
+    create(object: InsertionDocument<TDocument>, options: ModelOptions.CreateOptions, callback?: General.Callback<TInstance>): Promise<TInstance>;
     /**
      * Inserts the objects into the collection after validating them against this model's schema
      * @param {Object[]} objects The objects to insert into the collection
      * @param {function(Error, TInstance)} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    create(objects: TDocument[], callback?: General.Callback<TInstance[]>): Promise<TInstance[]>;
+    create(objects: InsertionDocument<TDocument>[], callback?: General.Callback<TInstance[]>): Promise<TInstance[]>;
     /**
      * Inserts the objects into the collection after validating them against this model's schema
      * @param {Object[]} objects The objects to insert into the collection
@@ -446,7 +448,7 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, TInstance)} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    create(objects: TDocument[], options: ModelOptions.CreateOptions, callback?: General.Callback<TInstance[]>): Promise<TInstance[]>;
+    create(objects: InsertionDocument<TDocument>[], options: ModelOptions.CreateOptions, callback?: General.Callback<TInstance[]>): Promise<TInstance[]>;
     create(...args: any[]): Promise<any> {
         return this.insert.apply(this, args);
     }
@@ -457,7 +459,7 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, TInstance)} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    insert(objects: TDocument, callback?: General.Callback<TInstance>): Promise<TInstance>;
+    insert(object: InsertionDocument<TDocument>, callback?: General.Callback<TInstance>): Promise<TInstance>;
     /**
      * Inserts an object into the collection after validating it against this model's schema
      * @param {Object} object The object to insert into the collection
@@ -465,14 +467,14 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, TInstance)} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    insert(objects: TDocument, options: ModelOptions.CreateOptions, callback?: General.Callback<TInstance>): Promise<TInstance>;
+    insert(object: InsertionDocument<TDocument>, options: ModelOptions.CreateOptions, callback?: General.Callback<TInstance>): Promise<TInstance>;
     /**
      * Inserts the objects into the collection after validating them against this model's schema
      * @param {Object[]} objects The objects to insert into the collection
      * @param {function(Error, TInstance[])} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    insert(objects: TDocument[], callback?: General.Callback<TInstance[]>): Promise<TInstance[]>;
+    insert(objects: InsertionDocument<TDocument>[], callback?: General.Callback<TInstance[]>): Promise<TInstance[]>;
     /**
      * Inserts the objects into the collection after validating them against this model's schema
      * @param {Object[]} objects The objects to insert into the collection
@@ -480,8 +482,8 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, TInstance[])} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    insert(objects: TDocument[], options: ModelOptions.CreateOptions, callback?: General.Callback<TInstance[]>): Promise<TInstance[]>;
-    insert(objs: TDocument | TDocument[], ...args: any[]): Promise<any> {
+    insert(objects: InsertionDocument<TDocument>[], options: ModelOptions.CreateOptions, callback?: General.Callback<TInstance[]>): Promise<TInstance[]>;
+    insert(objs: InsertionDocument<TDocument> | InsertionDocument<TDocument>[], ...args: any[]): Promise<any> {
         let objects: TDocument[];
         let options: ModelOptions.CreateOptions = {};
         let callback: General.Callback<any>|undefined = undefined;

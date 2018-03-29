@@ -167,7 +167,29 @@ export interface InstanceInternals<TDocument extends { _id ?: any }, TInstance> 
      */
     _model: Model<TDocument, TInstance>;
 
+    /**
+     * Used to provide post-transform object memoization on a per-field basis
+     * See #118 for design details
+     */
+    _fieldCache: FieldCache
+
+    /**
+     * Allows an instance implementation to define its own means of accessing
+     * properties. This is used to enable the memoization of transformed properties.
+     * @param field The name of the schema field whose value should be returned
+     */
     _getField<K extends keyof TInstance, V extends TInstance[K]>(field: K): V;
 
+    /**
+     * Allows an instance implementation to control how it responds when new values
+     * are assigned to any of its fields. This is used to support memoization of
+     * transformed properties safely.
+     * @param field The name of the schema field whose value should be updated
+     * @param value The pre-toDB-transform value to be assigned to this field
+     */
     _setField<K extends keyof TInstance, V extends TInstance[K]>(field: K, value: V): void;
+}
+
+export interface FieldCache {
+    [field: string]: any
 }

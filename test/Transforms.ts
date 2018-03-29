@@ -8,10 +8,10 @@ import {DefaultTransforms} from "../lib/Transforms";
 let hookEmitter = new Events.EventEmitter();
 
 interface Document {
-	_id?: string;
+	_id?: string | MongoDB.ObjectId;
     name: string;
 	email: string;
-	avatar: Buffer;
+	avatar: Buffer | MongoDB.Binary;
 	
 	lastModified?: Date;
 }
@@ -39,6 +39,7 @@ class Person extends Iridium.Instance<Document, Person> {
 		}
 	};
 
+	@Iridium.ObjectID
 	_id: string;
     name: string;
 	email: string;
@@ -86,42 +87,72 @@ describe("Transforms", () => {
 	});
 
 	describe("during creation", () => {
-		it("should be applied", () => {
-			return db.Person.insert({
-				name: "Test User",
-				email: "Test@email.com",
-				avatar: new Buffer(0)
-			}).then(user => {
-				chai.expect(user).to.exist.and.have.property("email", "TEST@EMAIL.COM");
+		describe("with a basic insertion document", () => {
+			it("should apply field transforms", () => {
+				return db.Person.insert({
+					name: "Test User",
+					email: "Test@email.com",
+					avatar: new Buffer(0)
+				}).then(user => {
+					chai.expect(user).to.exist.and.have.property("email", "TEST@EMAIL.COM");
+				});
 			});
 		});
 
-		it("should only be applied after onCreating", () => {
-			let onCreatingCalled = false;
-			hookEmitter.once("creating", (doc: Document) => {
-				onCreatingCalled = true;
-				chai.expect(doc.email).to.eql("Test@email.com");
-				chai.expect(doc.lastModified).to.not.exist;
-			});
+		describe("with a complex insertion object", () => {
+			it("should not apply field transforms", () => {
+				const person = {
+					toDB() {
+						return {
+							name: "Test User",
+							email: "test@email.com",
+							avatar: Iridium.toBinary(new Buffer(0))
+						}
+					}
+				}
 
-			return db.Person.insert({
-				name: "Test User",
-				email: "Test@email.com",
-				avatar: new Buffer(0)
-			}).then(user => {
-				chai.expect(onCreatingCalled).to.be.true;
-				chai.expect(user).to.exist;
-				chai.expect(user).to.have.property("document").with.property("lastModified");
-				chai.expect(user.document.lastModified!.valueOf()).to.be.closeTo(new Date().valueOf(), 1000);
+				return db.Person.insert(person).then(user => {
+					chai.expect(user).to.exist;
+					chai.expect(user.document).to.have.property("email", "test@email.com");
+				});
 			});
 		});
 
-		it("should be applied before validation", () => {
-			db.Person.schema["email"] = /^test@email.com$/;
-			return db.Person.insert({
-				name: "Test User",
-				email: "Test@email.com",
-				avatar: new Buffer(0)
+		describe("ordering", () => {
+			before(() => {
+				db.Person.schema["email"] = /^test@email.com$/;
+			});
+			
+			after(() => {
+				db.Person.schema["email"] = String;
+			});
+
+			it("should only be applied after onCreating", () => {
+				let onCreatingCalled = false;
+				hookEmitter.once("creating", (doc: Document) => {
+					onCreatingCalled = true;
+					chai.expect(doc.email).to.eql("Test@email.com");
+					chai.expect(doc.lastModified).to.not.exist;
+				});
+
+				return db.Person.insert({
+					name: "Test User",
+					email: "Test@email.com",
+					avatar: new Buffer(0)
+				}).then(user => {
+					chai.expect(onCreatingCalled).to.be.true;
+					chai.expect(user).to.exist;
+					chai.expect(user).to.have.property("document").with.property("lastModified");
+					chai.expect(user.document.lastModified!.valueOf()).to.be.closeTo(new Date().valueOf(), 1000);
+				});
+			});
+
+			it("should be applied before validation", () => {
+				return db.Person.insert({
+					name: "Test User",
+					email: "Test@email.com",
+					avatar: new Buffer(0)
+				});
 			});
 		});
 	});
@@ -238,7 +269,6 @@ describe("Transforms", () => {
 			it("should return a buffer", () => {
 				return db.Person.get().then(person => {
 					chai.expect(Buffer.isBuffer(person.avatar)).to.be.true;
-					//chai.expect(person.avatar.toString("utf8")).to.eql("test");
 					chai.expect(person.document.avatar).to.be.a("object");
 				});
 			});
@@ -246,8 +276,9 @@ describe("Transforms", () => {
 			it("should convert a buffer to a MongoDB.Binary", () => {
 				return db.Person.get().then(person => {
 					person.avatar = new Buffer("new", "utf8");
-					//chai.expect(person.avatar.toString("utf8")).to.eql("new");
-					chai.expect(person.document.avatar).to.be.a("object");
+					chai.expect(Buffer.isBuffer(person.avatar)).to.be.true;
+					chai.expect(person.avatar.toString("utf8")).to.eql("new");
+					chai.expect(person.document.avatar).to.be.instanceof(MongoDB.Binary)
 				});
 			});
 		});

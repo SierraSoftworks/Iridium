@@ -1,5 +1,6 @@
 ﻿import * as MongoDB from "mongodb";
 import {Model} from "./Model";
+import {InstanceInternals} from "./InstanceInterface";
 import * as Skmatc from "skmatc";
 import {Omnom} from "./utils/Omnom";
 import * as _ from "lodash";
@@ -172,6 +173,38 @@ export class ModelHelpers<TDocument, TInstance> {
      */
     cloneConditions<T>(original: T): T {
         return this.cloneDocument(original);
+    }
+
+    readInstanceField<K extends keyof TInstance, V extends TInstance[K]>(instance: InstanceInternals<TDocument, TInstance>, field: K): V {
+        if (instance._fieldCache.hasOwnProperty(field))
+            return instance._fieldCache[field]
+
+        const transform = instance._model.transforms[field]
+        if (!transform) return (<any>instance._modified)[field]
+        
+        return instance._fieldCache[field] = transform.fromDB((<any>instance._modified)[field], field, instance._model)
+    }
+
+    writeInstanceField<K extends keyof TInstance, V extends TInstance[K]>(instance: InstanceInternals<TDocument, TInstance>, field: K, value: V): void {
+        if (instance._fieldCache.hasOwnProperty(field)) {
+            instance._fieldCache[field] = value
+            return
+        }
+
+        (<any>instance._modified)[field] = value
+    }
+
+    applyCachedFieldChanges(instance: InstanceInternals<TDocument, TInstance>): TDocument {
+        _.each(instance._fieldCache, (value, field: keyof TDocument) => {
+            const transform = instance._model.transforms[field]
+            if (transform)
+                instance._modified[field] = transform.toDB(value, field, instance._model)
+            else
+                instance._modified[field] = value
+        })
+
+        instance._fieldCache = {}
+        return instance._modified
     }
 }
 

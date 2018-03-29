@@ -4,7 +4,7 @@ import * as MongoDB from "mongodb";
 import * as chai from "chai";
 
 interface Document {
-    _id?: string;
+    _id?: string | MongoDB.ObjectID;
     name: string;
     dateOfBirth: Date;
     siblings: {
@@ -12,7 +12,7 @@ interface Document {
         related: boolean;
         ageDifference: number;
     }[];
-    avatar: Buffer;
+    avatar: Buffer | MongoDB.Binary;
 }
 
 @Iridium.Validate("Over18", function(schema, data) {
@@ -29,7 +29,7 @@ class Person extends Iridium.Instance<Document, Person> {
             related: Boolean,
             ageDifference: Number
         }],
-        avatar: Buffer
+        avatar: MongoDB.Binary
     };
 
     @Iridium.ObjectID
@@ -44,7 +44,7 @@ class Person extends Iridium.Instance<Document, Person> {
     }[];
     
     @Iridium.Binary
-    avatar: Buffer;
+    avatar: MongoDB.Binary;
 }
 
 describe("Validation", () => {
