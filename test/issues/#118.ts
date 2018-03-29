@@ -44,7 +44,7 @@ class House extends Iridium.Instance<HouseDoc, House> {
   public houseName: string;
 
   @Iridium.Property([CarSchema])
-  @Iridium.Transform((db: CarDoc[]) => db.map(v => new Car(v)), (doc: Car[]) => doc.map(v => v.toDB()))
+  @Iridium.TransformClassList(Car)
   public cars: Car[]
 }
 
