@@ -100,367 +100,308 @@
 					can be found at <a href="http://sierrasoftworks.github.io/Iridium">sierrasoftworks.github.io/Iridium</a>.</li>
 				</ul>
 				<h2 id="requirements">Requirements</h2>
-				<p>Iridium is built on top of a number of very modern technologies, including TypeScript 2.0, JavaScript ES6 and the latest MongoDB
-					Node.js Driver (version 2.2). You&#39;ll need to be running Node.js 6.x, or 4.x with the <code>--harmony</code> flag to run version 7 of Iridium.
-				For older versions of Node.js, please considering using version 6 of Iridium instead.</p>
+				<p>Iridium is built on top of a number of very modern technologies, including TypeScript 2.8, JavaScript ES6 and the latest MongoDB
+				Node.js Driver (version 3.0). You&#39;ll need to be running Node.js 6.x run version 8 of Iridium.</p>
 				<p>For starters, you will need to be running MongoDB 2.6 or later in order to use Iridium - however we recommend you use MongoDB 3.1
-					due to the various performance improvements they&#39;ve made. If you&#39;re working with TypeScript, you will also need to use the 2.0
+					due to the various performance improvements they&#39;ve made. If you&#39;re working with TypeScript, you will also need to use the 2.8
 				compiler or risk having the Iridium type definitions break your project.</p>
 				<h2 id="using-iridium">Using Iridium</h2>
 				<p>Rather than opt of the usual &quot;Look how quickly you can do something&quot; approach, we thought it might be useful to see
-					an example which covers most of the stuff you&#39;d need to do in Iridium. This example covers defining your own document
-				interfaces, a custom schema and instance type which provides some additional methods.</p>
-				<p>You&#39;ll notice that the <code>House</code> class extends Iridium&#39;s <code>Instance</code> class, which gives it methods like <code>save()</code> as well
-					as change tracking when calling <code>save()</code> on the instance. If you&#39;d prefer a lighter approach or to use your own home-grown
-				implementation then you can do so by taking a look at the <a href="#custom-instances">Custom Instances</a> section.</p>
-				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> {Core, Model, Instance, Collection, Index, Property, ObjectID} Iridium <span class="hljs-keyword">from</span> <span class="hljs-string">'iridium'</span>;
+					an example which covers most of the stuff you&#39;d need to do in Iridium. We&#39;re going to put together a small database
+				example which takes advantage of nested objects, transforms, renames and some other nice features offered by Iridium.</p>
+				<p><strong>If you&#39;re looking for Iridium&#39;s API documentation, then you can find that <a href="http://sierrasoftworks.github.io/Iridium">here</a>.</strong></p>
+				<h3 id="example-description">Example Description</h3>
+				<p>Our example is a simple database which stores the list of cars that individual drivers own and describes those cars
+					with a <code>make</code>, <code>model</code> and <code>colour</code>. For the sake of showing off some of Iridium&#39;s more complex features, we&#39;re being
+					overly verbose in how we implement some components, however you&#39;ll often find that the simpler examples (like <code>Address</code>)
+				work perfectly for most use cases.</p>
+				<h3 id="example-components">Example Components</h3>
+				<h4 id="the-colour-object">The <code>Colour</code> object</h4>
+				<p>The <code>colour</code> object is used in our DB to represent the colour of a car.
+					While we could use a simple interface and schema, we have opted to include
+					a custom class as well so that we can provide application-level methods to
+				represent it as a hex string (for example).</p>
+				<p>In many cases you won&#39;t have need for this and a simple schema+interface
+					will suffice. Take a look at the <code>Address</code> object for an example of how that
+				can be done.</p>
+				<pre><code class="lang-typescript"><span class="hljs-comment">/**
+ * Schemas are used to provide automatic data validation before you
+ * save stuff to the database. We are using a custom "ubyte" validator
+ * which we define on our model later.
+ */</span>
+<span class="hljs-keyword">const</span> ColourSchema = {
+    r: <span class="hljs-string">"ubyte"</span>,
+    g: <span class="hljs-string">"ubyte"</span>,
+    b: <span class="hljs-string">"ubyte"</span>
+}
 
-<span class="hljs-keyword">interface</span> Colour {
+<span class="hljs-comment">/**
+ * We also define a document interface which describes how the
+ * colour is stored in the database.
+ */</span>
+<span class="hljs-keyword">interface</span> ColourDoc {
     r: <span class="hljs-built_in">number</span>;
     g: <span class="hljs-built_in">number</span>;
     b: <span class="hljs-built_in">number</span>;
 }
 
-<span class="hljs-keyword">interface</span> Car {
+<span class="hljs-comment">/**
+ * The Colour class is then used within our application to describe
+ * a colour. It provides useful utility functions that our app will
+ * utilize to perform its duties.
+ */</span>
+<span class="hljs-keyword">class</span> Colour {
+    <span class="hljs-keyword">constructor</span>(<span class="hljs-params">doc: ColourDoc</span>) {
+        <span class="hljs-keyword">this</span>.r = doc.r
+        <span class="hljs-keyword">this</span>.g = doc.g
+        <span class="hljs-keyword">this</span>.b = doc.b
+    }
+
+    r: <span class="hljs-built_in">number</span>;
+    g: <span class="hljs-built_in">number</span>;
+    b: <span class="hljs-built_in">number</span>;
+
+    <span class="hljs-comment">/**
+     * The toDB() method is used to convert this class back into a DB document
+     */</span>
+    toDB(): ColourDoc {
+        <span class="hljs-keyword">return</span> {
+            r: <span class="hljs-keyword">this</span>.r,
+            g: <span class="hljs-keyword">this</span>.g,
+            b: <span class="hljs-keyword">this</span>.b
+        }
+    }
+
+    toString() {
+        <span class="hljs-keyword">return</span> <span class="hljs-string">`#<span class="hljs-subst">${this.toHex(this.r)}</span><span class="hljs-subst">${this.toHex(this.g)}</span><span class="hljs-subst">${this.toHex(this.b)}</span>`</span>
+    }
+
+    <span class="hljs-comment">/**
+     * Who needs left-pad?
+     */</span>
+    <span class="hljs-keyword">private</span> toHex(num: <span class="hljs-built_in">number</span>, padding = <span class="hljs-number">2</span>) {
+        <span class="hljs-keyword">let</span> hex = num.toString(<span class="hljs-number">16</span>)
+        <span class="hljs-keyword">while</span> (hex.length &lt; <span class="hljs-number">2</span>)
+            hex = <span class="hljs-string">`0<span class="hljs-subst">${hex}</span>`</span>
+        <span class="hljs-keyword">return</span> hex
+    }
+}
+</code></pre>
+				<h4 id="the-car-object">The <code>Car</code> object</h4>
+				<p>Our <code>car</code> object shows how you can nest DB objects with the <code>toDB()</code> method
+					and their constructors. It also shows how you can implement helpful methods
+				on these classes to make writing code with them easier.</p>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">const</span> CarSchema = {
+    make: <span class="hljs-built_in">String</span>,
+    model: <span class="hljs-built_in">String</span>,
+    colour: ColourSchema
+}
+
+<span class="hljs-keyword">interface</span> CarDoc {
+    make: <span class="hljs-built_in">string</span>
+    model: <span class="hljs-built_in">string</span>
+    colour: ColourDoc
+}
+
+<span class="hljs-keyword">class</span> Car {
+    <span class="hljs-keyword">constructor</span>(<span class="hljs-params">doc: CarDoc</span>) {
+        <span class="hljs-keyword">this</span>.make = doc.make
+        <span class="hljs-keyword">this</span>.model = doc.model
+        <span class="hljs-keyword">this</span>.colour = <span class="hljs-keyword">new</span> Colour(doc.colour)
+    }
+
     make: <span class="hljs-built_in">string</span>;
     model: <span class="hljs-built_in">string</span>;
     colour: Colour;
-}
 
-<span class="hljs-keyword">interface</span> HouseDocument {
-    _id?: <span class="hljs-built_in">string</span>;
-    name: <span class="hljs-built_in">string</span>;
+    repaint(r: <span class="hljs-built_in">number</span>, g: <span class="hljs-built_in">number</span>, b: <span class="hljs-built_in">number</span>) {
+        <span class="hljs-keyword">this</span>.colour = <span class="hljs-keyword">new</span> Colour({ r, g, b })
+    }
 
-    cars?: Car[];
-}
-
-<span class="hljs-meta">@Index</span>({ name: <span class="hljs-number">1</span> })
-<span class="hljs-meta">@Collection</span>(<span class="hljs-string">'houses'</span>)
-<span class="hljs-keyword">class</span> House <span class="hljs-keyword">extends</span> Instance&lt;HouseDocument, House&gt; <span class="hljs-keyword">implements</span> HouseDocument {
-    <span class="hljs-meta">@ObjectID</span> _id: <span class="hljs-built_in">string</span>;
-    <span class="hljs-meta">@Property</span>(<span class="hljs-regexp">/^.+$/</span>)
-    name: <span class="hljs-built_in">string</span>;
-
-    <span class="hljs-meta">@Property</span>([{
-        make: <span class="hljs-built_in">String</span>,
-        model: <span class="hljs-built_in">String</span>,
-        colour: {
-            r: <span class="hljs-built_in">Number</span>,
-            g: <span class="hljs-built_in">Number</span>,
-            b: <span class="hljs-built_in">Number</span>
+    toDB(): CarDoc() {
+        <span class="hljs-keyword">return</span> {
+            make: <span class="hljs-keyword">this</span>.make,
+            model: <span class="hljs-keyword">this</span>.model,
+            colour: <span class="hljs-keyword">this</span>.colour.toDB()
         }
-    }])
+    }
+}
+</code></pre>
+				<h4 id="the-address-object">The <code>Address</code> object</h4>
+				<p>In this case, we don&#39;t need anything complex to represent
+					an address or to interact with it, so we&#39;re just going to
+					use a basic schema and interface to describe it - no need
+				for fancy classes or transforms.</p>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">const</span> AddressSchema = {
+    <span class="hljs-comment">// Address lines, at least one and no more than 3</span>
+    lines: [<span class="hljs-built_in">String</span>, <span class="hljs-number">1</span>, <span class="hljs-number">3</span>],
+    country: <span class="hljs-built_in">String</span>
+}
+
+<span class="hljs-keyword">interface</span> AddressDoc {
+    lines: <span class="hljs-built_in">string</span>[];
+    country: <span class="hljs-built_in">string</span>;
+}
+</code></pre>
+				<h4 id="the-driver-model">The <code>Driver</code> model</h4>
+				<p>Here is where we start interacting with Iridium. We&#39;re defining a model&#39;s Instance type
+					which is the class that Iridium will use to represent a DB document. Unlike many other
+					ORMs/ODMs, Iridium allows you to implement your own instance type if you so desire and
+					simply provides a useful base class for your average use case. You can find out more
+					about the methods that <a href="http://sierrasoftworks.github.io/Iridium/classes/instance.html"><code>Iridium.Instance</code></a>
+				provides by reading the <a href="http://sierrasoftworks.github.io/Iridium/classes/instance.html">API Documentation</a>.</p>
+				<p>In this example we are leveraging that default base class and using Iridium&#39;s various
+					<code>@decorators</code> to configure things like our indexes, schema validation rules, transforms
+					and renames. You can also bypass these decorators and use static fields on the instance
+				type itself if you prefer, however the decorators are usually a nicer way to manage things.</p>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> Iridium <span class="hljs-keyword">from</span> <span class="hljs-string">'iridium'</span>;
+<span class="hljs-keyword">import</span> {ObjectId} <span class="hljs-keyword">from</span> <span class="hljs-string">"mongodb"</span>;
+
+<span class="hljs-comment">// The DriverDocument describes the format of our database</span>
+<span class="hljs-comment">// document.</span>
+<span class="hljs-keyword">interface</span> DriverDocument {
+    _id?: ObjectId;
+    name: <span class="hljs-built_in">string</span>;
+    address: AddressDoc;
+
+    <span class="hljs-comment">// We want to let people create a driver without specifying</span>
+    <span class="hljs-comment">// their cars, so we make this optional.</span>
+    cars?: CarDoc[];
+}
+
+<span class="hljs-comment">// Finding a driver by name turns out to be a really common use case,</span>
+<span class="hljs-comment">// so we've added an index on that field to reduce the number of full</span>
+<span class="hljs-comment">// collection scans performed by our app.</span>
+<span class="hljs-meta">@Iridium</span>.Index({ name: <span class="hljs-number">1</span> })
+
+<span class="hljs-comment">// Let's also add an index on the cars that someone owns so that we can</span>
+<span class="hljs-comment">// quickly find out who drives that black Audi...</span>
+<span class="hljs-meta">@Iridium</span>.Index({ <span class="hljs-string">"cars.model"</span>: <span class="hljs-number">1</span>, <span class="hljs-string">"cars.make"</span>: <span class="hljs-number">1</span> }, { background: <span class="hljs-literal">true</span> })
+
+<span class="hljs-comment">// Driver objects should be stored in the `drivers` collection in our DB</span>
+<span class="hljs-meta">@Iridium</span>.Collection(<span class="hljs-string">'drivers'</span>)
+
+<span class="hljs-comment">// We want to add support for our "ubyte" custom datatype to the validation</span>
+<span class="hljs-comment">// engine, so we'll do that here.</span>
+<span class="hljs-meta">@Iridium</span>.Validate(<span class="hljs-string">"ubyte"</span>, <span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.assert(
+        <span class="hljs-keyword">typeof</span> value === <span class="hljs-string">"number"</span>
+            &amp;&amp; value &gt;= <span class="hljs-number">0</span>
+            &amp;&amp; value &lt; <span class="hljs-number">255</span>
+            &amp;&amp; <span class="hljs-built_in">Math</span>.floor(value) === value,
+        <span class="hljs-string">"Should be an integer between 0 and 255"</span>
+    )
+})
+<span class="hljs-keyword">class</span> Driver <span class="hljs-keyword">extends</span> Instance&lt;DriverDocument, Driver&gt; {
+    <span class="hljs-comment">// We'd prefer to work with a string ObjectID, so ask Iridium to take</span>
+    <span class="hljs-comment">// care of converting it for us.</span>
+    <span class="hljs-meta">@Iridium</span>.ObjectID
+    _id: <span class="hljs-built_in">string</span>;
+
+    <span class="hljs-comment">// We'd like to force drivers to have very specific types of names,</span>
+    <span class="hljs-comment">// in this case, only westernized names like J.P. Pietersen or Bob McAffee.</span>
+    <span class="hljs-meta">@Iridium</span>.Property(<span class="hljs-regexp">/^[A-Z][\w\-\.]*(\s[A-Z][\w\-\.])+/</span>)
+
+    <span class="hljs-comment">// Our DB originally called this full_name, so we're renaming it</span>
+    <span class="hljs-comment">// here for backwards compatibility, but we really prefer working</span>
+    <span class="hljs-comment">// with `name` in the app.</span>
+    <span class="hljs-meta">@Iridium</span>.Rename(<span class="hljs-string">"full_name"</span>)
+    name: <span class="hljs-built_in">string</span>;
+
+    <span class="hljs-comment">// This is a really simple nested document which doesn't use transforms</span>
+    <span class="hljs-comment">// or classes.</span>
+    <span class="hljs-meta">@Iridium</span>.Property(AddressSchema)
+    address: AddressDoc;
+
+    <span class="hljs-comment">// We have a list of cars that each driver owns. The schema is an array of</span>
+    <span class="hljs-comment">// CarSchema objects, which we defined above.</span>
+    <span class="hljs-meta">@Property</span>([CarSchema])
+    <span class="hljs-comment">// We also want Iridium to automatically transform our DB's CarDoc objects into</span>
+    <span class="hljs-comment">// our much more useful Car class, but also be smart about putting the values back</span>
+    <span class="hljs-comment">// into the DB in the right format.</span>
+    <span class="hljs-meta">@Iridium</span>.TransformClassList(Car)
     cars: Car[];
 
+    <span class="hljs-comment">// When we first create a Driver document we would like to make sure that cars</span>
+    <span class="hljs-comment">// is defined, but empty, so we use this onCreating hook to achieve that.</span>
     <span class="hljs-keyword">static</span> onCreating(doc: HouseDocument) {
         doc.cars = doc.cars || [];
     }
 
+    <span class="hljs-comment">// We'd like to quickly be able to add a car to a driver without needing to</span>
+    <span class="hljs-comment">// manually instantiate the object, so we've provided this nice helper method.</span>
     addCar(make: <span class="hljs-built_in">string</span>, model: <span class="hljs-built_in">string</span>, colour: Colour) {
-        <span class="hljs-keyword">this</span>.cars.push({
+        <span class="hljs-keyword">this</span>.cars.push(<span class="hljs-keyword">new</span> Car({
             make: make,
             model: model,
-            colour: colour
-        });
+            colour: colour.toDB()
+        }));
     }
 
+    <span class="hljs-comment">// We also would like to be able to access a driver's `numberOfCars` by a nice</span>
+    <span class="hljs-comment">// alias, so we've added a getter for that.</span>
     <span class="hljs-keyword">get</span> numberOfCars() {
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.cars.length;
     }
 }
+</code></pre>
+				<h4 id="example-core-implementation">Example <code>Core</code> implementation</h4>
+				<p>Once we&#39;ve defined all of our model types, it&#39;s time to define our database connection
+					class. To do so, simply extend Iridium&#39;s <a href="http://sierrasoftworks.github.io/Iridium/classes/core.html"><code>Core</code></a>
+				class and register your DB models there.</p>
+				<p>This pattern is, as with every other aspect of Iridium, optional and if you prefer you can
+					simply instantiate a new <a href="http://sierrasoftworks.github.io/Iridium/classes/core.html"><code>Iridium.Core</code></a>
+					and manage your models separately. This might make more sense for applications which use
+				Dependency Injection and are interested in de-coupling their models.</p>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> Iridium <span class="hljs-keyword">from</span> <span class="hljs-string">'iridium'</span>;
 
 <span class="hljs-keyword">class</span> MyDatabase <span class="hljs-keyword">extends</span> Core {
-    Houses = <span class="hljs-keyword">new</span> Model&lt;HouseDocument, House&gt;(<span class="hljs-keyword">this</span>, House);
+    Drivers = <span class="hljs-keyword">new</span> Model&lt;DriverDocument, Driver&gt;(<span class="hljs-keyword">this</span>, Driver);
+
+    <span class="hljs-comment">// We've got a few housekeeping tasks we'd like to take</span>
+    <span class="hljs-comment">// care of automatically when we start our database connection,</span>
+    <span class="hljs-comment">// so we use the `onConnected` hook to run them.</span>
+    <span class="hljs-keyword">protected</span> onConnected() {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.onConnected().then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-built_in">Promise</span>.all([
+            <span class="hljs-comment">// One of those tasks is creating all our indexes</span>
+            <span class="hljs-comment">// for the Drivers collection.</span>
+            <span class="hljs-keyword">this</span>.Drivers.ensureIndexes(),
+            <span class="hljs-keyword">this</span>.seed()
+        ]))
+    }
+
+    <span class="hljs-comment">// This is our own custom method which we call from the onConnected hook</span>
+    <span class="hljs-comment">// to seed the DB with some example data.</span>
+    <span class="hljs-keyword">protected</span> seed() {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.Drivers.count().then(<span class="hljs-function"><span class="hljs-params">count</span> =&gt;</span> {
+            <span class="hljs-keyword">if</span> (!count)
+                <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.Drivers.insert({
+                    name: <span class="hljs-string">"Example Driver"</span>,
+                    cars: [{
+                        make: <span class="hljs-string">'Audi'</span>,
+                        model: <span class="hljs-string">'A4'</span>,
+                        colour: { r: <span class="hljs-number">0</span>, g: <span class="hljs-number">0</span>, b: <span class="hljs-number">0</span> }
+                    }]
+                })
+        })
+    }
 }
+</code></pre>
+				<h4 id="example-application">Example Application</h4>
+				<p>When you have defined all of your database components, you&#39;ll probably want to use it.
+					To do so, simply instantiate your <code>MyDatabase</code> type and provide the connection configuration
+				for your environment; call <code>connect()</code> and then do whatever you need to do.</p>
+				<p>For more information on the various connection options you can provide, take a look
+				at the <a href="http://sierrasoftworks.github.io/Iridium/interfaces/configuration.html">API documentation</a>.</p>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">var</span> myDb = <span class="hljs-keyword">new</span> MyDatabase({ database: <span class="hljs-string">'drivers_test'</span> });
 
-<span class="hljs-keyword">var</span> myDb = <span class="hljs-keyword">new</span> MyDatabase({ database: <span class="hljs-string">'houses_test'</span> });
-
-myDb.connect().then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> myDb.Houses.insert({
-        name: <span class="hljs-string">'My House'</span>,
-        cars: [{
-            make: <span class="hljs-string">'Audi'</span>,
-            model: <span class="hljs-string">'A4'</span>,
-            colour: { r: <span class="hljs-number">0</span>, g: <span class="hljs-number">0</span>, b: <span class="hljs-number">0</span> }
-        }]
-    }))
-    .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> myDb.Houses.get())
-    .then(<span class="hljs-function">(<span class="hljs-params">house</span>) =&gt;</span> {
-        house.addCar(<span class="hljs-string">'Audi'</span>, <span class="hljs-string">'S4'</span>, { r: <span class="hljs-number">255</span>, g: <span class="hljs-number">255</span>, b: <span class="hljs-number">255</span> });
-        <span class="hljs-keyword">return</span> house.save();
+myDb.connect()
+    .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> myDb.Drivers.get({ name: <span class="hljs-string">"Example Driver"</span> }))
+    .then(<span class="hljs-function">(<span class="hljs-params">driver</span>) =&gt;</span> {
+        driver.addCar(<span class="hljs-string">'Audi'</span>, <span class="hljs-string">'S4'</span>, { r: <span class="hljs-number">255</span>, g: <span class="hljs-number">255</span>, b: <span class="hljs-number">255</span> });
+        <span class="hljs-keyword">return</span> driver.save();
     })
     .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> myDb.close());
-</code></pre>
-				<h2 id="defining-a-model">Defining a Model</h2>
-				<p>Iridium models are created with a reference to their Core (which provides the database connection) and an <code>InstanceType</code> which
-				is composed of a constructor function as well as a number of static properties providing configuration information for the instance.</p>
-				<p><strong>JavaScript</strong></p>
-				<pre><code class="lang-javascript"><span class="hljs-keyword">new</span> Model(core, InstanceType);
-</code></pre>
-				<p><strong>TypeScript</strong></p>
-				<pre><code class="lang-typescript"><span class="hljs-keyword">new</span> Model&lt;DocumentInterface, InstanceType&gt;(core, InstanceType);
-</code></pre>
-				<p>If you&#39;re working with TypeScript, you can provide an interface for the document structure used by the database, which will allow you
-					to get useful type hints when you are creating documents. You can also provide the <code>InstanceType</code> to provide useful type information
-					for any instances which are retrieved from the database. This information is carried through all promises and callbacks you will use
-				within Iridium and it makes your life significantly easier.</p>
-				<p>Typically you will expose your models as variables on a custom Core implementation like this.</p>
-				<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> MyCore <span class="hljs-keyword">extends</span> Core {
-    MyModel = <span class="hljs-keyword">new</span> Model&lt;MyDocumentInterface, MyInstanceType&gt;(<span class="hljs-keyword">this</span>, MyInstanceType);
-}
-</code></pre>
-				<h2 id="the-instancetype-constructor">The InstanceType Constructor</h2>
-				<p>The InstanceType constructor is responsible for creating objects which represent a document retrieved from the database. It also provides
-				a number of configuration details which are used to determine how Iridium works with the model.</p>
-				<p>There are two approaches to defining an instance constructor - the first is to create a true wrapper like the one provided by <code>Iridium.Instance</code>
-					which offers helper methods like <code>save()</code> and <code>remove()</code>, which comes in very handy for writing concise descriptive code, while the other approach
-				is to simply return the document received from the database - great for performance or security purposes.</p>
-				<p><strong>TypeScript</strong></p>
-				<pre><code class="lang-typescript"><span class="hljs-keyword">interface</span> Document {
-    _id?: <span class="hljs-built_in">string</span>;
-}
-
-<span class="hljs-keyword">class</span> InstanceType {
-    <span class="hljs-keyword">constructor</span>(<span class="hljs-params">model: Model&lt;Document, Instance&gt;, <span class="hljs-built_in">document</span>: Document, isNew: <span class="hljs-built_in">boolean</span> = <span class="hljs-literal">true</span>, isPartial: <span class="hljs-built_in">boolean</span> = <span class="hljs-literal">false</span></span>) {
-
-    }
-
-    _id: <span class="hljs-built_in">string</span>;
-
-    <span class="hljs-keyword">static</span> schema: Iridium.Schema = {
-        _id: <span class="hljs-literal">false</span>
-    };
-
-    <span class="hljs-keyword">static</span> collection = <span class="hljs-string">'myCollection'</span>;
-}
-</code></pre>
-				<p><strong>JavaScript</strong></p>
-				<pre><code class="lang-javascript"><span class="hljs-built_in">module</span>.exports = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">model, document, isNew, isPartial</span>) </span>{
-
-}
-
-<span class="hljs-built_in">module</span>.exports.collection = <span class="hljs-string">'myCollection'</span>;
-<span class="hljs-built_in">module</span>.exports.schema = {
-    <span class="hljs-attr">_id</span>: <span class="hljs-literal">false</span>
-};
-</code></pre>
-				<h3 id="configuration-options">Configuration Options</h3>
-				<p>As we mentioned, configuration of a model is conducted through static properties on its constructor. These configuration options include
-					the <code>schema</code> which is used to validate that all data inserted into the database through Iridium meets certain conditions, the <code>collection</code>
-				which specifies the name of the MongoDB collection into which the documents are stashed and a couple of others worth noting.</p>
-				<h4 id="schema">Schema</h4>
-				<p>Iridium uses <a href="https://github.com/SierraSoftworks/Skmatc">Skmatc</a> for schema validation, you can read more about it on its project page but
-				we&#39;ll give a quick rundown of the way you make use of it here.</p>
-				<p>The model&#39;s schema is defined using an object in which keys represent their document property counterparts while the values represent a validation
-					rule. You can also make use of the <a href="http://sierrasoftworks.github.io/Iridium/globals.html#property"><code>@Property</code></a> decorator to automatically build
-				up your schema object.</p>
-				<p><strong>TypeScript</strong></p>
-				<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> InstanceType {
-    _id: <span class="hljs-built_in">string</span>;
-    email: <span class="hljs-built_in">string</span>;
-
-    <span class="hljs-keyword">static</span> schema: Iridium.Schema = {
-        _id: <span class="hljs-literal">false</span>,
-        email: <span class="hljs-regexp">/^.+@.+$/</span>
-    };
-}
-</code></pre>
-				<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> InstanceType <span class="hljs-keyword">extends</span> Iridium.Instance&lt;<span class="hljs-built_in">any</span>, InstanceType&gt; {
-    <span class="hljs-meta">@Iridium</span>.ObjectID
-    _id: <span class="hljs-built_in">string</span>;
-
-    <span class="hljs-meta">@Iridium</span>.Property(<span class="hljs-built_in">String</span>)
-    email: <span class="hljs-built_in">string</span>;
-}
-</code></pre>
-				<p><strong>JavaScript</strong></p>
-				<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">InstanceType</span>(<span class="hljs-params"></span>) </span>{}
-
-InstanceType.schema = {
-    <span class="hljs-attr">_id</span>: <span class="hljs-literal">false</span>,
-    <span class="hljs-attr">email</span>: <span class="hljs-regexp">/^.+@.+$/</span>
-};
-</code></pre>
-				<h3 id="the-iridium-instance-class">The Iridium Instance Class</h3>
-				<p>Instead of implementing your own instance constructor every time, Iridium offers a powerful and tested instance base class which provides
-				a number of useful helper methods and a diff algorithm allowing you to make changes in a POCO manner.</p>
-				<p>To use it, simply inherit from it (if you need any computed properties or custom methods) or provide it as your instance type when instantiating
-				the model.</p>
-				<p><strong>TypeScript</strong></p>
-				<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> InstanceType <span class="hljs-keyword">extends</span> Iridium.Instance&lt;Document, InstanceType&gt; {
-    _id: <span class="hljs-built_in">string</span>;
-}
-
-<span class="hljs-keyword">new</span> Iridium.Model&lt;Document, InstanceType&gt;(core, InstanceType);
-</code></pre>
-				<p><strong>JavaScript</strong></p>
-				<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">InstanceType</span>(<span class="hljs-params"></span>) </span>{
-    Iridium.Instance.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
-}
-
-<span class="hljs-built_in">require</span>(<span class="hljs-string">'util'</span>).inherits(InstanceType, Iridium.Instance);
-
-<span class="hljs-keyword">new</span> Iridium.Model(core, InstanceType);
-</code></pre>
-				<p>If you&#39;ve used the <code>Iridium.Instance</code> constructor then you&#39;ll have a couple of useful helper methods available to you. These include <code>save()</code>, <code>refresh()</code>,
-					<code>update()</code>, <code>remove()</code> and <code>delete()</code> which do more or less what it says on the can - <code>refresh</code> and <code>update</code> are synonyms for one another as are <code>remove</code> and
-				<code>delete</code>.</p>
-				<p>You&#39;ll also find <code>first()</code> and <code>select()</code> which allow you to select the first, or all, entr(y|ies) in a collection which match a predicate - ensuring that <code>this</code>
-				maps to the instance itself within the predicate - helping to make comparisons somewhat easier within JavaScript ES5.</p>
-				<h2 id="best-practices">Best Practices</h2>
-				<p>There are a number of best practices which you should keep in mind when working with Iridium to help get the best possible experience. For starters, Iridium is
-				built up of a number of smaller components - namely the <a href="https://github.com/sierrasoftworks/skmatc">validation</a>, transform and caching layers.</p>
-				<h3 id="validation-layer">Validation Layer</h3>
-				<p>The validation layer allows you to plug in your own custom validators, or simply make use of the built in ones, to quickly validate your documents against a
-					strongly defined schema. It is designed to enable you to quickly generate meaningful and human readable validation messages, minimizing the need for error
-				translation within your application.</p>
-				<p>Custom validators can be added either using the <a href="http://sierrasoftworks.github.io/Iridium/interfaces/instanceimplementation.html#validators"><code>validators</code></a> property
-				or by using the <a href="http://sierrasoftworks.github.io/Iridium/globals.html#validate"><code>@Validate</code></a> decorator on your instance class.</p>
-				<pre><code class="lang-typescript"><span class="hljs-meta">@Iridium</span>.Validate(<span class="hljs-string">'myValidator'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">schema, data, path</span>) </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.assert(data == <span class="hljs-number">42</span>)
-})
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> InstanceType <span class="hljs-keyword">extends</span> Iridium.Instance&lt;<span class="hljs-built_in">any</span>, InstanceType&gt; {
-    <span class="hljs-meta">@Iridium</span>.Property(<span class="hljs-string">'myValidator'</span>)
-    myProperty: <span class="hljs-built_in">number</span>;
-}
-</code></pre>
-				<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> skmatc = <span class="hljs-built_in">require</span>(<span class="hljs-string">'skmatc'</span>);
-
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">InstanceType</span>(<span class="hljs-params"></span>) </span>{
-    Iridium.Instance.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
-}
-
-<span class="hljs-built_in">require</span>(<span class="hljs-string">'util'</span>).inherits(InstanceType, Iridium.Instance);
-
-InstanceType.validators = [
-    skmatc.create(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">schema</span>) </span>{
-        <span class="hljs-keyword">return</span> schema === <span class="hljs-string">'myValidator'</span>;
-    }, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data, schema, path</span>) </span>{
-        <span class="hljs-keyword">return</span> data === <span class="hljs-number">42</span>;
-    })
-];
-
-InstanceType.schema = {
-    <span class="hljs-attr">myProperty</span>: <span class="hljs-string">'myValidator'</span>
-};
-</code></pre>
-				<p>Iridium expects validators to operate in a read-only mode, modifying documents within your validators (while possible) is strongly discouraged as it can lead
-					to some strange side effects and isn&#39;t guaranteed to behave the same way between releases. If you need to make changes to documents, take a look at the Transform
-				Layer. </p>
-				<h3 id="transform-layer">Transform Layer</h3>
-				<p>The transform layer is designed to make changes to the documents you store within MongoDB as well as the data presented to your application. A good example is the
-					way in which ObjectIDs are treated, within your application they appear as plain strings - allowing you to quickly and easily perform many different operations with
-				them. However, when you attempt to save an ObjectID field to the database, it is automatically converted into the correct ObjectID object before being persisted.</p>
-				<p>The transform layer allows you to register your own transforms both on a per-model and per-property basis. In the case of a model, the transform is given the whole
-					document and is expected to return the transformed document. Property transforms work the same, except that they are presented with, and expected to return, the value
-				of a single top-level property.</p>
-				<p>The easiest way to add a transform is using the <a href="http://sierrasoftworks.github.io/Iridium/globals.html#transform"><code>@Transform</code></a> decorator, however if you are working
-					in a language which doesn&#39;t yet support decorators then you can easily use the
-				<a href="http://sierrasoftworks.github.io/Iridium/interfaces/instanceimplementation.html#transforms"><code>transforms</code></a> property on your instance class.</p>
-				<pre><code class="lang-typescript"><span class="hljs-meta">@Iridium</span>.Transform(<span class="hljs-function"><span class="hljs-params">document</span> =&gt;</span> {
-    <span class="hljs-built_in">document</span>.lastFetched = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>();
-}, <span class="hljs-function"><span class="hljs-params">document</span> =&gt;</span> {
-    <span class="hljs-built_in">document</span>.lastFetched &amp;&amp; <span class="hljs-keyword">delete</span> <span class="hljs-built_in">document</span>.lastFetched;
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">document</span>;
-})
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> InstanceType <span class="hljs-keyword">extends</span> Iridium.Instance&lt;<span class="hljs-built_in">any</span>, InstanceType&gt; {
-    <span class="hljs-meta">@Iridium</span>.Transform(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> data.toUpperCase(), <span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> data.toLowerCase())
-    email: <span class="hljs-built_in">string</span>;
-}
-</code></pre>
-				<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">InstanceType</span>(<span class="hljs-params"></span>) </span>{
-    Iridium.Instance.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
-}
-
-<span class="hljs-built_in">require</span>(<span class="hljs-string">'util'</span>).inherits(InstanceType, Iridium.Instance);
-
-InstanceType.transforms = {
-    <span class="hljs-attr">$document</span>: {
-        <span class="hljs-attr">fromDB</span>: <span class="hljs-function"><span class="hljs-params">document</span> =&gt;</span> {
-            <span class="hljs-built_in">document</span>.lastFetched = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>();
-        },
-        <span class="hljs-attr">toDB</span>: <span class="hljs-function"><span class="hljs-params">document</span> =&gt;</span> {
-            <span class="hljs-built_in">document</span>.lastFetched &amp;&amp; <span class="hljs-keyword">delete</span> <span class="hljs-built_in">document</span>.lastFetched;
-            <span class="hljs-keyword">return</span> <span class="hljs-built_in">document</span>;
-        }
-    },
-    <span class="hljs-attr">email</span>: {
-        <span class="hljs-attr">fromDB</span>: <span class="hljs-function"><span class="hljs-params">value</span> =&gt;</span> value.toUpperCase(),
-        <span class="hljs-attr">toDB</span>: <span class="hljs-function"><span class="hljs-params">value</span> =&gt;</span> value.toLowerCase()
-    }
-};
-</code></pre>
-				<h4 id="transform-gotchas">Transform Gotchas</h4>
-				<p>It is important to note that property transforms are lazily evaluated on field access, rather than when the document is retrieved from the database.
-					This is done for performance reasons, but has the side effect that complex objects which are the targets of property transforms must be re-assigned to the field
-				if you wish to trigger the <code>toDB</code> transform function.</p>
-				<p>Let&#39;s take the following model definition for our example, here we have a GeoJSON representation of a location but we want our application to use the data
-				in a <code>{lat,lng}</code> style object. In this case we can use a transform which translates from one form to another to accomplish our task.</p>
-				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> {inspect} <span class="hljs-keyword">from</span> <span class="hljs-string">"util"</span>;
-
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> InstanceType <span class="hljs-keyword">extends</span> Iridium.Instance&lt;<span class="hljs-built_in">any</span>, InstanceType&gt; {
-    <span class="hljs-comment">// Converts a GeoJSON object into a simple {lat, lng} object and back.</span>
-    <span class="hljs-meta">@Iridium</span>.Transform(
-        <span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> { lat: data.coordinates[<span class="hljs-number">1</span>], lng: data.coordinates[<span class="hljs-number">0</span>] },
-        <span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> { <span class="hljs-keyword">type</span>: <span class="hljs-string">"Point"</span>, coordinates: [data.lng, data.lat] }
-    )
-    position: {
-        lat: <span class="hljs-built_in">number</span>;
-        lng: <span class="hljs-built_in">number</span>;
-    };
-}
-
-db.Model.findOne().then(<span class="hljs-function"><span class="hljs-params">instance</span> =&gt;</span> {
-    <span class="hljs-built_in">console</span>.log(util.inspect(instance.position)); <span class="hljs-comment">// { lat: 1, lng: 2 }</span>
-    <span class="hljs-built_in">console</span>.log(util.inspect(instance.document.position)); <span class="hljs-comment">// { type: "Point", coordinates: [2, 1] }</span>
-
-    <span class="hljs-keyword">let</span> pos = instance.pos;
-    pos.lat = <span class="hljs-number">3</span>;
-    <span class="hljs-built_in">console</span>.log(util.inspect(pos)); <span class="hljs-comment">// { lat: 3, lng: 2 }</span>
-    <span class="hljs-built_in">console</span>.log(util.inspect(instance.position)); <span class="hljs-comment">// { lat: 1, lng: 2 }</span>
-    <span class="hljs-built_in">console</span>.log(util.inspect(instance.document.position)); <span class="hljs-comment">// { type: "Point", coordinates: [2, 1] }</span>
-
-    instance.position = pos
-    <span class="hljs-built_in">console</span>.log(util.inspect(instance.position)); <span class="hljs-comment">// { lat: 3, lng: 2 }</span>
-    <span class="hljs-built_in">console</span>.log(util.inspect(instance.document.position)); <span class="hljs-comment">// { type: "Point", coordinates: [2, 3] }</span>
-});
-</code></pre>
-				<h4 id="useful-transform-tricks">Useful Transform Tricks</h4>
-				<p>There are a couple of clever tricks you can do using transforms to enable additional functionality within Iridium. An example would be cleaning your documents of properties
-				not defined within your schemas whenever they are saved to the database.</p>
-				<h5 id="strict-schemas">Strict Schemas</h5>
-				<p>Let&#39;s say you want to only insert values which appear in your schemas - an example would be if you accept documents from a REST API and don&#39;t wish to manually cherry-pick
-					the properties you are going to insert. It could also simply be a way of lazily cleaning up old properties from documents as your schema evolves over time, helping to avoid
-					complications if someone forgets to clean up the database after making changes to the schema.
-				This can be easily achieved using the <code>$document</code> transform.</p>
-				<pre><code class="lang-typescript"><span class="hljs-meta">@Iridium</span>.Transform(<span class="hljs-function"><span class="hljs-params">document</span> =&gt;</span> <span class="hljs-built_in">document</span>, <span class="hljs-function">(<span class="hljs-params"><span class="hljs-built_in">document</span>, property, model</span>) =&gt;</span> {
-    <span class="hljs-built_in">Object</span>.keys(<span class="hljs-built_in">document</span>).forEach(<span class="hljs-function"><span class="hljs-params">key</span> =&gt;</span> {
-        <span class="hljs-keyword">if</span>(!model.schema.hasOwnProperty(key)) <span class="hljs-keyword">delete</span> <span class="hljs-built_in">document</span>[key];
-    });
-
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">document</span>;
-})
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> InstanceType <span class="hljs-keyword">extends</span> Iridium.Instance&lt;<span class="hljs-built_in">any</span>, InstanceType&gt; {
-
-}
-</code></pre>
-				<pre><code class="lang-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">InstanceType</span>(<span class="hljs-params"></span>) </span>{
-    Iridium.Instance.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
-}
-
-<span class="hljs-built_in">require</span>(<span class="hljs-string">'util'</span>).inherits(InstanceType, Iridium.Instance);
-
-InstanceType.transforms = {
-    <span class="hljs-attr">$document</span>: {
-        <span class="hljs-attr">fromDB</span>: <span class="hljs-function"><span class="hljs-params">document</span> =&gt;</span> <span class="hljs-built_in">document</span>,
-        <span class="hljs-attr">toDB</span>: <span class="hljs-function">(<span class="hljs-params"><span class="hljs-built_in">document</span>, property, model</span>) =&gt;</span> {
-            <span class="hljs-built_in">Object</span>.keys(<span class="hljs-built_in">document</span>).forEach(<span class="hljs-function"><span class="hljs-params">key</span> =&gt;</span> {
-                <span class="hljs-keyword">if</span>(!model.schema.hasOwnProperty(key)) <span class="hljs-keyword">delete</span> <span class="hljs-built_in">document</span>[key];
-            });
-
-            <span class="hljs-keyword">return</span> <span class="hljs-built_in">document</span>;
-        }
-    }
-};
 </code></pre>
 			</div>
 		</div>
@@ -532,9 +473,6 @@ InstanceType.transforms = {
 						<a href="interfaces/changes.html" class="tsd-kind-icon">Changes</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-is-external">
-						<a href="interfaces/conditions.html" class="tsd-kind-icon">Conditions</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/configuration.html" class="tsd-kind-icon">Configuration</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-is-external">
@@ -542,6 +480,9 @@ InstanceType.transforms = {
 					</li>
 					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/expressmiddleware.html" class="tsd-kind-icon">Express<wbr>Middleware</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/fieldcache.html" class="tsd-kind-icon">Field<wbr>Cache</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="interfaces/hooks.html" class="tsd-kind-icon">Hooks</a>
@@ -621,6 +562,12 @@ InstanceType.transforms = {
 					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/stage.html" class="tsd-kind-icon">Stage</a>
 					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="interfaces/transformclassinstance.html" class="tsd-kind-icon">Transform<wbr>Class<wbr>Instance</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="interfaces/transformclasstype.html" class="tsd-kind-icon">Transform<wbr>Class<wbr>Type</a>
+					</li>
 					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/transformoptions.html" class="tsd-kind-icon">Transform<wbr>Options</a>
 					</li>
@@ -633,7 +580,13 @@ InstanceType.transforms = {
 					<li class=" tsd-kind-type-alias tsd-is-external">
 						<a href="globals.html#bsontype" class="tsd-kind-icon">BSONType</a>
 					</li>
-					<li class=" tsd-kind-function tsd-is-external">
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter tsd-is-external">
+						<a href="globals.html#conditions" class="tsd-kind-icon">Conditions</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter tsd-is-external">
+						<a href="globals.html#insertiondocument" class="tsd-kind-icon">Insertion<wbr>Document</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter tsd-is-external">
 						<a href="globals.html#binary" class="tsd-kind-icon">Binary</a>
 					</li>
 					<li class=" tsd-kind-function tsd-is-external">
@@ -663,14 +616,20 @@ InstanceType.transforms = {
 					<li class=" tsd-kind-function tsd-has-type-parameter tsd-is-external">
 						<a href="globals.html#nodeify" class="tsd-kind-icon">Nodeify</a>
 					</li>
-					<li class=" tsd-kind-function tsd-is-external">
+					<li class=" tsd-kind-function tsd-has-type-parameter tsd-is-external">
 						<a href="globals.html#objectid" class="tsd-kind-icon">ObjectID</a>
 					</li>
-					<li class=" tsd-kind-function tsd-is-external">
+					<li class=" tsd-kind-function tsd-has-type-parameter tsd-is-external">
 						<a href="globals.html#rename" class="tsd-kind-icon">Rename</a>
 					</li>
-					<li class=" tsd-kind-function tsd-is-external">
+					<li class=" tsd-kind-function tsd-has-type-parameter tsd-is-external">
 						<a href="globals.html#transform" class="tsd-kind-icon">Transform</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter tsd-is-external">
+						<a href="globals.html#transformclass" class="tsd-kind-icon">Transform<wbr>Class</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter tsd-is-external">
+						<a href="globals.html#transformclasslist" class="tsd-kind-icon">Transform<wbr>Class<wbr>List</a>
 					</li>
 					<li class=" tsd-kind-function tsd-is-external">
 						<a href="globals.html#validate" class="tsd-kind-icon">Validate</a>
@@ -683,6 +642,9 @@ InstanceType.transforms = {
 					</li>
 					<li class=" tsd-kind-function tsd-is-external">
 						<a href="globals.html#hasvalidobjectid" class="tsd-kind-icon">has<wbr>Valid<wbr>ObjectID</a>
+					</li>
+					<li class=" tsd-kind-function tsd-is-external">
+						<a href="globals.html#tobinary" class="tsd-kind-icon">to<wbr>Binary</a>
 					</li>
 					<li class=" tsd-kind-function tsd-is-external">
 						<a href="globals.html#todecimal128" class="tsd-kind-icon">to<wbr>Decimal128</a>

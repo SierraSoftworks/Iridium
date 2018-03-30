@@ -138,7 +138,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/ed406bc/lib/ModelHandlers.ts#L19">lib/ModelHandlers.ts:19</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/1270216/lib/ModelHandlers.ts#L20">lib/ModelHandlers.ts:20</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -160,7 +160,7 @@
 					<div class="tsd-signature tsd-kind-icon">model<span class="tsd-signature-symbol">:</span> <a href="model.html" class="tsd-signature-type">Model</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TDocument</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TInstance</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/ed406bc/lib/ModelHandlers.ts#L20">lib/ModelHandlers.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/1270216/lib/ModelHandlers.ts#L21">lib/ModelHandlers.ts:21</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -171,19 +171,35 @@
 					<a name="creatingdocuments" class="tsd-anchor"></a>
 					<h3>creating<wbr>Documents</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">creating<wbr>Documents<span class="tsd-signature-symbol">(</span>documents<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TDocument</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">creating<wbr>Documents<span class="tsd-signature-symbol">(</span>documents<span class="tsd-signature-symbol">: </span><a href="../globals.html#insertiondocument" class="tsd-signature-type">InsertionDocument</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TDocument</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span>, transformOptions<span class="tsd-signature-symbol">?: </span><a href="../interfaces/transformoptions.html" class="tsd-signature-type">TransformOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/ed406bc/lib/ModelHandlers.ts#L59">lib/ModelHandlers.ts:59</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/1270216/lib/ModelHandlers.ts#L77">lib/ModelHandlers.ts:77</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Called by methods which will create a new document in the DB. Responsible for
+										dispatching hooks, performing data validation and processing any necessary
+									transforms.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>documents: <span class="tsd-signature-type">TDocument</span><span class="tsd-signature-symbol">[]</span></h5>
+									<h5>documents: <a href="../globals.html#insertiondocument" class="tsd-signature-type">InsertionDocument</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TDocument</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The list of documents which will be inserted. For single inserts an array of one document may be provided.</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> transformOptions: <a href="../interfaces/transformoptions.html" class="tsd-signature-type">TransformOptions</a><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Options which can be used to control how the transforms are applied when representing the document</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -200,9 +216,18 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/ed406bc/lib/ModelHandlers.ts#L25">lib/ModelHandlers.ts:25</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/1270216/lib/ModelHandlers.ts#L37">lib/ModelHandlers.ts:37</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Called by methods which retrieve a document from the database. This method
+										is responsible for performing any necessary transforms on the data, setting
+										the cache entry and wrapping the returned object in the relevant wrapper type
+										(usually an Instance). This method will also trigger the <code>onRetrieved</code> and <code>onReady</code>
+									hooks on the model at the correct times.</p>
+								</div>
+							</div>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
@@ -213,12 +238,21 @@
 							<ul class="tsd-parameters">
 								<li>
 									<h5>conditions: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The conditions which were used to request the document from the DB</p>
+									</div>
 								</li>
 								<li>
 									<h5>result: <span class="tsd-signature-type">TDocument</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The resulting document which was returned by the DB</p>
+									</div>
 								</li>
 								<li>
 									<h5>wrapper: <span class="tsd-signature-type">function</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The method which will be used to wrap the document, usually an Instance</p>
+									</div>
 									<ul class="tsd-parameters">
 										<li class="tsd-parameter-siganture">
 											<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
@@ -246,6 +280,9 @@
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> options: <a href="../interfaces/queryoptions.html" class="tsd-signature-type">QueryOptions</a><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Options which may be provided to override the behaviour of this method</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TResult</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -262,16 +299,29 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/ed406bc/lib/ModelHandlers.ts#L76">lib/ModelHandlers.ts:76</a></li>
+									<li>Defined in <a href="https://github.com/SierraSoftworks/Iridium/blob/1270216/lib/ModelHandlers.ts#L112">lib/ModelHandlers.ts:112</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Called by Instance methods before an Instance is saved to the databse.
+										Will only be called if there are changes to be saved and will ensure that
+									the <code>onSaving</code> hook is called if it is set.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>instance: <span class="tsd-signature-type">TInstance</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The instance which is being saved to the database</p>
+									</div>
 								</li>
 								<li>
 									<h5>changes: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The list of changes that have been made to this instance since it was retrieved from the DB</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TInstance</span><span class="tsd-signature-symbol">&gt;</span></h4>
