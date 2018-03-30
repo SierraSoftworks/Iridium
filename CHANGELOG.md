@@ -4,6 +4,26 @@ For a human friendly description of what changed in each release, take a look
 at the [Releases](https://github.com/SierraSoftworks/Iridium/releases) page.
 
 
+## Version [8.0.0-alpha.13](https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.13)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.13">tag: **v8.0.0-alpha.13**</a>
+
+```sh
+npm install iridium@8.0.0-alpha.13
+```
+
+### Changes
+ - [1270216](https://github.com/SierraSoftworks/Iridium/commit/1270216) 8.0.0-alpha.13
+ - [808c2e1](https://github.com/SierraSoftworks/Iridium/commit/808c2e1) fix: Prevent a potential crash if Core.close() is called before Core.connect()
+ - [19a3436](https://github.com/SierraSoftworks/Iridium/commit/19a3436) chore: Update to the latest upstream libraries
+ - [c2fe092](https://github.com/SierraSoftworks/Iridium/commit/c2fe092) test: Force mocha to exit when tests are complete
+ - [efe1246](https://github.com/SierraSoftworks/Iridium/commit/efe1246) doc: Update the README file to reflect current best practices and features
+ - [8eef1ba](https://github.com/SierraSoftworks/Iridium/commit/8eef1ba) chore: Update package versions
+ - [b2a9c8c](https://github.com/SierraSoftworks/Iridium/commit/b2a9c8c) refactor: Move decorators into their own folder
+ - [705e7d9](https://github.com/SierraSoftworks/Iridium/commit/705e7d9) feat #118: Add intelligent memoization of transformed fields on Instances
+ - [94fdb8d](https://github.com/SierraSoftworks/Iridium/commit/94fdb8d) refactor: Move logic for field transformation into Instance #118
+ - [f432ce0](https://github.com/SierraSoftworks/Iridium/commit/f432ce0) doc: Update documentation
+ - [ed406bc](https://github.com/SierraSoftworks/Iridium/commit/ed406bc) doc: Updated changelog for 8.0.0-alpha.12
+
 ## Version [8.0.0-alpha.12](https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.12)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.12">tag: **v8.0.0-alpha.12**</a>
 
