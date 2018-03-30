@@ -1,3 +1,4 @@
 --require dist/test/support/chai
 --timeout 10s
 --recursive
+--exit
