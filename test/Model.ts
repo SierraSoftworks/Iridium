@@ -40,6 +40,7 @@ describe("Model",() => {
     let core = new Iridium.Core({ database: "test" });
 
     before(() => core.connect());
+    after(() => core.close());
 
     describe("constructor", () => {
         function createInstanceImplementation(properties: any): any {
@@ -132,17 +133,17 @@ describe("Model",() => {
     describe("methods",() => {
         let test = new Iridium.Model(core, Test);
 
-        it("should expose create()",() => chai.expect(test.create).to.exist.and.be.a("function"));
-        it("should expose insert()",() => chai.expect(test.insert).to.exist.and.be.a("function"));
-        it("should expose remove()",() => chai.expect(test.remove).to.exist.and.be.a("function"));
-        it("should expose findOne()",() => chai.expect(test.findOne).to.exist.and.be.a("function"));
-        it("should expose get()",() => chai.expect(test.get).to.exist.and.be.a("function"));
-        it("should expose find()",() => chai.expect(test.find).to.exist.and.be.a("function"));
-        it("should expose count()",() => chai.expect(test.count).to.exist.and.be.a("function"));
-        it("should expose ensureIndex()",() => chai.expect(test.ensureIndex).to.exist.and.be.a("function"));
-        it("should expose ensureIndexes()",() => chai.expect(test.ensureIndexes).to.exist.and.be.a("function"));
-        it("should expose dropIndex()",() => chai.expect(test.dropIndex).to.exist.and.be.a("function"));
-        it("should expose dropIndexes()",() => chai.expect(test.dropIndexes).to.exist.and.be.a("function"));
+        it("should expose create()",() => { chai.expect(test.create).to.exist.and.be.a("function") });
+        it("should expose insert()",() => { chai.expect(test.insert).to.exist.and.be.a("function") });
+        it("should expose remove()",() => { chai.expect(test.remove).to.exist.and.be.a("function") });
+        it("should expose findOne()",() => { chai.expect(test.findOne).to.exist.and.be.a("function") });
+        it("should expose get()",() => { chai.expect(test.get).to.exist.and.be.a("function") });
+        it("should expose find()",() => { chai.expect(test.find).to.exist.and.be.a("function") });
+        it("should expose count()",() => { chai.expect(test.count).to.exist.and.be.a("function") });
+        it("should expose ensureIndex()",() => { chai.expect(test.ensureIndex).to.exist.and.be.a("function") });
+        it("should expose ensureIndexes()",() => { chai.expect(test.ensureIndexes).to.exist.and.be.a("function") });
+        it("should expose dropIndex()",() => { chai.expect(test.dropIndex).to.exist.and.be.a("function") });
+        it("should expose dropIndexes()",() => { chai.expect(test.dropIndexes).to.exist.and.be.a("function") });
     });
 
     describe("properties",() => {
@@ -161,14 +162,14 @@ describe("Model",() => {
             test.collectionName = "changed";
             chai.expect(test.collectionName).to.equal("changed");
         });
-        it("should expose schema",() => chai.expect(test).to.have.property("schema"));
-        it("should expose helpers",() => chai.expect(test).to.have.property("helpers"));
-        it("should expose handlers",() => chai.expect(test).to.have.property("handlers"));
-        it("should expose cache",() => chai.expect(test).to.have.property("cache"));
-        it("should expose cacheDirector",() => chai.expect(test).to.have.property("cacheDirector"));
-        it("should expose transforms",() => chai.expect(test).to.have.property("transforms"));
-        it("should expose indexes",() => chai.expect(test).to.have.property("indexes"));
-        it("should expose Instance",() => chai.expect(test.Instance).to.exist.and.be.a("function"));
+        it("should expose schema",() => { chai.expect(test).to.have.property("schema") });
+        it("should expose helpers",() => { chai.expect(test).to.have.property("helpers") });
+        it("should expose handlers",() => { chai.expect(test).to.have.property("handlers") });
+        it("should expose cache",() => { chai.expect(test).to.have.property("cache") });
+        it("should expose cacheDirector",() => { chai.expect(test).to.have.property("cacheDirector") });
+        it("should expose transforms",() => { chai.expect(test).to.have.property("transforms") });
+        it("should expose indexes",() => { chai.expect(test).to.have.property("indexes") });
+        it("should expose Instance",() => { chai.expect(test.Instance).to.exist.and.be.a("function") });
     });
 
     describe("collection",() => {

@@ -27,6 +27,7 @@ describe("Model", () => {
     let core = new Iridium.Core({ database: "test" });
 
     before(() => core.connect());
+    after(() => core.close());
 
     describe("aggregate()", () => {
        let model = new Iridium.Model<TestDocument, Test>(core, Test);

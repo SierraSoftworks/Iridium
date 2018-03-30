@@ -50,35 +50,34 @@
     "node": ">= 6.0"
   },
   "dependencies": {
-    "@types/chai": "^4.1.2",
     "@types/lodash": "^4.14.106",
     "@types/mongodb": "^3.0.9",
     "lodash": "^4.17.5",
     "mongodb": "^3.0.5",
-    "skmatc": "~1.2.3"
+    "skmatc": "~1.2.3",
+    "why-is-node-running": "^2.0.2"
   },
   "peerDependencies": {
     "@types/lodash": "^4.14.106",
-    "@types/mongodb": "^3.0.9",
-    "@types/chai": "^4.1.2"
+    "@types/mongodb": "^3.0.9"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.20",
     "@types/chai": "^4.1.2",
     "@types/chai-as-promised": "^7.1.0",
-    "@types/mocha": "^2.2.48",
+    "@types/mocha": "^5.0.0",
     "@types/source-map-support": "^0.4.0",
     "bluebird": "^3.5.1",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
-    "chalk": "^2.3.0",
+    "chalk": "^2.3.2",
     "concurrently": "^3.5.1",
     "coveralls": "^3.0.0",
     "debug": "^3.1.0",
     "istanbul": "~0.4.5",
-    "mocha": "^5.0.0",
+    "mocha": "^5.0.5",
     "remap-istanbul": "~0.10.1",
-    "source-map-support": "~0.5.3",
+    "source-map-support": "^0.5.4",
     "tslint": "^5.9.1",
     "typedoc": "~0.11.1",
     "typescript": "~2.8.1"

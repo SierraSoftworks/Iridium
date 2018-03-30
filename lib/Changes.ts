@@ -36,7 +36,7 @@ export interface Changes {
     };
 
     $pull?: {
-        [property: string]: Conditions;
+        [property: string]: Conditions<any>;
     };
 
     $pullAll?: {

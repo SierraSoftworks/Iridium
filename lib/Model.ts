@@ -269,21 +269,21 @@ export class Model<TDocument, TInstance> {
      * @param {Object} conditions The MongoDB query dictating which documents to return
      * @returns {Promise<TInstance[]>}
      */
-    find(conditions: { _id?: string; } | Conditions | string): Cursor<TDocument, TInstance>;
+    find(conditions: { _id?: string; } | Conditions<TDocument> | string): Cursor<TDocument, TInstance>;
     /**
      * Returns all documents in the collection which match the conditions
      * @param {Object} conditions The MongoDB query dictating which documents to return
      * @param {Object} fields The fields to include or exclude from the document
      * @returns {Promise<TInstance[]>}
      */
-    find(conditions: { _id?: string; } | Conditions | string, fields: { [name: string]: number }): Cursor<TDocument, TInstance>;
-    find(conditions?: { _id?: string; } | Conditions | string, fields?: any): Cursor<TDocument, TInstance> {
+    find(conditions: { _id?: string; } | Conditions<TDocument> | string, fields: { [name: string]: number }): Cursor<TDocument, TInstance>;
+    find(conditions?: { _id?: string; } | Conditions<TDocument> | string, fields?: any): Cursor<TDocument, TInstance> {
         conditions = conditions || {};
 
         if (!_.isPlainObject(conditions)) conditions = { _id: conditions };
         conditions = this._helpers.convertToDB(conditions, { document: true, properties: true, renames: true });
 
-        let cursor = this.collection.find<TDocument>(conditions);
+        let cursor = this.collection.find<TDocument>(<Conditions<TDocument>>conditions);
 
         if(fields)
             cursor = cursor.project(fields);
@@ -310,7 +310,7 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    get(conditions: { _id?: string; } | Conditions, callback?: General.Callback<TInstance>): Promise<TInstance>;
+    get(conditions: { _id?: string; } | Conditions<TDocument>, callback?: General.Callback<TInstance>): Promise<TInstance>;
     /**
      * Retrieves a single document from the collection with the given ID and wraps it as an instance
      * @param {any} id The document's unique _id field value in downstream format
@@ -326,7 +326,7 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    get(conditions: { _id?: string; } | Conditions, options: ModelOptions.QueryOptions, callback?: General.Callback<TInstance>): Promise<TInstance>;
+    get(conditions: { _id?: string; } | Conditions<TDocument>, options: ModelOptions.QueryOptions, callback?: General.Callback<TInstance>): Promise<TInstance>;
     get(...args: any[]): Promise<TInstance> {
         return this.findOne.apply(this, args);
     }
@@ -350,7 +350,7 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    findOne(conditions: { _id?: string; } | Conditions, callback?: General.Callback<TInstance>): Promise<TInstance|null>;
+    findOne(conditions: { _id?: string; } | Conditions<TDocument>, callback?: General.Callback<TInstance>): Promise<TInstance|null>;
     /**
      * Retrieves a single document from the collection with the given ID and wraps it as an instance
      * @param {any} id The document's unique _id field value in downstream format
@@ -366,7 +366,7 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    findOne(conditions: { _id?: string; } | Conditions, options: ModelOptions.QueryOptions, callback?: General.Callback<TInstance>): Promise<TInstance|null>;
+    findOne(conditions: { _id?: string; } | Conditions<TDocument>, options: ModelOptions.QueryOptions, callback?: General.Callback<TInstance>): Promise<TInstance|null>;
     findOne(...args: any[]): Promise<TInstance|null> {
         let conditions: { _id?: any, [key: string]: any }|undefined;
         let options: ModelOptions.QueryOptions|undefined;
@@ -395,7 +395,7 @@ export class Model<TDocument, TInstance> {
         }).then((cachedDocument: TDocument) => {
             if (cachedDocument) return cachedDocument;
             return new Promise<TDocument|null>((resolve, reject) => {
-                let cursor = this.collection.find(conditions);
+                let cursor = this.collection.find<TDocument>(conditions);
 
                 if(options!.sort)
                     cursor = cursor.sort(options!.sort!);
@@ -545,14 +545,14 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      */
     // @ts-ignore We implement support for leaving out `options` but providing the `callback` in our base implementation, even though this complains
-    update(conditions: { _id?: any } | Conditions | string, changes: Changes, callback?: General.Callback<number>): Promise<number>;
+    update(conditions: { _id?: any } | Conditions<TDocument> | string, changes: Changes, callback?: General.Callback<number>): Promise<number>;
     /**
      * Updates the documents in the backing collection which match the conditions using the given update instructions
      * @param {Object} conditions The conditions which determine which documents will be updated
      * @param {Object} changes The replacement document to do a full update
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      */
-    update(conditions: { _id?: any } | Conditions | string, changes: TDocument, callback?: General.Callback<number>): Promise<number>;
+    update(conditions: { _id?: any } | Conditions<TDocument> | string, changes: TDocument, callback?: General.Callback<number>): Promise<number>;
     /**
      * Updates the documents in the backing collection which match the conditions using the given update instructions
      * @param {Object} conditions The conditions which determine which documents will be updated
@@ -560,7 +560,7 @@ export class Model<TDocument, TInstance> {
      * @param {UpdateOptions} options The options which dictate how this function behaves
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      */
-    update(conditions: { _id?: string; } | Conditions | string, changes: Changes, options: ModelOptions.UpdateOptions, callback?: General.Callback<number>): Promise<number>;
+    update(conditions: { _id?: string; } | Conditions<TDocument> | string, changes: Changes, options: ModelOptions.UpdateOptions, callback?: General.Callback<number>): Promise<number>;
     /**
      * Updates the documents in the backing collection which match the conditions using the given update instructions
      * @param {Object} conditions The conditions which determine which documents will be updated
@@ -568,8 +568,8 @@ export class Model<TDocument, TInstance> {
      * @param {UpdateOptions} options The options which dictate how this function behaves
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      */
-    update(conditions: { _id?: string; } | Conditions | string, changes: TDocument, options: ModelOptions.UpdateOptions, callback?: General.Callback<number>): Promise<number>;
-    update(conditions: { _id?: string; } | Conditions | string, changes: Changes, options?: ModelOptions.UpdateOptions, callback?: General.Callback<number>): Promise<number> {
+    update(conditions: Conditions<TDocument> | string, changes: TDocument, options: ModelOptions.UpdateOptions, callback?: General.Callback<number>): Promise<number>;
+    update(conditions: Conditions<TDocument> | string, changes: Changes, options?: ModelOptions.UpdateOptions, callback?: General.Callback<number>): Promise<number> {
         if (typeof options === "function") {
             callback = <General.Callback<number>>options;
             options = {};
@@ -577,7 +577,7 @@ export class Model<TDocument, TInstance> {
 
         const opts = options || {};
 
-        if (!_.isPlainObject(conditions)) conditions = {
+        if (!_.isPlainObject(conditions)) conditions = <Conditions<TDocument>>{
             _id: conditions
         };
 
@@ -607,12 +607,12 @@ export class Model<TDocument, TInstance> {
                 }
 
                 if (opts.multi)
-                    return this.collection.updateMany(conditions, changes, opts, callback);
+                    return this.collection.updateMany(<Conditions<TDocument>>conditions, changes, opts, callback);
                 
                 if (isReplacement)
-                    return this.collection.replaceOne(conditions, changes, callback);
+                    return this.collection.replaceOne(<Conditions<TDocument>>conditions, changes, callback);
 
-                return this.collection.updateOne(conditions, changes, opts, callback)
+                return this.collection.updateOne(<Conditions<TDocument>>conditions, changes, opts, callback)
             })
         }), callback);
     }
@@ -629,9 +629,9 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      * @returns {Promise<number>}
      */
-    count(conditions: { _id?: string; } | Conditions | string, callback?: General.Callback<number>): Promise<number>;
+    count(conditions: { _id?: string; } | Conditions<TDocument> | string, callback?: General.Callback<number>): Promise<number>;
     count(conds?: any, callback?: General.Callback<number>): Promise<number> {
-        let conditions: { _id?: string; } | Conditions = conds;
+        let conditions: { _id?: string; } | Conditions<TDocument> = conds;
         if (typeof conds === "function") {
             callback = <General.Callback<number>>conds;
             conditions = {};
@@ -676,9 +676,9 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      * @returns {Promise<number>}
      */
-    remove(conditions: { _id?: string; } | Conditions | string, options: ModelOptions.RemoveOptions, callback?: General.Callback<number>): Promise<number>;
+    remove(conditions: { _id?: string; } | Conditions<TDocument> | string, options: ModelOptions.RemoveOptions, callback?: General.Callback<number>): Promise<number>;
     remove(conds?: any, options?: ModelOptions.RemoveOptions, callback?: General.Callback<number>): Promise<number> {
-        let conditions: { _id?: string; } | Conditions = conds;
+        let conditions: { _id?: string; } | Conditions<TDocument> = conds;
 
         if (typeof options === "function") {
             callback = <General.Callback<number>>options;

@@ -122,7 +122,9 @@ describe("Cache",() => {
         });
 
         describe("should be populated",() => {
-            beforeEach(() => core.cache = new Iridium.MemoryCache());
+            beforeEach(() => {
+                core.cache = new Iridium.MemoryCache()
+            });
 
             it("when a single document is retrieved",() => {
                 return model.get().then((instance) =>

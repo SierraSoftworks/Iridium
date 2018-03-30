@@ -164,7 +164,7 @@ export class Instance<TDocument, TInstance> {
      * @param {function} callback A callback which is triggered when the save operation completes
      * @returns {Promise}
      */
-    save(conditions: Conditions, changes: Changes, callback?: General.Callback<TInstance>): Promise<TInstance>;
+    save(conditions: Conditions<TDocument>, changes: Changes, callback?: General.Callback<TInstance>): Promise<TInstance>;
     save(...args: any[]): Promise<TInstance> {
         let callback: General.Callback<any>|undefined = undefined;
         let changes: any = null;
