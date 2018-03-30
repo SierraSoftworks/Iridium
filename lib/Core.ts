@@ -187,7 +187,7 @@ export class Core {
             if (!this._connection) return this;
             let conn: MongoDB.MongoClient = this._connection;
             this._connection = undefined;
-            conn.close();
+            conn.close && conn.close();
             return this;
         }), callback);
     }
