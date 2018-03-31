@@ -72,8 +72,10 @@ export class Model<TDocument, TInstance> {
         this._cacheDirector = instanceType.cache || new CacheOnID();
         this._transforms = instanceType.transforms || {};
         this._renames = instanceType.renames || {};
-        this._validators = instanceType.validators || [];
         this._indexes = instanceType.indexes || [];
+        
+        this._validators = instanceType.validators || [];
+        this.loadPluginValidators();
 
         if(!this._schema._id) this._schema._id = MongoDB.ObjectID;
 
@@ -84,6 +86,28 @@ export class Model<TDocument, TInstance> {
             this._Instance = ModelSpecificInstance(this, instanceType);
         else
             this._Instance = instanceType.bind(undefined, this);
+    }
+
+    /**
+     * Adds the validators to this Model's validators that are declared in
+     * all of the Plugin objects.
+     *
+     * Only Validators in the Plugins that have been registered with the Core
+     * will be added.
+     * 
+     * @private
+     * @memberof ModelHelpers
+     */
+    private loadPluginValidators(): void {
+        this.core.plugins.forEach((plugin) => {
+            if (plugin.validate != null) {
+                if (_.isArray(plugin.validate)) {
+                    this._validators = this._validators.concat(plugin.validate);;
+                } else {
+                    this._validators.push(plugin.validate);
+                }
+            }
+        });
     }
 
     /**
