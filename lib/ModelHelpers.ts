@@ -15,9 +15,31 @@ export class ModelHelpers<TDocument, TInstance> {
     constructor(public model: Model<TDocument, TInstance>) {
         this._validator = Skmatc.scope(model.schema);
         model.validators.forEach(validator => this._validator.register(validator));
+
+        this.registerPluginValidators();
     }
 
     private _validator: Skmatc.Skmatc;
+
+    /**
+     * Hooks up the validators that are declared in all of the Plugin objects.
+     * Only Validators in the Plugins that have been registered with the Core
+     * will be hooked up.
+     * 
+     * @private
+     * @memberof ModelHelpers
+     */
+    private registerPluginValidators(): void {
+        this.model.core.plugins.forEach((plugin) => {
+            if (plugin.validate != null) {
+                if (_.isArray(plugin.validate)) {
+                    plugin.validate.forEach((validator) => this._validator.register(validator));
+                } else {
+                    this._validator.register(plugin.validate);
+                }
+            }
+        });
+    }
 
     /**
      * Validates a document to ensure that it matches the model's ISchema requirements
