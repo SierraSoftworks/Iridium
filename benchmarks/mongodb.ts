@@ -69,7 +69,7 @@ iDB.connect()
     .then(() => iDB.UserWrapped.remove())
     .then(() => {
     return new Promise<any>((resolve, reject) => {
-        iDB.connection.collection("mongodb").deleteMany((err: Error) => {
+        iDB.db.collection("mongodb").deleteMany((err: Error) => {
             if (err) return reject(err);
             return resolve(null);
         });
@@ -77,14 +77,14 @@ iDB.connect()
 })
     .then(() => benchmark("MongoDB insert()",() => {
     return new Promise((resolve, reject) => {
-        iDB.connection.collection("mongodb").deleteMany({},(err) => {
+        iDB.db.collection("mongodb").deleteMany({},(err) => {
             if (err) return reject(err);
             return resolve({});
         });
     });
 },(objects) => {
         return new Promise<any>((resolve, reject) => {
-            iDB.connection.collection("mongodb").insertMany(objects,(err, objects) => {
+            iDB.db.collection("mongodb").insertMany(objects,(err, objects) => {
                 if (err) return reject(err);
                 return resolve(objects);
             });
@@ -95,7 +95,7 @@ iDB.connect()
 
     .then(() => benchmark("MongoDB find()",() => null,() => {
     return new Promise<any>((resolve, reject) => {
-        iDB.connection.collection("mongodb").find({}).toArray((err: Error, objects: any) => {
+        iDB.db.collection("mongodb").find({}).toArray((err: Error, objects: any) => {
             if (err) return reject(err);
             return resolve(objects);
         });
@@ -106,7 +106,7 @@ iDB.connect()
 
     .then(() => {
     return new Promise<any>((resolve, reject) => {
-        iDB.connection.collection("mongodb").deleteMany((err: Error, objects: any) => {
+        iDB.db.collection("mongodb").deleteMany((err: Error, objects: any) => {
             if (err) return reject(err);
             return resolve(objects);
         });
@@ -114,14 +114,14 @@ iDB.connect()
 })
     .then(() => benchmark("MongoDB remove()",(objects) => {
     return new Promise<any>((resolve, reject) => {
-        iDB.connection.collection("mongodb").deleteMany(objects,(err, objects) => {
+        iDB.db.collection("mongodb").deleteMany(objects,(err, objects) => {
             if (err) return reject(err);
             return resolve(objects);
         });
     });
 },() => {
         return new Promise<any>((resolve, reject) => {
-            iDB.connection.collection("mongodb").deleteMany((err: Error, objects: any) => {
+            iDB.db.collection("mongodb").deleteMany((err: Error, objects: any) => {
                 if (err) return reject(err);
                 return resolve(objects);
             });

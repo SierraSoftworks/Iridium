@@ -12,6 +12,7 @@ import {Conditions} from "./Conditions";
 import {Changes} from "./Changes";
 import * as MapReduce from "./MapReduce";
 import {hasValidObjectID} from "./utils/ObjectID";
+import {FieldCache} from "./InstanceInterface";
 import {Nodeify} from "./utils/Promise";
 
 import * as _ from "lodash";
@@ -48,6 +49,7 @@ export class Instance<TDocument, TInstance> {
         this._isPartial = isPartial;
         this._original = document;
         this._modified = model.helpers.cloneDocument(document);
+        this._fieldCache = {}
 
         _.each(model.core.plugins, (plugin: Plugin) => {
             if (plugin.newInstance) plugin.newInstance(this, model);
@@ -59,12 +61,13 @@ export class Instance<TDocument, TInstance> {
     private _model: Model<TDocument, TInstance>;
     private _original: TDocument;
     private _modified: TDocument;
+    private _fieldCache: FieldCache = {};
 
     /**
      * Gets the underlying document representation of this instance
      */
     get document(): TDocument {
-        return this._modified;
+        return this._model.helpers.applyCachedFieldChanges(<any>this);
     }
 
     /**
@@ -161,7 +164,7 @@ export class Instance<TDocument, TInstance> {
      * @param {function} callback A callback which is triggered when the save operation completes
      * @returns {Promise}
      */
-    save(conditions: Conditions, changes: Changes, callback?: General.Callback<TInstance>): Promise<TInstance>;
+    save(conditions: Conditions<TDocument>, changes: Changes, callback?: General.Callback<TInstance>): Promise<TInstance>;
     save(...args: any[]): Promise<TInstance> {
         let callback: General.Callback<any>|undefined = undefined;
         let changes: any = null;
@@ -174,6 +177,8 @@ export class Instance<TDocument, TInstance> {
                 else conditions = arg;
             }
         });
+
+        this._model.helpers.applyCachedFieldChanges(<any>this)
 
         return Nodeify(Promise.resolve().then(() => {
             conditions = this._model.helpers.cloneConditions(conditions);
@@ -203,7 +208,7 @@ export class Instance<TDocument, TInstance> {
             if (!changes && !this._isNew) return false;
 
             if (this._isNew) {
-                return this._model.handlers.creatingDocuments([this._modified]).then((modifiedDocs) => {
+                return this._model.handlers.creatingDocuments([this._modified], { properties: false }).then((modifiedDocs) => {
                     return new Promise((resolve, reject) => {
                         this._model.collection.insertOne(modifiedDocs[0], { w: "majority" }, (err, doc) => {
                             if (err) return reject(err);
@@ -255,6 +260,7 @@ export class Instance<TDocument, TInstance> {
                 this._isPartial = false;
                 this._isNew = false;
                 this._modified = value;
+                this._fieldCache = {};
                 this._original = this._model.helpers.cloneDocument(value);
                 return <TInstance><any>this;
             });
@@ -300,6 +306,7 @@ export class Instance<TDocument, TInstance> {
                 this._isPartial = false;
                 this._original = doc;
                 this._modified = this._model.helpers.cloneDocument(doc);
+                this._fieldCache = {};
 
                 return <TInstance><any>this;
             });
@@ -397,12 +404,28 @@ export class Instance<TDocument, TInstance> {
         return results;
     }
 
+    protected _getField<K extends keyof TInstance, V extends TInstance[K]>(field: K): V {
+        return this._model.helpers.readInstanceField(<any>this, field)
+    }
+
+    protected _setField<K extends keyof TInstance, V extends TInstance[K]>(field: K, value: V): void {
+        this._model.helpers.writeInstanceField(<any>this, field, value)
+    }
+
+    /**
+     * Gets the DB representation of this instance
+     * @returns {TDocument}
+     */
+    toDB(): TDocument {
+        return this._model.helpers.cloneDocument(this.document);
+    }
+
     /**
      * Gets the JSON representation of this instance
      * @returns {TDocument}
      */
     toJSON(): any {
-        return this.document;
+        return this._model.helpers.cloneDocument(this.document);
     }
 
     /**

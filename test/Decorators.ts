@@ -58,11 +58,11 @@ describe("Decorators", () => {
 		});
 
 		it("should support just spec indexes", () => {
-            chai.expect(Test.indexes).to.contain({ spec: { name: 1 }, options: {} });
+            chai.expect(Test.indexes).to.deep.include({ spec: { name: 1 }, options: {} });
 		});
 
 		it("should support indexes with both a spec and options", () => {
-			chai.expect(Test.indexes).to.contain({ spec: { email: 1 }, options: { background: true }});
+			chai.expect(Test.indexes).to.deep.include({ spec: { email: 1 }, options: { background: true }});
 		});
 
         it("should not pollute the parent's index object", () => {

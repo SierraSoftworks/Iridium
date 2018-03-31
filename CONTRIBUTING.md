@@ -7,31 +7,39 @@ You'll need to have an up to date version of Node.js installed (anything after *
 [nodejs.org/download](https://nodejs.org/download/). Once you've got that installed you'll have `npm` available - the Node.js
 Package Manager.
 
-Next thing to do is install Gulp on your system, just run `npm install -g gulp` and wait for that to finish. That will add the
-`gulp` command line utility which you will use to manage the Iridium development workflow.
+You'll also want to ensure that you have an instance of MongoDB running on your system, available at `127.0.0.1:27017`. The
+easiest way to do this is to spin up a Docker container:
+
+```bash
+# For a standard Docker daemon configuration
+docker run --rm -it -p 27017:27017 mongo:3.6
+
+# Or if you're running Docker in Swarm mode
+docker service create --name mongodb -p 27017:27017 mongo:3.6
+```
+
+You can also install MongoDB using one of the various [Community Server](https://www.mongodb.com/download-center#community)
+packages made available by them.
 
 ## Project layout
 
  - **benchmarks** holds any benchmark files, they're not currently used for unit testing or anything like that, but you can use
    them as a rough map between the different comparison libraries. If you decide to write any benchmarks, please stick to using
    TypeScript as it will help with refactoring should the API change.
- - **build** holds JavaScript files consumed by Gulp for the various gulp tasks available to you. Files within this folder are
-   automatically run whenever you execute `gulp` within the project directory.
+ - **build** holds JavaScript files which provide specific build tooling such as for generating the `CHANGELOG.md` file from our
+   Git history. These are usually run through `npm run $CMD`.
  - **dist** holds the compiled JavaScript and JSMap files, its structure mirrors that of the project's root directory. Generally
    you won't have any need to fiddle in here unless you're debugging a code generation issue.
  - **example** holds a couple of example files which show how you can go about doing certain things within Iridium. If you've got
    a good idea for an example then this is where you should put it. Generally you'll write these in TypeScript, but if you want
    to create an example of how to do things in JavaScript or any other JS targetting language then go right ahead.
- - **lib** *This is where the magic happens!* TypeScript files which make up the heart of Iridium.
+ - **lib** *>This is where the magic happens!<* TypeScript files which make up the heart of Iridium.
  - **test** Probably the second most important folder, it holds all of the unit tests used to ensure that Iridium is working the
    way it was intended.
- - **typings** holds the TypeScript definition files we use to interface with some of the JavaScript dependencies. These are
-   primarily pulled in by [tsd](http://definitelytyped.org/tsd/) from the [DefinitelyTyped](http://definitelytyped.org/)
-   project.
    
 ## Developing on Iridium
-Iridium's development workflow is almost entirely automated through a combination of Gulp and NPM hooks. The most common command
-you'll be using is `gulp watch` which will watch the **lib** and **test** folders for changes, compile the TypeScript files and
+Iridium's development workflow is almost entirely automated through NPM hooks. The most common command
+you'll be using is `npm run watch` which will watch the **lib** and **test** folders for changes, compile the TypeScript files and
 run the unit tests. You'll generally leave this running while you make changes to be notified almost immediately when things
 break.
 

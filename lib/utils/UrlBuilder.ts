@@ -5,16 +5,16 @@ export function BuildUrl(config: Configuration): string {
     let url: string = "mongodb://";
 
     if (config.username) {
-        url += config.username;
+        url += encodeURIComponent(config.username);
         if (config.password)
-            url += ":" + config.password;
+            url += ":" + encodeURIComponent(config.password);
         url += "@";
     }
 
     url += buildHostList(config);
     
     if (config.database)
-        url += "/" + config.database;
+        url += "/" + encodeURIComponent(config.database);
 
     return url;
 }
@@ -24,19 +24,19 @@ function buildHostList(config: Configuration): string {
 
     if (config.host) {
         if (config.port)
-            hosts.push(`${config.host}:${config.port}`);
+            hosts.push(`${encodeURIComponent(config.host)}:${config.port}`);
         else
-            hosts.push(config.host);
+            hosts.push(encodeURIComponent(config.host));
     }
 
     if (config.hosts) {
         config.hosts.forEach(host => {
             if (host.port)
-                hosts.push(`${host.address}:${host.port}`);
+                hosts.push(`${encodeURIComponent(host.address)}:${host.port}`);
             else if(config && config.port)
-                hosts.push(`${host.address}:${config.port}`);
+                hosts.push(`${(host.address)}:${config.port}`);
             else
-                hosts.push(host.address);
+                hosts.push((host.address));
         });
     }
 

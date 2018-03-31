@@ -1,10 +1,10 @@
 {
   "name": "iridium",
-  "version": "8.0.0-alpha.10",
+  "version": "8.0.0-alpha.13",
   "author": "Benjamin Pannell <admin@sierrasoftworks.com>",
   "description": "A custom lightweight ORM for MongoDB designed for power-users",
   "license": "MIT",
-  "homepage": "https://sierrasoftworks.com/iridium",
+  "homepage": "https://sierrasoftworks.github.com/Iridium/",
   "repository": {
     "url": "https://github.com/sierrasoftworks/iridium",
     "type": "git"
@@ -21,7 +21,7 @@
   "scripts": {
     "build": "tsc",
     "pretest": "npm run build",
-    "prepublish": "npm run build",
+    "prepublishOnly": "npm run build",
     "test": "mocha --opts test/mocha.opts dist/test",
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- --opts test/mocha.opts dist/test",
     "postcoverage": "npm run coverage:remap:lcov",
@@ -50,37 +50,37 @@
     "node": ">= 6.0"
   },
   "dependencies": {
-    "@types/chai": "^3.5.2",
-    "@types/lodash": "^4.14.64",
-    "@types/mongodb": "^2.2.13",
-    "lodash": "^4.17.4",
-    "mongodb": "^2.2.31",
-    "skmatc": "~1.2.3"
+    "@types/lodash": "^4.14.106",
+    "@types/mongodb": "^3.0.9",
+    "lodash": "^4.17.5",
+    "mongodb": "^3.0.5",
+    "skmatc": "~1.2.3",
+    "why-is-node-running": "^2.0.2"
   },
   "peerDependencies": {
-    "@types/lodash": "^4.14.64",
-    "@types/mongodb": "^2.2.13",
-    "@types/chai": "^3.5.2"
+    "@types/lodash": "^4.14.106",
+    "@types/mongodb": "^3.0.9"
   },
   "devDependencies": {
-    "@types/bluebird": "^3.5.19",
-    "@types/chai": "^3.5.2",
-    "@types/chai-as-promised": "^0.0.30",
-    "@types/mocha": "^2.2.41",
-    "@types/source-map-support": "^0.2.28",
+    "@types/bluebird": "^3.5.20",
+    "@types/chai": "^4.1.2",
+    "@types/chai-as-promised": "^7.1.0",
+    "@types/mocha": "^5.0.0",
+    "@types/source-map-support": "^0.4.0",
     "bluebird": "^3.5.1",
-    "chai": "^3.5.0",
-    "chai-as-promised": "^6.0.0",
-    "chalk": "^1.1.3",
-    "concurrently": "^3.4.0",
-    "coveralls": "^2.13.1",
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "chalk": "^2.3.2",
+    "concurrently": "^3.5.1",
+    "coveralls": "^3.0.0",
+    "debug": "^3.1.0",
     "istanbul": "~0.4.5",
-    "mocha": "^3.4.1",
-    "remap-istanbul": "^0.9.5",
-    "source-map-support": "^0.4.15",
-    "tslint": "^5.2.0",
-    "typedoc": "~0.7.1",
-    "typescript": "~2.6.2"
+    "mocha": "^5.0.5",
+    "remap-istanbul": "~0.10.1",
+    "source-map-support": "^0.5.4",
+    "tslint": "^5.9.1",
+    "typedoc": "~0.11.1",
+    "typescript": "~2.8.1"
   },
   "keywords": [
     "mongodb",
@@ -88,6 +88,7 @@
     "odm",
     "iridium",
     "validation",
-    "preprocessing"
+    "preprocessing",
+    "typescript"
   ]
 }

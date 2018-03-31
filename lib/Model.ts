@@ -30,6 +30,8 @@ import {Transforms, DefaultTransforms, RenameMap} from "./Transforms";
 import * as AggregationPipeline from "./Aggregate";
 import {MapFunction, ReduceFunction, MapReducedDocument, MapReduceFunctions, MapReduceOptions} from "./MapReduce";
 
+export type InsertionDocument<TDocument> = TDocument | { toDB(): TDocument };
+
 /**
  * An Iridium Model which represents a structured MongoDB collection.
  * Models expose the methods you will generally use to query those collections, and ensure that
@@ -167,7 +169,7 @@ export class Model<TDocument, TInstance> {
      * @returns {Collection}
      */
     get collection(): MongoDB.Collection {
-        return this.core.connection.collection(this._collection);
+        return this.core.db.collection(this._collection);
     }
 
     /**
@@ -267,21 +269,21 @@ export class Model<TDocument, TInstance> {
      * @param {Object} conditions The MongoDB query dictating which documents to return
      * @returns {Promise<TInstance[]>}
      */
-    find(conditions: { _id?: string; } | Conditions | string): Cursor<TDocument, TInstance>;
+    find(conditions: { _id?: string; } | Conditions<TDocument> | string): Cursor<TDocument, TInstance>;
     /**
      * Returns all documents in the collection which match the conditions
      * @param {Object} conditions The MongoDB query dictating which documents to return
      * @param {Object} fields The fields to include or exclude from the document
      * @returns {Promise<TInstance[]>}
      */
-    find(conditions: { _id?: string; } | Conditions | string, fields: { [name: string]: number }): Cursor<TDocument, TInstance>;
-    find(conditions?: { _id?: string; } | Conditions | string, fields?: any): Cursor<TDocument, TInstance> {
+    find(conditions: { _id?: string; } | Conditions<TDocument> | string, fields: { [name: string]: number }): Cursor<TDocument, TInstance>;
+    find(conditions?: { _id?: string; } | Conditions<TDocument> | string, fields?: any): Cursor<TDocument, TInstance> {
         conditions = conditions || {};
 
         if (!_.isPlainObject(conditions)) conditions = { _id: conditions };
         conditions = this._helpers.convertToDB(conditions, { document: true, properties: true, renames: true });
 
-        let cursor = this.collection.find<TDocument>(conditions);
+        let cursor = this.collection.find<TDocument>(<Conditions<TDocument>>conditions);
 
         if(fields)
             cursor = cursor.project(fields);
@@ -308,7 +310,7 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    get(conditions: { _id?: string; } | Conditions, callback?: General.Callback<TInstance>): Promise<TInstance>;
+    get(conditions: { _id?: string; } | Conditions<TDocument>, callback?: General.Callback<TInstance>): Promise<TInstance>;
     /**
      * Retrieves a single document from the collection with the given ID and wraps it as an instance
      * @param {any} id The document's unique _id field value in downstream format
@@ -324,7 +326,7 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    get(conditions: { _id?: string; } | Conditions, options: ModelOptions.QueryOptions, callback?: General.Callback<TInstance>): Promise<TInstance>;
+    get(conditions: { _id?: string; } | Conditions<TDocument>, options: ModelOptions.QueryOptions, callback?: General.Callback<TInstance>): Promise<TInstance>;
     get(...args: any[]): Promise<TInstance> {
         return this.findOne.apply(this, args);
     }
@@ -348,7 +350,7 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    findOne(conditions: { _id?: string; } | Conditions, callback?: General.Callback<TInstance>): Promise<TInstance|null>;
+    findOne(conditions: { _id?: string; } | Conditions<TDocument>, callback?: General.Callback<TInstance>): Promise<TInstance|null>;
     /**
      * Retrieves a single document from the collection with the given ID and wraps it as an instance
      * @param {any} id The document's unique _id field value in downstream format
@@ -364,7 +366,7 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, TInstance)} callback An optional callback which will be triggered when a result is available
      * @returns {Promise<TInstance>}
      */
-    findOne(conditions: { _id?: string; } | Conditions, options: ModelOptions.QueryOptions, callback?: General.Callback<TInstance>): Promise<TInstance|null>;
+    findOne(conditions: { _id?: string; } | Conditions<TDocument>, options: ModelOptions.QueryOptions, callback?: General.Callback<TInstance>): Promise<TInstance|null>;
     findOne(...args: any[]): Promise<TInstance|null> {
         let conditions: { _id?: any, [key: string]: any }|undefined;
         let options: ModelOptions.QueryOptions|undefined;
@@ -393,7 +395,7 @@ export class Model<TDocument, TInstance> {
         }).then((cachedDocument: TDocument) => {
             if (cachedDocument) return cachedDocument;
             return new Promise<TDocument|null>((resolve, reject) => {
-                let cursor = this.collection.find(conditions);
+                let cursor = this.collection.find<TDocument>(conditions);
 
                 if(options!.sort)
                     cursor = cursor.sort(options!.sort!);
@@ -423,7 +425,7 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, TInstance)} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    create(objects: TDocument, callback?: General.Callback<TInstance>): Promise<TInstance>;
+    create(object: InsertionDocument<TDocument>, callback?: General.Callback<TInstance>): Promise<TInstance>;
     /**
      * Inserts an object into the collection after validating it against this model's schema
      * @param {Object} object The object to insert into the collection
@@ -431,14 +433,14 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, TInstance)} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    create(objects: TDocument, options: ModelOptions.CreateOptions, callback?: General.Callback<TInstance>): Promise<TInstance>;
+    create(object: InsertionDocument<TDocument>, options: ModelOptions.CreateOptions, callback?: General.Callback<TInstance>): Promise<TInstance>;
     /**
      * Inserts the objects into the collection after validating them against this model's schema
      * @param {Object[]} objects The objects to insert into the collection
      * @param {function(Error, TInstance)} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    create(objects: TDocument[], callback?: General.Callback<TInstance[]>): Promise<TInstance[]>;
+    create(objects: InsertionDocument<TDocument>[], callback?: General.Callback<TInstance[]>): Promise<TInstance[]>;
     /**
      * Inserts the objects into the collection after validating them against this model's schema
      * @param {Object[]} objects The objects to insert into the collection
@@ -446,7 +448,7 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, TInstance)} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    create(objects: TDocument[], options: ModelOptions.CreateOptions, callback?: General.Callback<TInstance[]>): Promise<TInstance[]>;
+    create(objects: InsertionDocument<TDocument>[], options: ModelOptions.CreateOptions, callback?: General.Callback<TInstance[]>): Promise<TInstance[]>;
     create(...args: any[]): Promise<any> {
         return this.insert.apply(this, args);
     }
@@ -457,7 +459,7 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, TInstance)} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    insert(objects: TDocument, callback?: General.Callback<TInstance>): Promise<TInstance>;
+    insert(object: InsertionDocument<TDocument>, callback?: General.Callback<TInstance>): Promise<TInstance>;
     /**
      * Inserts an object into the collection after validating it against this model's schema
      * @param {Object} object The object to insert into the collection
@@ -465,14 +467,14 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, TInstance)} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    insert(objects: TDocument, options: ModelOptions.CreateOptions, callback?: General.Callback<TInstance>): Promise<TInstance>;
+    insert(object: InsertionDocument<TDocument>, options: ModelOptions.CreateOptions, callback?: General.Callback<TInstance>): Promise<TInstance>;
     /**
      * Inserts the objects into the collection after validating them against this model's schema
      * @param {Object[]} objects The objects to insert into the collection
      * @param {function(Error, TInstance[])} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    insert(objects: TDocument[], callback?: General.Callback<TInstance[]>): Promise<TInstance[]>;
+    insert(objects: InsertionDocument<TDocument>[], callback?: General.Callback<TInstance[]>): Promise<TInstance[]>;
     /**
      * Inserts the objects into the collection after validating them against this model's schema
      * @param {Object[]} objects The objects to insert into the collection
@@ -480,8 +482,8 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, TInstance[])} callback A callback which is triggered when the operation completes
      * @returns {Promise<TInstance>}
      */
-    insert(objects: TDocument[], options: ModelOptions.CreateOptions, callback?: General.Callback<TInstance[]>): Promise<TInstance[]>;
-    insert(objs: TDocument | TDocument[], ...args: any[]): Promise<any> {
+    insert(objects: InsertionDocument<TDocument>[], options: ModelOptions.CreateOptions, callback?: General.Callback<TInstance[]>): Promise<TInstance[]>;
+    insert(objs: InsertionDocument<TDocument> | InsertionDocument<TDocument>[], ...args: any[]): Promise<any> {
         let objects: TDocument[];
         let options: ModelOptions.CreateOptions = {};
         let callback: General.Callback<any>|undefined = undefined;
@@ -543,14 +545,14 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      */
     // @ts-ignore We implement support for leaving out `options` but providing the `callback` in our base implementation, even though this complains
-    update(conditions: { _id?: any } | Conditions | string, changes: Changes, callback?: General.Callback<number>): Promise<number>;
+    update(conditions: { _id?: any } | Conditions<TDocument> | string, changes: Changes, callback?: General.Callback<number>): Promise<number>;
     /**
      * Updates the documents in the backing collection which match the conditions using the given update instructions
      * @param {Object} conditions The conditions which determine which documents will be updated
      * @param {Object} changes The replacement document to do a full update
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      */
-    update(conditions: { _id?: any } | Conditions | string, changes: TDocument, callback?: General.Callback<number>): Promise<number>;
+    update(conditions: { _id?: any } | Conditions<TDocument> | string, changes: TDocument, callback?: General.Callback<number>): Promise<number>;
     /**
      * Updates the documents in the backing collection which match the conditions using the given update instructions
      * @param {Object} conditions The conditions which determine which documents will be updated
@@ -558,7 +560,7 @@ export class Model<TDocument, TInstance> {
      * @param {UpdateOptions} options The options which dictate how this function behaves
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      */
-    update(conditions: { _id?: string; } | Conditions | string, changes: Changes, options: ModelOptions.UpdateOptions, callback?: General.Callback<number>): Promise<number>;
+    update(conditions: { _id?: string; } | Conditions<TDocument> | string, changes: Changes, options: ModelOptions.UpdateOptions, callback?: General.Callback<number>): Promise<number>;
     /**
      * Updates the documents in the backing collection which match the conditions using the given update instructions
      * @param {Object} conditions The conditions which determine which documents will be updated
@@ -566,8 +568,8 @@ export class Model<TDocument, TInstance> {
      * @param {UpdateOptions} options The options which dictate how this function behaves
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      */
-    update(conditions: { _id?: string; } | Conditions | string, changes: TDocument, options: ModelOptions.UpdateOptions, callback?: General.Callback<number>): Promise<number>;
-    update(conditions: { _id?: string; } | Conditions | string, changes: Changes, options?: ModelOptions.UpdateOptions, callback?: General.Callback<number>): Promise<number> {
+    update(conditions: Conditions<TDocument> | string, changes: TDocument, options: ModelOptions.UpdateOptions, callback?: General.Callback<number>): Promise<number>;
+    update(conditions: Conditions<TDocument> | string, changes: Changes, options?: ModelOptions.UpdateOptions, callback?: General.Callback<number>): Promise<number> {
         if (typeof options === "function") {
             callback = <General.Callback<number>>options;
             options = {};
@@ -575,18 +577,24 @@ export class Model<TDocument, TInstance> {
 
         const opts = options || {};
 
-        if (!_.isPlainObject(conditions)) conditions = {
+        if (!_.isPlainObject(conditions)) conditions = <Conditions<TDocument>>{
             _id: conditions
         };
 
+        const isReplacement = Object.keys(changes).every(key => !!key.indexOf("$"));
+
         _.defaults(opts, {
             w: "majority",
-            multi: true
+            multi: !isReplacement
         });
 
+        
         return Nodeify(Promise.resolve().then(() => {
-            conditions = this._helpers.convertToDB(conditions, { document: true, properties: true, renames: true });
+            if (opts.multi && isReplacement)
+                return Promise.reject(new Error("You cannot use a replacement document and { multi: true }"));
 
+            conditions = this._helpers.convertToDB(conditions, { document: true, properties: true, renames: true });
+            
             return new Promise<number>((resolve, reject) => {
                 const callback = (err: Error, response: MongoDB.UpdateWriteOpResult) => {
                     if (err) return reject(err);
@@ -599,9 +607,12 @@ export class Model<TDocument, TInstance> {
                 }
 
                 if (opts.multi)
-                    return this.collection.updateMany(conditions, changes, opts, callback);
+                    return this.collection.updateMany(<Conditions<TDocument>>conditions, changes, opts, callback);
+                
+                if (isReplacement)
+                    return this.collection.replaceOne(<Conditions<TDocument>>conditions, changes, callback);
 
-                return this.collection.updateOne(conditions, changes, opts, callback)
+                return this.collection.updateOne(<Conditions<TDocument>>conditions, changes, opts, callback)
             })
         }), callback);
     }
@@ -618,9 +629,9 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      * @returns {Promise<number>}
      */
-    count(conditions: { _id?: string; } | Conditions | string, callback?: General.Callback<number>): Promise<number>;
+    count(conditions: { _id?: string; } | Conditions<TDocument> | string, callback?: General.Callback<number>): Promise<number>;
     count(conds?: any, callback?: General.Callback<number>): Promise<number> {
-        let conditions: { _id?: string; } | Conditions = conds;
+        let conditions: { _id?: string; } | Conditions<TDocument> = conds;
         if (typeof conds === "function") {
             callback = <General.Callback<number>>conds;
             conditions = {};
@@ -665,9 +676,9 @@ export class Model<TDocument, TInstance> {
      * @param {function(Error, Number)} callback A callback which is triggered when the operation completes
      * @returns {Promise<number>}
      */
-    remove(conditions: { _id?: string; } | Conditions | string, options: ModelOptions.RemoveOptions, callback?: General.Callback<number>): Promise<number>;
+    remove(conditions: { _id?: string; } | Conditions<TDocument> | string, options: ModelOptions.RemoveOptions, callback?: General.Callback<number>): Promise<number>;
     remove(conds?: any, options?: ModelOptions.RemoveOptions, callback?: General.Callback<number>): Promise<number> {
-        let conditions: { _id?: string; } | Conditions = conds;
+        let conditions: { _id?: string; } | Conditions<TDocument> = conds;
 
         if (typeof options === "function") {
             callback = <General.Callback<number>>options;
@@ -718,12 +729,8 @@ export class Model<TDocument, TInstance> {
      * @return A promise which completes with the results of the aggregation task
      */
     aggregate<T>(pipeline: AggregationPipeline.Stage[], options?: AggregationPipeline.Options): Promise<T[]> {
-        return new Promise<T[]>((resolve, reject) => {
-            this.collection.aggregate(pipeline, options || {}, (err, results) => {
-                if(err) return reject(err);
-                return resolve(results);
-            });
-        });
+        const cursor = this.collection.aggregate<T>(pipeline, options || {});
+        return cursor.toArray();
     }
 
     /**

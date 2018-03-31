@@ -40,428 +40,333 @@ npm install iridium --save
    can be found at [sierrasoftworks.github.io/Iridium](http://sierrasoftworks.github.io/Iridium).
 
 ## Requirements
-Iridium is built on top of a number of very modern technologies, including TypeScript 2.0, JavaScript ES6 and the latest MongoDB
-Node.js Driver (version 2.2). You'll need to be running Node.js 6.x, or 4.x with the `--harmony` flag to run version 7 of Iridium.
-For older versions of Node.js, please considering using version 6 of Iridium instead.
+Iridium is built on top of a number of very modern technologies, including TypeScript 2.8, JavaScript ES6 and the latest MongoDB
+Node.js Driver (version 3.0). You'll need to be running Node.js 6.x run version 8 of Iridium.
 
 For starters, you will need to be running MongoDB 2.6 or later in order to use Iridium - however we recommend you use MongoDB 3.1
-due to the various performance improvements they've made. If you're working with TypeScript, you will also need to use the 2.0
+due to the various performance improvements they've made. If you're working with TypeScript, you will also need to use the 2.8
 compiler or risk having the Iridium type definitions break your project.
 
 ## Using Iridium
 Rather than opt of the usual "Look how quickly you can do something" approach, we thought it might be useful to see
-an example which covers most of the stuff you'd need to do in Iridium. This example covers defining your own document
-interfaces, a custom schema and instance type which provides some additional methods.
+an example which covers most of the stuff you'd need to do in Iridium. We're going to put together a small database
+example which takes advantage of nested objects, transforms, renames and some other nice features offered by Iridium.
 
-You'll notice that the `House` class extends Iridium's `Instance` class, which gives it methods like `save()` as well
-as change tracking when calling `save()` on the instance. If you'd prefer a lighter approach or to use your own home-grown
-implementation then you can do so by taking a look at the [Custom Instances](#custom-instances) section.
+**If you're looking for Iridium's API documentation, then you can find that [here](http://sierrasoftworks.github.io/Iridium).**
+
+### Example Description
+Our example is a simple database which stores the list of cars that individual drivers own and describes those cars
+with a `make`, `model` and `colour`. For the sake of showing off some of Iridium's more complex features, we're being
+overly verbose in how we implement some components, however you'll often find that the simpler examples (like `Address`)
+work perfectly for most use cases.
+
+### Example Components
+
+#### The `Colour` object
+The `colour` object is used in our DB to represent the colour of a car.
+While we could use a simple interface and schema, we have opted to include
+a custom class as well so that we can provide application-level methods to
+represent it as a hex string (for example).
+
+In many cases you won't have need for this and a simple schema+interface
+will suffice. Take a look at the `Address` object for an example of how that
+can be done.
 
 ```typescript
-import {Core, Model, Instance, Collection, Index, Property, ObjectID} Iridium from 'iridium';
+/**
+ * Schemas are used to provide automatic data validation before you
+ * save stuff to the database. We are using a custom "ubyte" validator
+ * which we define on our model later.
+ */
+const ColourSchema = {
+    r: "ubyte",
+    g: "ubyte",
+    b: "ubyte"
+}
 
-interface Colour {
+/**
+ * We also define a document interface which describes how the
+ * colour is stored in the database.
+ */
+interface ColourDoc {
     r: number;
     g: number;
     b: number;
 }
 
-interface Car {
+/**
+ * The Colour class is then used within our application to describe
+ * a colour. It provides useful utility functions that our app will
+ * utilize to perform its duties.
+ */
+class Colour {
+    constructor(doc: ColourDoc) {
+        this.r = doc.r
+        this.g = doc.g
+        this.b = doc.b
+    }
+
+    r: number;
+    g: number;
+    b: number;
+
+    /**
+     * The toDB() method is used to convert this class back into a DB document
+     */
+    toDB(): ColourDoc {
+        return {
+            r: this.r,
+            g: this.g,
+            b: this.b
+        }
+    }
+
+    toString() {
+        return `#${this.toHex(this.r)}${this.toHex(this.g)}${this.toHex(this.b)}`
+    }
+
+    /**
+     * Who needs left-pad?
+     */
+    private toHex(num: number, padding = 2) {
+        let hex = num.toString(16)
+        while (hex.length < 2)
+            hex = `0${hex}`
+        return hex
+    }
+}
+```
+
+#### The `Car` object
+Our `car` object shows how you can nest DB objects with the `toDB()` method
+and their constructors. It also shows how you can implement helpful methods
+on these classes to make writing code with them easier.
+
+```typescript
+const CarSchema = {
+    make: String,
+    model: String,
+    colour: ColourSchema
+}
+
+interface CarDoc {
+    make: string
+    model: string
+    colour: ColourDoc
+}
+
+class Car {
+    constructor(doc: CarDoc) {
+        this.make = doc.make
+        this.model = doc.model
+        this.colour = new Colour(doc.colour)
+    }
+
     make: string;
     model: string;
     colour: Colour;
-}
 
-interface HouseDocument {
-    _id?: string;
-    name: string;
+    repaint(r: number, g: number, b: number) {
+        this.colour = new Colour({ r, g, b })
+    }
 
-    cars?: Car[];
-}
-
-@Index({ name: 1 })
-@Collection('houses')
-class House extends Instance<HouseDocument, House> implements HouseDocument {
-    @ObjectID _id: string;
-    @Property(/^.+$/)
-    name: string;
-
-    @Property([{
-        make: String,
-        model: String,
-        colour: {
-            r: Number,
-            g: Number,
-            b: Number
+    toDB(): CarDoc() {
+        return {
+            make: this.make,
+            model: this.model,
+            colour: this.colour.toDB()
         }
-    }])
+    }
+}
+```
+
+#### The `Address` object
+In this case, we don't need anything complex to represent
+an address or to interact with it, so we're just going to
+use a basic schema and interface to describe it - no need
+for fancy classes or transforms.
+
+```typescript
+const AddressSchema = {
+    // Address lines, at least one and no more than 3
+    lines: [String, 1, 3],
+    country: String
+}
+
+interface AddressDoc {
+    lines: string[];
+    country: string;
+}
+```
+
+#### The `Driver` model
+Here is where we start interacting with Iridium. We're defining a model's Instance type
+which is the class that Iridium will use to represent a DB document. Unlike many other
+ORMs/ODMs, Iridium allows you to implement your own instance type if you so desire and
+simply provides a useful base class for your average use case. You can find out more
+about the methods that [`Iridium.Instance`](http://sierrasoftworks.github.io/Iridium/classes/instance.html)
+provides by reading the [API Documentation](http://sierrasoftworks.github.io/Iridium/classes/instance.html).
+
+In this example we are leveraging that default base class and using Iridium's various
+`@decorators` to configure things like our indexes, schema validation rules, transforms
+and renames. You can also bypass these decorators and use static fields on the instance
+type itself if you prefer, however the decorators are usually a nicer way to manage things.
+
+```typescript
+import * as Iridium from 'iridium';
+import {ObjectId} from "mongodb";
+
+// The DriverDocument describes the format of our database
+// document.
+interface DriverDocument {
+    _id?: ObjectId;
+    name: string;
+    address: AddressDoc;
+
+    // We want to let people create a driver without specifying
+    // their cars, so we make this optional.
+    cars?: CarDoc[];
+}
+
+// Finding a driver by name turns out to be a really common use case,
+// so we've added an index on that field to reduce the number of full
+// collection scans performed by our app.
+@Iridium.Index({ name: 1 })
+
+// Let's also add an index on the cars that someone owns so that we can
+// quickly find out who drives that black Audi...
+@Iridium.Index({ "cars.model": 1, "cars.make": 1 }, { background: true })
+
+// Driver objects should be stored in the `drivers` collection in our DB
+@Iridium.Collection('drivers')
+
+// We want to add support for our "ubyte" custom datatype to the validation
+// engine, so we'll do that here.
+@Iridium.Validate("ubyte", (value) => {
+    return this.assert(
+        typeof value === "number"
+            && value >= 0
+            && value < 255
+            && Math.floor(value) === value,
+        "Should be an integer between 0 and 255"
+    )
+})
+class Driver extends Instance<DriverDocument, Driver> {
+    // We'd prefer to work with a string ObjectID, so ask Iridium to take
+    // care of converting it for us.
+    @Iridium.ObjectID
+    _id: string;
+
+    // We'd like to force drivers to have very specific types of names,
+    // in this case, only westernized names like J.P. Pietersen or Bob McAffee.
+    @Iridium.Property(/^[A-Z][\w\-\.]*(\s[A-Z][\w\-\.])+/)
+
+    // Our DB originally called this full_name, so we're renaming it
+    // here for backwards compatibility, but we really prefer working
+    // with `name` in the app.
+    @Iridium.Rename("full_name")
+    name: string;
+
+    // This is a really simple nested document which doesn't use transforms
+    // or classes.
+    @Iridium.Property(AddressSchema)
+    address: AddressDoc;
+
+    // We have a list of cars that each driver owns. The schema is an array of
+    // CarSchema objects, which we defined above.
+    @Property([CarSchema])
+    // We also want Iridium to automatically transform our DB's CarDoc objects into
+    // our much more useful Car class, but also be smart about putting the values back
+    // into the DB in the right format.
+    @Iridium.TransformClassList(Car)
     cars: Car[];
 
+    // When we first create a Driver document we would like to make sure that cars
+    // is defined, but empty, so we use this onCreating hook to achieve that.
     static onCreating(doc: HouseDocument) {
         doc.cars = doc.cars || [];
     }
 
+    // We'd like to quickly be able to add a car to a driver without needing to
+    // manually instantiate the object, so we've provided this nice helper method.
     addCar(make: string, model: string, colour: Colour) {
-        this.cars.push({
+        this.cars.push(new Car({
             make: make,
             model: model,
-            colour: colour
-        });
+            colour: colour.toDB()
+        }));
     }
 
+    // We also would like to be able to access a driver's `numberOfCars` by a nice
+    // alias, so we've added a getter for that.
     get numberOfCars() {
         return this.cars.length;
     }
 }
+```
+
+#### Example `Core` implementation
+Once we've defined all of our model types, it's time to define our database connection
+class. To do so, simply extend Iridium's [`Core`](http://sierrasoftworks.github.io/Iridium/classes/core.html)
+class and register your DB models there.
+
+This pattern is, as with every other aspect of Iridium, optional and if you prefer you can
+simply instantiate a new [`Iridium.Core`](http://sierrasoftworks.github.io/Iridium/classes/core.html)
+and manage your models separately. This might make more sense for applications which use
+Dependency Injection and are interested in de-coupling their models.
+
+```typescript
+import * as Iridium from 'iridium';
 
 class MyDatabase extends Core {
-    Houses = new Model<HouseDocument, House>(this, House);
+    Drivers = new Model<DriverDocument, Driver>(this, Driver);
+
+    // We've got a few housekeeping tasks we'd like to take
+    // care of automatically when we start our database connection,
+    // so we use the `onConnected` hook to run them.
+    protected onConnected() {
+        return super.onConnected().then(() => Promise.all([
+            // One of those tasks is creating all our indexes
+            // for the Drivers collection.
+            this.Drivers.ensureIndexes(),
+            this.seed()
+        ]))
+    }
+
+    // This is our own custom method which we call from the onConnected hook
+    // to seed the DB with some example data.
+    protected seed() {
+        return this.Drivers.count().then(count => {
+            if (!count)
+                return this.Drivers.insert({
+                    name: "Example Driver",
+                    cars: [{
+                        make: 'Audi',
+                        model: 'A4',
+                        colour: { r: 0, g: 0, b: 0 }
+                    }]
+                })
+        })
+    }
 }
+```
 
-var myDb = new MyDatabase({ database: 'houses_test' });
+#### Example Application
+When you have defined all of your database components, you'll probably want to use it.
+To do so, simply instantiate your `MyDatabase` type and provide the connection configuration
+for your environment; call `connect()` and then do whatever you need to do.
 
-myDb.connect().then(() => myDb.Houses.insert({
-        name: 'My House',
-        cars: [{
-            make: 'Audi',
-            model: 'A4',
-            colour: { r: 0, g: 0, b: 0 }
-        }]
-    }))
-    .then(() => myDb.Houses.get())
-    .then((house) => {
-        house.addCar('Audi', 'S4', { r: 255, g: 255, b: 255 });
-        return house.save();
+For more information on the various connection options you can provide, take a look
+at the [API documentation](http://sierrasoftworks.github.io/Iridium/interfaces/configuration.html).
+
+```typescript
+var myDb = new MyDatabase({ database: 'drivers_test' });
+
+myDb.connect()
+    .then(() => myDb.Drivers.get({ name: "Example Driver" }))
+    .then((driver) => {
+        driver.addCar('Audi', 'S4', { r: 255, g: 255, b: 255 });
+        return driver.save();
     })
     .then(() => myDb.close());
-```
-
-## Defining a Model
-Iridium models are created with a reference to their Core (which provides the database connection) and an `InstanceType` which
-is composed of a constructor function as well as a number of static properties providing configuration information for the instance.
-
-**JavaScript**
-```javascript
-new Model(core, InstanceType);
-```
-
-**TypeScript**
-```typescript
-new Model<DocumentInterface, InstanceType>(core, InstanceType);
-```
-
-If you're working with TypeScript, you can provide an interface for the document structure used by the database, which will allow you
-to get useful type hints when you are creating documents. You can also provide the `InstanceType` to provide useful type information
-for any instances which are retrieved from the database. This information is carried through all promises and callbacks you will use
-within Iridium and it makes your life significantly easier.
-
-Typically you will expose your models as variables on a custom Core implementation like this.
-
-```typescript
-class MyCore extends Core {
-    MyModel = new Model<MyDocumentInterface, MyInstanceType>(this, MyInstanceType);
-}
-```
-
-## The InstanceType Constructor
-The InstanceType constructor is responsible for creating objects which represent a document retrieved from the database. It also provides
-a number of configuration details which are used to determine how Iridium works with the model.
-
-There are two approaches to defining an instance constructor - the first is to create a true wrapper like the one provided by `Iridium.Instance`
-which offers helper methods like `save()` and `remove()`, which comes in very handy for writing concise descriptive code, while the other approach
-is to simply return the document received from the database - great for performance or security purposes.
-
-**TypeScript**
-```typescript
-interface Document {
-    _id?: string;
-}
-
-class InstanceType {
-    constructor(model: Model<Document, Instance>, document: Document, isNew: boolean = true, isPartial: boolean = false) {
-
-    }
-
-    _id: string;
-
-    static schema: Iridium.Schema = {
-        _id: false
-    };
-
-    static collection = 'myCollection';
-}
-```
-
-**JavaScript**
-```javascript
-module.exports = function(model, document, isNew, isPartial) {
-
-}
-
-module.exports.collection = 'myCollection';
-module.exports.schema = {
-    _id: false
-};
-```
-
-### Configuration Options
-As we mentioned, configuration of a model is conducted through static properties on its constructor. These configuration options include
-the `schema` which is used to validate that all data inserted into the database through Iridium meets certain conditions, the `collection`
-which specifies the name of the MongoDB collection into which the documents are stashed and a couple of others worth noting.
-
-#### Schema
-Iridium uses [Skmatc](https://github.com/SierraSoftworks/Skmatc) for schema validation, you can read more about it on its project page but
-we'll give a quick rundown of the way you make use of it here.
-
-The model's schema is defined using an object in which keys represent their document property counterparts while the values represent a validation
-rule. You can also make use of the [`@Property`](http://sierrasoftworks.github.io/Iridium/globals.html#property) decorator to automatically build
-up your schema object.
-
-**TypeScript**
-```typescript
-class InstanceType {
-    _id: string;
-    email: string;
-
-    static schema: Iridium.Schema = {
-        _id: false,
-        email: /^.+@.+$/
-    };
-}
-```
-
-```typescript
-class InstanceType extends Iridium.Instance<any, InstanceType> {
-    @Iridium.ObjectID
-    _id: string;
-    
-    @Iridium.Property(String)
-    email: string;
-}
-```
-
-**JavaScript**
-```javascript
-function InstanceType() {}
-
-InstanceType.schema = {
-    _id: false,
-    email: /^.+@.+$/
-};
-```
-
-
-### The Iridium Instance Class
-Instead of implementing your own instance constructor every time, Iridium offers a powerful and tested instance base class which provides
-a number of useful helper methods and a diff algorithm allowing you to make changes in a POCO manner.
-
-To use it, simply inherit from it (if you need any computed properties or custom methods) or provide it as your instance type when instantiating
-the model.
-
-**TypeScript**
-```typescript
-class InstanceType extends Iridium.Instance<Document, InstanceType> {
-    _id: string;
-}
-
-new Iridium.Model<Document, InstanceType>(core, InstanceType);
-```
-
-**JavaScript**
-```javascript
-function InstanceType() {
-    Iridium.Instance.apply(this, arguments);
-}
-
-require('util').inherits(InstanceType, Iridium.Instance);
-
-new Iridium.Model(core, InstanceType);
-```
-
-If you've used the `Iridium.Instance` constructor then you'll have a couple of useful helper methods available to you. These include `save()`, `refresh()`,
-`update()`, `remove()` and `delete()` which do more or less what it says on the can - `refresh` and `update` are synonyms for one another as are `remove` and
-`delete`.
-
-You'll also find `first()` and `select()` which allow you to select the first, or all, entr(y|ies) in a collection which match a predicate - ensuring that `this`
-maps to the instance itself within the predicate - helping to make comparisons somewhat easier within JavaScript ES5.
-
-## Best Practices
-There are a number of best practices which you should keep in mind when working with Iridium to help get the best possible experience. For starters, Iridium is
-built up of a number of smaller components - namely the [validation](https://github.com/sierrasoftworks/skmatc), transform and caching layers.
-
-### Validation Layer
-The validation layer allows you to plug in your own custom validators, or simply make use of the built in ones, to quickly validate your documents against a
-strongly defined schema. It is designed to enable you to quickly generate meaningful and human readable validation messages, minimizing the need for error
-translation within your application.
-
-Custom validators can be added either using the [`validators`](http://sierrasoftworks.github.io/Iridium/interfaces/instanceimplementation.html#validators) property
-or by using the [`@Validate`](http://sierrasoftworks.github.io/Iridium/globals.html#validate) decorator on your instance class.
-
-```typescript
-@Iridium.Validate('myValidator', function(schema, data, path) {
-    return this.assert(data == 42)
-})
-export class InstanceType extends Iridium.Instance<any, InstanceType> {
-    @Iridium.Property('myValidator')
-    myProperty: number;
-}
-```
-
-```javascript
-var skmatc = require('skmatc');
-
-function InstanceType() {
-    Iridium.Instance.apply(this, arguments);
-}
-
-require('util').inherits(InstanceType, Iridium.Instance);
-
-InstanceType.validators = [
-    skmatc.create(function(schema) {
-        return schema === 'myValidator';
-    }, function(data, schema, path) {
-        return data === 42;
-    })
-];
-
-InstanceType.schema = {
-    myProperty: 'myValidator'
-};
-```
-
-Iridium expects validators to operate in a read-only mode, modifying documents within your validators (while possible) is strongly discouraged as it can lead
-to some strange side effects and isn't guaranteed to behave the same way between releases. If you need to make changes to documents, take a look at the Transform
-Layer. 
-
-### Transform Layer
-The transform layer is designed to make changes to the documents you store within MongoDB as well as the data presented to your application. A good example is the
-way in which ObjectIDs are treated, within your application they appear as plain strings - allowing you to quickly and easily perform many different operations with
-them. However, when you attempt to save an ObjectID field to the database, it is automatically converted into the correct ObjectID object before being persisted.
-
-The transform layer allows you to register your own transforms both on a per-model and per-property basis. In the case of a model, the transform is given the whole
-document and is expected to return the transformed document. Property transforms work the same, except that they are presented with, and expected to return, the value
-of a single top-level property.
-
-The easiest way to add a transform is using the [`@Transform`](http://sierrasoftworks.github.io/Iridium/globals.html#transform) decorator, however if you are working
-in a language which doesn't yet support decorators then you can easily use the
-[`transforms`](http://sierrasoftworks.github.io/Iridium/interfaces/instanceimplementation.html#transforms) property on your instance class.
-
-```typescript
-@Iridium.Transform(document => {
-    document.lastFetched = new Date();
-}, document => {
-    document.lastFetched && delete document.lastFetched;
-    return document;
-})
-export class InstanceType extends Iridium.Instance<any, InstanceType> {
-    @Iridium.Transform(data => data.toUpperCase(), data => data.toLowerCase())
-    email: string;
-}
-```
-
-```javascript
-function InstanceType() {
-    Iridium.Instance.apply(this, arguments);
-}
-
-require('util').inherits(InstanceType, Iridium.Instance);
-
-InstanceType.transforms = {
-    $document: {
-        fromDB: document => {
-            document.lastFetched = new Date();
-        },
-        toDB: document => {
-            document.lastFetched && delete document.lastFetched;
-            return document;
-        }
-    },
-    email: {
-        fromDB: value => value.toUpperCase(),
-        toDB: value => value.toLowerCase()
-    }
-};
-```
-
-#### Transform Gotchas
-It is important to note that property transforms are lazily evaluated on field access, rather than when the document is retrieved from the database.
-This is done for performance reasons, but has the side effect that complex objects which are the targets of property transforms must be re-assigned to the field
-if you wish to trigger the `toDB` transform function.
-
-Let's take the following model definition for our example, here we have a GeoJSON representation of a location but we want our application to use the data
-in a `{lat,lng}` style object. In this case we can use a transform which translates from one form to another to accomplish our task.
-
-```typescript
-import {inspect} from "util";
-
-export class InstanceType extends Iridium.Instance<any, InstanceType> {
-    // Converts a GeoJSON object into a simple {lat, lng} object and back.
-    @Iridium.Transform(
-        data => { lat: data.coordinates[1], lng: data.coordinates[0] },
-        data => { type: "Point", coordinates: [data.lng, data.lat] }
-    )
-    position: {
-        lat: number;
-        lng: number;
-    };
-}
-
-db.Model.findOne().then(instance => {
-    console.log(util.inspect(instance.position)); // { lat: 1, lng: 2 }
-    console.log(util.inspect(instance.document.position)); // { type: "Point", coordinates: [2, 1] }
-
-    let pos = instance.pos;
-    pos.lat = 3;
-    console.log(util.inspect(pos)); // { lat: 3, lng: 2 }
-    console.log(util.inspect(instance.position)); // { lat: 1, lng: 2 }
-    console.log(util.inspect(instance.document.position)); // { type: "Point", coordinates: [2, 1] }
-
-    instance.position = pos
-    console.log(util.inspect(instance.position)); // { lat: 3, lng: 2 }
-    console.log(util.inspect(instance.document.position)); // { type: "Point", coordinates: [2, 3] }
-});
-```
-
-#### Useful Transform Tricks
-There are a couple of clever tricks you can do using transforms to enable additional functionality within Iridium. An example would be cleaning your documents of properties
-not defined within your schemas whenever they are saved to the database.
-
-##### Strict Schemas
-Let's say you want to only insert values which appear in your schemas - an example would be if you accept documents from a REST API and don't wish to manually cherry-pick
-the properties you are going to insert. It could also simply be a way of lazily cleaning up old properties from documents as your schema evolves over time, helping to avoid
-complications if someone forgets to clean up the database after making changes to the schema.
-This can be easily achieved using the `$document` transform.
-
-```typescript
-@Iridium.Transform(document => document, (document, property, model) => {
-    Object.keys(document).forEach(key => {
-        if(!model.schema.hasOwnProperty(key)) delete document[key];
-    });
-    
-    return document;
-})
-export class InstanceType extends Iridium.Instance<any, InstanceType> {
-    
-}
-```
-
-```javascript
-function InstanceType() {
-    Iridium.Instance.apply(this, arguments);
-}
-
-require('util').inherits(InstanceType, Iridium.Instance);
-
-InstanceType.transforms = {
-    $document: {
-        fromDB: document => document,
-        toDB: (document, property, model) => {
-            Object.keys(document).forEach(key => {
-                if(!model.schema.hasOwnProperty(key)) delete document[key];
-            });
-            
-            return document;
-        }
-    }
-};
 ```

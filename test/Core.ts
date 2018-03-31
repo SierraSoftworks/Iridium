@@ -24,9 +24,9 @@ class InheritedCoreWithHooks extends Iridium.Core {
     onConnectingResult: (connection: MongoDB.Db) => Promise<any> = (connection) => Promise.resolve(connection);
     onConnectedResult: () => Promise<void> = () => Promise.resolve();
 
-    protected onConnecting(db: MongoDB.Db) {
-        this.events.emit("connecting", db);
-        return this.onConnectingResult(db);
+    protected onConnecting(client: MongoDB.MongoClient) {
+        this.events.emit("connecting", client);
+        return this.onConnectingResult(client.db("test"));
     }
 
     protected onConnected() {
@@ -210,6 +210,8 @@ describe("Core",() => {
 
     describe("connect",() => {
         let core: Iridium.Core;
+        after(() => core && core.close());
+
         if (!process.env.CI_SERVER)
             it("should return a rejection if the connection fails",() => {
                 core = new Iridium.Core("mongodb://0.0.0.0/test");
@@ -268,9 +270,15 @@ describe("Core",() => {
     });
 
     describe("hooks", () => {
+        let core: InheritedCoreWithHooks;
+        beforeEach(() => {
+            core = new InheritedCoreWithHooks()
+        })
+        
+        afterEach(() => core.close())
+
         describe("onConnecting", () => {
             it("should be called whenever a low level connection is established", (done) => {
-                let core = new InheritedCoreWithHooks();
                 core.events.once("connecting", (connection: MongoDB.Db) => {
                     done();
                 });
@@ -282,7 +290,6 @@ describe("Core",() => {
             });
 
             it("should be passed the underlying connection", (done) => {
-                let core = new InheritedCoreWithHooks();
                 core.events.once("connecting", (connection: MongoDB.Db) => {
                     chai.expect(connection).to.exist;
                     done();
@@ -295,7 +302,6 @@ describe("Core",() => {
             });
 
             it("should be triggered before the connection is established", (done) => {
-                let core = new InheritedCoreWithHooks();
                 core.events.once("connecting", (connection: MongoDB.Db) => {
                     chai.expect(() => core.connection).to.throw;
                     done();
@@ -308,14 +314,12 @@ describe("Core",() => {
             });
 
             it("should abort the connection if it throws an error", () => {
-                let core = new InheritedCoreWithHooks();
                 core.onConnectingResult = (conn) => Promise.reject(new Error("Test error"));
 
                 return chai.expect(core.connect()).to.eventually.be.rejectedWith("Test error");
             });
 
             it("should leave the Iridium core disconnected if it throws an error", () => {
-                let core = new InheritedCoreWithHooks();
                 core.onConnectingResult = (conn) => Promise.reject(new Error("Test error"));
 
                 return chai.expect(core.connect().then(() => false, (err) => {
@@ -327,7 +331,6 @@ describe("Core",() => {
 
         describe("onConnected", () => {
             it("should be called whenever a connection is accepted", (done) => {
-                let core = new InheritedCoreWithHooks();
                 core.events.once("connected", () => {
                     done();
                 });
@@ -339,7 +342,6 @@ describe("Core",() => {
             });
 
             it("should be triggered after the connection is accepted", (done) => {
-                let core = new InheritedCoreWithHooks();
                 core.events.once("connected", () => {
                     chai.expect(core.connection).to.exist;
                     done();
@@ -352,14 +354,12 @@ describe("Core",() => {
             });
 
             it("should abort the connection if it throws an error", () => {
-                let core = new InheritedCoreWithHooks();
                 core.onConnectedResult = () => Promise.reject(new Error("Test error"));
 
                 return chai.expect(core.connect()).to.eventually.be.rejectedWith("Test error");
             });
 
             it("should leave the Iridium core disconnected if it throws an error", () => {
-                let core = new InheritedCoreWithHooks();
                 core.onConnectedResult = () => Promise.reject(new Error("Test error"));
 
                 return chai.expect(core.connect().then(() => false, (err) => {

@@ -48,7 +48,7 @@ describe("Hooks", function() {
     let core = new Iridium.Core({ database: "test" });
     let model = new Iridium.Model<TestDocument, Test>(core, Test);
 
-    beforeEach(() => shouldReject = 0);
+    beforeEach(() => { shouldReject = 0 });
     beforeEach(() => core.connect().then(() => model.remove()).then(() => model.insert({ answer: 10 })));
     afterEach(() => model.remove());
     after(() => core.close());
