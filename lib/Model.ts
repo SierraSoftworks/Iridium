@@ -265,9 +265,8 @@ export class Model<TDocument, TInstance> {
     private _validators: Skmatc.Validator[];
 
     /**
-     * Gets the custom validation types available for this model. These validators are added to the
-     * default skmatc validators, as well as those available through plugins, for use when checking
-     * your instances.
+     * Gets the custom validation types available for this model including validators from all of
+     * the plugins registered with the Core that was used to instantiate this Model.
      */
     get validators() {
         return this._validators;
