@@ -1,7 +1,7 @@
 {
   "ignore": [
-    "typings/**/*.d.ts",
-    "dist/**"
+    "dist/**",
+    "build/**/*.js"
   ],
   "test": [
     "test/**"
