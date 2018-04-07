@@ -1,0 +1,732 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Iridium</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">Iridium</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1> Iridium</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<h1 id="iridium">Iridium</h1>
+				<p><strong>A High Performance, IDE Friendly ODM for MongoDB</strong></p>
+				<p><a href="https://npmjs.org/package/iridium"><img src="https://badge.fury.io/js/iridium.svg" alt="NPM Module"></a>
+					<a href="https://travis-ci.org/SierraSoftworks/Iridium"><img src="https://travis-ci.org/SierraSoftworks/Iridium.svg?branch=release" alt="Build Status"></a>
+					<a href="https://coveralls.io/r/SierraSoftworks/Iridium?branch=release"><img src="https://coveralls.io/repos/SierraSoftworks/Iridium/badge.svg?branch=release" alt="Coverage Status"></a>
+					<a href="https://www.bithound.io/github/SierraSoftworks/Iridium"><img src="https://www.bithound.io/github/SierraSoftworks/Iridium/badges/score.svg" alt="bitHound Overall Score"></a>
+					<a href="https://www.bithound.io/github/SierraSoftworks/Iridium"><img src="https://www.bithound.io/github/SierraSoftworks/Iridium/badges/code.svg" alt="bitHound Code"></a>
+				<a href="https://www.bithound.io/github/SierraSoftworks/Iridium/master/dependencies/npm"><img src="https://www.bithound.io/github/SierraSoftworks/Iridium/badges/dependencies.svg" alt="bitHound Dependencies"></a></p>
+				<p>Iridium is designed to offer a high performance, easy to use and above all, editor friendly ODM for MongoDB on Node.js.
+					Rather than adopting the &quot;re-implement everything&quot; approach often favoured by ODMs like Mongoose and friends, requiring
+					you to learn an entirely new API and locking you into a specific coding style, Iridium tries to offer an incredibly
+					lightweight implementation which makes your life easier where it counts and gets out of your way when you want to do
+				anything more complex.</p>
+				<p>It also means that, if you&#39;re familiar with the MongoDB CLI you should find working with Iridium very natural, with all database
+				methods returning promises for their results and sensible, type annotated results being provided if you wish to make use of them.</p>
+				<h2 id="installation">Installation</h2>
+				<p>Iridium makes use of the latest set of <code>@types</code> TypeScript definitions files, allowing you to install everything using just a
+				simple <code>npm install</code>.</p>
+				<pre><code class="lang-bash">npm install iridium --save
+</code></pre>
+				<h2 id="features">Features</h2>
+				<ul>
+					<li><strong>Built with TypeScript</strong> and designed for ease of use, you&#39;ll be hard pressed to find another Node.js ORM as easy to pick
+					up and learn when combined with a supporting editor.</li>
+					<li><strong>Promises Throughout</strong> mean that you can easily start working with your favourite A+ compliant promise library and writing
+					more readable code. Don&#39;t think promises are the way forward? Stick with callbacks, Iridium supports both.</li>
+					<li><strong>Fully Tested</strong> with over 300 unit tests and over 95% test coverage, helping to ensure that Iridium always behaves the way
+					it&#39;s supposed to.</li>
+					<li><strong>Decorator Support</strong> helps describe your classes in an easy to understand and maintain manner, embrace ES7 with strong fallbacks
+					on ES5 compliant approaches.</li>
+					<li><strong>Fall into Success</strong> with Iridium&#39;s carefully designed API - which is structured to help ensure your code remains maintainable
+					regardless of how large your project becomes.</li>
+					<li><strong>Amazing Documentation</strong> which covers the full Iridium API, and is always up to date thanks to the brilliant TypeDoc project,
+					can be found at <a href="http://sierrasoftworks.github.io/Iridium">sierrasoftworks.github.io/Iridium</a>.</li>
+				</ul>
+				<h2 id="requirements">Requirements</h2>
+				<p>Iridium is built on top of a number of very modern technologies, including TypeScript 2.8, JavaScript ES6 and the latest MongoDB
+				Node.js Driver (version 3.0). You&#39;ll need to be running Node.js 6.x run version 8 of Iridium.</p>
+				<p>For starters, you will need to be running MongoDB 2.6 or later in order to use Iridium - however we recommend you use MongoDB 3.1
+					due to the various performance improvements they&#39;ve made. If you&#39;re working with TypeScript, you will also need to use the 2.8
+				compiler or risk having the Iridium type definitions break your project.</p>
+				<h2 id="using-iridium">Using Iridium</h2>
+				<p>Rather than opt of the usual &quot;Look how quickly you can do something&quot; approach, we thought it might be useful to see
+					an example which covers most of the stuff you&#39;d need to do in Iridium. We&#39;re going to put together a small database
+				example which takes advantage of nested objects, transforms, renames and some other nice features offered by Iridium.</p>
+				<p><strong>If you&#39;re looking for Iridium&#39;s API documentation, then you can find that <a href="http://sierrasoftworks.github.io/Iridium">here</a>.</strong></p>
+				<h3 id="example-description">Example Description</h3>
+				<p>Our example is a simple database which stores the list of cars that individual drivers own and describes those cars
+					with a <code>make</code>, <code>model</code> and <code>colour</code>. For the sake of showing off some of Iridium&#39;s more complex features, we&#39;re being
+					overly verbose in how we implement some components, however you&#39;ll often find that the simpler examples (like <code>Address</code>)
+				work perfectly for most use cases.</p>
+				<h3 id="example-components">Example Components</h3>
+				<h4 id="the-colour-object">The <code>Colour</code> object</h4>
+				<p>The <code>colour</code> object is used in our DB to represent the colour of a car.
+					While we could use a simple interface and schema, we have opted to include
+					a custom class as well so that we can provide application-level methods to
+				represent it as a hex string (for example).</p>
+				<p>In many cases you won&#39;t have need for this and a simple schema+interface
+					will suffice. Take a look at the <code>Address</code> object for an example of how that
+				can be done.</p>
+				<pre><code class="lang-typescript"><span class="hljs-comment">/**
+ * Schemas are used to provide automatic data validation before you
+ * save stuff to the database. We are using a custom "ubyte" validator
+ * which we define on our model later.
+ */</span>
+<span class="hljs-keyword">const</span> ColourSchema = {
+    r: <span class="hljs-string">"ubyte"</span>,
+    g: <span class="hljs-string">"ubyte"</span>,
+    b: <span class="hljs-string">"ubyte"</span>
+}
+
+<span class="hljs-comment">/**
+ * We also define a document interface which describes how the
+ * colour is stored in the database.
+ */</span>
+<span class="hljs-keyword">interface</span> ColourDoc {
+    r: <span class="hljs-built_in">number</span>;
+    g: <span class="hljs-built_in">number</span>;
+    b: <span class="hljs-built_in">number</span>;
+}
+
+<span class="hljs-comment">/**
+ * The Colour class is then used within our application to describe
+ * a colour. It provides useful utility functions that our app will
+ * utilize to perform its duties.
+ */</span>
+<span class="hljs-keyword">class</span> Colour {
+    <span class="hljs-keyword">constructor</span>(<span class="hljs-params">doc: ColourDoc</span>) {
+        <span class="hljs-keyword">this</span>.r = doc.r
+        <span class="hljs-keyword">this</span>.g = doc.g
+        <span class="hljs-keyword">this</span>.b = doc.b
+    }
+
+    r: <span class="hljs-built_in">number</span>;
+    g: <span class="hljs-built_in">number</span>;
+    b: <span class="hljs-built_in">number</span>;
+
+    <span class="hljs-comment">/**
+     * The toDB() method is used to convert this class back into a DB document
+     */</span>
+    toDB(): ColourDoc {
+        <span class="hljs-keyword">return</span> {
+            r: <span class="hljs-keyword">this</span>.r,
+            g: <span class="hljs-keyword">this</span>.g,
+            b: <span class="hljs-keyword">this</span>.b
+        }
+    }
+
+    toString() {
+        <span class="hljs-keyword">return</span> <span class="hljs-string">`#<span class="hljs-subst">${this.toHex(this.r)}</span><span class="hljs-subst">${this.toHex(this.g)}</span><span class="hljs-subst">${this.toHex(this.b)}</span>`</span>
+    }
+
+    <span class="hljs-comment">/**
+     * Who needs left-pad?
+     */</span>
+    <span class="hljs-keyword">private</span> toHex(num: <span class="hljs-built_in">number</span>, padding = <span class="hljs-number">2</span>) {
+        <span class="hljs-keyword">let</span> hex = num.toString(<span class="hljs-number">16</span>)
+        <span class="hljs-keyword">while</span> (hex.length &lt; <span class="hljs-number">2</span>)
+            hex = <span class="hljs-string">`0<span class="hljs-subst">${hex}</span>`</span>
+        <span class="hljs-keyword">return</span> hex
+    }
+}
+</code></pre>
+				<h4 id="the-car-object">The <code>Car</code> object</h4>
+				<p>Our <code>car</code> object shows how you can nest DB objects with the <code>toDB()</code> method
+					and their constructors. It also shows how you can implement helpful methods
+				on these classes to make writing code with them easier.</p>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">const</span> CarSchema = {
+    make: <span class="hljs-built_in">String</span>,
+    model: <span class="hljs-built_in">String</span>,
+    colour: ColourSchema
+}
+
+<span class="hljs-keyword">interface</span> CarDoc {
+    make: <span class="hljs-built_in">string</span>
+    model: <span class="hljs-built_in">string</span>
+    colour: ColourDoc
+}
+
+<span class="hljs-keyword">class</span> Car {
+    <span class="hljs-keyword">constructor</span>(<span class="hljs-params">doc: CarDoc</span>) {
+        <span class="hljs-keyword">this</span>.make = doc.make
+        <span class="hljs-keyword">this</span>.model = doc.model
+        <span class="hljs-keyword">this</span>.colour = <span class="hljs-keyword">new</span> Colour(doc.colour)
+    }
+
+    make: <span class="hljs-built_in">string</span>;
+    model: <span class="hljs-built_in">string</span>;
+    colour: Colour;
+
+    repaint(r: <span class="hljs-built_in">number</span>, g: <span class="hljs-built_in">number</span>, b: <span class="hljs-built_in">number</span>) {
+        <span class="hljs-keyword">this</span>.colour = <span class="hljs-keyword">new</span> Colour({ r, g, b })
+    }
+
+    toDB(): CarDoc() {
+        <span class="hljs-keyword">return</span> {
+            make: <span class="hljs-keyword">this</span>.make,
+            model: <span class="hljs-keyword">this</span>.model,
+            colour: <span class="hljs-keyword">this</span>.colour.toDB()
+        }
+    }
+}
+</code></pre>
+				<h4 id="the-address-object">The <code>Address</code> object</h4>
+				<p>In this case, we don&#39;t need anything complex to represent
+					an address or to interact with it, so we&#39;re just going to
+					use a basic schema and interface to describe it - no need
+				for fancy classes or transforms.</p>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">const</span> AddressSchema = {
+    <span class="hljs-comment">// Address lines, at least one and no more than 3</span>
+    lines: [<span class="hljs-built_in">String</span>, <span class="hljs-number">1</span>, <span class="hljs-number">3</span>],
+    country: <span class="hljs-built_in">String</span>
+}
+
+<span class="hljs-keyword">interface</span> AddressDoc {
+    lines: <span class="hljs-built_in">string</span>[];
+    country: <span class="hljs-built_in">string</span>;
+}
+</code></pre>
+				<h4 id="the-driver-model">The <code>Driver</code> model</h4>
+				<p>Here is where we start interacting with Iridium. We&#39;re defining a model&#39;s Instance type
+					which is the class that Iridium will use to represent a DB document. Unlike many other
+					ORMs/ODMs, Iridium allows you to implement your own instance type if you so desire and
+					simply provides a useful base class for your average use case. You can find out more
+					about the methods that <a href="http://sierrasoftworks.github.io/Iridium/classes/instance.html"><code>Iridium.Instance</code></a>
+				provides by reading the <a href="http://sierrasoftworks.github.io/Iridium/classes/instance.html">API Documentation</a>.</p>
+				<p>In this example we are leveraging that default base class and using Iridium&#39;s various
+					<code>@decorators</code> to configure things like our indexes, schema validation rules, transforms
+					and renames. You can also bypass these decorators and use static fields on the instance
+				type itself if you prefer, however the decorators are usually a nicer way to manage things.</p>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> Iridium <span class="hljs-keyword">from</span> <span class="hljs-string">'iridium'</span>;
+<span class="hljs-keyword">import</span> {ObjectId} <span class="hljs-keyword">from</span> <span class="hljs-string">"mongodb"</span>;
+
+<span class="hljs-comment">// The DriverDocument describes the format of our database</span>
+<span class="hljs-comment">// document.</span>
+<span class="hljs-keyword">interface</span> DriverDocument {
+    _id?: ObjectId;
+    name: <span class="hljs-built_in">string</span>;
+    address: AddressDoc;
+
+    <span class="hljs-comment">// We want to let people create a driver without specifying</span>
+    <span class="hljs-comment">// their cars, so we make this optional.</span>
+    cars?: CarDoc[];
+}
+
+<span class="hljs-comment">// Finding a driver by name turns out to be a really common use case,</span>
+<span class="hljs-comment">// so we've added an index on that field to reduce the number of full</span>
+<span class="hljs-comment">// collection scans performed by our app.</span>
+<span class="hljs-meta">@Iridium</span>.Index({ name: <span class="hljs-number">1</span> })
+
+<span class="hljs-comment">// Let's also add an index on the cars that someone owns so that we can</span>
+<span class="hljs-comment">// quickly find out who drives that black Audi...</span>
+<span class="hljs-meta">@Iridium</span>.Index({ <span class="hljs-string">"cars.model"</span>: <span class="hljs-number">1</span>, <span class="hljs-string">"cars.make"</span>: <span class="hljs-number">1</span> }, { background: <span class="hljs-literal">true</span> })
+
+<span class="hljs-comment">// Driver objects should be stored in the `drivers` collection in our DB</span>
+<span class="hljs-meta">@Iridium</span>.Collection(<span class="hljs-string">'drivers'</span>)
+
+<span class="hljs-comment">// We want to add support for our "ubyte" custom datatype to the validation</span>
+<span class="hljs-comment">// engine, so we'll do that here.</span>
+<span class="hljs-meta">@Iridium</span>.Validate(<span class="hljs-string">"ubyte"</span>, <span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.assert(
+        <span class="hljs-keyword">typeof</span> value === <span class="hljs-string">"number"</span>
+            &amp;&amp; value &gt;= <span class="hljs-number">0</span>
+            &amp;&amp; value &lt; <span class="hljs-number">255</span>
+            &amp;&amp; <span class="hljs-built_in">Math</span>.floor(value) === value,
+        <span class="hljs-string">"Should be an integer between 0 and 255"</span>
+    )
+})
+<span class="hljs-keyword">class</span> Driver <span class="hljs-keyword">extends</span> Instance&lt;DriverDocument, Driver&gt; {
+    <span class="hljs-comment">// We'd prefer to work with a string ObjectID, so ask Iridium to take</span>
+    <span class="hljs-comment">// care of converting it for us.</span>
+    <span class="hljs-meta">@Iridium</span>.ObjectID
+    _id: <span class="hljs-built_in">string</span>;
+
+    <span class="hljs-comment">// We'd like to force drivers to have very specific types of names,</span>
+    <span class="hljs-comment">// in this case, only westernized names like J.P. Pietersen or Bob McAffee.</span>
+    <span class="hljs-meta">@Iridium</span>.Property(<span class="hljs-regexp">/^[A-Z][\w\-\.]*(\s[A-Z][\w\-\.])+/</span>)
+
+    <span class="hljs-comment">// Our DB originally called this full_name, so we're renaming it</span>
+    <span class="hljs-comment">// here for backwards compatibility, but we really prefer working</span>
+    <span class="hljs-comment">// with `name` in the app.</span>
+    <span class="hljs-meta">@Iridium</span>.Rename(<span class="hljs-string">"full_name"</span>)
+    name: <span class="hljs-built_in">string</span>;
+
+    <span class="hljs-comment">// This is a really simple nested document which doesn't use transforms</span>
+    <span class="hljs-comment">// or classes.</span>
+    <span class="hljs-meta">@Iridium</span>.Property(AddressSchema)
+    address: AddressDoc;
+
+    <span class="hljs-comment">// We have a list of cars that each driver owns. The schema is an array of</span>
+    <span class="hljs-comment">// CarSchema objects, which we defined above.</span>
+    <span class="hljs-meta">@Property</span>([CarSchema])
+    <span class="hljs-comment">// We also want Iridium to automatically transform our DB's CarDoc objects into</span>
+    <span class="hljs-comment">// our much more useful Car class, but also be smart about putting the values back</span>
+    <span class="hljs-comment">// into the DB in the right format.</span>
+    <span class="hljs-meta">@Iridium</span>.TransformClassList(Car)
+    cars: Car[];
+
+    <span class="hljs-comment">// When we first create a Driver document we would like to make sure that cars</span>
+    <span class="hljs-comment">// is defined, but empty, so we use this onCreating hook to achieve that.</span>
+    <span class="hljs-keyword">static</span> onCreating(doc: HouseDocument) {
+        doc.cars = doc.cars || [];
+    }
+
+    <span class="hljs-comment">// We'd like to quickly be able to add a car to a driver without needing to</span>
+    <span class="hljs-comment">// manually instantiate the object, so we've provided this nice helper method.</span>
+    addCar(make: <span class="hljs-built_in">string</span>, model: <span class="hljs-built_in">string</span>, colour: Colour) {
+        <span class="hljs-keyword">this</span>.cars.push(<span class="hljs-keyword">new</span> Car({
+            make: make,
+            model: model,
+            colour: colour.toDB()
+        }));
+    }
+
+    <span class="hljs-comment">// We also would like to be able to access a driver's `numberOfCars` by a nice</span>
+    <span class="hljs-comment">// alias, so we've added a getter for that.</span>
+    <span class="hljs-keyword">get</span> numberOfCars() {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.cars.length;
+    }
+}
+</code></pre>
+				<h4 id="example-core-implementation">Example <code>Core</code> implementation</h4>
+				<p>Once we&#39;ve defined all of our model types, it&#39;s time to define our database connection
+					class. To do so, simply extend Iridium&#39;s <a href="http://sierrasoftworks.github.io/Iridium/classes/core.html"><code>Core</code></a>
+				class and register your DB models there.</p>
+				<p>This pattern is, as with every other aspect of Iridium, optional and if you prefer you can
+					simply instantiate a new <a href="http://sierrasoftworks.github.io/Iridium/classes/core.html"><code>Iridium.Core</code></a>
+					and manage your models separately. This might make more sense for applications which use
+				Dependency Injection and are interested in de-coupling their models.</p>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> Iridium <span class="hljs-keyword">from</span> <span class="hljs-string">'iridium'</span>;
+
+<span class="hljs-keyword">class</span> MyDatabase <span class="hljs-keyword">extends</span> Core {
+    Drivers = <span class="hljs-keyword">new</span> Model&lt;DriverDocument, Driver&gt;(<span class="hljs-keyword">this</span>, Driver);
+
+    <span class="hljs-comment">// We've got a few housekeeping tasks we'd like to take</span>
+    <span class="hljs-comment">// care of automatically when we start our database connection,</span>
+    <span class="hljs-comment">// so we use the `onConnected` hook to run them.</span>
+    <span class="hljs-keyword">protected</span> onConnected() {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.onConnected().then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-built_in">Promise</span>.all([
+            <span class="hljs-comment">// One of those tasks is creating all our indexes</span>
+            <span class="hljs-comment">// for the Drivers collection.</span>
+            <span class="hljs-keyword">this</span>.Drivers.ensureIndexes(),
+            <span class="hljs-keyword">this</span>.seed()
+        ]))
+    }
+
+    <span class="hljs-comment">// This is our own custom method which we call from the onConnected hook</span>
+    <span class="hljs-comment">// to seed the DB with some example data.</span>
+    <span class="hljs-keyword">protected</span> seed() {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.Drivers.count().then(<span class="hljs-function"><span class="hljs-params">count</span> =&gt;</span> {
+            <span class="hljs-keyword">if</span> (!count)
+                <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.Drivers.insert({
+                    name: <span class="hljs-string">"Example Driver"</span>,
+                    cars: [{
+                        make: <span class="hljs-string">'Audi'</span>,
+                        model: <span class="hljs-string">'A4'</span>,
+                        colour: { r: <span class="hljs-number">0</span>, g: <span class="hljs-number">0</span>, b: <span class="hljs-number">0</span> }
+                    }]
+                })
+        })
+    }
+}
+</code></pre>
+				<h4 id="example-application">Example Application</h4>
+				<p>When you have defined all of your database components, you&#39;ll probably want to use it.
+					To do so, simply instantiate your <code>MyDatabase</code> type and provide the connection configuration
+				for your environment; call <code>connect()</code> and then do whatever you need to do.</p>
+				<p>For more information on the various connection options you can provide, take a look
+				at the <a href="http://sierrasoftworks.github.io/Iridium/interfaces/configuration.html">API documentation</a>.</p>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">var</span> myDb = <span class="hljs-keyword">new</span> MyDatabase({ database: <span class="hljs-string">'drivers_test'</span> });
+
+myDb.connect()
+    .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> myDb.Drivers.get({ name: <span class="hljs-string">"Example Driver"</span> }))
+    .then(<span class="hljs-function">(<span class="hljs-params">driver</span>) =&gt;</span> {
+        driver.addCar(<span class="hljs-string">'Audi'</span>, <span class="hljs-string">'S4'</span>, { r: <span class="hljs-number">255</span>, g: <span class="hljs-number">255</span>, b: <span class="hljs-number">255</span> });
+        <span class="hljs-keyword">return</span> driver.save();
+    })
+    .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> myDb.close());
+</code></pre>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class="label tsd-is-external">
+						<span>Externals</span>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external tsd-is-not-exported">
+						<a href="modules/__global.html">__global</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-class tsd-is-external">
+						<a href="classes/cacheonid.html" class="tsd-kind-icon">Cache<wbr>OnID</a>
+					</li>
+					<li class=" tsd-kind-class tsd-is-external">
+						<a href="classes/core.html" class="tsd-kind-icon">Core</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
+						<a href="classes/cursor.html" class="tsd-kind-icon">Cursor</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
+						<a href="classes/instance.html" class="tsd-kind-icon">Instance</a>
+					</li>
+					<li class=" tsd-kind-class tsd-is-external">
+						<a href="classes/memorycache.html" class="tsd-kind-icon">Memory<wbr>Cache</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
+						<a href="classes/model.html" class="tsd-kind-icon">Model</a>
+					</li>
+					<li class=" tsd-kind-class tsd-is-external">
+						<a href="classes/modelcache.html" class="tsd-kind-icon">Model<wbr>Cache</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
+						<a href="classes/modelhandlers.html" class="tsd-kind-icon">Model<wbr>Handlers</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
+						<a href="classes/modelhelpers.html" class="tsd-kind-icon">Model<wbr>Helpers</a>
+					</li>
+					<li class=" tsd-kind-class tsd-is-external">
+						<a href="classes/noopcache.html" class="tsd-kind-icon">No<wbr>OpCache</a>
+					</li>
+					<li class=" tsd-kind-class tsd-is-external">
+						<a href="classes/omnom.html" class="tsd-kind-icon">Omnom</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/bsonarray.html" class="tsd-kind-icon">BSONArray</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/bsonobject.html" class="tsd-kind-icon">BSONObject</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/cache.html" class="tsd-kind-icon">Cache</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/cachedirector.html" class="tsd-kind-icon">Cache<wbr>Director</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="interfaces/callback.html" class="tsd-kind-icon">Callback</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/changes.html" class="tsd-kind-icon">Changes</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/configuration.html" class="tsd-kind-icon">Configuration</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/createoptions.html" class="tsd-kind-icon">Create<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/expressmiddleware.html" class="tsd-kind-icon">Express<wbr>Middleware</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/fieldcache.html" class="tsd-kind-icon">Field<wbr>Cache</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="interfaces/hooks.html" class="tsd-kind-icon">Hooks</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/index.html" class="tsd-kind-icon">Index</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/indexspecification.html" class="tsd-kind-icon">Index<wbr>Specification</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external tsd-is-not-exported">
+						<a href="interfaces/instanceconstructor.html" class="tsd-kind-icon">Instance<wbr>Constructor</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="interfaces/instanceimplementation.html" class="tsd-kind-icon">Instance<wbr>Implementation</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="interfaces/instanceinternals.html" class="tsd-kind-icon">Instance<wbr>Internals</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="interfaces/mapfunction.html" class="tsd-kind-icon">Map<wbr>Function</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="interfaces/mapreducefunctions.html" class="tsd-kind-icon">Map<wbr>Reduce<wbr>Functions</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/mapreduceoptions.html" class="tsd-kind-icon">Map<wbr>Reduce<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="interfaces/mapreduceddocument.html" class="tsd-kind-icon">Map<wbr>Reduced<wbr>Document</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="interfaces/mapper.html" class="tsd-kind-icon">Mapper</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="interfaces/middlewarefactory.html" class="tsd-kind-icon">Middleware<wbr>Factory</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="interfaces/modelspecificinstanceconstructor.html" class="tsd-kind-icon">Model<wbr>Specific<wbr>Instance<wbr>Constructor</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/options.html" class="tsd-kind-icon">Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/plugin.html" class="tsd-kind-icon">Plugin</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="interfaces/predicate.html" class="tsd-kind-icon">Predicate</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="interfaces/property.html" class="tsd-kind-icon">Property</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="interfaces/propertygetter.html" class="tsd-kind-icon">Property<wbr>Getter</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="interfaces/propertysetter.html" class="tsd-kind-icon">Property<wbr>Setter</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="interfaces/propertytransform.html" class="tsd-kind-icon">Property<wbr>Transform</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/queryoptions.html" class="tsd-kind-icon">Query<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="interfaces/reducefunction.html" class="tsd-kind-icon">Reduce<wbr>Function</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/removeoptions.html" class="tsd-kind-icon">Remove<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/renamemap.html" class="tsd-kind-icon">Rename<wbr>Map</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/schema.html" class="tsd-kind-icon">Schema</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/stage.html" class="tsd-kind-icon">Stage</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="interfaces/transformclassinstance.html" class="tsd-kind-icon">Transform<wbr>Class<wbr>Instance</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="interfaces/transformclasstype.html" class="tsd-kind-icon">Transform<wbr>Class<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/transformoptions.html" class="tsd-kind-icon">Transform<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/transforms.html" class="tsd-kind-icon">Transforms</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/updateoptions.html" class="tsd-kind-icon">Update<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-is-external">
+						<a href="globals.html#bsontype" class="tsd-kind-icon">BSONType</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter tsd-is-external">
+						<a href="globals.html#conditions" class="tsd-kind-icon">Conditions</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter tsd-is-external">
+						<a href="globals.html#insertiondocument" class="tsd-kind-icon">Insertion<wbr>Document</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter tsd-is-external">
+						<a href="globals.html#binary" class="tsd-kind-icon">Binary</a>
+					</li>
+					<li class=" tsd-kind-function tsd-is-external">
+						<a href="globals.html#buildurl" class="tsd-kind-icon">Build<wbr>Url</a>
+					</li>
+					<li class=" tsd-kind-function tsd-is-external">
+						<a href="globals.html#collection" class="tsd-kind-icon">Collection</a>
+					</li>
+					<li class=" tsd-kind-function tsd-is-external">
+						<a href="globals.html#defaultvalidators" class="tsd-kind-icon">Default<wbr>Validators</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter tsd-is-external">
+						<a href="globals.html#delay" class="tsd-kind-icon">Delay</a>
+					</li>
+					<li class=" tsd-kind-function tsd-is-external">
+						<a href="globals.html#expressmiddlewarefactory" class="tsd-kind-icon">Express<wbr>Middleware<wbr>Factory</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter tsd-is-external">
+						<a href="globals.html#map" class="tsd-kind-icon">Map</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter tsd-is-external">
+						<a href="globals.html#mapreduce" class="tsd-kind-icon">Map<wbr>Reduce</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter tsd-is-external">
+						<a href="globals.html#modelspecificinstance" class="tsd-kind-icon">Model<wbr>Specific<wbr>Instance</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter tsd-is-external">
+						<a href="globals.html#nodeify" class="tsd-kind-icon">Nodeify</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter tsd-is-external">
+						<a href="globals.html#objectid" class="tsd-kind-icon">ObjectID</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter tsd-is-external">
+						<a href="globals.html#rename" class="tsd-kind-icon">Rename</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter tsd-is-external">
+						<a href="globals.html#transform" class="tsd-kind-icon">Transform</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter tsd-is-external">
+						<a href="globals.html#transformclass" class="tsd-kind-icon">Transform<wbr>Class</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter tsd-is-external">
+						<a href="globals.html#transformclasslist" class="tsd-kind-icon">Transform<wbr>Class<wbr>List</a>
+					</li>
+					<li class=" tsd-kind-function tsd-is-external">
+						<a href="globals.html#validate" class="tsd-kind-icon">Validate</a>
+					</li>
+					<li class=" tsd-kind-function tsd-is-external tsd-is-not-exported">
+						<a href="globals.html#buildhostlist" class="tsd-kind-icon">build<wbr>Host<wbr>List</a>
+					</li>
+					<li class=" tsd-kind-function tsd-is-external">
+						<a href="globals.html#hasobjectid" class="tsd-kind-icon">has<wbr>ObjectID</a>
+					</li>
+					<li class=" tsd-kind-function tsd-is-external">
+						<a href="globals.html#hasvalidobjectid" class="tsd-kind-icon">has<wbr>Valid<wbr>ObjectID</a>
+					</li>
+					<li class=" tsd-kind-function tsd-is-external">
+						<a href="globals.html#tobinary" class="tsd-kind-icon">to<wbr>Binary</a>
+					</li>
+					<li class=" tsd-kind-function tsd-is-external">
+						<a href="globals.html#todecimal128" class="tsd-kind-icon">to<wbr>Decimal128</a>
+					</li>
+					<li class=" tsd-kind-function tsd-is-external">
+						<a href="globals.html#tolong" class="tsd-kind-icon">to<wbr>Long</a>
+					</li>
+					<li class=" tsd-kind-function tsd-is-external">
+						<a href="globals.html#toobjectid" class="tsd-kind-icon">to<wbr>ObjectID</a>
+					</li>
+					<li class=" tsd-kind-object-literal tsd-is-external">
+						<a href="globals.html#defaulttransforms" class="tsd-kind-icon">Default<wbr>Transforms</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>

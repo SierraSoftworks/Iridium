@@ -1,4 +1,0 @@
-[submodule "doc"]
-	path = doc
-	url = https://github.com/SierraSoftworks/Iridium.git
-	branch = gh-pages
