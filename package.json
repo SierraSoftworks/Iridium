@@ -29,8 +29,6 @@
     "coverage:remap:json": "remap-istanbul -i coverage/coverage.json -o coverage/coverage-ts.json",
     "coverage:remap:html": "remap-istanbul -i coverage/coverage.json -o coverage/report -t html",
     "lint": "tslint lib/",
-    "git:stash": "git stash",
-    "git:stash:pop": "git stash pop",
     "changelog": "node build/changelog.js",
     "doc": "typedoc --out ./doc --mode file --name Iridium --tsconfig tsconfig.doc.json iridium.ts",
     "watch": "concurrently -r --kill-others \"npm run watch:build\" \"npm run watch:test\"",
