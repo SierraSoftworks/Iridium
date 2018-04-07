@@ -673,7 +673,7 @@ export class Model<TDocument, TInstance> {
      * @returns {Promise<number>}
      */
     // @ts-ignore We implement support for leaving out `options` but providing the `callback` in our base implementation, even though this complains
-    remove(conditions: { _id?: string; } | Conditions | any, callback?: General.Callback<number>): Promise<number>;
+    remove(conditions: { _id?: string; } | Conditions<TDocument> | any, callback?: General.Callback<number>): Promise<number>;
     /**
      * Removes all documents from the collection which match the conditions
      * @param {Object} conditions The conditions determining whether an object is removed or not
