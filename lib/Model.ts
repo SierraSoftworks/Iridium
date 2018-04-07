@@ -73,9 +73,13 @@ export class Model<TDocument, TInstance> {
         this._transforms = instanceType.transforms || {};
         this._renames = instanceType.renames || {};
         this._indexes = instanceType.indexes || [];
-        
-        this._validators = instanceType.validators || [];
-        this.loadPluginValidators();
+
+        // The order of assigning _validators is deliberate. It is desired to put plugin validators
+        // first so that the instance validators go second which means when these are looped through
+        // and registered to skmatc, then the instance validators have a chance to overwrite the
+        // validators defined by the plugins.
+        this._validators = _.flatMap(this.core.plugins, (plugin) => plugin.validate || [])
+                            .concat(instanceType.validators || []);
 
         if(!this._schema._id) this._schema._id = MongoDB.ObjectID;
 
@@ -86,28 +90,6 @@ export class Model<TDocument, TInstance> {
             this._Instance = ModelSpecificInstance(this, instanceType);
         else
             this._Instance = instanceType.bind(undefined, this);
-    }
-
-    /**
-     * Adds the validators to this Model's validators that are declared in
-     * all of the Plugin objects.
-     *
-     * Only Validators in the Plugins that have been registered with the Core
-     * will be added.
-     * 
-     * @private
-     * @memberof ModelHelpers
-     */
-    private loadPluginValidators(): void {
-        this.core.plugins.forEach((plugin) => {
-            if (plugin.validate != null) {
-                if (_.isArray(plugin.validate)) {
-                    this._validators = this._validators.concat(plugin.validate);;
-                } else {
-                    this._validators.push(plugin.validate);
-                }
-            }
-        });
     }
 
     /**
