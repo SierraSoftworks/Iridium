@@ -13,8 +13,14 @@ class Test extends Iridium.Instance<any, Test> {
 
 describe("Plugins",() => {
     let core: Iridium.Core;
-    beforeEach(() => {
+    beforeEach(async () => {
         core = new Iridium.Core({ database: "test" });
+        await core.connect();
+    });
+
+    after(async () => {
+        await core.db.dropCollection("test");
+        await core.db.dropCollection("apartments");
     });
 
     describe("newModel",() => {
@@ -129,6 +135,66 @@ describe("Plugins",() => {
                 newInstance: (instance, model) => { },
                 validate: [Skmatc.create((schema) => schema == "Test", function (schema, data) { return this.assert(data == "test") })]
             });
+        });
+
+        it("should actually use a plugin's validator array to validate a document", async () => {
+            class Apartment extends Iridium.Instance<any, Apartment> {
+                static collection = "apartments";
+                static schema: Iridium.Schema = {
+                    _id: false
+                };
+
+                @Iridium.Property("Kittens")
+                public kittens: string[];
+            
+                _id: string;
+            }
+            
+            let wasCalled = false;
+
+            core.register({
+                validate: [Skmatc.create((schema) => schema == "Kittens", function (schema, data) {
+                    wasCalled = true;
+                    return this.assert(data.length >= 1, "Kittens are mandatory! Must have at least 1.");
+                })]
+            });
+
+            const apartmentModel = new Iridium.Model(core, Apartment);
+            const apartment = new apartmentModel.Instance({ kittens: ['Sweety']});
+
+            await apartment.save();
+
+            chai.expect(wasCalled).to.be.true;
+        });
+
+        it("should actually use a plugin's single validator object to validate a document", async () => {
+            class Apartment extends Iridium.Instance<any, Apartment> {
+                static collection = "apartments";
+                static schema: Iridium.Schema = {
+                    _id: false
+                };
+
+                @Iridium.Property("Cats")
+                public kittens: string[];
+            
+                _id: string;
+            }
+            
+            let wasCalled = false;
+
+            core.register({
+                validate: Skmatc.create((schema) => schema == "Cats", function (schema, data) {
+                    wasCalled = true;
+                    return this.assert(data.length >= 1, "Cats are mandatory! Must have at least 1.");
+                })
+            });
+
+            const apartmentModel = new Iridium.Model(core, Apartment);
+            const apartment = new apartmentModel.Instance({ kittens: ['Sweety']});
+
+            await apartment.save();
+
+            chai.expect(wasCalled).to.be.true;
         });
     });
 });

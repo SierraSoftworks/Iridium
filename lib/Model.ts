@@ -72,8 +72,14 @@ export class Model<TDocument, TInstance> {
         this._cacheDirector = instanceType.cache || new CacheOnID();
         this._transforms = instanceType.transforms || {};
         this._renames = instanceType.renames || {};
-        this._validators = instanceType.validators || [];
         this._indexes = instanceType.indexes || [];
+
+        // The order of assigning _validators is deliberate. It is desired to put plugin validators
+        // first so that the instance validators go second which means when these are looped through
+        // and registered to skmatc, then the instance validators have a chance to overwrite the
+        // validators defined by the plugins.
+        this._validators = _.flatMap(this.core.plugins, (plugin) => plugin.validate || [])
+                            .concat(instanceType.validators || []);
 
         if(!this._schema._id) this._schema._id = MongoDB.ObjectID;
 
@@ -241,9 +247,8 @@ export class Model<TDocument, TInstance> {
     private _validators: Skmatc.Validator[];
 
     /**
-     * Gets the custom validation types available for this model. These validators are added to the
-     * default skmatc validators, as well as those available through plugins, for use when checking
-     * your instances.
+     * Gets the custom validation types available for this model including validators from all of
+     * the plugins registered with the Core that was used to instantiate this Model.
      */
     get validators() {
         return this._validators;
@@ -668,7 +673,7 @@ export class Model<TDocument, TInstance> {
      * @returns {Promise<number>}
      */
     // @ts-ignore We implement support for leaving out `options` but providing the `callback` in our base implementation, even though this complains
-    remove(conditions: { _id?: string; } | Conditions | any, callback?: General.Callback<number>): Promise<number>;
+    remove(conditions: { _id?: string; } | Conditions<TDocument> | any, callback?: General.Callback<number>): Promise<number>;
     /**
      * Removes all documents from the collection which match the conditions
      * @param {Object} conditions The conditions determining whether an object is removed or not
