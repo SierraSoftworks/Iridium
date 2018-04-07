@@ -4,6 +4,26 @@ For a human friendly description of what changed in each release, take a look
 at the [Releases](https://github.com/SierraSoftworks/Iridium/releases) page.
 
 
+## Version [8.0.0-alpha.14](https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.14)
+<a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.14">tag: **v8.0.0-alpha.14**</a>
+
+```sh
+npm install iridium@8.0.0-alpha.14
+```
+
+### Changes
+ - [5ebf611](https://github.com/SierraSoftworks/Iridium/commit/5ebf611) 8.0.0-alpha.14
+ - [3345371](https://github.com/SierraSoftworks/Iridium/commit/3345371) build: Update automated build files to improve their quality
+ - [7cede54](https://github.com/SierraSoftworks/Iridium/commit/7cede54) tweak: Make the new conditions interface compatible with the old interface for easier upgrades.
+ - [8485611](https://github.com/SierraSoftworks/Iridium/commit/8485611) Merge pull request #120 from CatGuardian/feature/8.0.0
+ - [b3c1db9](https://github.com/SierraSoftworks/Iridium/commit/b3c1db9) Updated iridium with a mistype of Conditions.
+ - [96e11aa](https://github.com/SierraSoftworks/Iridium/commit/96e11aa) Made code clean improvement and made plugins registered first.
+ - [7468c2e](https://github.com/SierraSoftworks/Iridium/commit/7468c2e) Updated comments for get validators() of Model.
+ - [e5ecdc3](https://github.com/SierraSoftworks/Iridium/commit/e5ecdc3) Changed it so that the plugin validators are loaded into each Model's validators.
+ - [eaf6c70](https://github.com/SierraSoftworks/Iridium/commit/eaf6c70) Addd Plugin validation support.
+ - [2cc6949](https://github.com/SierraSoftworks/Iridium/commit/2cc6949) Merge pull request #1 from SierraSoftworks/feature/8.0.0
+ - [830d2a4](https://github.com/SierraSoftworks/Iridium/commit/830d2a4) doc: Update documentation for v8.0.0-alpha.13
+
 ## Version [8.0.0-alpha.13](https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.13)
 <a style="border-radius: 2px; padding: 4px 8px; background: rgb(64, 120, 192); color: #fff;" href="https://github.com/SierraSoftworks/Iridium/releases/tag/v8.0.0-alpha.13">tag: **v8.0.0-alpha.13**</a>
 
