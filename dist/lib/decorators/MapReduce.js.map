@@ -1,0 +1,1 @@
+{"version":3,"file":"MapReduce.js","sourceRoot":"","sources":["../../../lib/decorators/MapReduce.ts"],"names":[],"mappings":";;AAGA;;;;;;;;;;;;;GAaG;AACH,mBAKE,GAA2B,EAAE,MAAkC;IAChE,OAAO,UAAU,MAAiB;QACjC,MAAM,CAAC,gBAAgB,GAAG,EAAE,GAAG,EAAE,GAAG,EAAE,MAAM,EAAE,MAAM,EAAE,CAAC;IACxD,CAAC,CAAC;AACH,CAAC;AATD,8BASC"}

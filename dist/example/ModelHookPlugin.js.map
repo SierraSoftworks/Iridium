@@ -1,0 +1,1 @@
+{"version":3,"file":"ModelHookPlugin.js","sourceRoot":"","sources":["../../example/ModelHookPlugin.ts"],"names":[],"mappings":";AAEA;IACI,QAAQ,CAAC,KAA8B;QACnC,KAAK,CAAC,cAAc,GAAG,KAAK,CAAC,cAAc,CAAC,WAAW,EAAE,CAAC;IAC9D,CAAC;CACJ;AAED,iBAAS,0BAA0B,CAAC"}
